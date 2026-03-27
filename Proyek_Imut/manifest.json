@@ -1,0 +1,20 @@
+{
+  "name": "ElektroDict — Kamus Teknik Elektro",
+  "short_name": "ElektroDict",
+  "description": "Kamus teknik elektro lengkap dengan kalkulator, latihan soal AI, skema interaktif, dan ElektroBot.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0e1117",
+  "theme_color": "#4f9cf9",
+  "lang": "id",
+  "categories": ["education", "utilities"],
+  "icons": [
+    {
+      "src": "icons/icon-72.png",
+      "sizes": "72x72",
+      "type": "image/png",
+      "purpose": "any"
+    },
+[... rest of manifest.json ...]

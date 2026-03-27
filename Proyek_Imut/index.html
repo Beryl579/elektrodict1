@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>ElektroDict — Kamus Teknik Elektro</title>
+
+<!-- PWA Manifest -->
+<link rel="manifest" href="manifest.json">
+
+<!-- PWA Meta Tags -->
+<meta name="theme-color" content="#4f9cf9">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ElektroDict">
+<meta name="application-name" content="ElektroDict">
+<meta name="description" content="Kamus teknik elektro lengkap dengan kalkulator, latihan soal AI, skema interaktif, dan ElektroBot.">
+
+<!-- Apple Touch Icons (fallback kalau belum ada file icon) -->
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="icon" type="image/png" sizes="32x32" href="icons/icon-96.png">
+<link rel="icon" type="image/png" sizes="16x16" href="icons/icon-72.png">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Outfit:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="katexLoaded=true;renderPendingMath()"></script>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- Splash Screen Launch Animation -->
+  <div id="splash-screen">
+    <div class="splash-content">
+      <div class="splash-bolt">⚡</div>
+      <div class="splash-text">Elektro<span>Dict</span></div>
+    </div>
+  </div>
+  <!-- Ambient Background Blobs -->
+  <div class="ambient-bg">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a class="logo" href="#"><div class="logo-mark">⚡</div><div class="logo-name">Elektro<b>Dict</b></div></a>
+    <div class="hspace"></div>
+    <div class="hbadge"><b id="totalCount">0</b> istilah</div>
+    <button class="theme-btn" id="themeBtn" onclick="toggleTheme()" title="Ganti tema">🌙</button>
+    <!-- PWA Install Button — muncul otomatis kalau browser support -->
+    <button class="theme-btn" id="pwa-install-btn" onclick="installPWA()" title="Install App" style="display:none">📲</button>
+    <a href="https://berylsinaga.netlify.app/" target="_blank" rel="noopener" class="nav-portfolio" title="Portfolio Beryl Sinaga">🔗</a>
+  </div>
+</nav>
+
+<!-- ═══════ FLOATING CHAT BUBBLE (mobile left) ═══════ -->
+<div class="chat-fab-left-wrap" id="chatFabWrap">
+  <div class="chat-tooltip" id="chatTooltip">Ada yang bisa saya bantu? 💬</div>
+  <button class="chat-fab-left" id="bnav-chat" onclick="openM()" title="Chat ElektroBot">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.17L4 17.17V4h16v12z"/><path d="M7 9h2v2H7zm4 0h2v2h-2zm4 0h2v2h-2z"/></svg>
+  </button>
+</div>
+
+<!-- ═══════ BOTTOM NAV (mobile only) ═══════ -->
+<div class="bottom-nav" id="bottomNav">
+  <button class="bnav-item on" id="bnav-kamus" onclick="switchTab('kamus')">
+    <div class="bnav-dot"></div>
+    <span class="bnav-icon">📖</span>
+    <span class="bnav-label">Kamus</span>
+  </button>
+  <button class="bnav-item" id="bnav-quiz" onclick="switchTab('quiz')">
+    <div class="bnav-dot"></div>
+    <span class="bnav-icon">🧠</span>
+    <span class="bnav-label">Latihan</span>
+  </button>
+  <button class="bnav-item" id="bnav-aivision" onclick="switchTab('aivision')">
+    <div class="bnav-dot"></div>
+    <span class="bnav-icon">🔬</span>
+    <span class="bnav-label">AI Vision</span>
+  </button>
+  <button class="bnav-item" id="bnav-kalk" onclick="switchTab('kalk')">
+    <div class="bnav-dot"></div>
+    <span class="bnav-icon">🔢</span>
+    <span class="bnav-label">Kalkulator</span>
+  </button>
+  <button class="bnav-item" id="bnav-skema" onclick="switchTab('skema')">
+    <div class="bnav-dot"></div>
+    <span class="bnav-icon">⚡</span>
+    <span class="bnav-label">Skema</span>
+  </button>
+  <button class="bnav-item" id="bnav-resistor" onclick="switchTab('resistor')">
+    <div class="bnav-dot"></div>
+    <span class="bnav-icon">🎨</span>
+    <span class="bnav-label">Resistor</span>
+  </button>
+  <button class="bnav-item" id="bnav-konversi" onclick="switchTab('konversi')">
+    <div class="bnav-dot"></div>
+    <span class="bnav-icon">🔄</span>
+    <span class="bnav-label">Konversi</span>
+  </button>
+  <button class="bnav-item" id="bnav-timeline" onclick="switchTab('timeline')">
+    <div class="bnav-dot"></div>
+    <span class="bnav-icon">🕰️</span>
+    <span class="bnav-label">Timeline</span>
+  </button>
+  <button class="bnav-item" id="bnav-logika" onclick="switchTab('logika')">
+    <div class="bnav-dot"></div>
+    <span class="bnav-icon">🕹️</span>
+    <span class="bnav-label">Logika</span>
+  </button>
+</div>
+<div class="page on" id="page-kamus">
+  <div class="sbar"><div class="sfield">
+    <span class="sico">🔍</span>
+    <input type="text" id="searchInput" placeholder="Cari istilah, rumus, kata kunci..." oninput="onSearch(this.value)">
+    <button class="sx" id="sx" onclick="clearSearch()">×</button>
+  </div></div>
+  <div class="fbar" id="fbar"></div>
+  <div class="kbody">
+    <div class="ksec">
+      <div class="smeta">
+        <div class="slabel" id="slabel">Semua Istilah</div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <div class="scount" id="scount"></div>
+          <button class="pdf-btn" onclick="exportKamusPDF()" title="Export PDF">
+            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 1.5L18.5 9H13V3.5zM8 17h8v1H8v-1zm0-3h8v1H8v-1zm0-3h5v1H8v-1z"/></svg>
+            Export PDF
+          </button>
+        </div>
+      </div>
+      <div class="grid" id="grid"></div>
+      <div class="empty" id="empty">🔌 Tidak ada istilah yang cocok</div>
+      <div class="wm">by Beryl Nathaniel Sinaga</div>
+    </div>
+    <aside class="chat-sidebar">
+      <div style="display:flex;flex-direction:column;height:100%">
+        <div class="chead">
+          <div class="cava">⚡</div>
+          <div class="cinfo"><div class="cname">ElektroBot</div><div class="cstatus">● online</div></div>
+          <button class="ctts" id="tts-toggle-D" onclick="toggleTTS()" title="Mute/Unmute Suara">🔊</button>
+          <button class="cback" onclick="clearChatHistory()" title="Reset riwayat chat" style="font-size:13px">🗑️</button>
+        </div>
+        <div class="cmsgs" id="msgsD"></div>
+        <div class="quick">
+          <div class="qchip" onclick="qask('Apa perbedaan AC dan DC?')">AC vs DC</div>
+          <div class="qchip" onclick="qask('Jelaskan Hukum Ohm')">Hukum Ohm</div>
+          <div class="qchip" onclick="qask('Fungsi kapasitor?')">Kapasitor</div>
+          <div class="qchip" onclick="qask('Cara baca kode warna resistor?')">Kode Resistor</div>
+          <div class="qchip" onclick="qask('Apa itu transistor BJT?')">Transistor BJT</div>
+        </div>
+        <div class="cinp">
+          <button class="cmic" id="mic-btn-D" onclick="toggleMic('D')" title="Bicara dengan AI (Voice)">🎤</button>
+          <textarea id="inpD" placeholder="Tanya soal elektro..." rows="1" oninput="rz(this)" onkeydown="ck(event,'D')"></textarea>
+          <button class="csend" id="sendD" onclick="send('D')">
+            <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg>
+          </button>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<!-- ═══════ QUIZ PAGE ═══════ -->
+<div class="page" id="page-quiz">
+  <div class="quiz-wrap">
+    <div class="quiz-header">
+      <h2>🧠 Latihan Soal</h2>
+      <p>Soal di-generate AI secara random — beda tiap sesi!</p>
+    </div>
+
+    <!-- difficulty -->
+    <div class="quiz-diff" id="quiz-diff">
+      <button class="qdiff-btn on" onclick="setDiff(this,'mudah')">😊 Mudah</button>
+      <button class="qdiff-btn" onclick="setDiff(this,'sedang')">🔥 Sedang</button>
+      <button class="qdiff-btn" onclick="setDiff(this,'sulit')">💀 Sulit</button>
+    </div>
+
+    <!-- kategori -->
+    <div class="quiz-cats" id="quiz-cats"></div>
+
+    <!-- tombol mulai -->
+    <button class="quiz-start-btn" id="quiz-start-btn" onclick="startAIQuiz()" disabled>
+      ⚡ Pilih Kategori dulu
+    </button>
+
+    <!-- loading -->
+    <div class="quiz-loading" id="quiz-loading">
+      <div class="ql-spinner"></div>
+      <div class="ql-text">Gua lagi bikin soal buat lu... ⚡</div>
+      <div class="ql-sub" id="ql-sub">Generate 5 soal · kategori: —</div>
+    </div>
+
+    <!-- soal box -->
+    <div class="quiz-box" id="quiz-box" style="display:none"></div>
+
+    <!-- nav -->
+    <div class="quiz-nav" id="quiz-nav" style="display:none">
+      <button class="qbtn qbtn-p" id="qbtn-prev" onclick="prevQ()">← Sebelumnya</button>
+      <div class="q-prog" id="q-prog"></div>
+      <button class="qbtn qbtn-n" id="qbtn-next" onclick="nextQ()">Selanjutnya →</button>
+    </div>
+
+    <!-- skor -->
+    <div class="quiz-score" id="quiz-score">
+      <div class="score-big" id="sc-pct">0%</div>
+      <div class="score-label">Skor lu 🎯</div>
+      <div class="score-bar"><div class="score-fill" id="sc-fill" style="width:0%"></div></div>
+      <div class="score-detail">
+        <div class="sd c"><div class="sd-num" id="sc-c">0</div><div class="sd-lbl">Benar ✅</div></div>
+        <div class="sd w"><div class="sd-num" id="sc-w">0</div><div class="sd-lbl">Salah ❌</div></div>
+        <div class="sd"><div class="sd-num" id="sc-t" style="color:var(--accent)">0</div><div class="sd-lbl">Total</div></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;align-items:center;margin-top:8px">
+        <button class="share-btn" onclick="shareScore()">📤 Share Hasil ke WhatsApp</button>
+        <button class="share-copy-btn" onclick="copyScore()">📋 Copy Teks Hasil</button>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
+          <button class="qbtn qbtn-n" onclick="retryQuiz()" style="padding:10px 24px">🔄 Soal Baru</button>
+          <button class="qbtn qbtn-p" onclick="resetQuiz()" style="padding:10px 24px">← Ganti Kategori</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ KALKULATOR PAGE ═══════ -->
+<div class="page" id="page-kalk">
+  <div class="calc-chatview">
+    <div class="calc-chathead">
+      <div class="calc-chathead-ava">🔢</div>
+      <div class="calc-chathead-info">
+        <div class="calc-chathead-name">KalkulatorBot</div>
+        <div class="calc-chathead-sub">● 8 kalkulator tersedia</div>
+      </div>
+    </div>
+    <div class="calc-msgarea" id="calc-msgarea"></div>
+  </div>
+</div>
+
+<!-- FAB + MOBILE CHAT -->
+<button class="fab" onclick="openM()">💬</button>
+<div class="chat-mobile" id="chatM">
+  <div class="chead" style="background:linear-gradient(135deg,var(--accent-d),var(--bg3));border-bottom:1px solid var(--line2)">
+    <div class="cava" style="background:linear-gradient(135deg,var(--accent),#2563eb);border:none;box-shadow:0 2px 8px #4f9cf966">⚡</div>
+    <div class="cinfo">
+      <div class="cname">ElektroBot</div>
+      <div class="cstatus">● online · siap bantu</div>
+    </div>
+    <button class="ctts" id="tts-toggle-M" onclick="toggleTTS()" title="Mute/Unmute Suara">🔊</button>
+    <button class="cback" onclick="clearChatHistory()" title="Reset chat" style="font-size:13px;margin-right:4px">🗑️</button>
+    <button class="cback" onclick="closeM()" style="font-weight:700;font-size:16px">×</button>
+  </div>
+  <div class="cmsgs" id="msgsM"></div>
+  <div class="quick">
+    <div class="qchip" onclick="qask('Apa perbedaan AC dan DC?')">AC vs DC</div>
+    <div class="qchip" onclick="qask('Jelaskan Hukum Ohm')">Hukum Ohm</div>
+    <div class="qchip" onclick="qask('Fungsi kapasitor?')">Kapasitor</div>
+    <div class="qchip" onclick="qask('Cara baca kode warna resistor?')">Kode Resistor</div>
+    <div class="qchip" onclick="qask('Apa itu transistor BJT?')">Transistor BJT</div>
+  </div>
+  <div class="cinp">
+    <button class="cmic" id="mic-btn-M" onclick="toggleMic('M')" title="Bicara dengan AI (Voice)">🎤</button>
+    <textarea id="inpM" placeholder="Tanya soal elektro..." rows="1" oninput="rz(this)" onkeydown="ck(event,'M')"></textarea>
+    <button class="csend" id="sendM" onclick="send('M')">
+      <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg>
+    </button>
+  </div>
+</div>
+<div class="overlay" id="overlay" onclick="closeM()"></div>
+
+<!-- ═══════ KODE WARNA RESISTOR PAGE ═══════ -->
+<div class="page" id="page-resistor">
+  <div class="resist-wrap">
+    <div class="resist-header">
+      <h2>🎨 Kode Warna Resistor</h2>
+      <p>Baca nilai resistor dari gelang warna secara instan</p>
+    </div>
+    <div class="resist-mode">
+      <button class="rmode-btn on" onclick="setResistMode(this,4)" id="rmode4">4 Gelang</button>
+      <button class="rmode-btn" onclick="setResistMode(this,5)" id="rmode5">5 Gelang</button>
+    </div>
+    <div class="resist-svg-wrap" id="resist-svg-wrap"></div>
+    <div class="resist-bands" id="resist-bands"></div>
+    <div class="resist-result" id="resist-result">
+      <div class="resist-result-val" id="rr-val">— Ω</div>
+      <div class="resist-result-tol" id="rr-tol">Pilih warna gelang</div>
+      <div class="resist-result-range" id="rr-range"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ KONVERSI SATUAN PAGE ═══════ -->
+<div class="page" id="page-konversi">
+  <div class="konv-wrap">
+    <div class="konv-header">
+      <h2>🔄 Konversi Satuan</h2>
+      <p>Konversi satuan teknik elektro dengan cepat dan akurat</p>
+    </div>
+    <div class="konv-cats" id="konv-cats"></div>
+    <div id="konv-panels"></div>
+  </div>
+</div>
+
+<!-- ═══════ ONBOARDING POPUP ═══════ -->
+<div class="onboard-overlay" id="onboardOverlay">
+  <div class="onboard-card">
+    <div class="onboard-quote">
+      <div class="onboard-quote-icon">💡</div>
+      <div class="onboard-quote-text" id="oq-text"></div>
+      <div class="onboard-quote-src" id="oq-src"></div>
+    </div>
+    <div class="onboard-body">
+      <div class="onboard-title">⚡ ElektroDict</div>
+      <div class="onboard-sub">Kamus teknik elektro lengkap — buat mahasiswa, oleh mahasiswa</div>
+      <div class="onboard-features">
+        <div class="onboard-feat"><span class="onboard-feat-icon">📖</span><div class="onboard-feat-info"><div class="onboard-feat-title">100+ Istilah Elektro</div><div class="onboard-feat-desc">Lengkap dengan rumus & penjelasan</div></div></div>
+        <div class="onboard-feat"><span class="onboard-feat-icon">🧠</span><div class="onboard-feat-info"><div class="onboard-feat-title">Latihan Soal AI</div><div class="onboard-feat-desc">Soal random di-generate tiap sesi</div></div></div>
+        <div class="onboard-feat"><span class="onboard-feat-icon">🔢</span><div class="onboard-feat-info"><div class="onboard-feat-title">Kalkulator & Konversi</div><div class="onboard-feat-desc">Ohm, RLC, daya, satuan & lainnya</div></div></div>
+        <div class="onboard-feat"><span class="onboard-feat-icon">💬</span><div class="onboard-feat-info"><div class="onboard-feat-title">ElektroBot AI</div><div class="onboard-feat-desc">Tanya soal elektro, jawab gaul & akurat</div></div></div>
+        <!-- scroll hint step — only shown on mobile -->
+        <div class="onboard-feat" id="onboard-scroll-hint" style="display:none;background:var(--accent-d);border-color:#2a5a9a">
+          <span class="onboard-feat-icon">👆</span>
+          <div class="onboard-feat-info">
+            <div class="onboard-feat-title" style="color:var(--accent)">Menu bisa digeser!</div>
+            <div class="onboard-feat-desc">Tombol navigasi di bawah bisa di-<strong>swipe kanan</strong> untuk akses semua fitur</div>
+          </div>
+        </div>
+      </div>
+      <button class="onboard-btn" onclick="closeOnboard()">Gas Belajar! ⚡</button>
+    </div>
+  </div>
+</div>
+
+<!-- hint bar "akses fitur lainnya" — muncul kalau skip onboarding atau belum scroll -->
+<div class="bnav-hint-bar" id="bnavHintBar" onclick="dismissHintBar()">
+  <span class="bnav-hint-txt">Akses fitur lainnya di sini</span>
+  <span class="bnav-hint-arrows">›››</span>
+  <button class="bnav-hint-close" onclick="event.stopPropagation();dismissHintBar()" title="tutup">×</button>
+</div>
+
+<!-- ═══════ SKEMA PAGE ═══════ -->
+<div class="page" id="page-skema">
+  <div class="skema-wrap">
+    <div class="skema-header">
+      <h2>⚡ Skema Rangkaian Dasar</h2>
+      <p>Diagram interaktif — tap toggle untuk lihat kondisi rangkaian</p>
+    </div>
+    <div class="skema-list" id="skema-list"></div>
+  </div>
+</div>
+
+<!-- ═══════ AI VISION PAGE ═══════ -->
+<div class="page" id="page-aivision">
+  <div class="aiv-wrap">
+    <div class="aiv-header">
+      <h2>🔬 AI Vision</h2>
+      <p>Upload foto soal atau rangkaian — AI langsung analisis untuk lu</p>
+    </div>
+
+    <!-- mode selector -->
+    <div class="aiv-modes">
+      <button class="aivm-btn on" id="aivm-soal" onclick="setAIVMode(this,'soal')">
+        <span class="aivm-icon">📝</span>
+        <div class="aivm-info">
+          <div class="aivm-title">Soal dari Foto</div>
+          <div class="aivm-desc">Foto soal ujian, AI jawab step-by-step</div>
+        </div>
+      </button>
+      <button class="aivm-btn" id="aivm-rangkaian" onclick="setAIVMode(this,'rangkaian')">
+        <span class="aivm-icon">🔌</span>
+        <div class="aivm-info">
+          <div class="aivm-title">Rangkaian Analyzer</div>
+          <div class="aivm-desc">Foto skema/PCB, AI jelasin cara kerjanya</div>
+        </div>
+      </button>
+    </div>
+
+    <!-- upload zone -->
+    <div class="aiv-upload" id="aiv-upload"
+      ondragover="event.preventDefault();this.classList.add('drag')"
+      ondragleave="this.classList.remove('drag')"
+      ondrop="handleAIVDrop(event)">
+      <input type="file" accept="image/*" onchange="handleAIVFile(this.files[0])">
+      <div class="aiv-upload-icon">📷</div>
+      <div class="aiv-upload-txt">Tap untuk pilih foto</div>
+      <div class="aiv-upload-sub" id="aiv-upload-sub">atau drag & drop gambar di sini</div>
+    </div>
+
+    <!-- preview -->
+    <div class="aiv-preview" id="aiv-preview">
+      <img id="aiv-img" src="" alt="preview">
+      <button class="aiv-preview-del" onclick="resetAIV()">✕</button>
+    </div>
+
+    <!-- analyze button -->
+    <button class="aiv-analyze-btn" id="aiv-analyze-btn" onclick="analyzeImage()" disabled>
+      🔬 Analisis dengan AI
+    </button>
+
+    <!-- loading -->
+    <div class="aiv-loading" id="aiv-loading">
+      <div class="tbbl" style="padding:6px 10px"><div class="tdots"><span></span><span></span><span></span></div></div>
+      <span class="aiv-loading-txt" id="aiv-loading-txt">AI lagi baca gambar lu...</span>
+    </div>
+
+    <!-- result -->
+    <div class="aiv-result" id="aiv-result">
+      <div class="aiv-result-head">
+        <div class="aiv-result-ava">🔬</div>
+        <div class="aiv-result-name">AI Vision ⚡</div>
+      </div>
+      <div class="aiv-result-bubble" id="aiv-result-bubble"></div>
+      <button class="aiv-reset" onclick="resetAIVResult()">🔄 Analisis Gambar Lain</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ TIMELINE PAGE ═══════ -->
+<div class="page" id="page-timeline">
+  <div class="tl-wrap">
+    <div class="tl-header">
+      <h2>🕰️ Timeline Sejarah Elektro</h2>
+      <p>Perjalanan penemuan listrik & elektronika dari abad ke-17 hingga era digital</p>
+    </div>
+    <div class="tl-eras" id="tl-eras"></div>
+    <div class="tl-list" id="tl-list"></div>
+  </div>
+</div>
+
+<!-- Tour trigger -->
+<button class="tour-trigger" onclick="startTour()" title="Mulai Tour Fitur">🗺️</button>
+
+<!-- Tour overlay -->
+<div class="tour-overlay off" id="tour-overlay"></div>
+<div class="tour-spotlight" id="tour-spotlight" style="display:none"></div>
+<div class="tour-tip" id="tour-tip" style="display:none">
+  <div class="tour-tip-step" id="tour-step-lbl">LANGKAH 1 / 8</div>
+  <div class="tour-tip-title" id="tour-tip-title">Judul</div>
+  <div class="tour-tip-desc" id="tour-tip-desc">Deskripsi</div>
+  <div class="tour-tip-btns">
+    <button class="tour-tip-skip" onclick="endTour()">Lewati</button>
+    <button class="tour-tip-next" id="tour-next-btn" onclick="tourNext()">Selanjutnya →</button>
+    <div class="tour-tip-dots" id="tour-dots"></div>
+  </div>
+</div>
+
+<!-- ═══════ LOGIKA SIMULATOR PAGE ═══════ -->
+<div class="page" id="page-logika">
+  <div class="logika-wrap">
+    <div class="logika-header">
+      <h2>🕹️ Simulator Gerbang Logika</h2>
+      <p>Pelajari gerbang logika digital secara interaktif!</p>
+    </div>
+
+    <div class="logic-board">
+      <div class="logic-row">
+        <!-- Input Switches -->
+        <div class="logic-inputs">
+          <div class="l-input">
+            <div class="l-lbl">A</div>
+            <div class="l-switch" id="swA" onclick="toggleSwitch('A')"></div>
+          </div>
+          <div class="l-input" id="row-swB">
+            <div class="l-lbl">B</div>
+            <div class="l-switch" id="swB" onclick="toggleSwitch('B')"></div>
+          </div>
+        </div>
+
+        <!-- Gate Selector -->
+        <div class="logic-gate">
+          <div class="gate-label">GERBANG (GATE)</div>
+          <select class="gate-select" id="gateSelect" onchange="updateLogic()">
+            <option value="AND">AND</option>
+            <option value="OR">OR</option>
+            <option value="NOT">NOT</option>
+            <option value="NAND">NAND</option>
+            <option value="NOR">NOR</option>
+            <option value="XOR">XOR</option>
+            <option value="XNOR">XNOR</option>
+          </select>
+        </div>
+
+        <!-- Output LED -->
+        <div class="logic-out">
+          <div class="led-bulb" id="ledOut">
+            <span class="led-val" id="ledVal">0</span>
+          </div>
+          <div class="led-lbl">OUTPUT (Y)</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="logika-header" style="margin-top:32px;margin-bottom:16px;">
+      <h2 style="font-size:16px;">Tabel Kebenaran (Truth Table)</h2>
+      <p>Highlight menunjukkan posisi saklar saat ini</p>
+    </div>
+    <div class="tt-wrap">
+      <table class="tt-table">
+        <thead id="tt-head">
+          <tr><th>A</th><th>B</th><th>Y</th></tr>
+        </thead>
+        <tbody id="tt-body">
+          <!-- Filled by JS -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- jsPDF CDN for PDF export -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+
+<!-- Service Worker Registration -->
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/sw.js').then(reg => {
+        console.log('SW Registered:', reg.scope);
+      }).catch(err => {
+        console.log('SW Reg Auth Failed:', err);
+      });
+    });
+  }
+</script>
+</body>
+</html>
