@@ -57,7 +57,13 @@ async function callAI(payload, timeoutMs = TIMEOUT_TEXT_MS) {
         data.error?.message ||
         data.message ||
         (typeof data === 'string' ? data : JSON.stringify(data).slice(0, 300));
-      throw new Error(`HTTP ${response.status}: ${msg || response.statusText}`);
+      let line = msg || response.statusText;
+      if (response.status === 404) {
+        line =
+          (line ? line + ' ' : '') +
+          '— Buka aplikasi dari URL deployment Vercel (bukan file .html langsung). Lokal: pasang Vercel CLI lalu jalankan `vercel dev` di folder project.';
+      }
+      throw new Error(`HTTP ${response.status}: ${line}`);
     }
 
     if (data.error && !data.choices) {
