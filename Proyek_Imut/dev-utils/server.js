@@ -1,4 +1,5 @@
 const http = require('http');
+const https = require('https');
 const fs = require('fs');
 const path = require('path');
 
@@ -7,8 +8,8 @@ const ROOT = path.join(__dirname, '..');
 
 // Simple .env support
 if (fs.existsSync(path.join(ROOT, '.env'))) {
-    const env = fs.readFileSync(path.join(ROOT, '.env'), 'utf8');
-    env.split('\n').forEach(line => {
+    const envData = fs.readFileSync(path.join(ROOT, '.env'), 'utf8');
+    envData.split('\n').forEach(line => {
         const [key, ...val] = line.split('=');
         if (key && val) process.env[key.trim()] = val.join('=').trim();
     });
@@ -20,32 +21,44 @@ const MIME_TYPES = {
     '.svg': 'image/svg+xml', '.pdf': 'application/pdf'
 };
 
-http.createServer(async (req, res) => {
-    // 1. Handle AI API Proxy (Miras Vercel Function)
+const server = http.createServer((req, res) => {
+    // 1. Handle AI API Proxy (/api/chat)
     if (req.url === '/api/chat' && req.method === 'POST') {
         let body = '';
         req.on('data', chunk => body += chunk);
-        req.on('end', async () => {
-            try {
-                // Gunakan GROQ_API_KEY dari env variable lokal jika ada
-                const apiKey = process.env.GROQ_API_KEY; 
-                if(!apiKey) {
-                    res.writeHead(500, { 'Content-Type': 'application/json' });
-                    return res.end(JSON.stringify({ error: { message: "LOKAL: GROQ_API_KEY tidak ditemukan di environment. Jalankan dengan: '$env:GROQ_API_KEY=\"your_key\"; node server.js'" } }));
-                }
-
-                const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-                    method: "POST",
-                    headers: { "Authorization": `Bearer ${apiKey}`, "Content-Type": "application/json" },
-                    body: body
-                });
-                const data = await response.json();
-                res.writeHead(200, { 'Content-Type': 'application/json' });
-                res.end(JSON.stringify(data));
-            } catch (e) {
-                res.writeHead(500);
-                res.end(JSON.stringify({ error: { message: e.message } }));
+        req.on('end', () => {
+            const apiKey = process.env.GROQ_API_KEY;
+            if (!apiKey || apiKey.includes('masukkan_key')) {
+                res.writeHead(500, { 'Content-Type': 'application/json' });
+                return res.end(JSON.stringify({ error: { message: "LOKAL: API Key belum diisi di file .env!" } }));
             }
+
+            const options = {
+                hostname: 'api.groq.com',
+                path: '/openai/v1/chat/completions',
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${apiKey}`,
+                    'Content-Type': 'application/json'
+                }
+            };
+
+            const proxyReq = https.request(options, (proxyRes) => {
+                let proxyData = '';
+                proxyRes.on('data', chunk => proxyData += chunk);
+                proxyRes.on('end', () => {
+                    res.writeHead(proxyRes.statusCode, { 'Content-Type': 'application/json' });
+                    res.end(proxyData);
+                });
+            });
+
+            proxyReq.on('error', (e) => {
+                res.writeHead(500, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ error: { message: "Proxy Error: " + e.message } }));
+            });
+
+            proxyReq.write(body);
+            proxyReq.end();
         });
         return;
     }
@@ -67,7 +80,10 @@ http.createServer(async (req, res) => {
         }
     });
 
-}).listen(PORT);
+});
 
-console.log(`Server running at http://localhost:${PORT}/`);
-console.log('Project root:', ROOT);
+server.listen(PORT, () => {
+    console.log(`\x1b[32m[ElektroDict] Server jalan di http://localhost:${PORT}/\x1b[0m`);
+    console.log(`[Info] Root Folder: ${ROOT}`);
+    console.log(`[Info] API Key: ${process.env.GROQ_API_KEY ? 'Terdeteksi' : 'BUM TERDETEKSI'}`);
+});
