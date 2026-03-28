@@ -538,32 +538,108 @@ function getScoreText() {
 }
 
 // ═══════════════════════════════════════════════════════════
-// 9. WINDOW ONLOAD
+// 9. SPLASH SCREEN & APP BOOT
 // ═══════════════════════════════════════════════════════════
 
-window.onload = () => {
-  initTheme();
-  document.getElementById('totalCount').textContent = KAMUS.length;
-  renderChips();
-  renderGrid(KAMUS);
-  
-  // Init Modules
-  ElektroChat.init();
-  ElektroQuiz.init();
-  ElektroCalc.init();
-  ElektroResistor.init();
-  
-  initSkema();
-  initTimeline();
-  initOnboarding();
-  updateLogic();
-  
-  if (localStorage.getItem('ed_tooltip_hidden')) {
-    const tip = document.getElementById('chatTooltip');
-    if (tip) tip.classList.add('hide');
+const SPLASH_MIN_DISPLAY_MS = 720;
+const SPLASH_FORCE_DISMISS_MS = 4800;
+let splashForceTimer = null;
+
+/**
+ * Sembunyikan splash — idempotent; tidak akan diblokir oleh error sebelumnya.
+ */
+function dismissSplashScreen() {
+  if (window.__edSplashDismissed) return;
+  window.__edSplashDismissed = true;
+  if (splashForceTimer !== null) {
+    clearTimeout(splashForceTimer);
+    splashForceTimer = null;
   }
-  
-  requestAnimationFrame(() => requestAnimationFrame(() => {
-    document.getElementById('page-kamus').classList.add('visible');
-  }));
-};
+
+  const splash = document.getElementById('splash-screen');
+  if (splash) {
+    splash.classList.add('fade-out');
+    setTimeout(() => {
+      try { splash.remove(); } catch (e) {}
+    }, 920);
+  }
+
+  const page = document.getElementById('page-kamus');
+  if (page) {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        try { page.classList.add('visible'); } catch (e) {}
+      });
+    });
+  }
+}
+
+function safeInit(label, fn) {
+  try {
+    if (typeof fn === 'function') fn();
+  } catch (err) {
+    console.error('[ElektroDict init]', label, err);
+  }
+}
+
+function startSplashFallbackTimer() {
+  splashForceTimer = setTimeout(() => {
+    console.warn('[ElektroDict] Splash fallback timeout — masuk aplikasi');
+    dismissSplashScreen();
+  }, SPLASH_FORCE_DISMISS_MS);
+}
+
+function runAppInitialization() {
+  const t0 = typeof performance !== 'undefined' ? performance.now() : Date.now();
+
+  safeInit('theme', initTheme);
+  safeInit('totalCount', () => {
+    const el = document.getElementById('totalCount');
+    if (el && typeof KAMUS !== 'undefined' && KAMUS.length !== undefined) {
+      el.textContent = KAMUS.length;
+    }
+  });
+  safeInit('chips', () => renderChips());
+  safeInit('grid', () => renderGrid(KAMUS));
+  safeInit('ElektroChat', () => { if (window.ElektroChat) ElektroChat.init(); });
+  safeInit('ElektroQuiz', () => { if (window.ElektroQuiz) ElektroQuiz.init(); });
+  safeInit('ElektroCalc', () => { if (window.ElektroCalc) ElektroCalc.init(); });
+  safeInit('ElektroResistor', () => { if (window.ElektroResistor) ElektroResistor.init(); });
+  safeInit('skema', initSkema);
+  safeInit('timeline', initTimeline);
+  safeInit('onboarding', initOnboarding);
+  safeInit('logic', updateLogic);
+
+  safeInit('chatTooltip', () => {
+    try {
+      if (localStorage.getItem('ed_tooltip_hidden')) {
+        const tip = document.getElementById('chatTooltip');
+        if (tip) tip.classList.add('hide');
+      }
+    } catch (e) {}
+  });
+
+  const elapsed = (typeof performance !== 'undefined' ? performance.now() : Date.now()) - t0;
+  const wait = Math.max(0, SPLASH_MIN_DISPLAY_MS - elapsed);
+  setTimeout(() => dismissSplashScreen(), wait);
+}
+
+function bootstrapApp() {
+  startSplashFallbackTimer();
+  try {
+    runAppInitialization();
+  } catch (err) {
+    console.error('[ElektroDict] Boot error', err);
+    dismissSplashScreen();
+  }
+}
+
+// Boot sesegera DOM siap — tidak menunggu window 'load' (gambar/font lambat tidak boleh mengunci splash).
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', bootstrapApp, { once: true });
+} else {
+  bootstrapApp();
+}
+
+// Jika event load baru selesai belakangan, pastikan splash tidak tertinggal (idempotent).
+window.addEventListener('load', () => dismissSplashScreen());
