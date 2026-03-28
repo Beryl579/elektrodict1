@@ -5,22 +5,35 @@
 const API_MODEL = "llama-3.3-70b-versatile";
 const VERCEL_URL = "/api/chat";
 
+/** 
+ * ElektroDict Unified API Wrapper 
+ * Menggunakan window.ElektroAPI dari /js/api.js 
+ */
 async function callAI(payload) {
-  try {
-    const r = await fetch(VERCEL_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-    
-    if (r.status === 404) {
-      throw new Error("Vercel Function tidak ditemukan. Pastikan kamu men-deploy folder yang mengandung direktori /api/");
+  if (!window.ElektroAPI) {
+    console.warn("[ElektroDict] ElektroAPI not loaded! Falling back to raw fetch.");
+    try {
+      const r = await fetch("/api/chat", {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      return await r.json();
+    } catch(e) {
+      return { error: { message: "Gagal terhubung ke API. Cek koneksi atau status deploy." } };
     }
-    
-    return await r.json();
-  } catch(e) {
-    console.error('[ElektroDict] Serverless Error:', e);
-    return { error: { message: "Gagal terhubung ke Vercel Serverless Backend. Cek koneksi atau status deploy." } };
+  }
+
+  try {
+    // Gunakan fungsi chat dari API layer (sudah ada timeout & error handling)
+    return await window.ElektroAPI.chat(payload.messages, {
+      model: payload.model,
+      temperature: payload.temperature,
+      max_tokens: payload.max_tokens
+    });
+  } catch (e) {
+    console.error("[ElektroDict] API Error:", e);
+    return { error: { message: e.message || "Gagal terhubung ke AI." } };
   }
 }
 const SYS = `Lo adalah ElektroBot — asisten AI teknik elektro yang gaul, asik, dan relate sama mahasiswa. Gaya ngomong lo santai kayak temen sendiri, pake bahasa sehari-hari (lu/gua), tapi tetep akurat secara teknis.
