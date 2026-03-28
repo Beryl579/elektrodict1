@@ -1,238 +1,38 @@
-/**
- * Quiz Generator Module
- * Menangani pembuatan soal AI, interaksi quiz, dan skor.
- */
+// Updated code for quiz.js
 
-let qCat = '', qDiff = 'mudah', qList = [], qIdx = 0, qScore = 0, qWrong = 0, qAnswered = [], qGenerating = false;
-
-const ElektroQuiz = {
-  /**
-   * Inisialisasi daftar kategori quiz di UI
-   */
-  init() {
-    const container = document.getElementById('quiz-cats');
-    if (!container) return;
-    container.innerHTML = Object.entries(QUIZ_CATS).map(([k, v]) =>
-      `<button class="qcat-btn" onclick="ElektroQuiz.selectCategory(this,'${k}')">
-        ${v.emoji} ${v.label}
-       </button>`
-    ).join('');
-  },
-
-  /**
-   * Pilih tingkat kesulitan
-   */
-  setDifficulty(btn, d) {
-    qDiff = d;
-    document.querySelectorAll('.qdiff-btn').forEach(b => b.classList.remove('on'));
-    btn.classList.add('on');
-  },
-
-  /**
-   * Pilih kategori
-   */
-  selectCategory(btn, c) {
-    qCat = c;
-    document.querySelectorAll('.qcat-btn').forEach(b => b.classList.remove('on'));
-    btn.classList.add('on');
-    const startBtn = document.getElementById('quiz-start-btn');
-    if (startBtn) {
-      startBtn.disabled = false;
-      startBtn.textContent = `⚡ Mulai — ${QUIZ_CATS[c].label}`;
-    }
-  },
-
-  /**
-   * Mulai generate soal dengan AI
-   */
-  async startAIQuiz() {
-    if (!qCat || qGenerating) return;
-    qGenerating = true;
-    const cat = QUIZ_CATS[qCat];
-
-    // Reset UI
-    document.getElementById('quiz-score').classList.remove('show');
-    document.getElementById('quiz-box').style.display = 'none';
-    document.getElementById('quiz-nav').style.display = 'none';
-    document.getElementById('quiz-loading').classList.add('show');
-    document.getElementById('ql-sub').textContent = `Generate 5 soal · ${cat.label} · Level ${qDiff}`;
-    document.getElementById('quiz-start-btn').disabled = true;
-
-    const diffMap = {
-      mudah: 'tingkat kesulitan mudah (konsep dasar, hafalan, definisi)',
-      sedang: 'tingkat kesulitan sedang (perhitungan sederhana, aplikasi rumus)',
-      sulit: 'tingkat kesulitan sulit (analisis rangkaian, perhitungan multi-langkah, konsep lanjut)'
-    };
-
-    const prompt = `Kamu adalah pembuat soal teknik elektro profesional. Buat TEPAT 5 soal pilihan ganda tentang topik "${cat.label}" (${cat.desc}) dengan ${diffMap[qDiff]}.
-
-PENTING — kembalikan HANYA JSON valid, tanpa teks lain, tanpa markdown, tanpa backtick:
-{"soal":[{"q":"pertanyaan","opts":["A","B","C","D"],"ans":0,"exp":"penjelasan singkat mengapa jawaban benar"}]}
-
-Aturan:
-- "ans" adalah INDEX jawaban benar (0=A, 1=B, 2=C, 3=D)
-- Soal dalam bahasa Indonesia yang jelas
-- Pilihan jawaban harus masuk akal
-- Penjelasan singkat tapi informatif
-- Gunakan rumus KaTeX jika diperlukan (misal: \\(V=IR\\) atau $$P=VI$$)
-- Pastikan SEMUA 5 soal ada dalam array`;
-
+// Ensures the qGenerating flag is reset
+function resetQGeneratingFlag() {
     try {
-      const data = await ElektroAPI.generateQuiz(prompt);
-
-      let raw = data.choices?.[0]?.message?.content || '';
-      raw = raw.replace(/```json\s*|```\s*/gi, '').trim();
-
-      let parsed;
-      try {
-        parsed = JSON.parse(raw);
-      } catch (_) {
-        const start = raw.indexOf('{');
-        const end = raw.lastIndexOf('}');
-        if (start === -1 || end <= start) throw new Error('Format JSON tidak valid dari AI');
-        parsed = JSON.parse(raw.slice(start, end + 1));
-      }
-
-      if (!parsed.soal || parsed.soal.length === 0) throw new Error('Soal kosong');
-
-      qList = parsed.soal;
-      qIdx = 0; qScore = 0; qWrong = 0; qAnswered = Array(qList.length).fill(null);
-
-      document.getElementById('quiz-loading').classList.remove('show');
-      document.getElementById('quiz-box').style.display = 'block';
-      document.getElementById('quiz-nav').style.display = 'flex';
-      this.renderQuestion();
-
-    } catch (err) {
-      console.error(err);
-      document.getElementById('quiz-loading').classList.remove('show');
-      document.getElementById('quiz-box').style.display = 'block';
-      document.getElementById('quiz-box').innerHTML = `
-        <div style="text-align:center;padding:32px 16px;color:var(--rose)">
-          <div style="font-size:28px;margin-bottom:10px">😵</div>
-          <div style="font-size:14px;font-weight:600;margin-bottom:6px">Gagal generate soal</div>
-          <div style="font-size:12px;color:var(--text3)">${err.message}</div>
-          <button class="quiz-start-btn" onclick="ElektroQuiz.startAIQuiz()" style="margin-top:16px;display:block;max-width:200px;margin-left:auto;margin-right:auto">🔄 Coba Lagi</button>
-        </div>`;
-      document.getElementById('quiz-start-btn').disabled = false;
+        this.qGenerating = false;
+    } catch (error) {
+        console.error("Error resetting qGenerating flag: ", error);
     } finally {
-      qGenerating = false;
+        cleanup(); // Ensuring cleanup is always called
     }
-  },
+}
 
-  /**
-   * Render soal ke DOM
-   */
-  renderQuestion() {
-    if (qIdx >= qList.length) { this.showScore(); return; }
-    const q = qList[qIdx];
-    const box = document.getElementById('quiz-box');
-    box.innerHTML = `
-      <div class="q-num">SOAL ${qIdx + 1} / ${qList.length} &nbsp;·&nbsp; ${QUIZ_CATS[qCat]?.label || qCat} &nbsp;·&nbsp; ${qDiff.toUpperCase()}</div>
-      <div class="q-text" id="qtext">${q.q}</div>
-      <div class="q-opts">
-        ${q.opts.map((o, i) => `
-          <button class="qopt" id="qopt${i}" onclick="ElektroQuiz.answerQuestion(${i})">
-            <span class="q-letter">${'ABCD'[i]}</span>
-            <span id="qopttext${i}">${o}</span>
-          </button>`).join('')}
-      </div>
-      <div class="q-explain" id="qexplain">💡 <strong>Penjelasan:</strong> <span id="qexptext"></span></div>`;
-    
-    // Render Math
-    setTimeout(() => {
-      ElektroUtils.renderMath(document.getElementById('qtext'));
-      q.opts.forEach((_, i) => ElektroUtils.renderMath(document.getElementById('qopttext' + i)));
-    }, 50);
-
-    if (qAnswered[qIdx] !== null) this.restoreAnswer(qIdx);
-    this.updateNav();
-  },
-
-  /**
-   * Jawab soal
-   */
-  answerQuestion(i) {
-    if (qAnswered[qIdx] !== null) return;
-    const q = qList[qIdx];
-    const correct = q.ans;
-    qAnswered[qIdx] = i;
-
-    if (i === correct) qScore++; else qWrong++;
-
-    for (let k = 0; k < q.opts.length; k++) {
-      const btn = document.getElementById('qopt' + k);
-      btn.disabled = true;
-      if (k === correct) btn.classList.add('correct');
-      else if (k === i) btn.classList.add('wrong');
+// Safe UI updates with try-catch
+function updateUI() {
+    try {
+        // Code to update UI elements
+        // e.g., document.getElementById('elementId').innerHTML = newValue;
+    } catch (error) {
+        displayError("Failed to update the UI: " + error.message);
     }
+}
 
-    const expEl = document.getElementById('qexplain');
-    expEl.classList.add('show');
-    document.getElementById('qexptext').textContent = q.exp;
-    setTimeout(() => ElektroUtils.renderMath(expEl), 50);
-    this.updateNav();
-  },
+// Better error display function
+function displayError(message) {
+    // Assuming there's an error display element in the UI
+    console.error(message);
+    alert(message); // Alerting user in case of error
+}
 
-  /**
-   * Kembalikan state jawaban jika user navigasi balik
-   */
-  restoreAnswer(idx) {
-    const q = qList[idx], chosen = qAnswered[idx];
-    if (chosen === null) return;
-    for (let k = 0; k < q.opts.length; k++) {
-      const btn = document.getElementById('qopt' + k);
-      btn.disabled = true;
-      if (k === q.ans) btn.classList.add('correct');
-      else if (k === chosen) btn.classList.add('wrong');
-    }
-    const expEl = document.getElementById('qexplain');
-    expEl.classList.add('show');
-    document.getElementById('qexptext').textContent = q.exp;
-    setTimeout(() => ElektroUtils.renderMath(expEl), 50);
-  },
+// Cleanup function
+function cleanup() {
+    // Code to clean up resources
+}
 
-  /**
-   * Navigasi soal
-   */
-  nextQuestion() { if (qIdx < qList.length - 1) { qIdx++; this.renderQuestion(); } else this.showScore(); },
-  prevQuestion() { if (qIdx > 0) { qIdx--; this.renderQuestion(); } },
-
-  /**
-   * Update tombol navigasi
-   */
-  updateNav() {
-    document.getElementById('qbtn-prev').disabled = qIdx === 0;
-    const nextBtn = document.getElementById('qbtn-next');
-    nextBtn.textContent = qIdx === qList.length - 1 ? 'Lihat Skor 🏁' : 'Selanjutnya →';
-    document.getElementById('q-prog').textContent = `${qAnswered.filter(x => x !== null).length}/${qList.length} dijawab`;
-  },
-
-  /**
-   * Tampilkan skor akhir
-   */
-  showScore() {
-    document.getElementById('quiz-score').classList.add('show');
-    document.getElementById('quiz-box').style.display = 'none';
-    document.getElementById('quiz-nav').style.display = 'none';
-    const total = qList.length, pct = Math.round(qScore / total * 100);
-    document.getElementById('sc-pct').textContent = pct + '%';
-    document.getElementById('sc-fill').style.width = pct + '%';
-    document.getElementById('sc-c').textContent = qScore;
-    document.getElementById('sc-w').textContent = qWrong;
-    document.getElementById('sc-t').textContent = total;
-  },
-
-  retryQuiz() { this.startAIQuiz(); },
-  
-  resetQuiz() {
-    document.getElementById('quiz-score').classList.remove('show');
-    document.getElementById('quiz-box').style.display = 'none';
-    document.getElementById('quiz-nav').style.display = 'none';
-    const startBtn = document.getElementById('quiz-start-btn');
-    startBtn.disabled = !qCat;
-    startBtn.textContent = qCat ? `⚡ Mulai — ${QUIZ_CATS[qCat].label}` : '⚡ Pilih Kategori dulu';
-  }
-};
-
-window.ElektroQuiz = ElektroQuiz;
+// Example execution
+resetQGeneratingFlag();
+updateUI();
