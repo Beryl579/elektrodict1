@@ -22,17 +22,31 @@ const MIME_TYPES = {
 };
 
 const server = http.createServer((req, res) => {
-    // 1. Handle AI API Proxy (/api/chat)
+    // 1. Handle CORS Preflight & Base Headers
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
+    if (req.method === 'OPTIONS') {
+        res.writeHead(204);
+        return res.end();
+    }
+
+    console.log(`[Request] ${req.method} ${req.url}`);
+
+    // 2. Handle AI API Proxy (/api/chat)
     if (req.url === '/api/chat' && req.method === 'POST') {
         let body = '';
         req.on('data', chunk => body += chunk);
         req.on('end', () => {
             const apiKey = process.env.GROQ_API_KEY;
             if (!apiKey || apiKey.includes('masukkan_key')) {
+                console.error('[Error] API Key belum diisi di .env!');
                 res.writeHead(500, { 'Content-Type': 'application/json' });
                 return res.end(JSON.stringify({ error: { message: "LOKAL: API Key belum diisi di file .env!" } }));
             }
 
+            console.log('[AI] Forwarding request to Groq...');
             const options = {
                 hostname: 'api.groq.com',
                 path: '/openai/v1/chat/completions',
@@ -47,12 +61,14 @@ const server = http.createServer((req, res) => {
                 let proxyData = '';
                 proxyRes.on('data', chunk => proxyData += chunk);
                 proxyRes.on('end', () => {
+                    console.log(`[AI] Groq Response: ${proxyRes.statusCode}`);
                     res.writeHead(proxyRes.statusCode, { 'Content-Type': 'application/json' });
                     res.end(proxyData);
                 });
             });
 
             proxyReq.on('error', (e) => {
+                console.error('[AI] Proxy Error:', e.message);
                 res.writeHead(500, { 'Content-Type': 'application/json' });
                 res.end(JSON.stringify({ error: { message: "Proxy Error: " + e.message } }));
             });

@@ -13,14 +13,22 @@ async function callAI(payload) {
       body: JSON.stringify(payload)
     });
     
-    if (r.status === 404) {
-      throw new Error("Vercel Function tidak ditemukan. Pastikan kamu men-deploy folder yang mengandung direktori /api/");
+    // Jika response tidak ok (4xx atau 5xx)
+    if (!r.ok) {
+      let errorDetail = "";
+      try {
+        const errJson = await r.json();
+        errorDetail = errJson.error?.message || JSON.stringify(errJson);
+      } catch(e) {
+        errorDetail = await r.text();
+      }
+      throw new Error(`HTTP ${r.status}: ${errorDetail || r.statusText}`);
     }
     
     return await r.json();
   } catch(e) {
     console.error('[ElektroDict] Serverless Error:', e);
-    return { error: { message: "Gagal terhubung ke Vercel Serverless Backend. Cek koneksi atau status deploy." } };
+    return { error: { message: `Gagal terhubung ke AI: ${e.message}` } };
   }
 }
 const SYS = `Lo adalah ElektroBot — asisten AI teknik elektro yang gaul, asik, dan relate sama mahasiswa. Gaya ngomong lo santai kayak temen sendiri, pake bahasa sehari-hari (lu/gua), tapi tetep akurat secara teknis.
