@@ -2,8 +2,9 @@
 // CONFIG — PRODUCTION SECURE MODE (Vercel Functions)
 // ═══════════════════════════════════════════════════════════
 
-const API_MODEL = "llama-3.3-70b-versatile";
-const VERCEL_URL = "/api/chat";
+// Konstanta diambil dari ElektroAPI di js/api.js jika tersedia
+const API_MODEL = (window.ElektroAPI && window.ElektroAPI.MODEL_TEXT) || "llama-3.3-70b-versatile";
+const VERCEL_URL = (window.ElektroAPI && window.ElektroAPI.VERCEL_URL) || "/api/chat";
 
 /** 
  * ElektroDict Unified API Wrapper 
