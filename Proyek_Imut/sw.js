@@ -1,4 +1,4 @@
-const CACHE_NAME = 'elektrodict-v2';
+const CACHE_NAME = 'elektrodict-v3';
 const ASSETS = [
   '/',
   '/index.html',
@@ -6,9 +6,9 @@ const ASSETS = [
   '/js/data.js',
   '/js/app.js',
   '/manifest.json',
-  'https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css',
+  'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css',
   'https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js',
-  'https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js',
+  'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js',
   'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js'
 ];
 

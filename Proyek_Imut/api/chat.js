@@ -28,7 +28,7 @@ export default async function handler(req) {
   // Ambil API Key dari Vercel Environment Variables
   const GROQ_API_KEY = process.env.GROQ_API_KEY;
   if (!GROQ_API_KEY) {
-    return new Response(JSON.stringify({ error: { message: "API Key belum dimasukkan di Vercel Dashboard!" } }), {
+    return new Response(JSON.stringify({ error: { message: "API Key belum dimasukkan!" } }), {
       status: 500,
       headers: { "Content-Type": "application/json" }
     });
