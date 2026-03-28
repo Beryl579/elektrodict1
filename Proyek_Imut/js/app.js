@@ -84,7 +84,7 @@ function initTheme() {
  */
 function rz(el) {
   el.style.height = 'auto';
-  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+  el.style.height = Math.min(el.scrollHeight, 90) + 'px';
 }
 
 /**
@@ -108,14 +108,19 @@ function clearChatHistory() {
   ElektroChat.clearHistory();
 }
 
+let mOpen = false;
+
 function qask(q) {
-  const v = window.innerWidth < 860 ? 'M' : 'D';
-  if (v === 'M' && typeof openM === 'function') openM();
-  const inp = document.getElementById('inp' + v);
-  if (inp) {
-    inp.value = q;
-    send(v);
-  }
+  const mob = window.innerWidth < 860;
+  const v = mob ? 'M' : 'D';
+  if (mob && !mOpen) openM();
+  setTimeout(() => {
+    const inp = document.getElementById('inp' + v);
+    if (inp) {
+      inp.value = q;
+      send(v);
+    }
+  }, mob ? 300 : 0);
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -479,15 +484,24 @@ function toggleMic(v) {
 // 8. MISC (PWA, Skema, Tour, PDF)
 // ═══════════════════════════════════════════════════════════
 
-function openM() { 
-  document.getElementById('chatM').classList.add('on'); 
+function openM() {
+  const panel = document.getElementById('chatM');
+  if (panel) panel.classList.add('open');
   document.getElementById('overlay').classList.add('on');
-  mOpen = true; 
+  const tip = document.getElementById('chatTooltip');
+  if (tip) {
+    tip.classList.add('hide');
+    localStorage.setItem('ed_tooltip_hidden', '1');
+  }
+  mOpen = true;
+  setTimeout(() => document.getElementById('inpM')?.focus(), 300);
 }
-function closeM() { 
-  document.getElementById('chatM').classList.remove('on'); 
+
+function closeM() {
+  const panel = document.getElementById('chatM');
+  if (panel) panel.classList.remove('open');
   document.getElementById('overlay').classList.remove('on');
-  mOpen = false; 
+  mOpen = false;
 }
 
 // init skema, tour, pdf etc logic here... (abbreviated for size but same as before)
