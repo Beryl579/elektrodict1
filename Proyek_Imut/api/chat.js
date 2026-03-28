@@ -1,57 +1,43 @@
-export const runtime = 'edge';
+// api/chat.js - Standard Node.js Serverless Function (Vercel)
+// Menggunakan Standard Runtime (bukan Edge) untuk stabilitas lebih baik
 
-export default async function handler(req) {
-  // Ambil origin untuk validasi CORS (Vercel production & deployment domains)
-  const origin = req.headers.get("origin");
-  
-  // Izinkan origin jika dari .vercel.app atau localhost (dev)
+export default async function handler(req, res) {
+  // CORS Headers
+  const origin = req.headers.origin;
   const isAllowed = !origin || 
                     origin.endsWith(".vercel.app") || 
                     origin.includes("localhost") || 
                     origin.includes("127.0.0.1");
-
-  const allowedOrigin = isAllowed ? origin : "https://elektrodict.vercel.app";
   
-  // Handle CORS preflight
+  const allowedOrigin = isAllowed ? origin : "https://elektrodict.vercel.app";
+
+  // Handle CORS Preflight
+  res.setHeader('Access-Control-Allow-Origin', allowedOrigin || "*");
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Max-Age', '86400');
+
   if (req.method === "OPTIONS") {
-    return new Response(null, {
-      status: 200,
-      headers: {
-        "Access-Control-Allow-Origin": allowedOrigin || "*",
-        "Access-Control-Allow-Headers": "Content-Type, Authorization",
-        "Access-Control-Allow-Methods": "POST, OPTIONS",
-        "Access-Control-Max-Age": "86400",
-      },
-    });
+    return res.status(200).end();
   }
 
-  // Hanya terima method POST
   if (req.method !== "POST") {
-    return new Response(JSON.stringify({ error: { message: `Method ${req.method} Not Allowed` } }), {
-      status: 405,
-      headers: { "Content-Type": "application/json" }
-    });
+    return res.status(405).json({ error: { message: `Method ${req.method} Not Allowed` } });
   }
 
-  // Ambil API Key dari Vercel Environment Variables
   const GROQ_API_KEY = process.env.GROQ_API_KEY;
   if (!GROQ_API_KEY) {
-    console.error("[Backend] Error: GROQ_API_KEY is missing.");
-    return new Response(JSON.stringify({ error: { message: "API Key belum dikonfigurasi di Vercel!" } }), {
-      status: 500,
-      headers: { "Content-Type": "application/json" }
-    });
+    console.error("[Backend] API Key is missing in process.env");
+    return res.status(500).json({ error: { message: "API Key belum dikonfigurasi di Vercel!" } });
   }
 
   try {
-    const payload = await req.json();
+    const payload = req.body;
     
-    // Basic validation
-    if (!payload.messages || !Array.isArray(payload.messages)) {
-      throw new Error("Payload 'messages' tidak valid.");
+    if (!payload || !payload.messages) {
+      return res.status(400).json({ error: { message: "Payload tidak valid." } });
     }
 
-    // Proxy request ke Groq
     const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -66,26 +52,14 @@ export default async function handler(req) {
 
     if (!response.ok) {
       const errorData = await response.json();
-      return new Response(JSON.stringify(errorData), {
-        status: response.status,
-        headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": allowedOrigin || "*" }
-      });
+      return res.status(response.status).json(errorData);
     }
 
     const data = await response.json();
-
-    return new Response(JSON.stringify(data), {
-      status: 200,
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": allowedOrigin || "*"
-      }
-    });
+    return res.status(200).json(data);
 
   } catch (error) {
-    return new Response(JSON.stringify({ error: { message: error.message || "Internal Server Error" } }), {
-      status: 500,
-      headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": allowedOrigin || "*" }
-    });
+    console.error("[Backend] Runtime Error:", error);
+    return res.status(500).json({ error: { message: error.message || "Internal Server Error" } });
   }
 }
