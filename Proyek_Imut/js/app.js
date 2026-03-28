@@ -109,12 +109,15 @@ function clearChatHistory() {
 }
 
 let mOpen = false;
+let qaskTimer = null;
 
 function qask(q) {
   const mob = window.innerWidth < 860;
   const v = mob ? 'M' : 'D';
   if (mob && !mOpen) openM();
-  setTimeout(() => {
+  if (qaskTimer != null) clearTimeout(qaskTimer);
+  qaskTimer = setTimeout(() => {
+    qaskTimer = null;
     const inp = document.getElementById('inp' + v);
     if (inp) {
       inp.value = q;

@@ -79,13 +79,20 @@ Aturan:
 
     try {
       const data = await ElektroAPI.generateQuiz(prompt);
-      
+
       let raw = data.choices?.[0]?.message?.content || '';
-      raw = raw.replace(/```json|```/g, '').trim();
-      const match = raw.match(/\{[\s\S]*\}/);
-      if (!match) throw new Error('Format JSON tidak valid dari AI');
-      
-      const parsed = JSON.parse(match[0]);
+      raw = raw.replace(/```json\s*|```\s*/gi, '').trim();
+
+      let parsed;
+      try {
+        parsed = JSON.parse(raw);
+      } catch (_) {
+        const start = raw.indexOf('{');
+        const end = raw.lastIndexOf('}');
+        if (start === -1 || end <= start) throw new Error('Format JSON tidak valid dari AI');
+        parsed = JSON.parse(raw.slice(start, end + 1));
+      }
+
       if (!parsed.soal || parsed.soal.length === 0) throw new Error('Soal kosong');
 
       qList = parsed.soal;

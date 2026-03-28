@@ -1,11 +1,57 @@
 /**
  * AI Vision Module
- * Menangani upload foto, preview, dan analisis gambar menggunakan Groq Vision.
+ * Groq: meta-llama/llama-4-scout-17b-16e-instruct — batas base64 ~4MB; resize otomatis.
  */
 
 let aivMode = 'soal';
 let aivImageB64 = null;
 let aivImageType = 'image/jpeg';
+
+const MAX_VISION_EDGE_PX = 1280;
+const MAX_BASE64_CHARS = 2_800_000;
+
+/**
+ * Kecilkan gambar agar lolos batas Groq / proxy (Canvas).
+ */
+function shrinkImageForApi(base64, mimeType) {
+  return new Promise((resolve) => {
+    const url = `data:${mimeType};base64,${base64}`;
+    const img = new Image();
+    img.onload = () => {
+      try {
+        let w = img.naturalWidth || img.width;
+        let h = img.naturalHeight || img.height;
+        if (w < 1 || h < 1) {
+          resolve(base64);
+          return;
+        }
+        if (w > MAX_VISION_EDGE_PX || h > MAX_VISION_EDGE_PX) {
+          if (w >= h) {
+            h = Math.round((h * MAX_VISION_EDGE_PX) / w);
+            w = MAX_VISION_EDGE_PX;
+          } else {
+            w = Math.round((w * MAX_VISION_EDGE_PX) / h);
+            h = MAX_VISION_EDGE_PX;
+          }
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, w, h);
+        const outMime = mimeType === 'image/png' ? 'image/jpeg' : mimeType;
+        const dataUrl = canvas.toDataURL(outMime, 0.88);
+        const parts = dataUrl.split(',');
+        resolve(parts[1] || base64);
+      } catch (e) {
+        console.warn('[Vision] shrink fallback', e);
+        resolve(base64);
+      }
+    };
+    img.onerror = () => resolve(base64);
+    img.src = url;
+  });
+}
 
 const AIV_PROMPTS = {
   soal: `Lo adalah tutor teknik elektro yang gaul dan sabar. User kirim foto soal ujian/latihan elektro.
@@ -90,8 +136,16 @@ const ElektroVision = {
     document.getElementById('aiv-result').classList.remove('show');
 
     try {
+      let b64 = aivImageB64;
+      let mime = aivImageType;
+      if (b64.length > MAX_BASE64_CHARS) {
+        document.getElementById('aiv-loading-txt').textContent = 'Ngecilin gambar dulu biar lancar... 📐';
+        b64 = await shrinkImageForApi(b64, mime);
+        if (mime === 'image/png') mime = 'image/jpeg';
+      }
+
       const prompt = AIV_PROMPTS[aivMode];
-      const data = await ElektroAPI.analyzeImage(aivImageB64, aivImageType, prompt);
+      const data = await ElektroAPI.analyzeImage(b64, mime, prompt);
       
       const reply = data.choices?.[0]?.message?.content || "(Waduh, AI-nya lagi gak bisa jawab nih)";
       const bubble = document.getElementById('aiv-result-bubble');

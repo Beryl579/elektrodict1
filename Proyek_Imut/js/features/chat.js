@@ -174,15 +174,27 @@ function clearChatHistory() {
   botMsg('M', resetText);
 }
 
+function releaseChatBusy(sendD, sendM, focusInp) {
+  busy = false;
+  [sendD, sendM].forEach(b => { if (b) b.disabled = false; });
+  if (focusInp) {
+    try { focusInp.focus(); } catch (e) {}
+  }
+}
+
 async function send(v) {
   const inp = document.getElementById('inp' + v);
   if (!inp) return;
   const txt = inp.value.trim();
-  if (!txt || busy) return;
+  if (!txt) return;
+  if (busy) {
+    return;
+  }
 
-  busy = true;
   const sendD = document.getElementById('sendD');
   const sendM = document.getElementById('sendM');
+
+  busy = true;
   [sendD, sendM].forEach(b => { if (b) b.disabled = true; });
   inp.value = '';
   inp.style.height = '38px';
@@ -205,17 +217,19 @@ async function send(v) {
     botMsg('M', rep);
     pushHist({ role: 'assistant', content: rep });
 
-    if (typeof speak === 'function') speak(rep);
+    try {
+      if (typeof speak === 'function') speak(rep);
+    } catch (speakErr) {
+      console.warn('[ElektroChat] TTS', speakErr);
+    }
   } catch (err) {
     hideDots('D');
     hideDots('M');
-    const errMsg = '⚠ Error: ' + err.message;
+    const errMsg = '⚠ Error: ' + (err && err.message ? err.message : String(err));
     botMsg('D', errMsg, true);
     botMsg('M', errMsg, true);
   } finally {
-    busy = false;
-    [sendD, sendM].forEach(b => { if (b) b.disabled = false; });
-    inp.focus();
+    releaseChatBusy(sendD, sendM, inp);
   }
 }
 

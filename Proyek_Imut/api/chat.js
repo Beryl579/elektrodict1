@@ -1,61 +1,100 @@
 export const runtime = 'edge';
 
-export default async function handler(req) {
-  // LOGGING: Info request awal
-  console.log(`[API] Memberima ${req.method} request ke /api/chat`);
+const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
+/** Edge fetch ke Groq — harus lebih besar dari timeout klien untuk vision */
+const UPSTREAM_TIMEOUT_MS = 115000;
 
-  // CORS Headers - Mengizinkan semua origin untuk debugging Vercel
+export default async function handler(req) {
   const headers = {
-    "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Headers": "Content-Type, Authorization",
-    "Access-Control-Allow-Methods": "POST, OPTIONS",
-    "Content-Type": "application/json"
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+    'Content-Type': 'application/json'
   };
 
-  // Handle CORS preflight
-  if (req.method === "OPTIONS") {
+  if (req.method === 'OPTIONS') {
     return new Response(null, { status: 200, headers });
   }
 
-  // Hanya terima method POST
-  if (req.method !== "POST") {
-    console.warn(`[API] Method ${req.method} tidak diizinkan`);
-    return new Response(JSON.stringify({ error: { message: "Method Not Allowed" } }), { status: 405, headers });
+  if (req.method !== 'POST') {
+    return new Response(JSON.stringify({ error: { message: 'Method Not Allowed' } }), {
+      status: 405,
+      headers
+    });
   }
 
-  // Ambil API Key dari Vercel Environment Variables
   const GROQ_API_KEY = process.env.GROQ_API_KEY;
+
   if (!GROQ_API_KEY) {
-    console.error(`[API] Error: GROQ_API_KEY tidak ditemukan di Environment Variables!`);
-    return new Response(JSON.stringify({ error: { message: "Konfigurasi server error: API Key tidak ditemukan di Vercel." } }), { status: 500, headers });
+    console.error('[API] GROQ_API_KEY tidak ada di Environment Variables');
+    return new Response(
+      JSON.stringify({
+        error: {
+          message:
+            'Konfigurasi server: set GROQ_API_KEY di Vercel → Project → Settings → Environment Variables (Production & Preview), lalu redeploy.'
+        }
+      }),
+      { status: 500, headers }
+    );
   }
+
+  let payload;
+  try {
+    payload = await req.json();
+  } catch (e) {
+    return new Response(JSON.stringify({ error: { message: 'Invalid JSON body' } }), {
+      status: 400,
+      headers
+    });
+  }
+
+  const model = payload?.model || '(missing)';
+  console.log(`[API] POST /api/chat → Groq model=${model}`);
+
+  const controller = new AbortController();
+  const kill = setTimeout(() => controller.abort(), UPSTREAM_TIMEOUT_MS);
 
   try {
-    const payload = await req.json();
-    console.log(`[API] Payload diterima, meneruskan ke Groq...`);
-    
-    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-      method: "POST",
+    const response = await fetch(GROQ_URL, {
+      method: 'POST',
       headers: {
-        "Authorization": `Bearer ${GROQ_API_KEY}`,
-        "Content-Type": "application/json"
+        Authorization: `Bearer ${GROQ_API_KEY}`,
+        'Content-Type': 'application/json'
       },
-      body: JSON.stringify(payload)
+      body: JSON.stringify(payload),
+      signal: controller.signal
     });
 
-    console.log(`[API] Response dari Groq: ${response.status} ${response.statusText}`);
+    const text = await response.text();
+    console.log(`[API] Groq ${response.status} len=${text?.length ?? 0}`);
 
     if (!response.ok) {
-      const errorText = await response.text();
-      console.error(`[API] Groq Error Details: ${errorText}`);
-      return new Response(errorText, { status: response.status, headers });
+      let msg = text?.slice(0, 500) || response.statusText;
+      try {
+        const j = JSON.parse(text);
+        msg = j.error?.message || j.message || msg;
+      } catch (_) {}
+      return new Response(JSON.stringify({ error: { message: msg } }), {
+        status: response.status,
+        headers
+      });
     }
 
-    const data = await response.json();
-    return new Response(JSON.stringify(data), { status: 200, headers });
-
+    return new Response(text, { status: 200, headers });
   } catch (error) {
-    console.error(`[API] Runtime Error: ${error.message}`);
-    return new Response(JSON.stringify({ error: { message: error.message } }), { status: 500, headers });
+    const isAbort = error.name === 'AbortError';
+    console.error(`[API] ${isAbort ? 'Timeout' : 'Error'}:`, error.message);
+    return new Response(
+      JSON.stringify({
+        error: {
+          message: isAbort
+            ? 'Groq API timeout di server. Coba gambar lebih kecil atau ulangi.'
+            : error.message
+        }
+      }),
+      { status: 504, headers }
+    );
+  } finally {
+    clearTimeout(kill);
   }
 }
