@@ -2530,21 +2530,33 @@ async function generateAIProject() {
   try {
     const data = await window.ElektroAPI.generateProject(idea);
     
-    // Try to parse the result. Sometimes AI adds markdown even if told not to.
-    let jsonStr = data.result;
-    if(jsonStr.includes('```')) {
-      jsonStr = jsonStr.replace(/```json|```/g, '').trim();
+    // 1. Retrieve raw content
+    let rawContent = data.result;
+
+    // 2. Strip markdown artifacts
+    rawContent = rawContent.replace(/```json/g, '').replace(/```/g, '').trim();
+
+    // 3. Sanitize unescaped control characters (newlines, tabs) within JSON string values
+    rawContent = rawContent.replace(/[\u0000-\u0019]+/g, function(match) {
+        return escape(match).replace(/%u/g, '\\u').replace(/%/g, '\\x');
+    });
+
+    try {
+        const prj = JSON.parse(rawContent);
+        
+        // Add dynamic ID and fix field names if AI slightly diverged
+        prj.id = 'ai-' + prj.title.toLowerCase().replace(/\s+/g, '-').slice(0, 20);
+        // Backward compatibility for the render logic
+        if (prj.wiring_table && !prj.wiring) prj.wiring = prj.wiring_table;
+        
+        currentAIProject = prj;
+        renderProjectDetail(prj);
+
+    } catch (parseError) {
+        console.error("JSON Parsing Error after sanitization:", parseError);
+        console.log("Raw Content that failed:", rawContent);
+        alert("Gagal memproses data proyek dari AI. Silakan coba lagi.");
     }
-    
-    const prj = JSON.parse(jsonStr);
-    
-    // Add dynamic ID and fix field names if AI slightly diverged
-    prj.id = 'ai-' + prj.title.toLowerCase().replace(/\s+/g, '-').slice(0, 20);
-    // Backward compatibility for the render logic
-    if (prj.wiring_table && !prj.wiring) prj.wiring = prj.wiring_table;
-    
-    currentAIProject = prj;
-    renderProjectDetail(prj);
 
   } catch (err) {
     console.error("Generate Error:", err);
