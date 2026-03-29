@@ -209,3 +209,172 @@ const TIMELINE = [
    desc:"AI generatif mulai merevolusi desain elektronika — dari generasi kode HDL otomatis, optimasi layout PCB, hingga debugging rangkaian. Engineer elektro kini berkolaborasi dengan AI.",
    impact:"Era baru AI-assisted engineering"},
 ];
+
+const PROJECTS = [
+  {
+    "id": "prj-001",
+    "title": "Blinking LED (Hello World)",
+    "description": "Proyek paling dasar untuk menguji papan Arduino dan memahami struktur kode (setup dan loop).",
+    "difficulty": "Mudah",
+    "components": [
+      "1x Arduino Uno",
+      "1x LED (Warna bebas)",
+      "1x Resistor 220 Ohm",
+      "Kabel Jumper secukupnya",
+      "Breadboard"
+    ],
+    "schema_placeholder": "https://via.placeholder.com/600x400?text=Skema+Blinking+LED",
+    "code": "void setup() {\n  pinMode(13, OUTPUT);\n}\n\nvoid loop() {\n  digitalWrite(13, HIGH);\n  delay(1000);\n  digitalWrite(13, LOW);\n  delay(1000);\n}",
+    "steps": [
+      {
+        "nama_komponen": "Arduino Uno",
+        "alur_rangkaian": "Siapkan papan Arduino dan sambungkan ke komputer menggunakan kabel USB."
+      },
+      {
+        "nama_komponen": "LED (Kaki Panjang / Anoda)",
+        "alur_rangkaian": "Tancapkan ke breadboard, lalu hubungkan ke salah satu ujung Resistor 220 Ohm."
+      },
+      {
+        "nama_komponen": "Resistor 220 Ohm",
+        "alur_rangkaian": "Hubungkan ujung resistor yang lain ke Pin 13 digital pada papan Arduino."
+      },
+      {
+        "nama_komponen": "LED (Kaki Pendek / Katoda)",
+        "alur_rangkaian": "Hubungkan kaki pendek LED langsung ke jalur pin GND pada papan Arduino."
+      }
+    ]
+  },
+  {
+    "id": "prj-002",
+    "title": "Lampu Lalu Lintas Sederhana",
+    "description": "Simulasi lampu lalu lintas menggunakan tiga buah LED dengan pengaturan jeda waktu (delay).",
+    "difficulty": "Mudah",
+    "components": [
+      "1x Arduino Uno",
+      "1x LED Merah, 1x LED Kuning, 1x LED Hijau",
+      "3x Resistor 220 Ohm",
+      "Kabel Jumper secukupnya",
+      "Breadboard"
+    ],
+    "schema_placeholder": "https://via.placeholder.com/600x400?text=Skema+Traffic+Light",
+    "code": "int ledMerah = 12;\nint ledKuning = 11;\nint ledHijau = 10;\n\nvoid setup() {\n  pinMode(ledMerah, OUTPUT);\n  pinMode(ledKuning, OUTPUT);\n  pinMode(ledHijau, OUTPUT);\n}\n\nvoid loop() {\n  digitalWrite(ledMerah, HIGH);\n  delay(3000);\n  digitalWrite(ledMerah, LOW);\n  digitalWrite(ledKuning, HIGH);\n  delay(1000);\n  digitalWrite(ledKuning, LOW);\n  digitalWrite(ledHijau, HIGH);\n  delay(3000);\n  digitalWrite(ledHijau, LOW);\n}",
+    "steps": [
+      {
+        "nama_komponen": "LED Merah, Kuning, Hijau",
+        "alur_rangkaian": "Pasang ketiga LED pada breadboard dengan jarak yang cukup agar tidak saling bersentuhan."
+      },
+      {
+        "nama_komponen": "Jalur GND Breadboard",
+        "alur_rangkaian": "Hubungkan masing-masing kaki katoda (pendek) dari ketiga LED ke jalur negatif (GND) di breadboard."
+      },
+      {
+        "nama_komponen": "Kabel Jumper GND",
+        "alur_rangkaian": "Sambungkan jalur negatif (GND) breadboard ke pin GND pada Arduino."
+      },
+      {
+        "nama_komponen": "Resistor 220 Ohm",
+        "alur_rangkaian": "Hubungkan anoda (kaki panjang) LED Merah ke pin 12, Kuning ke pin 11, dan Hijau ke pin 10 menggunakan resistor."
+      }
+    ]
+  },
+  {
+    "id": "prj-003",
+    "title": "Lampu Tidur Otomatis (Sensor LDR)",
+    "description": "Menyalakan lampu secara otomatis ketika kondisi ruangan di sekitarnya menjadi gelap.",
+    "difficulty": "Menengah",
+    "components": [
+      "1x Arduino Uno",
+      "1x Sensor Cahaya (LDR)",
+      "1x LED",
+      "1x Resistor 220 Ohm",
+      "1x Resistor 10k Ohm",
+      "Kabel Jumper secukupnya",
+      "Breadboard"
+    ],
+    "schema_placeholder": "https://via.placeholder.com/600x400?text=Skema+Sensor+LDR",
+    "code": "int ldrPin = A0;\nint ledPin = 9;\n\nvoid setup() {\n  pinMode(ledPin, OUTPUT);\n  Serial.begin(9600);\n}\n\nvoid loop() {\n  int ldrValue = analogRead(ldrPin);\n  if (ldrValue < 300) {\n    digitalWrite(ledPin, HIGH);\n  } else {\n    digitalWrite(ledPin, LOW);\n  }\n  delay(100);\n}",
+    "steps": [
+      {
+        "nama_komponen": "Sensor LDR & Resistor 10k",
+        "alur_rangkaian": "Buat rangkaian pembagi tegangan dengan menghubungkan satu kaki LDR dan satu kaki resistor 10k Ohm pada baris yang sama di breadboard."
+      },
+      {
+        "nama_komponen": "Kabel Jumper Analog",
+        "alur_rangkaian": "Hubungkan titik temu antara LDR dan resistor 10k Ohm ke pin analog A0 pada Arduino."
+      },
+      {
+        "nama_komponen": "Kabel Daya (5V & GND)",
+        "alur_rangkaian": "Hubungkan kaki LDR yang lain ke pin 5V Arduino, dan kaki resistor 10k Ohm yang lain ke pin GND Arduino."
+      },
+      {
+        "nama_komponen": "LED & Resistor 220 Ohm",
+        "alur_rangkaian": "Pasang LED pada breadboard. Hubungkan anoda ke pin 9 Arduino melalui resistor 220 Ohm, dan katoda ke GND."
+      }
+    ]
+  },
+  {
+    "id": "prj-004",
+    "title": "Alarm Anti Maling (Sensor PIR)",
+    "description": "Sistem keamanan sederhana yang akan membunyikan alarm ketika mendeteksi pergerakan objek.",
+    "difficulty": "Menengah",
+    "components": [
+      "1x Arduino Uno",
+      "1x Sensor Gerak PIR",
+      "1x Buzzer Aktif",
+      "Kabel Jumper secukupnya",
+      "Breadboard"
+    ],
+    "schema_placeholder": "https://via.placeholder.com/600x400?text=Skema+Sensor+PIR",
+    "code": "int pirPin = 2;\nint buzzerPin = 8;\n\nvoid setup() {\n  pinMode(pirPin, INPUT);\n  pinMode(buzzerPin, OUTPUT);\n  Serial.begin(9600);\n}\n\nvoid loop() {\n  int pirState = digitalRead(pirPin);\n  if (pirState == HIGH) {\n    digitalWrite(buzzerPin, HIGH);\n    Serial.println(\"Gerakan terdeteksi!\");\n  } else {\n    digitalWrite(buzzerPin, LOW);\n  }\n  delay(100);\n}",
+    "steps": [
+      {
+        "nama_komponen": "Sensor Gerak PIR",
+        "alur_rangkaian": "Hubungkan pin VCC pada sensor PIR ke pin 5V Arduino, dan pin GND sensor ke GND Arduino."
+      },
+      {
+        "nama_komponen": "Kabel Data PIR",
+        "alur_rangkaian": "Hubungkan pin OUT (atau Data) pada sensor PIR ke pin digital 2 pada Arduino."
+      },
+      {
+        "nama_komponen": "Buzzer Aktif",
+        "alur_rangkaian": "Hubungkan pin positif (biasanya kaki lebih panjang) buzzer ke pin digital 8 Arduino."
+      },
+      {
+        "nama_komponen": "Kabel GND Buzzer",
+        "alur_rangkaian": "Hubungkan pin negatif buzzer ke pin GND pada Arduino."
+      }
+    ]
+  },
+  {
+    "id": "prj-005",
+    "title": "Pengukur Jarak (Sensor Ultrasonik)",
+    "description": "Mengukur jarak suatu objek di depan sensor menggunakan gelombang suara.",
+    "difficulty": "Menengah",
+    "components": [
+      "1x Arduino Uno",
+      "1x Sensor Ultrasonik HC-SR04",
+      "Kabel Jumper secukupnya",
+      "Breadboard"
+    ],
+    "schema_placeholder": "https://via.placeholder.com/600x400?text=Skema+Ultrasonik",
+    "code": "const int trigPin = 9;\nconst int echoPin = 10;\n\nvoid setup() {\n  pinMode(trigPin, OUTPUT);\n  pinMode(echoPin, INPUT);\n  Serial.begin(9600);\n}\n\nvoid loop() {\n  digitalWrite(trigPin, LOW);\n  delayMicroseconds(2);\n  digitalWrite(trigPin, HIGH);\n  delayMicroseconds(10);\n  digitalWrite(trigPin, LOW);\n  \n  long duration = pulseIn(echoPin, HIGH);\n  int distance = duration * 0.034 / 2;\n  \n  Serial.print(\"Jarak: \");\n  Serial.print(distance);\n  Serial.println(\" cm\");\n  delay(500);\n}",
+    "steps": [
+      {
+        "nama_komponen": "Sensor HC-SR04 (VCC & GND)",
+        "alur_rangkaian": "Hubungkan pin VCC pada sensor ke pin 5V Arduino, dan pin GND sensor ke pin GND Arduino."
+      },
+      {
+        "nama_komponen": "Pin Trigger Ultrasonik",
+        "alur_rangkaian": "Hubungkan pin Trig pada sensor ultrasonik ke pin digital 9 pada Arduino."
+      },
+      {
+        "nama_komponen": "Pin Echo Ultrasonik",
+        "alur_rangkaian": "Hubungkan pin Echo pada sensor ultrasonik ke pin digital 10 pada Arduino."
+      },
+      {
+        "nama_komponen": "Serial Monitor",
+        "alur_rangkaian": "Setelah kode diunggah, buka Serial Monitor di Arduino IDE untuk melihat hasil pengukuran jarak."
+      }
+    ]
+  }
+];

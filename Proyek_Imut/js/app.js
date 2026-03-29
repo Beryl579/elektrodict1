@@ -2381,6 +2381,7 @@ window.onload=()=>{
   initKonversi();
   initResistor();
   initTimeline();
+  initProjects();
   initOnboarding();
   loadChatHistory();
   // Sembunyikan tooltip kalau user sudah pernah buka chat sebelumnya
@@ -2503,6 +2504,146 @@ function installPWA(){
   if (!deferredInstallPrompt) return;
   deferredInstallPrompt.prompt();
   deferredInstallPrompt.userChoice.then(()=>{ deferredInstallPrompt = null; });
+}
+
+// ═══════════════════════════════════════════════════════════
+// #51 — PROJECT HUB LOGIC
+// ═══════════════════════════════════════════════════════════
+function initProjects() {
+  renderProjectList();
+}
+
+function renderProjectList() {
+  const grid = document.getElementById('projects-grid');
+  if(!grid) return;
+  grid.innerHTML = PROJECTS.map(p => {
+    return `
+      <div class="prj-card" onclick="openProject('${p.id}')">
+        <div class="prj-card-title">${p.title}</div>
+        <div class="prj-card-desc">${p.description}</div>
+        <div class="prj-card-meta">
+          <div class="prj-card-diff diff-${p.difficulty.toLowerCase().replace(' ','-')}">${p.difficulty}</div>
+          <div style="font-size: 11px; color: var(--text3); font-family: var(--mono);">${p.steps.length} langkah</div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function openProject(id) {
+  const prj = PROJECTS.find(p => p.id === id);
+  if(!prj) return;
+
+  const content = document.getElementById('project-detail-content');
+  if(!content) return;
+
+  // Load progress
+  const progress = JSON.parse(localStorage.getItem(`ed_prj_progress_${id}`) || '[]');
+
+  content.innerHTML = `
+    <div class="pd-header">
+      <h1 class="pd-title">${prj.title}</h1>
+      <div class="pd-meta">
+        <div class="prj-card-diff diff-${prj.difficulty.toLowerCase().replace(' ','-')}">${prj.difficulty}</div>
+        <div style="font-size: 12px; color: var(--text2); font-family: var(--mono);">${prj.id}</div>
+      </div>
+    </div>
+
+    <div class="pd-section">
+      <h3 class="pd-section-h">📦 Komponen yang Dibutuhkan</h3>
+      <div class="pd-components">
+        <ul class="pd-comp-list">
+          ${prj.components.map(c => `<li class="pd-comp-item">${c}</li>`).join('')}
+        </ul>
+      </div>
+    </div>
+
+    <div class="pd-section">
+      <h3 class="pd-section-h">⚡ Skema Rangkaian</h3>
+      <div style="text-align:center;">
+        <img src="${prj.schema_placeholder}" alt="Skema ${prj.title}" class="pd-schema-img">
+      </div>
+    </div>
+
+    <div class="pd-section">
+      <h3 class="pd-section-h">💻 Kode Program (Arduino IDE)</h3>
+      <div class="pd-code-wrap">
+        <div class="pd-code-header">
+          <div class="pd-code-lang">C++ / Arduino</div>
+          <button class="pd-code-copy" onclick="copyPrjCode('${prj.id}', event)">📋 Copy Code</button>
+        </div>
+        <pre class="pd-code-pre"><code id="code-${prj.id}">${prj.code.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</code></pre>
+      </div>
+    </div>
+
+    <div class="pd-section">
+      <h3 class="pd-section-h">📝 Langkah Perakitan</h3>
+      <div class="pd-table-wrap">
+        <table class="pd-table">
+          <thead>
+            <tr>
+              <th style="width: 50px;">Check</th>
+              <th style="width: 150px;">Komponen</th>
+              <th>Alur Rangkaian</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${prj.steps.map((step, i) => {
+              const checked = progress.includes(i);
+              return `
+                <tr id="step-${prj.id}-${i}" class="${checked ? 'completed' : ''}">
+                  <td class="pd-check">
+                    <input type="checkbox" class="pd-check-input" 
+                      ${checked ? 'checked' : ''} 
+                      onchange="togglePrjStep('${prj.id}', ${i})">
+                  </td>
+                  <td><span class="pd-step-comp">${step.nama_komponen}</span></td>
+                  <td><span class="pd-step-txt">${step.alur_rangkaian}</span></td>
+                </tr>
+              `;
+            }).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  `;
+
+  switchTab('project-detail');
+}
+
+function togglePrjStep(id, idx) {
+  const row = document.getElementById(`step-${id}-${idx}`);
+  if(!row) return;
+
+  const isChecked = row.querySelector('input').checked;
+  if(isChecked) row.classList.add('completed');
+  else row.classList.remove('completed');
+
+  // Save to localStorage
+  let progress = JSON.parse(localStorage.getItem(`ed_prj_progress_${id}`) || '[]');
+  if(isChecked) {
+    if(!progress.includes(idx)) progress.push(idx);
+  } else {
+    progress = progress.filter(i => i !== idx);
+  }
+  localStorage.setItem(`ed_prj_progress_${id}`, JSON.stringify(progress));
+}
+
+function copyPrjCode(id, e) {
+  const prj = PROJECTS.find(p => p.id === id);
+  if(!prj) return;
+  navigator.clipboard.writeText(prj.code).then(() => {
+    // target was clicked button
+    const btn = e ? e.target : document.querySelector('.pd-code-copy');
+    const oldText = btn.innerHTML;
+    btn.innerHTML = '✅ Copied!';
+    setTimeout(() => {
+      btn.innerHTML = oldText;
+    }, 2000);
+  }).catch(err => {
+    console.error('Failed to copy code:', err);
+    alert('Gagal menyalin kode.');
+  });
 }
 
 // ═══════════════════════════════════════════════════════════

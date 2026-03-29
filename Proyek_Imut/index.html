@@ -89,6 +89,11 @@
     <span class="bnav-icon">⚡</span>
     <span class="bnav-label">Skema</span>
   </button>
+  <button class="bnav-item" id="bnav-projects" onclick="switchTab('projects')">
+    <div class="bnav-dot"></div>
+    <span class="bnav-icon">🛠️</span>
+    <span class="bnav-label">Lab Proyek</span>
+  </button>
   <button class="bnav-item" id="bnav-resistor" onclick="switchTab('resistor')">
     <div class="bnav-dot"></div>
     <span class="bnav-icon">🎨</span>
@@ -504,6 +509,25 @@
         </tbody>
       </table>
     </div>
+  </div>
+</div>
+
+<!-- ═══════ PROJECTS PAGE ═══════ -->
+<div class="page" id="page-projects">
+  <div class="projects-wrap">
+    <div class="projects-header">
+      <h2>🛠️ Lab Proyek</h2>
+      <p>Kumpulan proyek DIY elektronika & mikrokontroler</p>
+    </div>
+    <div class="projects-grid" id="projects-grid"></div>
+  </div>
+</div>
+
+<!-- ═══════ PROJECT DETAIL PAGE ═══════ -->
+<div class="page" id="page-project-detail">
+  <div class="pd-wrap">
+    <button class="pd-back" onclick="switchTab('projects')">← Kembali ke Daftar</button>
+    <div id="project-detail-content"></div>
   </div>
 </div>
 
