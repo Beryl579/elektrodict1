@@ -2626,7 +2626,7 @@ function renderProjectDetail(prj) {
           <div class="pd-code-lang">C++ / Arduino</div>
           <button class="pd-code-copy" onclick="copyPrjCodeDirect(this)">📋 Copy Code</button>
         </div>
-        <pre class="pd-code-pre"><code id="code-content">${prj.code.replace(/\\n/g, '\n').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</code></pre>
+        <pre class="pd-code-pre"><code id="code-content">${(Array.isArray(prj.code) ? prj.code.join('\n') : prj.code).replace(/\\n/g, '\n').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</code></pre>
       </div>
     </div>
 
