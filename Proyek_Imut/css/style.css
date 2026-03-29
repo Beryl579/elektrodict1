@@ -1368,7 +1368,7 @@ body.light .led-bulb.on .led-val { color:#fff; }
     font-size: 11px; padding: 4px 10px; border-radius: 6px; cursor: pointer; transition: all 0.2s;
 }
 .pd-code-copy:hover { border-color: var(--accent); color: var(--accent); }
-.pd-code-pre { padding: 16px; overflow-x: auto; margin: 0; }
+.pd-code-pre { padding: 16px; overflow-x: auto; margin: 0; white-space: pre-wrap; }
 .pd-code-pre code { font-family: var(--mono); font-size: 13px; color: #e6edf3; line-height: 1.6; }
 
 /* Step Table */
