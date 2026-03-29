@@ -45,7 +45,8 @@ export default async function handler(req, res) {
 "wiring_table": [ { "komponen": "Nama Komponen", "koneksi_pin": "Koneksi ke Pin" } ],
 "code": "Kode C++ untuk Arduino IDE",
 "steps": [ { "alur_perakitan": "Langkah 1" }, { "alur_perakitan": "Langkah 2" } ]
-}`;
+}
+CRITICAL RULE: All multiline strings (especially the 'code' string) MUST be on a single line with line breaks strictly escaped as '\\n'. DO NOT output actual/raw line breaks inside any JSON string values. The entire output must be perfectly valid for JavaScript's JSON.parse().`;
 
     const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",

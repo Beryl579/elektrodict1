@@ -2533,16 +2533,11 @@ async function generateAIProject() {
     // 1. Retrieve raw content
     let rawContent = data.result;
 
-    // 2. Strip markdown artifacts
-    rawContent = rawContent.replace(/```json/g, '').replace(/```/g, '').trim();
-
-    // 3. Sanitize unescaped control characters (newlines, tabs) within JSON string values
-    rawContent = rawContent.replace(/[\u0000-\u0019]+/g, function(match) {
-        return escape(match).replace(/%u/g, '\\u').replace(/%/g, '\\x');
-    });
+    // 2. Strip markdown blocks
+    let cleanContent = rawContent.replace(/```json/ig, '').replace(/```/g, '').trim();
 
     try {
-        const prj = JSON.parse(rawContent);
+        const prj = JSON.parse(cleanContent);
         
         // Add dynamic ID and fix field names if AI slightly diverged
         prj.id = 'ai-' + prj.title.toLowerCase().replace(/\s+/g, '-').slice(0, 20);
@@ -2553,8 +2548,8 @@ async function generateAIProject() {
         renderProjectDetail(prj);
 
     } catch (parseError) {
-        console.error("JSON Parsing Error after sanitization:", parseError);
-        console.log("Raw Content that failed:", rawContent);
+        console.error("JSON Parsing Error:", parseError);
+        console.log("Raw Content that failed:", cleanContent);
         alert("Gagal memproses data proyek dari AI. Silakan coba lagi.");
     }
 
