@@ -119,6 +119,31 @@
         temperature: 0.9,
         stream: false
       }, TIMEOUT_TEXT_MS);
+    },
+
+    async generateProject(idea) {
+      try {
+        const response = await fetchWithTimeout(
+          '/api/project-gen',
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ idea })
+          },
+          TIMEOUT_TEXT_MS
+        );
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error?.message || "Gagal membuat proyek.");
+        }
+
+        return await response.json();
+
+      } catch (error) {
+        console.error('[ElektroAPI] Project Generation Error:', error);
+        throw error;
+      }
     }
   };
 })();

@@ -516,10 +516,24 @@
 <div class="page" id="page-projects">
   <div class="projects-wrap">
     <div class="projects-header">
-      <h2>🛠️ Lab Proyek</h2>
-      <p>Kumpulan proyek DIY elektronika & mikrokontroler</p>
+      <h2>🛠️ AI Project Generator</h2>
+      <p>Ketik ide proyek mikrokontroler kamu, AI akan merancang semuanya!</p>
     </div>
-    <div class="projects-grid" id="projects-grid"></div>
+    
+    <div class="prj-generator-box">
+      <div class="prj-input-wrapper">
+        <input type="text" id="prj-idea-input" placeholder="Contoh: Sistem penyiram tanaman otomatis..." onkeyup="if(event.key==='Enter') generateAIProject()">
+      </div>
+      <button class="prj-gen-btn" id="prj-gen-btn" onclick="generateAIProject()">
+        <span class="btn-ico">💡</span>
+        <span class="btn-txt">Generate Proyek</span>
+      </button>
+    </div>
+
+    <div id="prj-loading" class="prj-loading hide">
+      <div class="prj-spinner"></div>
+      <p>Sedang berpikir... merancang skema, komponen, dan kode...</p>
+    </div>
   </div>
 </div>
 

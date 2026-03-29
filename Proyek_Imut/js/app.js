@@ -2510,35 +2510,82 @@ function installPWA(){
 // #51 — PROJECT HUB LOGIC
 // ═══════════════════════════════════════════════════════════
 function initProjects() {
-  renderProjectList();
+  // Static list is removed in favor of AI Generator
+  // We can keep this empty or use it to load previous history
+}
+
+let currentAIProject = null;
+
+async function generateAIProject() {
+  const input = document.getElementById('prj-idea-input');
+  const idea = input.value.trim();
+  if(!idea) return;
+
+  const btn = document.getElementById('prj-gen-btn');
+  const loading = document.getElementById('prj-loading');
+  
+  btn.disabled = true;
+  loading.classList.remove('hide');
+
+  try {
+    const data = await window.ElektroAPI.generateProject(idea);
+    
+    // Try to parse the result. Sometimes AI adds markdown even if told not to.
+    let jsonStr = data.result;
+    if(jsonStr.includes('```')) {
+      jsonStr = jsonStr.replace(/```json|```/g, '').trim();
+    }
+    
+    const prj = JSON.parse(jsonStr);
+    
+    // Add dynamic ID and fix field names if AI slightly diverged
+    prj.id = 'ai-' + prj.title.toLowerCase().replace(/\s+/g, '-').slice(0, 20);
+    // Backward compatibility for the render logic
+    if (prj.wiring_table && !prj.wiring) prj.wiring = prj.wiring_table;
+    
+    currentAIProject = prj;
+    renderProjectDetail(prj);
+
+  } catch (err) {
+    console.error("Generate Error:", err);
+    alert("Maaf, gagal membuat proyek. Coba gunakan perintah yang lebih spesifik.");
+  } finally {
+    btn.disabled = false;
+    loading.classList.add('hide');
+  }
 }
 
 function renderProjectList() {
-  const grid = document.getElementById('projects-grid');
-  if(!grid) return;
-  grid.innerHTML = PROJECTS.map(p => {
-    return `
-      <div class="prj-card" onclick="openProject('${p.id}')">
-        <div class="prj-card-title">${p.title}</div>
-        <div class="prj-card-desc">${p.description}</div>
-        <div class="prj-card-meta">
-          <div class="prj-card-diff diff-${p.difficulty.toLowerCase().replace(' ','-')}">${p.difficulty}</div>
-          <div style="font-size: 11px; color: var(--text3); font-family: var(--mono);">${p.steps.length} langkah</div>
-        </div>
-      </div>
-    `;
-  }).join('');
+  // This is no longer used but we keep the empty function to avoid breaks
 }
 
 function openProject(id) {
   const prj = PROJECTS.find(p => p.id === id);
-  if(!prj) return;
+  if(prj) renderProjectDetail(prj);
+}
 
+function renderProjectDetail(prj) {
   const content = document.getElementById('project-detail-content');
   if(!content) return;
 
   // Load progress
-  const progress = JSON.parse(localStorage.getItem(`ed_prj_progress_${id}`) || '[]');
+  const progress = JSON.parse(localStorage.getItem(`ed_prj_progress_${prj.id}`) || '[]');
+
+  // Wiring Table HTML
+  const wiringHtml = prj.wiring_table ? `
+    <div class="pd-section">
+      <h3 class="pd-section-h">🔌 Tabel Koneksi Kabel</h3>
+      <div class="pd-table-wrap">
+        <table class="pd-table">
+          <thead>
+            <tr><th>Komponen</th><th>Koneksi Pin</th></tr>
+          </thead>
+          <tbody>
+            ${prj.wiring_table.map(w => `<tr><td><b>${w.komponen}</b></td><td><code>${w.koneksi_pin}</code></td></tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>` : '';
 
   content.innerHTML = `
     <div class="pd-header">
@@ -2550,6 +2597,11 @@ function openProject(id) {
     </div>
 
     <div class="pd-section">
+      <h3 class="pd-section-h">📖 Deskripsi</h3>
+      <p style="color:var(--text2); font-size:14px; line-height:1.6;">${prj.description}</p>
+    </div>
+
+    <div class="pd-section">
       <h3 class="pd-section-h">📦 Komponen yang Dibutuhkan</h3>
       <div class="pd-components">
         <ul class="pd-comp-list">
@@ -2558,21 +2610,16 @@ function openProject(id) {
       </div>
     </div>
 
-    <div class="pd-section">
-      <h3 class="pd-section-h">⚡ Skema Rangkaian</h3>
-      <div style="text-align:center;">
-        <img src="${prj.schema_placeholder}" alt="Skema ${prj.title}" class="pd-schema-img">
-      </div>
-    </div>
+    ${wiringHtml}
 
     <div class="pd-section">
       <h3 class="pd-section-h">💻 Kode Program (Arduino IDE)</h3>
       <div class="pd-code-wrap">
         <div class="pd-code-header">
           <div class="pd-code-lang">C++ / Arduino</div>
-          <button class="pd-code-copy" onclick="copyPrjCode('${prj.id}', event)">📋 Copy Code</button>
+          <button class="pd-code-copy" onclick="copyPrjCodeDirect(this)">📋 Copy Code</button>
         </div>
-        <pre class="pd-code-pre"><code id="code-${prj.id}">${prj.code.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</code></pre>
+        <pre class="pd-code-pre"><code id="code-content">${prj.code.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</code></pre>
       </div>
     </div>
 
@@ -2583,8 +2630,7 @@ function openProject(id) {
           <thead>
             <tr>
               <th style="width: 50px;">Check</th>
-              <th style="width: 150px;">Komponen</th>
-              <th>Alur Rangkaian</th>
+              <th>Alur Perakitan</th>
             </tr>
           </thead>
           <tbody>
@@ -2597,8 +2643,7 @@ function openProject(id) {
                       ${checked ? 'checked' : ''} 
                       onchange="togglePrjStep('${prj.id}', ${i})">
                   </td>
-                  <td><span class="pd-step-comp">${step.nama_komponen}</span></td>
-                  <td><span class="pd-step-txt">${step.alur_rangkaian}</span></td>
+                  <td><span class="pd-step-txt">${step.alur_perakitan}</span></td>
                 </tr>
               `;
             }).join('')}
@@ -2609,6 +2654,15 @@ function openProject(id) {
   `;
 
   switchTab('project-detail');
+}
+
+function copyPrjCodeDirect(btn) {
+  const code = document.getElementById('code-content').textContent;
+  navigator.clipboard.writeText(code).then(() => {
+    const oldText = btn.innerHTML;
+    btn.innerHTML = '✅ Copied!';
+    setTimeout(() => { btn.innerHTML = oldText; }, 2000);
+  });
 }
 
 function togglePrjStep(id, idx) {
@@ -2629,20 +2683,12 @@ function togglePrjStep(id, idx) {
   localStorage.setItem(`ed_prj_progress_${id}`, JSON.stringify(progress));
 }
 
-function copyPrjCode(id, e) {
-  const prj = PROJECTS.find(p => p.id === id);
-  if(!prj) return;
-  navigator.clipboard.writeText(prj.code).then(() => {
-    // target was clicked button
-    const btn = e ? e.target : document.querySelector('.pd-code-copy');
+function copyPrjCodeDirect(btn) {
+  const code = document.getElementById('code-content').textContent;
+  navigator.clipboard.writeText(code).then(() => {
     const oldText = btn.innerHTML;
     btn.innerHTML = '✅ Copied!';
-    setTimeout(() => {
-      btn.innerHTML = oldText;
-    }, 2000);
-  }).catch(err => {
-    console.error('Failed to copy code:', err);
-    alert('Gagal menyalin kode.');
+    setTimeout(() => { btn.innerHTML = oldText; }, 2000);
   });
 }
 
