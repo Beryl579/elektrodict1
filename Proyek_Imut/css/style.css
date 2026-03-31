@@ -1423,3 +1423,38 @@ body.light .led-bulb.on .led-val { color:#fff; }
 }
 @keyframes prjSpin { to { transform: rotate(360deg); } }
 .hide { display: none !important; }
+
+/* ── PROJECT UPGRADE STYLES ── */
+.pd-disclaimer {
+  background: rgba(245, 158, 11, 0.08); 
+  border: 1px solid rgba(245, 158, 11, 0.2);
+  border-radius: var(--r2);
+  padding: 14px 18px;
+  margin-bottom: 30px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  animation: pageIn 0.5s ease;
+}
+.pd-disclaimer-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 5px rgba(245, 158, 11, 0.4));
+}
+.pd-disclaimer-text {
+  font-size: 13px;
+  color: #fbbf24; /* Lighter amber for better readability on dark */
+  line-height: 1.6;
+  font-weight: 500;
+}
+.pd-table code {
+  background: var(--bg4);
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: var(--accent);
+  font-family: var(--mono);
+  font-size: 12px;
+  border: 1px solid var(--line);
+}
+

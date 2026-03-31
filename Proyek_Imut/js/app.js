@@ -2578,6 +2578,15 @@ function renderProjectDetail(prj) {
   // Load progress
   const progress = JSON.parse(localStorage.getItem(`ed_prj_progress_${prj.id}`) || '[]');
 
+  // AI Disclaimer HTML
+  const disclaimerHtml = `
+    <div class="pd-disclaimer">
+      <div class="pd-disclaimer-icon">⚠️</div>
+      <div class="pd-disclaimer-text">
+        Catatan: Panduan proyek ini di-generate oleh AI. Harap periksa kembali skema rangkaian, datasheet komponen, dan batas tegangan sebelum merakit untuk mencegah kerusakan alat.
+      </div>
+    </div>`;
+
   // Wiring Table HTML
   const wiringHtml = prj.wiring_table ? `
     <div class="pd-section">
@@ -2585,10 +2594,19 @@ function renderProjectDetail(prj) {
       <div class="pd-table-wrap">
         <table class="pd-table">
           <thead>
-            <tr><th>Komponen</th><th>Koneksi Pin</th></tr>
+            <tr>
+              <th>Komponen</th>
+              <th>Pin Komponen</th>
+              <th>Koneksi ke Board</th>
+            </tr>
           </thead>
           <tbody>
-            ${prj.wiring_table.map(w => `<tr><td><b>${w.komponen}</b></td><td><code>${w.koneksi_pin}</code></td></tr>`).join('')}
+            ${prj.wiring_table.map(w => `
+              <tr>
+                <td><b>${w.komponen}</b></td>
+                <td><code>${w.pin_komponen || w.koneksi_pin || '-'}</code></td>
+                <td><code>${w.koneksi_arduino || w.koneksi_pin || '-'}</code></td>
+              </tr>`).join('')}
           </tbody>
         </table>
       </div>
@@ -2617,6 +2635,7 @@ function renderProjectDetail(prj) {
       </div>
     </div>
 
+    ${disclaimerHtml}
     ${wiringHtml}
 
     <div class="pd-section">

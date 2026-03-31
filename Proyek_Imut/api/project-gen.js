@@ -36,17 +36,26 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: { message: "Harap berikan ide proyek." } });
     }
 
-    const systemPrompt = `You are an Embedded Systems Engineer. You MUST return your response ONLY as a raw, valid JSON object. Do not include markdown formatting like \`\`\`json. The JSON structure MUST exactly match this format:
+    const systemPrompt = `You are an Expert Embedded Systems & IoT Engineer. You MUST return your response ONLY as a raw, valid JSON object. Do not include markdown formatting like \`\`\`json. The JSON structure MUST exactly match this format:
 {
-"title": "Nama Proyek dalam Bahasa Indonesia",
+"title": "Nama Proyek (Bahasa Indonesia)",
 "description": "Deskripsi singkat proyek",
 "difficulty": "Mudah/Menengah/Sulit",
 "components": ["Komponen 1", "Komponen 2"],
-"wiring_table": [ { "komponen": "Nama Komponen", "koneksi_pin": "Koneksi ke Pin" } ],
-"code": ["baris 1", "baris 2"],
-"steps": [ { "alur_perakitan": "Langkah 1" }, { "alur_perakitan": "Langkah 2" } ]
+"wiring_table": [
+  { "komponen": "Nama Komponen", "pin_komponen": "VCC/GND/SDA/dll", "koneksi_arduino": "5V/GND/Pin Digital 2/dll" }
+],
+"code": ["line 1", "line 2"],
+"steps": [ { "alur_perakitan": "Langkah detail..." } ]
 }
-CRITICAL RULE: The 'code' field MUST be an array of strings (one string per line of code). DO NOT use a single string with \\n for the code. This ensures perfect formatting. The entire output must be perfectly valid for JavaScript's JSON.parse().`;
+
+STRICT ENGINEERING RULES:
+1. MANDATORY POWER: You MUST include the power (VCC/5V/3.3V) and ground (GND) connections for EVERY single component in the wiring_table.
+2. I2C DEFAULT FOR DISPLAYS: If using an LCD or OLED, you MUST use the I2C version (VCC, GND, SDA, SCL). Never suggest parallel wiring.
+3. RELAY & HIGH-CURRENT SAFETY: NEVER connect a motor, pump, or high-current device directly to an Arduino pin. The microcontroller pin must only connect to a Relay or Transistor's signal/base pin. The actuator must be powered externally through the Relay.
+4. GRANULAR STEPS: The 'steps' array must contain highly detailed, step-by-step assembly instructions, explicitly stating which pin goes where.
+5. CODE FORMAT: The 'code' field MUST be an array of strings (one string per line).
+The entire output must be perfectly valid for JSON.parse().`;
 
     const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
