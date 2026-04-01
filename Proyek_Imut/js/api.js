@@ -45,6 +45,17 @@
       if (!response.ok) {
         const msg = data.error?.message || data.message || (typeof data === 'string' ? data : JSON.stringify(data).slice(0, 300));
         let line = msg || response.statusText;
+
+        // ── 429 Rate Limit — throw special error ──
+        if (response.status === 429 || /rate.?limit/i.test(line)) {
+          const waitMatch = line.match(/try again in ([\d.]+)s/i);
+          const waitSec = waitMatch ? Math.ceil(parseFloat(waitMatch[1])) : 20;
+          const err = new Error('RATE_LIMIT');
+          err.isRateLimit = true;
+          err.waitSeconds = waitSec;
+          throw err;
+        }
+
         if (response.status === 404) {
           line = (line ? line + ' ' : '') + '— Backend API tidak ditemukan.';
         }

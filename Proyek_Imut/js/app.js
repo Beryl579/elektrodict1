@@ -34,6 +34,8 @@ async function callAI(payload) {
     });
   } catch (e) {
     console.error("[ElektroDict] API Error:", e);
+    // Re-throw rate limit errors so the UI can handle them gracefully
+    if (e.isRateLimit) throw e;
     return { error: { message: e.message || "Gagal terhubung ke AI." } };
   }
 }
@@ -1398,6 +1400,71 @@ const HIST_STORAGE_KEY = 'elektrobot_history';
 let chatHistory = []; // single source of truth
 let busy = false, mOpen = false;
 
+/* ── Bot online status — graceful 429 handling ── */
+let isBotOnline = true;
+let rateLimitTimer = null;
+
+function setBotOffline(waitSec) {
+  isBotOnline = false;
+  // Update status indicators in both panels
+  document.querySelectorAll('.cstatus').forEach(el => {
+    el.innerHTML = '<span style="color:#ef4444">● offline</span> · sedang istirahat';
+    el.classList.add('offline');
+  });
+  // Disable inputs & send buttons
+  ['D','M'].forEach(v => {
+    const inp = document.getElementById('inp'+v);
+    const btn = document.getElementById('send'+v);
+    if(inp) { inp.disabled = true; inp.placeholder = `Bot istirahat... (${waitSec}s)`; }
+    if(btn) btn.disabled = true;
+  });
+  // Disable quick chips
+  document.querySelectorAll('.qchip').forEach(c => { c.style.pointerEvents = 'none'; c.style.opacity = '0.4'; });
+  // Auto-recovery timer
+  if(rateLimitTimer) clearTimeout(rateLimitTimer);
+  // Countdown display
+  let remaining = waitSec;
+  const countdown = setInterval(() => {
+    remaining--;
+    if(remaining <= 0) { clearInterval(countdown); return; }
+    ['D','M'].forEach(v => {
+      const inp = document.getElementById('inp'+v);
+      if(inp) inp.placeholder = `Bot istirahat... (${remaining}s)`;
+    });
+  }, 1000);
+  rateLimitTimer = setTimeout(() => {
+    clearInterval(countdown);
+    setBotOnline();
+  }, waitSec * 1000);
+}
+
+function setBotOnline() {
+  isBotOnline = true;
+  if(rateLimitTimer) { clearTimeout(rateLimitTimer); rateLimitTimer = null; }
+  // Restore status indicators
+  document.querySelectorAll('.cstatus').forEach(el => {
+    el.classList.remove('offline');
+  });
+  // Desktop status text
+  const dStatus = document.querySelector('.chat-sidebar .cstatus');
+  if(dStatus) dStatus.innerHTML = '● online';
+  // Mobile status text
+  const mStatus = document.querySelector('.chat-mobile .cstatus');
+  if(mStatus) mStatus.innerHTML = '● online · siap bantu';
+  // Re-enable inputs
+  ['D','M'].forEach(v => {
+    const inp = document.getElementById('inp'+v);
+    const btn = document.getElementById('send'+v);
+    if(inp) { inp.disabled = false; inp.placeholder = 'Tanya soal elektro...'; }
+    if(btn) btn.disabled = false;
+  });
+  // Re-enable quick chips
+  document.querySelectorAll('.qchip').forEach(c => { c.style.pointerEvents = ''; c.style.opacity = ''; });
+  // Notify user
+  botMsg('D','Bot udah online lagi! ⚡ Silakan lanjut tanya.');
+  botMsg('M','Bot udah online lagi! ⚡ Silakan lanjut tanya.');
+}
+
 /* ── localStorage helpers ── */
 function saveHistToStorage(){
   try {
@@ -1569,6 +1636,10 @@ function ck(e,v){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send(v);}}
 async function send(v){
   const inp=document.getElementById('inp'+v),txt=inp.value.trim();
   if(!txt||busy)return;
+  if(!isBotOnline) {
+    botMsg(v, 'Bot masih istirahat, tunggu sebentar ya... ⏳');
+    return;
+  }
   window.speechSynthesis && window.speechSynthesis.cancel();
   busy=true;document.getElementById('send'+v).disabled=true;
   inp.value='';inp.style.height='38px';
@@ -1591,10 +1662,20 @@ async function send(v){
     speak(rep);
   }catch(err){
     hideDots('D'); hideDots('M');
-    botMsg('D','⚠ Error: '+err.message,true);
-    botMsg('M','⚠ Error: '+err.message,true);
+    // ── Handle 429 Rate Limit gracefully ──
+    if(err.isRateLimit) {
+      const wait = err.waitSeconds || 20;
+      const friendlyMsg = `Maaf ya, server sedang terlalu sibuk (kena limit) 😴\nBot sedang istirahat sebentar, coba lagi dalam ~${wait} detik.\nTenang, nanti otomatis online lagi kok! ⚡`;
+      botMsg('D', friendlyMsg);
+      botMsg('M', friendlyMsg);
+      setBotOffline(wait);
+    } else {
+      botMsg('D','⚠ Error: '+err.message,true);
+      botMsg('M','⚠ Error: '+err.message,true);
+    }
   }
-  busy=false;document.getElementById('send'+v).disabled=false;inp.focus();
+  busy=false;
+  if(isBotOnline) { document.getElementById('send'+v).disabled=false; inp.focus(); }
 }
 
 // ═══════════════════════════════════════════════════════════
