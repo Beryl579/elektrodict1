@@ -317,6 +317,11 @@ function switchTab(t){
       requestAnimationFrame(()=>requestAnimationFrame(()=>pg.classList.add('visible')));
     }
   }, 60);
+  // Safety: Stop Synth if playing and leaving synth tab
+  if (t !== 'synth' && typeof synthPlaying !== 'undefined' && synthPlaying) {
+    toggleSynth();
+  }
+
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
@@ -2797,4 +2802,138 @@ function toggleMic(v) {
   document.querySelectorAll('.cmic').forEach(b => b.classList.remove('recording'));
   btn.classList.add('recording');
   recognition.start();
+}
+
+// ═══════════════════════════════════════════════════════════
+// AUDIO SYNTHESIZER & OSCILLOSCOPE LOGIC
+// ═══════════════════════════════════════════════════════════
+let audioCtx, oscillator, gainNode, analyser, bufferLength, dataArray, animationId;
+let synthPlaying = false;
+
+function initSynth() {
+  if (audioCtx) return;
+  try {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    oscillator = audioCtx.createOscillator();
+    gainNode = audioCtx.createGain();
+    analyser = audioCtx.createAnalyser();
+
+    analyser.fftSize = 2048;
+    bufferLength = analyser.frequencyBinCount;
+    dataArray = new Uint8Array(bufferLength);
+
+    oscillator.connect(analyser);
+    analyser.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+
+    // Default settings
+    gainNode.gain.value = 0.1;
+    oscillator.type = 'sine';
+    oscillator.frequency.value = 50;
+    
+    oscillator.start();
+    audioCtx.suspend();
+  } catch (e) {
+    console.error("Web Audio API not supported:", e);
+    alert("Browser kamu tidak mendukung Web Audio API.");
+  }
+}
+
+function toggleSynth() {
+  const btn = document.getElementById('synth-play-btn');
+  if (!btn) return;
+
+  if (!audioCtx) initSynth();
+  if (!audioCtx) return;
+
+  if (audioCtx.state === 'suspended') {
+    audioCtx.resume().then(() => {
+      synthPlaying = true;
+      btn.classList.add('playing');
+      btn.innerHTML = '<span class="p-ico">⏹</span> Stop Sinyal';
+      updateSynthSettings();
+      drawScope();
+    });
+  } else {
+    audioCtx.suspend().then(() => {
+      synthPlaying = false;
+      btn.classList.remove('playing');
+      btn.innerHTML = '<span class="p-ico">▶</span> Mulai Sinyal';
+      if (animationId) cancelAnimationFrame(animationId);
+      
+      // Clear canvas on stop
+      const canvas = document.getElementById('synth-canvas');
+      if (canvas) {
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+    });
+  }
+}
+
+function updateSynthSettings() {
+  if (!audioCtx) {
+    // Update labels even if not playing
+    const freqEl = document.getElementById('synth-freq');
+    const volEl = document.getElementById('synth-vol');
+    if(freqEl) document.getElementById('val-freq').textContent = freqEl.value;
+    if(volEl) document.getElementById('val-vol').textContent = Math.round(volEl.value * 100);
+    return;
+  }
+  
+  const wave = document.getElementById('synth-wave-type').value;
+  const freq = document.getElementById('synth-freq').value;
+  const vol = document.getElementById('synth-vol').value;
+
+  // Use ramp for smooth transitions
+  oscillator.type = wave;
+  oscillator.frequency.setTargetAtTime(parseFloat(freq), audioCtx.currentTime, 0.05);
+  gainNode.gain.setTargetAtTime(parseFloat(vol), audioCtx.currentTime, 0.05);
+
+  // Update UI Labels
+  document.getElementById('val-freq').textContent = freq;
+  document.getElementById('val-vol').textContent = Math.round(vol * 100);
+  document.getElementById('scope-freq-display').textContent = parseFloat(freq).toFixed(1) + ' Hz';
+  document.getElementById('scope-wave-display').textContent = wave.toUpperCase();
+}
+
+function drawScope() {
+  if (!synthPlaying) return;
+  animationId = requestAnimationFrame(drawScope);
+  
+  analyser.getByteTimeDomainData(dataArray);
+
+  const canvas = document.getElementById('synth-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const width = canvas.width;
+  const height = canvas.height;
+
+  ctx.clearRect(0, 0, width, height);
+  
+  // Oscilloscope specific styling
+  ctx.lineWidth = 3;
+  ctx.strokeStyle = '#00ff41';
+  ctx.shadowBlur = 10;
+  ctx.shadowColor = '#00ff41';
+  
+  ctx.beginPath();
+
+  const sliceWidth = width * 1.0 / bufferLength;
+  let x = 0;
+
+  for (let i = 0; i < bufferLength; i++) {
+    const v = dataArray[i] / 128.0;
+    const y = v * height / 2;
+
+    if (i === 0) {
+      ctx.moveTo(x, y);
+    } else {
+      ctx.lineTo(x, y);
+    }
+
+    x += sliceWidth;
+  }
+
+  ctx.stroke();
 }

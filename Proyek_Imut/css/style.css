@@ -1458,3 +1458,180 @@ body.light .led-bulb.on .led-val { color:#fff; }
   border: 1px solid var(--line);
 }
 
+/* ═══════════════════ AUDIO SYNTHESIZER PAGE ═══════════════════ */
+.synth-wrap { max-width: 800px; margin: 0 auto; padding: 24px 0 60px; }
+.synth-header { text-align: center; margin-bottom: 24px; }
+.synth-header h2 { font-size: 24px; font-weight: 700; color: var(--text); margin-bottom: 6px; font-family: var(--font-h); }
+.synth-header p { font-size: 13px; color: var(--text2); }
+
+/* Oscilloscope Cabinet */
+.scope-cabinet {
+  background: #0a0c10;
+  border: 4px solid #1a1d23;
+  border-radius: 20px;
+  padding: 16px;
+  box-shadow: inset 0 0 40px rgba(0,0,0,0.8), 0 10px 40px rgba(0,0,0,0.6);
+  margin-bottom: 24px;
+  position: relative;
+}
+.scope-screen-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 2 / 1;
+  background: #010805;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #1a201c;
+}
+#synth-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+}
+.scope-grid {
+  position: absolute;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(0, 255, 64, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 64, 0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+  z-index: 1;
+}
+.scope-grid::after {
+  content: '';
+  position: absolute;
+  top: 50%; left: 0; right: 0;
+  height: 1px; background: rgba(0, 255, 64, 0.15);
+}
+.scope-grid::before {
+  content: '';
+  position: absolute;
+  left: 50%; top: 0; bottom: 0;
+  width: 1px; background: rgba(0, 255, 64, 0.15);
+}
+.scope-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, transparent 40%, rgba(0, 40, 20, 0.4) 100%);
+  z-index: 3;
+  pointer-events: none;
+}
+.scope-status {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 12px;
+  padding: 0 4px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: #00ff41;
+  text-shadow: 0 0 5px rgba(0, 255, 65, 0.5);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Controls */
+.synth-controls {
+  background: var(--bg2);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  padding: 24px;
+}
+.synth-main-btn-wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+.synth-play-btn {
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: var(--r2);
+  padding: 14px 40px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.3s;
+  box-shadow: 0 4px 15px rgba(79, 156, 249, 0.3);
+}
+.synth-play-btn.playing {
+  background: var(--rose);
+  box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+}
+.synth-play-btn .p-ico { font-size: 18px; }
+
+.synth-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 20px;
+}
+@media (max-width: 639px) { .synth-grid { grid-template-columns: 1fr; } }
+
+.synth-ctrl-group { display: flex; flex-direction: column; gap: 8px; }
+.synth-ctrl-group label { font-size: 11px; font-weight: 600; color: var(--text3); font-family: var(--mono); text-transform: uppercase; }
+.synth-ctrl-group label span { color: var(--accent); }
+
+.synth-ctrl-group select {
+  background: var(--bg3);
+  border: 1px solid var(--line);
+  color: var(--text);
+  padding: 10px;
+  border-radius: 8px;
+  font-family: var(--font);
+  font-size: 13px;
+  outline: none;
+  cursor: pointer;
+}
+
+/* Range Input Styling */
+.synth-ctrl-group input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  background: var(--bg4);
+  border-radius: 3px;
+  outline: none;
+}
+.synth-ctrl-group input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  background: var(--accent);
+  border-radius: 50%;
+  cursor: pointer;
+  border: 3px solid var(--bg2);
+}
+
+.range-labels {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--mono);
+  font-size: 9px;
+  color: var(--text3);
+  margin-top: -4px;
+}
+
+.synth-info { margin-top: 24px; }
+.s-info-card {
+  background: var(--bg3);
+  border-left: 4px solid var(--accent);
+  padding: 16px;
+  border-radius: 8px;
+}
+.s-info-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+.s-info-card p {
+  font-size: 13px;
+  color: var(--text2);
+  line-height: 1.5;
+}

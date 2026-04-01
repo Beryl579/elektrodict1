@@ -114,6 +114,11 @@
     <span class="bnav-icon">🕹️</span>
     <span class="bnav-label">Logika</span>
   </button>
+  <button class="bnav-item" id="bnav-synth" onclick="switchTab('synth')">
+    <div class="bnav-dot"></div>
+    <span class="bnav-icon">🎸</span>
+    <span class="bnav-label">Synth</span>
+  </button>
 </div>
 <div class="page on" id="page-kamus">
   <div class="sbar"><div class="sfield">
@@ -542,6 +547,68 @@
   <div class="pd-wrap">
     <button class="pd-back" onclick="switchTab('projects')">← Kembali ke Daftar</button>
     <div id="project-detail-content"></div>
+  </div>
+</div>
+
+<!-- ═══════ AUDIO SYNTHESIZER PAGE ═══════ -->
+<div class="page" id="page-synth">
+  <div class="synth-wrap">
+    <div class="synth-header">
+      <h2>🎸 Logic-to-Sound Synthesizer</h2>
+      <p>Dengarkan dan visualisasikan sinyal listrik secara real-time</p>
+    </div>
+
+    <!-- Oscilloscope Screen -->
+    <div class="scope-cabinet">
+      <div class="scope-screen-wrap">
+        <canvas id="synth-canvas" width="800" height="400"></canvas>
+        <div class="scope-grid"></div>
+        <div class="scope-glow"></div>
+      </div>
+      <div class="scope-status">
+        <span id="scope-freq-display">50.0 Hz</span>
+        <span id="scope-wave-display">SINE</span>
+      </div>
+    </div>
+
+    <!-- Synth Controls -->
+    <div class="synth-controls">
+      <div class="synth-main-btn-wrap">
+        <button id="synth-play-btn" class="synth-play-btn" onclick="toggleSynth()">
+          <span class="p-ico">▶</span> Mulai Sinyal
+        </button>
+      </div>
+
+      <div class="synth-grid">
+        <div class="synth-ctrl-group">
+          <label>Bentuk Gelombang</label>
+          <select id="synth-wave-type" onchange="updateSynthSettings()">
+            <option value="sine">Sine (Sinus)</option>
+            <option value="square">Square (Kotak)</option>
+            <option value="sawtooth">Sawtooth (Gergaji)</option>
+            <option value="triangle">Triangle (Segitiga)</option>
+          </select>
+        </div>
+
+        <div class="synth-ctrl-group">
+          <label>Frekuensi: <span id="val-freq">50</span> Hz</label>
+          <input type="range" id="synth-freq" min="20" max="2000" step="1" value="50" oninput="updateSynthSettings()">
+          <div class="range-labels"><span>20Hz</span><span>2kHz</span></div>
+        </div>
+
+        <div class="synth-ctrl-group">
+          <label>Volume: <span id="val-vol">10</span>%</label>
+          <input type="range" id="synth-vol" min="0" max="1" step="0.01" value="0.1" oninput="updateSynthSettings()">
+        </div>
+      </div>
+    </div>
+
+    <div class="synth-info">
+      <div class="s-info-card">
+        <div class="s-info-title">💡 Tahukah Kamu?</div>
+        <p>Frekuensi 50Hz adalah standar listrik PLN di Indonesia. Kamu bisa mendengarnya sebagai "hum" atau dengungan rendah. Coba naikkan ke 1kHz untuk mendengar "test tone" audio standar.</p>
+      </div>
+    </div>
   </div>
 </div>
 
