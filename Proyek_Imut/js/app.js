@@ -2884,61 +2884,89 @@ function copyPrjCode(btn, type) {
 function copyPrjCodeDirect(btn) { copyPrjCode(btn, 'cpp'); }
 
 /**
- * One-Click Wokwi Launcher via hidden POST form.
- * Endpoint: https://wokwi.com/_api/setup/arduino-uno (POST)
- * Fields  : sketch.ino (C++ code) + diagram.json (Wokwi diagram)
+ * Bulletproof One-Click Wokwi Launcher
+ * Strategy 1: POST form to https://wokwi.com/_api/setup/arduino-uno (most reliable)
+ * Strategy 2: Base64 URL fallback if POST is blocked by browser popup policy
  */
 function openInWokwi() {
   const content = document.getElementById('project-detail-content');
 
-  // Always prefer dataset (raw, un-escaped) over textContent (HTML-escaped)
-  const cppCode = content?.dataset.cppCode || '';
-
-  // wokwi_diagram from dataset is already the pretty-printed string
-  const rawDiagram = content?.dataset.wokwi || '';
+  // Source raw data from dataset (never from textContent which is HTML-escaped)
+  const cppCode    = content?.dataset.cppCode || '';
+  const rawDiagram = content?.dataset.wokwi   || '';
 
   if (!cppCode || !rawDiagram) {
     alert('Data proyek belum siap. Silakan generate ulang terlebih dahulu.');
     return;
   }
 
-  // Ensure diagramString is compact valid JSON (not double-encoded)
+  // Validate & compact the diagram JSON
   let diagramString;
   try {
-    // rawDiagram is a string; parse then re-stringify to compact it
-    const parsed = typeof rawDiagram === 'object'
-      ? rawDiagram
-      : JSON.parse(rawDiagram);
-    diagramString = JSON.stringify(parsed);
+    const data = typeof rawDiagram === 'object' ? rawDiagram : JSON.parse(rawDiagram);
+    diagramString = JSON.stringify(data);          // compact, no extra whitespace
   } catch(e) {
-    // If parse fails, use raw as-is (AI may have returned compact JSON already)
-    diagramString = typeof rawDiagram === 'string'
-      ? rawDiagram
-      : JSON.stringify(rawDiagram);
+    diagramString = typeof rawDiagram === 'string' ? rawDiagram : JSON.stringify(rawDiagram);
   }
 
-  // Build hidden form and POST to Wokwi
-  const form = document.createElement('form');
-  form.method = 'POST';
-  form.action = 'https://wokwi.com/_api/setup/arduino-uno';
-  form.target = '_blank';
-  form.style.display = 'none';
+  // Detect board type from diagram (default: arduino-uno, upgrade to esp32 if found)
+  const boardType = diagramString.includes('esp32') ? 'esp32' : 'arduino-uno';
+  const endpoint  = `https://wokwi.com/_api/setup/${boardType}`;
 
-  const addField = (name, value) => {
-    const inp = document.createElement('input');
-    inp.type  = 'hidden';
-    inp.name  = name;
-    inp.value = value;
-    form.appendChild(inp);
-  };
+  // ── STRATEGY 1: POST form (preferred — Wokwi officially supports this) ──
+  try {
+    const form = document.createElement('form');
+    form.method  = 'POST';
+    form.action  = endpoint;
+    form.target  = '_blank';
+    form.style.display = 'none';
 
-  addField('sketch.ino',   cppCode);
-  addField('diagram.json', diagramString);
+    const addInput = (name, value) => {
+      const inp = document.createElement('input');
+      inp.type  = 'hidden';
+      inp.name  = name;
+      inp.value = value;
+      form.appendChild(inp);
+    };
 
-  document.body.appendChild(form);
-  form.submit();
-  // Remove after short delay so submit completes
-  setTimeout(() => { if (form.parentNode) form.parentNode.removeChild(form); }, 3000);
+    addInput('sketch.ino',   cppCode);
+    addInput('diagram.json', diagramString);
+
+    document.body.appendChild(form);
+    form.submit();
+    setTimeout(() => { if (form.parentNode) form.parentNode.removeChild(form); }, 3000);
+
+  } catch(postError) {
+    // ── STRATEGY 2: Base64 URL fallback ──
+    console.warn('[Wokwi] POST failed, falling back to base64 URL:', postError);
+    _openInWokwiFallback(cppCode, diagramString, boardType);
+  }
+}
+
+/**
+ * Fallback: encodes sketch + diagram as base64 and opens Wokwi via URL import.
+ * Used when the POST form is blocked by popup/CSP restrictions.
+ */
+function _openInWokwiFallback(cppCode, diagramString, boardType) {
+  try {
+    // Build a combined JSON payload Wokwi can import
+    const payload = JSON.stringify({
+      files: [
+        { name: 'sketch.ino',   content: cppCode },
+        { name: 'diagram.json', content: diagramString }
+      ]
+    });
+    const b64 = btoa(unescape(encodeURIComponent(payload)));
+    const url = `https://wokwi.com/projects/new/${boardType}?data=${b64}`;
+    const win = window.open(url, '_blank');
+    if (!win) {
+      // Last resort: copy the Wokwi URL and tell the user
+      navigator.clipboard?.writeText(url).catch(() => {});
+      alert('Popup diblokir browser.\nURL Wokwi sudah dicopy ke clipboard — paste di tab baru!');
+    }
+  } catch(e) {
+    alert('Gagal membuka Wokwi otomatis. Gunakan tombol "Copy diagram.json" dan buka wokwi.com secara manual.');
+  }
 }
 
 function togglePrjStep(id, idx) {
