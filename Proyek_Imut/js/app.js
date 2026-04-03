@@ -2884,31 +2884,40 @@ function copyPrjCode(btn, type) {
 function copyPrjCodeDirect(btn) { copyPrjCode(btn, 'cpp'); }
 
 /**
- * One-Click Wokwi Launcher via hidden POST form
- * Creates a form targeting https://wokwi.com/_api/setup/arduino-uno
- * and submits sketch.ino + diagram.json in a new tab.
+ * One-Click Wokwi Launcher via hidden POST form.
+ * Endpoint: https://wokwi.com/_api/setup/arduino-uno (POST)
+ * Fields  : sketch.ino (C++ code) + diagram.json (Wokwi diagram)
  */
 function openInWokwi() {
   const content = document.getElementById('project-detail-content');
-  const cppCode   = content?.dataset.cppCode   || document.getElementById('code-content-cpp')?.textContent   || '';
-  const wokwiJson = content?.dataset.wokwi      || document.getElementById('code-content-wokwi')?.textContent || '';
 
-  if (!cppCode || !wokwiJson) {
-    alert('Data proyek belum siap. Generate ulang dulu ya!');
+  // Always prefer dataset (raw, un-escaped) over textContent (HTML-escaped)
+  const cppCode = content?.dataset.cppCode || '';
+
+  // wokwi_diagram from dataset is already the pretty-printed string
+  const rawDiagram = content?.dataset.wokwi || '';
+
+  if (!cppCode || !rawDiagram) {
+    alert('Data proyek belum siap. Silakan generate ulang terlebih dahulu.');
     return;
   }
 
-  // Ensure wokwiJson is valid JSON string (not double-encoded)
-  let diagramStr = wokwiJson;
+  // Ensure diagramString is compact valid JSON (not double-encoded)
+  let diagramString;
   try {
-    // If it's already an object (shouldn't be but just in case), stringify it
-    const parsed = typeof wokwiJson === 'object' ? wokwiJson : JSON.parse(wokwiJson);
-    diagramStr = JSON.stringify(parsed);
+    // rawDiagram is a string; parse then re-stringify to compact it
+    const parsed = typeof rawDiagram === 'object'
+      ? rawDiagram
+      : JSON.parse(rawDiagram);
+    diagramString = JSON.stringify(parsed);
   } catch(e) {
-    diagramStr = wokwiJson; // use as-is
+    // If parse fails, use raw as-is (AI may have returned compact JSON already)
+    diagramString = typeof rawDiagram === 'string'
+      ? rawDiagram
+      : JSON.stringify(rawDiagram);
   }
 
-  // Build hidden form
+  // Build hidden form and POST to Wokwi
   const form = document.createElement('form');
   form.method = 'POST';
   form.action = 'https://wokwi.com/_api/setup/arduino-uno';
@@ -2924,11 +2933,12 @@ function openInWokwi() {
   };
 
   addField('sketch.ino',   cppCode);
-  addField('diagram.json', diagramStr);
+  addField('diagram.json', diagramString);
 
   document.body.appendChild(form);
   form.submit();
-  setTimeout(() => document.body.removeChild(form), 2000);
+  // Remove after short delay so submit completes
+  setTimeout(() => { if (form.parentNode) form.parentNode.removeChild(form); }, 3000);
 }
 
 function togglePrjStep(id, idx) {
