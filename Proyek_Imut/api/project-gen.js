@@ -50,7 +50,9 @@ RULES:
 - Top comment: // Proyek: X \n// Logika: Y \n// Platform: Uno
 - ALWAYS add delay(50); at end of loop().
 5. WOKWI DIAGRAM:
-- MUST be 1-liner MINIFIED JSON string (NO extra spaces/newlines): {"version":1,"parts":[...],"connections":[...]}
+- MUST be 1-liner MINIFIED JSON string: {"version":1,"parts":[...],"connections":[...]}
+- MANDATORY PARTS OBJECT: Every item in "parts" array MUST be a valid object with type, id, top, left coordinates (to prevent overlap).
+  Example: {"type":"wokwi-arduino-uno","id":"uno","top":0,"left":0}
 - ALLOWED PARTS: wokwi-arduino-uno, wokwi-led, wokwi-resistor, wokwi-buzzer, wokwi-hc-sr04, wokwi-pushbutton, wokwi-potentiometer, wokwi-lcd-1602, wokwi-dht11, wokwi-relay-module, wokwi-servo
 - FALLBACK: Use wokwi-potentiometer for unknown sensors. Add note to description.
 - STRICT PINS (UPPERCASE ONLY):
@@ -59,7 +61,7 @@ RULES:
   pot/hc-sr04/dht11/relay: VCC, GND, SIG/TRIG/ECHO/SDA/IN
   servo: V, G, S
   resistor/buzzer/btn: 1, 2, 1L, 1R
-- CONNECTIONS: Array of Arrays ["src:pin","tgt:pin","color",[]] (NEVER objects).
+- CONNECTIONS ARRAY: MUST be array of arrays ["src:pin","tgt:pin","color",[]]. NEVER use objects for connections.
 - LCD 1602 PARALLEL ONLY (NO SDA/SCL/VCC):
   REQUIRED: ["lcd:VSS","uno:GND.1","black",[]],["lcd:VDD","uno:5V","red",[]],["lcd:V0","uno:GND.2","black",[]],["lcd:RS","uno:12","green",[]],["lcd:RW","uno:GND.3","black",[]],["lcd:E","uno:11","yellow",[]],["lcd:D4","uno:5","blue",[]],["lcd:D5","uno:4","blue",[]],["lcd:D6","uno:3","blue",[]],["lcd:D7","uno:2","blue",[]],["lcd:A","uno:5V","red",[]],["lcd:K","uno:GND.1","black",[]]
   C++: LiquidCrystal lcd(12,11,5,4,3,2);`;
