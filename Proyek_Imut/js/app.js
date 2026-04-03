@@ -2758,34 +2758,62 @@ function renderProjectDetail(prj) {
 
   const wokwiSectionHtml = wokwiPretty ? `
     <div class="pd-section">
-      <h3 class="pd-section-h">🧪 Wokwi Circuit Simulator</h3>
+      <h3 class="pd-section-h">🛠️ Jalankan di Simulator</h3>
 
-      <!-- Primary One-Click Launch -->
-      <button
-        onclick="openInWokwi()"
-        style="width:100%;padding:14px;background:linear-gradient(135deg,#4ade80,#16a34a);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:12px;letter-spacing:.3px;box-shadow:0 4px 18px rgba(22,163,74,.35);transition:transform .15s;"
-        onmouseover="this.style.transform='translateY(-2px)'"
-        onmouseout="this.style.transform=''"
-      >🚀 Jalankan di Wokwi (Otomatis)</button>
+      <!-- Simulation Setup Dashboard -->
+      <div style="border:1px solid rgba(99,102,241,.25);border-radius:12px;padding:18px;background:rgba(99,102,241,.04);display:flex;flex-direction:column;gap:14px;">
 
-      <!-- Secondary Manual Buttons -->
-      <div style="display:flex;flex-wrap:wrap;gap:9px;margin-bottom:12px;">
-        <button class="pd-code-copy" style="flex:1;min-width:140px;" onclick="copyPrjCode(this,'cpp')">📋 Copy Code (sketch.ino)</button>
-        <button class="pd-code-copy" style="flex:1;min-width:140px;" onclick="copyPrjCode(this,'wokwi')">📋 Copy Wiring (diagram.json)</button>
-      </div>
-
-      <!-- Disclaimer Box -->
-      <div style="background:rgba(250,176,5,.08);border:1px solid rgba(250,176,5,.3);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:14px;">
-        ⚠️ <b>Catatan:</b> Jika komponen asli tidak tersedia di Wokwi, AI menggunakan <b>Potensiometer</b> sebagai pengganti input analog. Cek panduan wiring untuk alat fisik!
-      </div>
-
-      <!-- diagram.json preview -->
-      <div class="pd-code-wrap">
-        <div class="pd-code-header">
-          <div class="pd-code-lang">diagram.json</div>
-          <button class="pd-code-copy" onclick="copyPrjCode(this,'wokwi')">📋 Copy diagram.json</button>
+        <!-- Step 1 -->
+        <div style="display:flex;gap:14px;align-items:flex-start;">
+          <div style="background:var(--accent);color:#fff;font-weight:700;font-size:13px;min-width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">1</div>
+          <div style="flex:1;">
+            <div style="font-weight:700;font-size:13px;color:var(--text);margin-bottom:6px;">Persiapkan Simulator</div>
+            <a href="https://wokwi.com/projects/new/arduino-uno" target="_blank" rel="noopener"
+              style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:linear-gradient(135deg,#4ade80,#16a34a);color:#fff;border-radius:7px;text-decoration:none;font-weight:600;font-size:12px;box-shadow:0 3px 12px rgba(22,163,74,.3);">
+              🌐 Buka Wokwi (Uno)
+            </a>
+          </div>
         </div>
-        <pre class="pd-code-pre" style="max-height:260px;"><code id="code-content-wokwi">${safeWokwi}</code></pre>
+
+        <div style="height:1px;background:var(--line2);opacity:.5;"></div>
+
+        <!-- Step 2 -->
+        <div style="display:flex;gap:14px;align-items:flex-start;">
+          <div style="background:var(--accent);color:#fff;font-weight:700;font-size:13px;min-width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">2</div>
+          <div style="flex:1;">
+            <div style="font-weight:700;font-size:13px;color:var(--text);margin-bottom:6px;">Pasang Komponen (Wiring)</div>
+            <button class="pd-code-copy" onclick="copyPrjCode(this,'wokwi')">📋 Salin Data Wiring (JSON)</button>
+            <p style="font-size:11px;color:var(--text3);margin-top:7px;line-height:1.5;">Di tab Wokwi, buka file <b>diagram.json</b>, hapus semua isinya, lalu <b>PASTE</b> data ini.</p>
+          </div>
+        </div>
+
+        <div style="height:1px;background:var(--line2);opacity:.5;"></div>
+
+        <!-- Step 3 -->
+        <div style="display:flex;gap:14px;align-items:flex-start;">
+          <div style="background:var(--accent);color:#fff;font-weight:700;font-size:13px;min-width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">3</div>
+          <div style="flex:1;">
+            <div style="font-weight:700;font-size:13px;color:var(--text);margin-bottom:6px;">Masukkan Program (Sketch)</div>
+            <button class="pd-code-copy" onclick="copyPrjCode(this,'cpp')">📋 Salin Kode Program (INO)</button>
+            <p style="font-size:11px;color:var(--text3);margin-top:7px;line-height:1.5;">Di tab Wokwi, buka file <b>sketch.ino</b>, hapus semua isinya, lalu <b>PASTE</b> kode ini.</p>
+          </div>
+        </div>
+
+        <!-- Final warning note -->
+        <div style="background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.2);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--text2);line-height:1.6;margin-top:2px;">
+          ⚠️ <b>Penting:</b> Pastikan menghapus kode bawaan Wokwi sebelum mem-paste data dari ElektroDict.
+          Jika komponen asli tidak tersedia, AI menggunakan <b>Potensiometer</b> sebagai pengganti input sensor analog.
+        </div>
+
+      </div>
+
+      <!-- diagram.json preview (collapsible feel via max-height) -->
+      <div class="pd-code-wrap" style="margin-top:14px;">
+        <div class="pd-code-header">
+          <div class="pd-code-lang">diagram.json — Preview</div>
+          <button class="pd-code-copy" onclick="copyPrjCode(this,'wokwi')">📋 Salin</button>
+        </div>
+        <pre class="pd-code-pre" style="max-height:220px;"><code id="code-content-wokwi">${safeWokwi}</code></pre>
       </div>
     </div>` : '';
 
