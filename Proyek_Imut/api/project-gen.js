@@ -116,11 +116,30 @@ STRICT ENGINEERING RULES:
    wokwi-pushbutton    → "1L", "1R", "2L", "2R"
    wokwi-potentiometer → "VCC", "SIG", "GND"
    wokwi-hc-sr04       → "VCC", "TRIG", "ECHO", "GND"
-   wokwi-lcd-1602      → "VCC", "GND", "SDA", "SCL"
+   wokwi-lcd-1602      → Parallel mode ONLY: "VSS", "VDD", "V0", "RS", "RW", "E", "D4", "D5", "D6", "D7", "A", "K"
    wokwi-dht11         → "VCC", "SDA", "GND"
    wokwi-relay-module  → "VCC", "GND", "IN"
    wokwi-servo         → "V", "G", "S"
    RULE: Never guess a pin name. If unsure, use "1" and "2".
+
+   === LCD WIRING — PARALLEL MODE MANDATORY ===
+   wokwi-lcd-1602 uses PARALLEL wiring ONLY. I2C (SDA/SCL) is FORBIDDEN for this component.
+   FORBIDDEN pins: "SDA", "SCL", "VCC" — do NOT use these for lcd connections.
+   MANDATORY parallel connections (ALL must be present):
+     ["lcd:VSS", "uno:GND.1", "black", []]        // Ground LCD power
+     ["lcd:VDD", "uno:5V",   "red",   []]        // 5V LCD power
+     ["lcd:V0",  "uno:GND.2", "black", []]        // Contrast: MUST go to GND or text is invisible
+     ["lcd:RS",  "uno:12",   "green", []]         // Register Select
+     ["lcd:RW",  "uno:GND.3", "black", []]        // Read/Write: MUST go to GND (Write mode)
+     ["lcd:E",   "uno:11",   "yellow",  []]       // Enable pin
+     ["lcd:D4",  "uno:5",    "blue",  []]         // Data bit 4
+     ["lcd:D5",  "uno:4",    "blue",  []]         // Data bit 5
+     ["lcd:D6",  "uno:3",    "blue",  []]         // Data bit 6
+     ["lcd:D7",  "uno:2",    "blue",  []]         // Data bit 7
+     ["lcd:A",   "uno:5V",   "red",   []]         // Backlight anode (+)
+     ["lcd:K",   "uno:GND.1","black", []]         // Backlight cathode (−)
+   cpp_code MUST use LiquidCrystal library (NOT LiquidCrystal_I2C), initialized as:
+     LiquidCrystal lcd(12, 11, 5, 4, 3, 2); // RS, E, D4, D5, D6, D7
 
    === UPPERCASE PIN NAMES — NON-NEGOTIABLE ===
    ALL pin names in the "connections" array MUST be written in UPPERCASE.
