@@ -2627,16 +2627,22 @@ async function generateAIProject() {
     // 1. Retrieve raw content
     let rawContent = data.result;
 
-    // 2. Strip markdown blocks
+    // 2. Strip markdown blocks (just in case)
     let cleanContent = rawContent.replace(/```json/ig, '').replace(/```/g, '').trim();
 
     try {
         const prj = JSON.parse(cleanContent);
         
-        // Add dynamic ID and fix field names if AI slightly diverged
-        prj.id = 'ai-' + prj.title.toLowerCase().replace(/\s+/g, '-').slice(0, 20);
-        // Backward compatibility for the render logic
-        if (prj.wiring_table && !prj.wiring) prj.wiring = prj.wiring_table;
+        // Add dynamic ID
+        prj.id = 'ai-' + (prj.title || 'proyek').toLowerCase().replace(/\s+/g, '-').slice(0, 20);
+        
+        // Normalize field names: support both old and new API schema
+        if (!prj.bom && prj.components) prj.bom = prj.components;
+        if (!prj.wiring_guide && prj.wiring_table) prj.wiring_guide = prj.wiring_table;
+        if (!prj.cpp_code && prj.code) {
+          prj.cpp_code = Array.isArray(prj.code) ? prj.code.join('\n') : String(prj.code || '');
+        }
+        if (!prj.difficulty) prj.difficulty = 'Menengah';
         
         currentAIProject = prj;
         renderProjectDetail(prj);
@@ -2681,10 +2687,23 @@ function renderProjectDetail(prj) {
       </div>
     </div>`;
 
-  // Wiring Table HTML
-  const wiringHtml = prj.wiring_table ? `
+  // === BOM / Components HTML (new field: bom, fallback to components) ===
+  const componentList = prj.bom || prj.components || [];
+  const bomHtml = componentList.length ? `
     <div class="pd-section">
-      <h3 class="pd-section-h">🔌 Tabel Koneksi Kabel</h3>
+      <h3 class="pd-section-h">📦 Bill of Materials (BOM)</h3>
+      <div class="pd-components">
+        <ul class="pd-comp-list">
+          ${componentList.map(c => `<li class="pd-comp-item">${c}</li>`).join('')}
+        </ul>
+      </div>
+    </div>` : '';
+
+  // === Wiring Guide HTML (new field: wiring_guide, fallback to wiring_table) ===
+  const wiringData = prj.wiring_guide || prj.wiring_table || prj.wiring || [];
+  const wiringHtml = wiringData.length ? `
+    <div class="pd-section">
+      <h3 class="pd-section-h">🔌 Tabel Koneksi Kabel (Wiring Guide)</h3>
       <div class="pd-table-wrap">
         <table class="pd-table">
           <thead>
@@ -2695,64 +2714,68 @@ function renderProjectDetail(prj) {
             </tr>
           </thead>
           <tbody>
-            ${prj.wiring_table.map(w => `
+            ${wiringData.map(w => `
               <tr>
                 <td><b>${w.komponen}</b></td>
                 <td><code>${w.pin_komponen || w.koneksi_pin || '-'}</code></td>
-                <td><code>${w.koneksi_arduino || w.koneksi_pin || '-'}</code></td>
+                <td><code>${w.koneksi_arduino || w.koneksi_board || '-'}</code></td>
               </tr>`).join('')}
           </tbody>
         </table>
       </div>
     </div>` : '';
 
-  content.innerHTML = `
-    <div class="pd-header">
-      <h1 class="pd-title">${prj.title}</h1>
-      <div class="pd-meta">
-        <div class="prj-card-diff diff-${prj.difficulty.toLowerCase().replace(' ','-')}">${prj.difficulty}</div>
-        <div style="font-size: 12px; color: var(--text2); font-family: var(--mono);">${prj.id}</div>
-      </div>
-    </div>
+  // === C++ Code HTML (new field: cpp_code, fallback to code) ===
+  const rawCode = prj.cpp_code ||
+    (Array.isArray(prj.code) ? prj.code.join('\n') : (typeof prj.code === 'string' ? prj.code.replace(/\\n/g, '\n') : ''));
+  const safeCode = rawCode.replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
+  const codeHtml = `
     <div class="pd-section">
-      <h3 class="pd-section-h">📖 Deskripsi</h3>
-      <p style="color:var(--text2); font-size:14px; line-height:1.6;">${prj.description}</p>
-    </div>
-
-    <div class="pd-section">
-      <h3 class="pd-section-h">📦 Komponen yang Dibutuhkan</h3>
-      <div class="pd-components">
-        <ul class="pd-comp-list">
-          ${prj.components.map(c => `<li class="pd-comp-item">${c}</li>`).join('')}
-        </ul>
-      </div>
-    </div>
-
-    ${disclaimerHtml}
-    ${wiringHtml}
-
-    <div class="pd-section">
-      <h3 class="pd-section-h">💻 Kode Program (Arduino IDE)</h3>
+      <h3 class="pd-section-h">💻 Sketch C++ (Arduino IDE)</h3>
       <div class="pd-code-wrap">
         <div class="pd-code-header">
           <div class="pd-code-lang">C++ / Arduino</div>
-          <button class="pd-code-copy" onclick="copyPrjCodeDirect(this)">📋 Copy Code</button>
+          <button class="pd-code-copy" onclick="copyPrjCode(this, 'cpp')">📋 Copy Code (sketch.ino)</button>
         </div>
-        <pre class="pd-code-pre"><code id="code-content">${(()=>{
-          let formattedCode = "";
-          if (Array.isArray(prj.code)) {
-            formattedCode = prj.code.join('\n');
-          } else if (typeof prj.code === 'string') {
-            formattedCode = prj.code.replace(/\\n/g, '\n');
-          } else {
-            formattedCode = String(prj.code || "");
-          }
-          return formattedCode.replace(/</g, '&lt;').replace(/>/g, '&gt;');
-        })()}</code></pre>
+        <pre class="pd-code-pre"><code id="code-content-cpp">${safeCode}</code></pre>
       </div>
-    </div>
+    </div>`;
 
+  // === Wokwi Section (new field: wokwi_diagram) ===
+  const wokwiRaw = prj.wokwi_diagram || '';
+  // wokwi_diagram may be a string (stringified JSON) or already an object
+  let wokwiPretty = '';
+  if (wokwiRaw) {
+    try {
+      const parsed = typeof wokwiRaw === 'string' ? JSON.parse(wokwiRaw) : wokwiRaw;
+      wokwiPretty = JSON.stringify(parsed, null, 2);
+    } catch(e) {
+      wokwiPretty = typeof wokwiRaw === 'string' ? wokwiRaw : JSON.stringify(wokwiRaw, null, 2);
+    }
+  }
+  const safeWokwi = wokwiPretty.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+  const wokwiSectionHtml = wokwiPretty ? `
+    <div class="pd-section">
+      <h3 class="pd-section-h">🧪 Wokwi Circuit Simulator</h3>
+      <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:14px;">
+        <button class="pd-code-copy" style="background:var(--accent);color:#fff;padding:10px 18px;border-radius:8px;border:none;cursor:pointer;font-weight:600;font-size:13px;" onclick="copyPrjCode(this, 'wokwi')">📋 Copy Wiring (diagram.json)</button>
+        <a href="https://wokwi.com/projects/new/arduino-uno" target="_blank" rel="noopener" style="background:linear-gradient(135deg,#4ade80,#16a34a);color:#fff;padding:10px 18px;border-radius:8px;text-decoration:none;font-weight:600;font-size:13px;display:inline-flex;align-items:center;gap:6px;">🚀 Buka Wokwi Simulator</a>
+      </div>
+      <p style="font-size:12px;color:var(--text3);margin-bottom:10px;">💡 Cara pakai: Klik Buka Wokwi → klik <b>+</b> → pilih <b>Upload Files</b> → paste isi <b>diagram.json</b> di bawah ini.</p>
+      <div class="pd-code-wrap">
+        <div class="pd-code-header">
+          <div class="pd-code-lang">diagram.json</div>
+          <button class="pd-code-copy" onclick="copyPrjCode(this, 'wokwi')">📋 Copy diagram.json</button>
+        </div>
+        <pre class="pd-code-pre" style="max-height:280px;"><code id="code-content-wokwi">${safeWokwi}</code></pre>
+      </div>
+    </div>` : '';
+
+  // === Assembly Steps HTML ===
+  const stepsData = prj.steps || [];
+  const stepsHtml = stepsData.length ? `
     <div class="pd-section">
       <h3 class="pd-section-h">📝 Langkah Perakitan</h3>
       <div class="pd-table-wrap">
@@ -2764,7 +2787,7 @@ function renderProjectDetail(prj) {
             </tr>
           </thead>
           <tbody>
-            ${prj.steps.map((step, i) => {
+            ${stepsData.map((step, i) => {
               const checked = progress.includes(i);
               return `
                 <tr id="step-${prj.id}-${i}" class="${checked ? 'completed' : ''}">
@@ -2773,27 +2796,76 @@ function renderProjectDetail(prj) {
                       ${checked ? 'checked' : ''} 
                       onchange="togglePrjStep('${prj.id}', ${i})">
                   </td>
-                  <td><span class="pd-step-txt">${step.alur_perakitan}</span></td>
+                  <td><span class="pd-step-txt">${step.alur_perakitan || step}</span></td>
                 </tr>
               `;
             }).join('')}
           </tbody>
         </table>
       </div>
+    </div>` : '';
+
+  const diffLabel = prj.difficulty || 'AI Generated';
+  const diffClass = diffLabel.toLowerCase().replace(/\s+/g, '-');
+
+  content.innerHTML = `
+    <div class="pd-header">
+      <h1 class="pd-title">${prj.title}</h1>
+      <div class="pd-meta">
+        <div class="prj-card-diff diff-${diffClass}">${diffLabel}</div>
+        <div style="font-size: 12px; color: var(--text2); font-family: var(--mono);">${prj.id}</div>
+      </div>
     </div>
+
+    <div class="pd-section">
+      <h3 class="pd-section-h">📖 Deskripsi</h3>
+      <p style="color:var(--text2); font-size:14px; line-height:1.6;">${prj.description}</p>
+    </div>
+
+    ${bomHtml}
+    ${disclaimerHtml}
+    ${wiringHtml}
+    ${codeHtml}
+    ${wokwiSectionHtml}
+    ${stepsHtml}
   `;
+
+  // Store wokwi raw string for clipboard access
+  if(wokwiPretty) content.dataset.wokwi = wokwiPretty;
+  if(rawCode)    content.dataset.cppCode = rawCode;
 
   switchTab('project-detail');
 }
 
-function copyPrjCodeDirect(btn) {
-  const code = document.getElementById('code-content').textContent;
-  navigator.clipboard.writeText(code).then(() => {
-    const oldText = btn.innerHTML;
+// Unified copy function for project code/wokwi
+function copyPrjCode(btn, type) {
+  const content = document.getElementById('project-detail-content');
+  let text = '';
+  if (type === 'wokwi') {
+    text = content?.dataset.wokwi || document.getElementById('code-content-wokwi')?.textContent || '';
+  } else {
+    text = content?.dataset.cppCode || document.getElementById('code-content-cpp')?.textContent || document.getElementById('code-content')?.textContent || '';
+  }
+  if (!text) return;
+  navigator.clipboard.writeText(text).then(() => {
+    const old = btn.innerHTML;
     btn.innerHTML = '✅ Copied!';
-    setTimeout(() => { btn.innerHTML = oldText; }, 2000);
+    setTimeout(() => { btn.innerHTML = old; }, 2000);
+  }).catch(() => {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    const old = btn.innerHTML;
+    btn.innerHTML = '✅ Copied!';
+    setTimeout(() => { btn.innerHTML = old; }, 2000);
   });
 }
+
+// Legacy alias (backward compat)
+function copyPrjCodeDirect(btn) { copyPrjCode(btn, 'cpp'); }
 
 function togglePrjStep(id, idx) {
   const row = document.getElementById(`step-${id}-${idx}`);

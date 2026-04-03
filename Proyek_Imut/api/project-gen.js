@@ -40,22 +40,20 @@ export default async function handler(req, res) {
 {
 "title": "Nama Proyek (Bahasa Indonesia)",
 "description": "Deskripsi singkat proyek",
-"difficulty": "Mudah/Menengah/Sulit",
-"components": ["Komponen 1", "Komponen 2"],
-"wiring_table": [
+"bom": ["Komponen 1", "Komponen 2"],
+"wiring_guide": [
   { "komponen": "Nama Komponen", "pin_komponen": "VCC/GND/SDA/dll", "koneksi_arduino": "5V/GND/Pin Digital 2/dll" }
 ],
-"code": ["line 1", "line 2"],
-"steps": [ { "alur_perakitan": "Langkah detail..." } ]
+"cpp_code": "kumpulan string code arduino lengkap",
+"wokwi_diagram": "stringified JSON diagram.json"
 }
 
 STRICT ENGINEERING RULES:
-1. MANDATORY POWER: You MUST include the power (VCC/5V/3.3V) and ground (GND) connections for EVERY single component in the wiring_table.
+1. MANDATORY POWER: You MUST include the power (VCC/5V/3.3V) and ground (GND) connections for EVERY single component in the wiring_guide.
 2. I2C DEFAULT FOR DISPLAYS: If using an LCD or OLED, you MUST use the I2C version (VCC, GND, SDA, SCL). Never suggest parallel wiring.
 3. RELAY & HIGH-CURRENT SAFETY: NEVER connect a motor, pump, or high-current device directly to an Arduino pin. The microcontroller pin must only connect to a Relay or Transistor's signal/base pin. The actuator must be powered externally through the Relay.
-4. GRANULAR STEPS: The 'steps' array must contain highly detailed, step-by-step assembly instructions, explicitly stating which pin goes where.
-5. CODE FORMAT: The 'code' field MUST be an array of strings (one string per line).
-The entire output must be perfectly valid for JSON.parse().`;
+4. CODE FORMAT: The 'cpp_code' field MUST be a single long string containing the full Arduino C++ code (include newlines \n).
+5. WOKWI DIAGRAM: You must generate a valid, stringified JSON representing a standard Wokwi diagram.json file. It must include "version": 1, the "parts" array (e.g., "board-uno", LEDs, resistors), and the "connections" array mapping the virtual wires precisely. This diagram must perfectly match the cpp_code and bom. Ensure quotes are escaped properly so it is a valid string inside the main JSON.`;
 
     const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
@@ -65,12 +63,13 @@ The entire output must be perfectly valid for JSON.parse().`;
       },
       body: JSON.stringify({
         model: "llama-3.3-70b-versatile",
+        response_format: { type: "json_object" },
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: `Buatkan tutorial untuk proyek: ${idea}` }
         ],
         temperature: 0.7,
-        max_tokens: 2000,
+        max_tokens: 4000,
         stream: false 
       })
     });
