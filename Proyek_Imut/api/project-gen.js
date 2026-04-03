@@ -149,28 +149,46 @@ STRICT ENGINEERING RULES:
    Lowercase pin names WILL cause the Wokwi simulation to fail silently.
    This rule is non-negotiable and overrides any other naming convention.`;
 
-    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        "Authorization": `Bearer ${GROQ_API_KEY}`,
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        model: "llama-3.3-70b-versatile",
-        response_format: { type: "json_object" },
-        messages: [
-          { role: "system", content: systemPrompt },
-          { role: "user", content: `Buatkan tutorial untuk proyek: ${idea}` }
-        ],
-        temperature: 0.7,
-        max_tokens: 4000,
-        stream: false 
-      })
-    });
+    // Helper: attempt a single Groq call with the given model
+    async function callGroq(model) {
+      const resp = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${GROQ_API_KEY}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          model,
+          response_format: { type: "json_object" },
+          messages: [
+            { role: "system", content: systemPrompt },
+            { role: "user",   content: `Buatkan tutorial untuk proyek: ${idea}` }
+          ],
+          temperature: 0.7,
+          max_tokens: 4000,
+          stream: false
+        })
+      });
+      return resp;
+    }
 
+    // ── PRIMARY attempt: 70B model ──
+    let response = await callGroq("llama-3.3-70b-versatile");
+
+    // ── FALLBACK: retry with fast 8B model on 429 / 500 ──
+    if (response.status === 429 || response.status === 500) {
+      console.warn(`[Backend] Primary model failed (${response.status}), falling back to llama-3.1-8b-instant...`);
+      response = await callGroq("llama-3.1-8b-instant");
+    }
+
+    // ── Final failure handling with structured status codes ──
     if (!response.ok) {
-      const errorData = await response.json();
-      return res.status(response.status).json(errorData);
+      const status = response.status;
+      const errBody = await response.json().catch(() => ({}));
+      if (status === 429) {
+        return res.status(429).json({ status: "limit_reached", error: { message: "Quota AI habis di kedua model. Coba lagi dalam 1-2 menit." } });
+      }
+      return res.status(status).json({ status: "ai_fainted", error: { message: errBody?.error?.message || "AI gagal generate. Coba instruksi yang lebih simpel." } });
     }
 
     const data = await response.json();
@@ -181,6 +199,6 @@ STRICT ENGINEERING RULES:
 
   } catch (error) {
     console.error("[Backend] Runtime Error:", error);
-    return res.status(500).json({ error: { message: error.message || "Internal Server Error" } });
+    return res.status(500).json({ status: "ai_fainted", error: { message: error.message || "Internal Server Error" } });
   }
 }

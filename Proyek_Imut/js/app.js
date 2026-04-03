@@ -2613,17 +2613,25 @@ let currentAIProject = null;
 async function generateAIProject() {
   const input = document.getElementById('prj-idea-input');
   const idea = input.value.trim();
-  if(!idea) return;
 
-  const btn = document.getElementById('prj-gen-btn');
+  // Friendly empty-input validation
+  if (!idea) {
+    showPrjToast("Eits, jangan dikosongin dong! 😅 Tulis dulu proyek Arduino apa yang mau kamu buat.", 'warn');
+    input.focus();
+    return;
+  }
+
+  const btn     = document.getElementById('prj-gen-btn');
   const loading = document.getElementById('prj-loading');
-  
-  btn.disabled = true;
+  const origBtnLabel = btn.innerHTML;
+
+  btn.disabled  = true;
+  btn.innerHTML = '🛠️ Sabar ya, lagi ngerakit kabel virtual buat kamu...';
   loading.classList.remove('hide');
 
   try {
     const data = await window.ElektroAPI.generateProject(idea);
-    
+
     // 1. Retrieve raw content
     let rawContent = data.result;
 
@@ -2632,10 +2640,10 @@ async function generateAIProject() {
 
     try {
         const prj = JSON.parse(cleanContent);
-        
+
         // Add dynamic ID
         prj.id = 'ai-' + (prj.title || 'proyek').toLowerCase().replace(/\s+/g, '-').slice(0, 20);
-        
+
         // Normalize field names: support both old and new API schema
         if (!prj.bom && prj.components) prj.bom = prj.components;
         if (!prj.wiring_guide && prj.wiring_table) prj.wiring_guide = prj.wiring_table;
@@ -2643,23 +2651,66 @@ async function generateAIProject() {
           prj.cpp_code = Array.isArray(prj.code) ? prj.code.join('\n') : String(prj.code || '');
         }
         if (!prj.difficulty) prj.difficulty = 'Menengah';
-        
+
         currentAIProject = prj;
         renderProjectDetail(prj);
 
     } catch (parseError) {
         console.error("JSON Parsing Error:", parseError);
         console.log("Raw Content that failed:", cleanContent);
-        alert("Gagal memproses data proyek dari AI. Silakan coba lagi.");
+        showPrjToast("Aduh, ElektroBot lagi agak pusing! 😵‍💫 Gagal nge-generate. Coba kasih instruksi yang lebih simpel atau klik ulang.", 'error');
     }
 
   } catch (err) {
     console.error("Generate Error:", err);
-    alert("Maaf, gagal membuat proyek. Coba gunakan perintah yang lebih spesifik.");
+
+    // Read structured status from backend response if available
+    const status = err?.status || (err?.message || '').includes('429') ? 'limit_reached' : '';
+
+    if (status === 'limit_reached' || err?.httpStatus === 429) {
+      showPrjToast("Waduh, trafik lagi padat banget! 🚦 Kuota AI kita lagi istirahat bentar. Coba lagi dalam 1-2 menit ya!", 'warn');
+    } else if (err?.name === 'TypeError' || err?.message?.includes('fetch') || err?.message?.includes('network')) {
+      showPrjToast("Koneksi lagi bapuk nih... 🌐 Coba cek internet kamu atau klik 'Generate' sekali lagi!", 'warn');
+    } else {
+      showPrjToast("Aduh, ElektroBot lagi agak pusing! 😵‍💫 Gagal nge-generate. Coba kasih instruksi yang lebih simpel atau klik ulang.", 'error');
+    }
   } finally {
-    btn.disabled = false;
+    btn.disabled  = false;
+    btn.innerHTML = origBtnLabel;
     loading.classList.add('hide');
   }
+}
+
+/**
+ * Show a friendly toast notification inside the project section
+ * type: 'warn' | 'error' | 'info'
+ */
+function showPrjToast(message, type = 'info') {
+  // Remove any existing toast
+  document.getElementById('prj-toast')?.remove();
+
+  const colors = {
+    warn:  { bg: 'rgba(250,176,5,.12)',  border: 'rgba(250,176,5,.4)',   text: '#fbbf24' },
+    error: { bg: 'rgba(239,68,68,.10)',  border: 'rgba(239,68,68,.35)',  text: '#f87171' },
+    info:  { bg: 'rgba(99,102,241,.10)', border: 'rgba(99,102,241,.35)', text: 'var(--accent)' }
+  };
+  const c = colors[type] || colors.info;
+
+  const toast = document.createElement('div');
+  toast.id = 'prj-toast';
+  toast.style.cssText = `
+    background:${c.bg};border:1px solid ${c.border};border-radius:10px;
+    padding:12px 16px;font-size:13px;color:${c.text};line-height:1.6;
+    margin-bottom:14px;animation:fadeIn .25s ease;font-weight:500;
+  `;
+  toast.textContent = message;
+
+  // Insert above the generate button area
+  const btn = document.getElementById('prj-gen-btn');
+  btn?.parentNode?.insertBefore(toast, btn);
+
+  // Auto-dismiss after 6s
+  setTimeout(() => toast.remove(), 6000);
 }
 
 function renderProjectList() {
