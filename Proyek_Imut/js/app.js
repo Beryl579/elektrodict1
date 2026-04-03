@@ -1024,19 +1024,19 @@ function parseAIText(text){
   result = result.replace(/\$\$([\s\S]*?)\$\$/g, (_, math) => {
     const idx = latexBlocks.length;
     latexBlocks.push({type:'display', math: math.trim()});
-    return `\x00LATEX${idx}\x00`;
+    return `@@LATEX_BLOCK_${idx}@@`;
   });
   // 2. Protect \[...\] display
   result = result.replace(/\\\[([\s\S]*?)\\\]/g, (_, math) => {
     const idx = latexBlocks.length;
     latexBlocks.push({type:'display', math: math.trim()});
-    return `\x00LATEX${idx}\x00`;
+    return `@@LATEX_BLOCK_${idx}@@`;
   });
   // 3. Protect \(...\) inline
   result = result.replace(/\\\(([^)]*?)\\\)/g, (_, math) => {
     const idx = latexBlocks.length;
     latexBlocks.push({type:'inline', math: math.trim()});
-    return `\x00LATEX${idx}\x00`;
+    return `@@LATEX_BLOCK_${idx}@@`;
   });
   // 4. Protect $...$ inline — BUGFIX #8: only match if content looks like math (has letter/operator, not pure currency/number)
   result = result.replace(/\$([^\$\n\r]{1,200}?)\$/g, (_, math) => {
@@ -1047,27 +1047,34 @@ function parseAIText(text){
     if(!/[a-zA-Z\\^_{}\|=><]/.test(m)) return `$${math}$`;
     const idx = latexBlocks.length;
     latexBlocks.push({type:'inline', math: m});
-    return `\x00LATEX${idx}\x00`;
+    return `@@LATEX_BLOCK_${idx}@@`;
   });
 
-  // Escape remaining HTML
-  result = esc(result);
-
-  // Markdown rendering
-  result = result.replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>');
-  result = result.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-  result = result.replace(/(?<!\*)\*([^*\n]+?)\*(?!\*)/g, '<em>$1</em>');
-  result = result.replace(/`([^`]+)`/g, '<code style="background:var(--bg4);padding:1px 5px;border-radius:4px;font-family:var(--mono);font-size:.9em;color:var(--amber)">$1</code>');
-  result = result.replace(/^###\s+(.+)$/gm, '<h4 style="font-size:14px;font-weight:700;color:var(--accent);margin:12px 0 4px">$1</h4>');
-  result = result.replace(/^##\s+(.+)$/gm,  '<h3 style="font-size:15px;font-weight:700;color:var(--accent);margin:14px 0 5px">$1</h3>');
-  result = result.replace(/^#\s+(.+)$/gm,   '<h2 style="font-size:16px;font-weight:700;color:var(--accent);margin:16px 0 6px">$1</h2>');
-  result = result.replace(/^[\*\-]\s+(.+)$/gm, '<div style="display:flex;gap:8px;margin:4px 0"><span style="color:var(--accent);flex-shrink:0">▸</span><span>$1</span></div>');
-  result = result.replace(/^(\d+)\.\s+(.+)$/gm, '<div style="display:flex;gap:8px;margin:4px 0"><span style="color:var(--accent);font-family:var(--mono);font-size:11px;flex-shrink:0;margin-top:2px">$1.</span><span>$2</span></div>');
-  result = result.replace(/\n\n/g, '<br><br>');
-  result = result.replace(/\n/g, '<br>');
+  // Helper to escape basic HTML if marked is not handling it fully, but marked does this.
+  // We'll strip esc() because marked handles blockquotes etc. better without escaping first.
+  // Just let marked parse it.
+  if (typeof marked !== 'undefined') {
+    result = marked.parse(result, { breaks: true, gfm: true });
+  } else if (typeof window.marked !== 'undefined') {
+    result = window.marked.parse(result, { breaks: true, gfm: true });
+  } else {
+    // Fallback if marked didn't load
+    result = esc(result);
+    result = result.replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>');
+    result = result.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    result = result.replace(/(?<!\*)\*([^*\n]+?)\*(?!\*)/g, '<em>$1</em>');
+    result = result.replace(/`([^`]+)`/g, '<code style="background:var(--bg4);padding:1px 5px;border-radius:4px;font-family:var(--mono);font-size:.9em;color:var(--amber)">$1</code>');
+    result = result.replace(/^###\s+(.+)$/gm, '<h4 style="font-size:14px;font-weight:700;color:var(--accent);margin:12px 0 4px">$1</h4>');
+    result = result.replace(/^##\s+(.+)$/gm,  '<h3 style="font-size:15px;font-weight:700;color:var(--accent);margin:14px 0 5px">$1</h3>');
+    result = result.replace(/^#\s+(.+)$/gm,   '<h2 style="font-size:16px;font-weight:700;color:var(--accent);margin:16px 0 6px">$1</h2>');
+    result = result.replace(/^[\*\-]\s+(.+)$/gm, '<div style="display:flex;gap:8px;margin:4px 0"><span style="color:var(--accent);flex-shrink:0">▸</span><span>$1</span></div>');
+    result = result.replace(/^(\d+)\.\s+(.+)$/gm, '<div style="display:flex;gap:8px;margin:4px 0"><span style="color:var(--accent);font-family:var(--mono);font-size:11px;flex-shrink:0;margin-top:2px">$1.</span><span>$2</span></div>');
+    result = result.replace(/\n\n/g, '<br><br>');
+    result = result.replace(/\n/g, '<br>');
+  }
 
   // Restore LaTeX as renderable spans
-  result = result.replace(/\x00LATEX(\d+)\x00/g, (_, idx) => {
+  result = result.replace(/@@LATEX_BLOCK_(\d+)@@/g, (_, idx) => {
     const block = latexBlocks[parseInt(idx)];
     const latexEsc = block.math.replace(/"/g,'&quot;');
     if(block.type === 'display'){
@@ -2836,10 +2843,45 @@ function toggleTTS() {
   }
 }
 
+function cleanTextForSpeech(text) {
+  if (!text) return '';
+  let clean = String(text);
+
+  // 1. Strip Emojis
+  clean = clean.replace(/[\p{Emoji_Presentation}\p{Extended_Pictographic}]/gu, '');
+
+  // 2. Remove Markdown (except minus sign, handle list dash separately)
+  clean = clean.replace(/[*#_`~|]/g, ' ');
+  clean = clean.replace(/(?:^|\n)\s*-\s+/g, ' '); // list dash
+
+  // 3. Convert LaTeX to Spoken Indonesian
+  clean = clean.replace(/\$\$/g, ' ');
+  clean = clean.replace(/\\\(/g, ' ');
+  clean = clean.replace(/\\\)/g, ' ');
+  clean = clean.replace(/\\\[/g, ' ');
+  clean = clean.replace(/\\\]/g, ' ');
+  clean = clean.replace(/\$/g, ' ');
+
+  clean = clean.replace(/\\frac\{([^}]+)\}\{([^}]+)\}/g, ' $1 per $2 ');
+  clean = clean.replace(/\\cdot/g, ' dikali ');
+  clean = clean.replace(/\\times/g, ' dikali ');
+  clean = clean.replace(/\+/g, ' ditambah ');
+  clean = clean.replace(/-/g, ' dikurangi ');
+  clean = clean.replace(/=/g, ' sama dengan ');
+  clean = clean.replace(/\^2/g, ' kuadrat ');
+
+  // Clean trailing formatting
+  clean = clean.replace(/[{}]/g, ' ');
+  clean = clean.replace(/\\[a-zA-Z]+/g, ' ');
+  clean = clean.replace(/\s+/g, ' ').trim();
+
+  return clean;
+}
+
 function speak(text) {
   if(!ttsEnabled || !window.speechSynthesis) return;
-  // Hilangkan format markdown dan emoji agar terbaca natural
-  let cleanText = text.replace(/[*_#`~>]/g, '').replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F700}-\u{1F77F}\u{1F780}-\u{1F7FF}\u{1F800}-\u{1F8FF}\u{1F900}-\u{1F9FF}\u{1FA00}-\u{1FA6F}\u{1FA70}-\u{1FAFF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu, '');
+  // Hilangkan format markdown, emoji, dan konversi LaTeX agar terbaca natural
+  let cleanText = cleanTextForSpeech(text);
   const utter = new SpeechSynthesisUtterance(cleanText);
   utter.lang = 'id-ID';
   utter.rate = 1.05;

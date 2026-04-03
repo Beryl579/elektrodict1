@@ -1637,3 +1637,28 @@ body.light .led-bulb.on .led-val { color:#fff; }
   color: var(--text2);
   line-height: 1.5;
 }
+
+/* ── MARKDOWN TABLE STYLING ── */
+.bbl table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0;
+  font-size: 13px;
+  border-radius: var(--r3);
+  overflow: hidden;
+  border: 1px solid var(--line2);
+}
+.bbl th, .bbl td {
+  padding: 8px 12px;
+  border: 1px solid var(--line2);
+  text-align: left;
+}
+.bbl th {
+  background: var(--bg4);
+  font-weight: 600;
+  color: var(--text);
+  border-bottom: 2px solid var(--accent);
+}
+.bbl tr:nth-child(even) td {
+  background: rgba(255,255,255,0.02);
+}
