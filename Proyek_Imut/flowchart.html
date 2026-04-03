@@ -2,6 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Flow Diagram — ElektroDict System</title>
 <!-- html2canvas and jsPDF libraries for high quality PDF capture -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -23,14 +24,17 @@
 
   .actions {
     background: #ffffff;
-    padding: 15px 30px;
+    padding: 20px 30px;
     border-radius: 12px;
     box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
     margin-bottom: 30px;
     display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
     align-items: center;
     gap: 15px;
     z-index: 10;
+    max-width: 90vw;
   }
 
   .btn {
@@ -48,6 +52,22 @@
   .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(37,99,235,0.4); }
   .btn:active { transform: translateY(0); }
   .btn:disabled { background: #94a3b8; cursor: not-allowed; box-shadow: none; transform: none; }
+
+  .btn.mobile-btn { background: linear-gradient(135deg, #10b981, #059669); }
+  .btn.mobile-btn:hover { box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4); }
+
+  /* Mobile Portrait / Tall Layout Logic */
+  .a4-landscape.mobile-print {
+    width: 1000px;
+    height: auto;
+    min-height: 2000px;
+    padding: 60px;
+  }
+  .a4-landscape.mobile-print .columns {
+    flex-direction: column;
+    gap: 60px;
+  }
+  .a4-landscape.mobile-print .header { margin-bottom: 60px; }
 
   /* =========================================================
      A4 LANDSCAPE EXACT DIMENSIONS 
@@ -75,7 +95,10 @@
     .a4-landscape { transform: scale(0.85); margin-bottom: -150px; }
   }
   @media (max-width: 1200px) {
-    .a4-landscape { transform: scale(0.65); margin-bottom: -350px; }
+    .a4-landscape { transform: scale(0.5); margin-bottom: -500px; }
+  }
+  @media (max-width: 600px) {
+    .a4-landscape { transform: scale(0.25); margin-bottom: -800px; }
   }
 
   /* Deep Background Gradient */
@@ -183,11 +206,14 @@
 <body>
 
 <div class="actions">
-  <button class="btn" onclick="generateHighResPDF()" id="generateBtn">
-    <span style="font-size:20px; vertical-align:middle; margin-right:6px">📄</span> Download PDF Diagram
+  <button class="btn" onclick="generateHighResPDF('landscape')" id="generateBtn">
+    <span style="font-size:20px; vertical-align:middle; margin-right:6px">🖥️</span> PDF Desktop (A4)
   </button>
-  <span id="statusTxt">Resolusi sangat tinggi (Lossless) | Mendukung Emoji 😎 & Gradien HTML</span>
+  <button class="btn mobile-btn" onclick="generateHighResPDF('mobile')" id="generateMobileBtn">
+    <span style="font-size:20px; vertical-align:middle; margin-right:6px">📱</span> PDF Smartphone (Scroll)
+  </button>
 </div>
+<div id="statusTxt" style="text-align:center;color:#64748b;font-weight:500;margin-bottom:30px;font-size:14px;">Resolusi ultra-tinggi lossless · Mendukung Emoji Unicode & Gradien HTML</div>
 
 <div class="a4-landscape" id="flowchartCapture">
   <div class="content">
@@ -370,47 +396,61 @@
 <script>
 window.jsPDF = window.jspdf.jsPDF;
 
-async function generateHighResPDF() {
+async function generateHighResPDF(type = 'landscape') {
   const btn = document.getElementById('generateBtn');
+  const btnM = document.getElementById('generateMobileBtn');
   const status = document.getElementById('statusTxt');
   
   btn.disabled = true;
+  if(btnM) btnM.disabled = true;
   status.style.color = '#3b82f6';
-  status.innerHTML = '<b>Memproses...</b> Menyusun pixel demi pixel dari elemen HTML (ini butuh waktu beberapa detik ⏳)';
+  status.innerHTML = '<b>Memproses...</b> Membangun layout UI (butuh waktu bbrp detik ⏳)';
+
+  const el = document.getElementById('flowchartCapture');
+
+  // Trigger relayout if mobile
+  if (type === 'mobile') {
+    el.classList.add('mobile-print');
+  }
+
+  // Jeda sangat singkat (50ms) agar DOM update sebelum dicapture
+  await new Promise(r => setTimeout(r, 50));
 
   try {
-    const el = document.getElementById('flowchartCapture');
-    
-    // Konfigurasi html2canvas ultra-tinggi untuk presisi cetak
     const canvas = await html2canvas(el, {
-      scale: 3, // Kualitas rendering 3x lipat
+      scale: 3, 
       useCORS: true,
       backgroundColor: '#0a0e1a',
       logging: false
     });
 
-    status.innerHTML = '<b>Mengonversi...</b> Menyatukan hasil proses ke format PDF A4...';
+    status.innerHTML = '<b>Mengonversi...</b> Menyatukan hasil ke format PDF...';
 
-    // Buat objek PDF A4 Landscape
-    const pdf = new jsPDF({
-      orientation: 'landscape',
-      unit: 'mm',
-      format: 'a4'
-    });
+    const imgData = canvas.toDataURL('image/jpeg', 0.98);
 
-    // Ambil data gambar (kualitas maksimal JPEG untuk size reasonable)
-    const imgData = canvas.toDataURL('image/jpeg', 1.0);
-    
-    // Fit image perfectly without cutting
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-    // Cukup hitung rasio asli canvas agar proporsional
-    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-    
-    // Fit the image ke keseluruhan form PDF
-    pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
-    
-    // Unduh File
-    pdf.save('ElektroDict_Flow_Diagram_HQ.pdf');
+    if (type === 'mobile') {
+      // PDF mode ukuran statis pixel = memanjang 1 halaman full tanpa margin/kepotong (cocok utk HP)
+      const wPx = canvas.width / 3;
+      const hPx = canvas.height / 3;
+      const pdf = new jsPDF({
+        orientation: 'portrait',
+        unit: 'px',
+        format: [wPx, hPx]
+      });
+      pdf.addImage(imgData, 'JPEG', 0, 0, wPx, hPx);
+      pdf.save('ElektroDict_Flow_Mobile.pdf');
+    } else {
+      // PDF mode A4 Landscape presisi untuk Desktop/Cetak
+      const pdf = new jsPDF({
+        orientation: 'landscape',
+        unit: 'mm',
+        format: 'a4'
+      });
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+      pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+      pdf.save('ElektroDict_Flow_Desktop.pdf');
+    }
     
     status.style.color = '#10b981';
     status.innerHTML = '✅ <b>PDF beres!</b> Cek folder Downloads kamu.';
@@ -420,10 +460,12 @@ async function generateHighResPDF() {
     status.innerHTML = '❌ <b>Terjadi kesalahan:</b> ' + error.message;
     console.error("PDF Generate Error:", error);
   } finally {
+    el.classList.remove('mobile-print');
     btn.disabled = false;
+    if(btnM) btnM.disabled = false;
     setTimeout(() => {
-        status.style.color = '';
-        status.innerHTML = 'Resolusi sangat tinggi (Lossless) | Mendukung Emoji 😎 & Gradien HTML';
+        status.style.color = '#64748b';
+        status.innerHTML = 'Resolusi ultra-tinggi lossless · Mendukung Emoji Unicode & Gradien HTML';
     }, 5000);
   }
 }
