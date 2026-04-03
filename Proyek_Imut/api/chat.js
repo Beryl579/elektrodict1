@@ -39,23 +39,20 @@ export default async function handler(req, res) {
     }
 
     // --- MODEL SWITCHER LOGIC ---
-    let targetModel = payload.model || "llama-3.3-70b-versatile";
+    let requestedModel = payload.model;
+    let targetModel = requestedModel || "llama-3.3-70b-versatile";
     let messages = Array.isArray(payload.messages) ? [...payload.messages] : [];
     
-    if (payload.modelChoice === 'master') {
-      targetModel = 'gpt-oss-120b';
+    if (targetModel === 'openai/gpt-oss-120b') {
       if (messages.length > 0 && messages[0].role === 'system') {
         messages[0].content = "Persona of a senior electrical engineering student who is highly technical, a theory expert, and answers in a casual, student-friendly tone.\nStrict Requirement: You MUST use LaTeX formatting for any mathematical formulas or equations (e.g. \\(V = IR\\) for inline and $$P = VI$$ for display block).";
       }
-    } else if (payload.modelChoice === 'flash') {
-      targetModel = 'llama-3.3-70b-versatile';
+    } else {
+      // Default to Flash Response persona for LLaMA and anything else
       if (messages.length > 0 && messages[0].role === 'system') {
         messages[0].content = "Persona of an assistant who is highly responsive, to-the-point, and also uses a casual tone.\nStrict Requirement: You MUST use LaTeX formatting for any mathematical formulas or equations (e.g. \\(V = IR\\) for inline and $$P = VI$$ for display block).";
       }
     }
-    
-    // Remove custom property from payload before sending to Groq
-    delete payload.modelChoice;
 
     const groqPayload = {
       ...payload,
