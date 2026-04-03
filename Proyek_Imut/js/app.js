@@ -29,6 +29,7 @@ async function callAI(payload) {
     // Gunakan fungsi chat dari API layer (sudah ada timeout & error handling)
     return await window.ElektroAPI.chat(payload.messages, {
       model: payload.model,
+      modelChoice: payload.modelChoice,
       temperature: payload.temperature,
       max_tokens: payload.max_tokens
     });
@@ -1652,7 +1653,8 @@ async function send(v){
   showDots('D'); showDots('M');
 
   try{
-    const data = await callAI({model:API_MODEL,messages:[{role:'system',content:SYS},...chatHistory]});
+    const mc = document.getElementById('modelChoiceD') ? document.getElementById('modelChoiceD').value : 'flash';
+    const data = await callAI({model:API_MODEL, modelChoice: mc, messages:[{role:'system',content:SYS},...chatHistory]});
     hideDots('D'); hideDots('M');
     if(data.error) throw new Error(data.error.message);
     const rep=data.choices?.[0]?.message?.content||'(tidak ada respons)';

@@ -84,6 +84,7 @@
     async chat(messages, options = {}) {
       return await callAIBase({
         model: options.model || MODEL_TEXT,
+        modelChoice: options.modelChoice,
         messages,
         temperature: options.temperature ?? 0.7,
         max_tokens: options.max_tokens ?? 1000,

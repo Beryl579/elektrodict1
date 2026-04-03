@@ -148,7 +148,16 @@
       <div style="display:flex;flex-direction:column;height:100%">
         <div class="chead">
           <div class="cava">⚡</div>
-          <div class="cinfo"><div class="cname">ElektroBot</div><div class="cstatus">● online</div></div>
+          <div class="cinfo" style="flex:1">
+            <div class="cname" style="display:flex;align-items:center;gap:6px">
+              ElektroBot
+              <select id="modelChoiceD" onchange="document.getElementById('modelChoiceM').value=this.value" style="font-size:10px;padding:2px 4px;border-radius:4px;background:var(--bg3);color:var(--text);border:1px solid var(--line1);cursor:pointer">
+                <option value="flash">Flash Response</option>
+                <option value="master">Master Logic</option>
+              </select>
+            </div>
+            <div class="cstatus">● online</div>
+          </div>
           <button class="ctts" id="tts-toggle-D" onclick="toggleTTS()" title="Mute/Unmute Suara">🔊</button>
           <button class="cback" onclick="clearChatHistory()" title="Reset riwayat chat" style="font-size:13px">🗑️</button>
         </div>
@@ -253,8 +262,14 @@
 <div class="chat-mobile" id="chatM">
   <div class="chead" style="background:linear-gradient(135deg,var(--accent-d),var(--bg3));border-bottom:1px solid var(--line2)">
     <div class="cava" style="background:linear-gradient(135deg,var(--accent),#2563eb);border:none;box-shadow:0 2px 8px #4f9cf966">⚡</div>
-    <div class="cinfo">
-      <div class="cname">ElektroBot</div>
+    <div class="cinfo" style="flex:1">
+      <div class="cname" style="display:flex;align-items:center;gap:6px">
+        ElektroBot
+        <select id="modelChoiceM" onchange="document.getElementById('modelChoiceD').value=this.value" style="font-size:10px;padding:2px 4px;border-radius:4px;background:var(--bg3);color:var(--text);border:1px solid var(--line1);cursor:pointer">
+          <option value="flash">Flash Response</option>
+          <option value="master">Master Logic</option>
+        </select>
+      </div>
       <div class="cstatus">● online · siap bantu</div>
     </div>
     <button class="ctts" id="tts-toggle-M" onclick="toggleTTS()" title="Mute/Unmute Suara">🔊</button>
