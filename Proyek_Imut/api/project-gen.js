@@ -53,7 +53,23 @@ STRICT ENGINEERING RULES:
 2. I2C DEFAULT FOR DISPLAYS: If using an LCD or OLED, you MUST use the I2C version (VCC, GND, SDA, SCL). Never suggest parallel wiring.
 3. RELAY & HIGH-CURRENT SAFETY: NEVER connect a motor, pump, or high-current device directly to an Arduino pin. The microcontroller pin must only connect to a Relay or Transistor's signal/base pin. The actuator must be powered externally through the Relay.
 4. CODE FORMAT: The 'cpp_code' field MUST be a single long string containing the full Arduino C++ code (include newlines \n).
-5. WOKWI DIAGRAM: You must generate a valid, stringified JSON representing a standard Wokwi diagram.json file. It must include "version": 1, the "parts" array (e.g., "board-uno", LEDs, resistors), and the "connections" array mapping the virtual wires precisely. This diagram must perfectly match the cpp_code and bom. Ensure quotes are escaped properly so it is a valid string inside the main JSON.`;
+5. WOKWI DIAGRAM — STRICT SCHEMA:
+   The 'wokwi_diagram' field MUST be a stringified JSON string of a valid Wokwi diagram.json.
+   It MUST match this exact top-level structure: {"version":1,"parts":[...],"connections":[...]}.
+
+   PARTS RULES:
+   - Every object in "parts" MUST have "type" and "id" string fields.
+   - "top" and "left" (number, pixels) are required for positioning.
+   - Valid "type" values: "wokwi-arduino-uno", "wokwi-led", "wokwi-resistor", "wokwi-pushbutton", "wokwi-hc-sr04", "wokwi-relay-module", "wokwi-buzzer", "wokwi-dht22", "wokwi-lcd1602", "wokwi-servo".
+   - Example parts entry: {"type":"wokwi-arduino-uno","id":"uno","top":0,"left":0}
+
+   CONNECTIONS RULES — CRITICAL:
+   - "connections" MUST be an ARRAY OF ARRAYS. Do NOT use objects like {"id":"...","to":"..."}.
+   - Each connection is a 4-element array: ["source_id:pin", "target_id:pin", "wire_color", []]
+   - "wire_color" must be a CSS color string e.g. "green", "red", "black", "yellow".
+   - Example connections entry: ["uno:13", "led1:A", "green", []]
+   - Pin GND connections: ["uno:GND.1", "led1:C", "black", []]
+   - NEVER write: {"id": "c1", "from": "...", "to": "..."} — this is WRONG and will break Wokwi.`;
 
     const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
