@@ -52,7 +52,23 @@ STRICT ENGINEERING RULES:
 1. MANDATORY POWER: Include VCC/5V and GND connections for EVERY component in wiring_guide.
 2. I2C FOR DISPLAYS: Always use I2C (VCC, GND, SDA, SCL) for LCD/OLED. Never parallel wiring.
 3. RELAY SAFETY: Never wire a motor/pump directly to an Arduino pin. Use a relay module.
-4. CODE FORMAT: 'cpp_code' must be one long string with real newlines (\\n).
+4. CODE FORMAT & DOCUMENTATION (cpp_code):
+   - 'cpp_code' MUST be one long string with real newlines (\\n).
+   - LOGIC OVERVIEW: Add a 2-3 line comment block at the VERY TOP of the sketch describing the project logic.
+     Format:
+     // Proyek: [Nama Proyek]
+     // Logika: [Penjelasan singkat cara kerja]
+     // Platform: Arduino Uno
+   - EVERY IMPORTANT LINE must have a concise Indonesian comment using // prefix.
+     Applies to: variable declarations, pinMode, digitalWrite, analogRead, LCD functions, Serial, delays, if-conditions, loop logic.
+   - Examples of correct comments:
+     int sensorPin = A0;          // Mendefinisikan pin A0 sebagai input sensor
+     pinMode(relayPin, OUTPUT);   // Mengatur pin relay sebagai output digital
+     int val = analogRead(sensorPin); // Membaca nilai analog dari sensor (rentang 0-1023)
+     if (val < 500) {             // Jika nilai di bawah 500, kondisi terpenuhi
+     lcd.begin(16, 2);            // Memulai LCD ukuran 16 kolom x 2 baris
+     lcd.print("Halo!");          // Menampilkan teks pada posisi kursor aktif
+   - BAHASA: All comments MUST be in Indonesian. No English comments allowed.
 5. SIMULATION OPTIMIZATION: Always add "delay(50);" at the very end of void loop() to prevent Wokwi simulator lag.
 
 6. WOKWI DIAGRAM — GOD MODE STRICT SCHEMA:
@@ -104,7 +120,15 @@ STRICT ENGINEERING RULES:
    wokwi-dht11         → "VCC", "SDA", "GND"
    wokwi-relay-module  → "VCC", "GND", "IN"
    wokwi-servo         → "V", "G", "S"
-   RULE: Never guess a pin name. If unsure, use "1" and "2".`;
+   RULE: Never guess a pin name. If unsure, use "1" and "2".
+
+   === UPPERCASE PIN NAMES — NON-NEGOTIABLE ===
+   ALL pin names in the "connections" array MUST be written in UPPERCASE.
+   This applies to EVERY component without exception.
+   CORRECT  : ["lcd:VSS", "uno:GND.1", "lcd:RS", "lcd:D4"]
+   WRONG     : ["lcd:vss", "uno:gnd.1", "lcd:rs", "lcd:d4"]
+   Lowercase pin names WILL cause the Wokwi simulation to fail silently.
+   This rule is non-negotiable and overrides any other naming convention.`;
 
     const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
