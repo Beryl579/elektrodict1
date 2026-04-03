@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<title>Flow Diagram — ElektroDict System</title>
+<!-- html2canvas and jsPDF libraries for high quality PDF capture -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #f1f5f9;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 30px;
+    min-height: 100vh;
+  }
+
+  .actions {
+    background: #ffffff;
+    padding: 15px 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    z-index: 10;
+  }
+
+  .btn {
+    background: linear-gradient(135deg, #4f9cf9, #2563eb);
+    color: white;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(37,99,235,0.3);
+    transition: transform 0.2s;
+  }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(37,99,235,0.4); }
+  .btn:active { transform: translateY(0); }
+  .btn:disabled { background: #94a3b8; cursor: not-allowed; box-shadow: none; transform: none; }
+
+  /* =========================================================
+     A4 LANDSCAPE EXACT DIMENSIONS 
+     Ratio 1.414 (297 / 210) 
+     Approx dimensions for high-res web rendering
+  ========================================================= */
+  .a4-landscape {
+    width: 1584px;
+    height: 1120px;
+    background: #0a0e1a;
+    color: #e0e6f0;
+    position: relative;
+    padding: 60px 80px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+    border: 1px solid #1e293b;
+    border-radius: 4px;
+    overflow: visible; /* Prevent any cutting off */
+    /* Zoom out slightly for smaller screens to be visible, but html2canvas captures full size */
+    transform-origin: top center;
+  }
+
+  @media (max-width: 1500px) {
+    .a4-landscape { transform: scale(0.85); margin-bottom: -150px; }
+  }
+  @media (max-width: 1200px) {
+    .a4-landscape { transform: scale(0.65); margin-bottom: -350px; }
+  }
+
+  /* Deep Background Gradient */
+  .a4-landscape::before {
+    content: '';
+    position: absolute; top:0; left:0; width:100%; height:100%;
+    background: radial-gradient(circle at 15% 25%, rgba(79,156,249,0.08) 0%, transparent 40%),
+                radial-gradient(circle at 85% 75%, rgba(139,92,246,0.08) 0%, transparent 40%),
+                linear-gradient(180deg, rgba(10,14,26,1) 0%, rgba(13,19,36,1) 100%);
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* Content wrapper above background */
+  .content { position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column; }
+
+  .header {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    border-bottom: 2px solid rgba(30,41,59,0.7);
+    padding-bottom: 25px; margin-bottom: 40px;
+  }
+  .logo-wrapper { display: flex; align-items: center; gap: 20px; }
+  .logo-icon {
+    width: 56px; height: 56px;
+    background: linear-gradient(135deg, #4f9cf9, #2563eb);
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 30px; font-weight: bold;
+    box-shadow: 0 8px 25px rgba(79,156,249,0.3);
+  }
+  .title-group h1 { font-size: 32px; font-weight: 800; color: #ffffff; letter-spacing: -0.5px; margin-bottom: 6px; }
+  .title-group h1 span { color: #6db3f9; font-weight: 400; opacity: 0.8; }
+  .title-group p { font-size: 14px; color: #8b9bc0; letter-spacing: 0.5px; text-transform: uppercase; font-weight: 600; }
+  .meta { text-align: right; }
+  .meta strong { font-size: 16px; color: #ffffff; }
+  .meta p { font-size: 13px; color: #8b9bc0; margin-top: 6px; }
+
+  /* Columns Grid Layout */
+  .columns { display: flex; gap: 40px; flex: 1; }
+  .col { flex: 1; display: flex; flex-direction: column; gap: 16px; position: relative; justify-content: flex-start; }
+  
+  .col-head {
+    display: flex; align-items: center; gap: 12px; margin-bottom: 15px;
+    font-size: 15px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px;
+  }
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+
+  .blue-text { color: #6db3f9; }  .dot-blue { background: #4f9cf9; box-shadow: 0 0 10px #4f9cf9; }
+  .purp-text { color: #b49cf6; }  .dot-purp { background: #8b5cf6; box-shadow: 0 0 10px #8b5cf6; }
+  .pink-text { color: #e879a0; }  .dot-pink { background: #e879a0; box-shadow: 0 0 10px #e879a0; }
+  .grn-text  { color: #3ecf8e; }  .dot-grn  { background: #3ecf8e; box-shadow: 0 0 10px #3ecf8e; }
+
+  /* Cards Styling */
+  .card {
+    background: rgba(15,22,41,0.85); backdrop-filter: blur(10px);
+    border: 1px solid #1e293b; border-radius: 16px;
+    padding: 20px 22px; text-align: center;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+    position: relative;
+    flex-shrink: 0;
+  }
+  .card-icon { font-size: 28px; margin-bottom: 12px; }
+  .card-title { font-size: 17px; font-weight: 700; color: #ffffff; margin-bottom: 8px; }
+  .card-sub { font-size: 13px; color: #94a3b8; line-height: 1.5; }
+
+  .card.primary { background: linear-gradient(145deg, rgba(30,58,138,0.3) 0%, rgba(15,23,42,0.8) 100%); border-color: rgba(59,130,246,0.3); }
+  .card.server { background: linear-gradient(145deg, rgba(88,28,135,0.3) 0%, rgba(15,23,42,0.8) 100%); border-color: rgba(139,92,246,0.3); }
+  .card.ai { background: linear-gradient(145deg, rgba(157,23,77,0.3) 0%, rgba(15,23,42,0.8) 100%); border-color: rgba(236,72,153,0.3); }
+  .card.infra { background: linear-gradient(145deg, rgba(6,78,59,0.3) 0%, rgba(15,23,42,0.8) 100%); border-color: rgba(16,185,129,0.3); }
+
+  /* Feature Grid (for features) */
+  .feat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: -5px; }
+  .feat-card {
+    background: rgba(15,23,42,0.6); border: 1px solid #334155; border-radius: 10px;
+    padding: 15px; text-align: center;
+  }
+  .feat-icon { font-size: 20px; margin-bottom: 6px; }
+  .feat-title { font-size: 12px; font-weight: 700; color: #cbd5e1; margin-bottom: 4px; }
+  .feat-sub { font-size: 11px; color: #64748b; }
+
+  /* Arrows */
+  .arrow { text-align: center; color: #475569; font-size: 24px; margin: -5px 0; line-height: 1; position: relative; z-index: 10; font-weight: 300;}
+  .arrow-label {
+    display: inline-block; background: #0f172a; border: 1px solid #334155;
+    color: #94a3b8; font-size: 12px; font-weight: 500; padding: 4px 14px;
+    border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px;
+    margin: -10px auto; position: relative; z-index: 15;
+  }
+  .arrow-group { text-align: center; display: flex; flex-direction: column; align-items: center; margin: 5px 0; }
+
+  /* Footer */
+  .footer {
+    border-top: 2px solid rgba(30,41,59,0.7); padding-top: 25px; margin-top: auto;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .legend { display: flex; gap: 25px; }
+  .legend-item { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: #94a3b8; }
+  .l-dot { width: 16px; height: 8px; border-radius: 4px; }
+
+  .techs { display: flex; gap: 10px; }
+  .tech { background: #1e293b; color: #e2e8f0; font-size: 11px; font-family: monospace; padding: 6px 14px; border-radius: 6px; font-weight: 600;}
+
+</style>
+</head>
+<body>
+
+<div class="actions">
+  <button class="btn" onclick="generateHighResPDF()" id="generateBtn">
+    <span style="font-size:20px; vertical-align:middle; margin-right:6px">📄</span> Download PDF Diagram
+  </button>
+  <span id="statusTxt">Resolusi sangat tinggi (Lossless) | Mendukung Emoji 😎 & Gradien HTML</span>
+</div>
+
+<div class="a4-landscape" id="flowchartCapture">
+  <div class="content">
+
+    <!-- Header Section -->
+    <div class="header">
+      <div class="logo-wrapper">
+        <div class="logo-icon">⚡</div>
+        <div class="title-group">
+          <h1>ElektroDict <span>— System Flow Diagram</span></h1>
+          <p>Progressive Web App · Kamus Teknik Elektro Interaktif</p>
+        </div>
+      </div>
+      <div class="meta">
+        <strong>Beryl Nathaniel Sinaga</strong>
+        <p>Deployed on Vercel · PWA Ready</p>
+      </div>
+    </div>
+
+    <!-- Main 3 Columns -->
+    <div class="columns">
+
+      <!-- COL 1: CLIENT SIDE -->
+      <div class="col" style="flex: 1.1">
+        <div class="col-head blue-text"><div class="dot dot-blue"></div> Client-Side (Browser / App)</div>
+
+        <div class="card primary" style="padding:15px; flex-shrink:1;">
+          <div class="card-icon" style="font-size:22px;margin-bottom:6px">👤</div>
+          <div class="card-title" style="font-size:15px;margin-bottom:4px">User (Mahasiswa / Pelajar)</div>
+          <div class="card-sub" style="font-size:12px">Mengakses sistem via Web Browser atau PWA Installed</div>
+        </div>
+
+        <div class="arrow">⬇</div>
+
+        <div class="card primary">
+          <div class="card-icon">🌐</div>
+          <div class="card-title">Frontend — index.html + app.js</div>
+          <div class="card-sub">Render DOM Dinamis · Responsivitas Otomatis<br>Parsing KaTeX untuk Rumus · State Management Lokal</div>
+        </div>
+
+        <div class="arrow-group">
+          <div class="arrow">⬇</div>
+          <div class="arrow-label">UI Rendering Components</div>
+        </div>
+
+        <div class="feat-grid">
+          <div class="feat-card"><div class="feat-icon">📖</div><div class="feat-title">Kamus Elektro</div><div class="feat-sub">130+ Kata & Rumus</div></div>
+          <div class="feat-card"><div class="feat-icon">🔢</div><div class="feat-title">Kalkulator</div><div class="feat-sub">Multi RLC & Ohm</div></div>
+          <div class="feat-card"><div class="feat-icon">🎨</div><div class="feat-title">Kode Resistor</div><div class="feat-sub">Tabel & SVG Visual</div></div>
+          <div class="feat-card"><div class="feat-icon">🔄</div><div class="feat-title">Konversi Unit</div><div class="feat-sub">dB, Watt, V, I, dll.</div></div>
+          <div class="feat-card"><div class="feat-icon">🎸</div><div class="feat-title">Signal Synth</div><div class="feat-sub">Web Audio API</div></div>
+          <div class="feat-card"><div class="feat-icon">🕹️</div><div class="feat-title">Logic Gate Sim</div><div class="feat-sub">Interaktif 7 Gerbang</div></div>
+        </div>
+
+        <!-- Static Data -->
+        <div class="card infra" style="margin-top:auto; padding:15px">
+          <div class="card-title" style="font-size:14px; margin-bottom:4px">📦 data.js — Static Resource Layer</div>
+          <div class="card-sub" style="font-size:12px">Menyimpan Array Objek: KAMUS, KALKULATOR, QUIZ_CATS, PROJECTS</div>
+        </div>
+      </div>
+
+      <!-- COL 2: API FLOW -->
+      <div class="col" style="flex: 0.9">
+        <div class="col-head purp-text"><div class="dot dot-purp"></div> REST Data Flow</div>
+        
+        <div style="height:25px"></div>
+
+        <div class="card server">
+          <div class="card-icon">🔗</div>
+          <div class="card-title">api.js — Abstraksi Lokal</div>
+          <div class="card-sub">Satu jalur entry untuk call HTTP<br>fetchWithTimeout() · Exception Guard</div>
+        </div>
+
+        <div class="arrow-group" style="margin:20px 0;">
+          <div class="arrow">⬇</div>
+          <div class="arrow-label">POST /api/chat</div>
+        </div>
+
+        <div class="card server" style="border-width:2px; box-shadow: 0 0 40px rgba(139,92,246,0.2)">
+          <div class="card-icon">▲</div>
+          <div class="card-title">Vercel Serverless Functions</div>
+          <div class="card-sub">
+            <span style="color:#d8b4fe; font-weight:600">/api/chat.js</span> — Proxy General AI<br>
+            <span style="color:#d8b4fe; font-weight:600">/api/project-gen.js</span> — Strict JSON Coder<br>
+            <br>Validasi Body · CORS Headers Handling
+          </div>
+        </div>
+
+        <div class="arrow-group" style="margin:20px 0;">
+          <div class="arrow">⬇</div>
+          <div class="arrow-label">Secret: GROQ_API_KEY</div>
+        </div>
+
+        <div class="card ai">
+          <div class="card-icon">🧠</div>
+          <div class="card-title">Groq Cloud AI Provider</div>
+          <div class="card-sub">Infrastruktur LPU (Language Processing Unit)<br>Model: <strong style="color:white">LLaMA 3.3 70B Versatile</strong><br>Model: <strong style="color:white">LLaMA 4 Scout</strong> (Analyzer)</div>
+        </div>
+
+        <div class="arrow-group" style="margin-bottom:0; margin-top:20px">
+          <div class="arrow-label" style="border-color:#10b981; color:#34d399">JSON Response Stream ⬆</div>
+        </div>
+      </div>
+
+      <!-- COL 3: FEATURES & INFRA -->
+      <div class="col" style="flex: 1">
+        <div class="col-head pink-text"><div class="dot dot-pink"></div> AI-Powered Services</div>
+
+        <div class="card ai" style="text-align:left; padding: 18px 25px;">
+          <div class="card-icon" style="float:left; margin-right:15px; font-size:36px; margin-bottom:0">💬</div>
+          <div>
+            <div class="card-title">ElektroBot (AI Chatbot)</div>
+            <div class="card-sub">Menjawab konsep elektro dengan bahasa santai ala mahasiswa. Mendukung penyimpanan riwayat obrolan (localStorage), parsing rumus matematika, TTS (Voice), dan Auto Recovery jika limit API (429).</div>
+          </div>
+        </div>
+
+        <div class="card ai" style="text-align:left; padding: 18px 25px;">
+          <div class="card-icon" style="float:left; margin-right:15px; font-size:36px; margin-bottom:0">🧠</div>
+          <div>
+            <div class="card-title">AI Quiz Generator</div>
+            <div class="card-sub">Menghasilkan 5 soal unik pada tiap sesi dengan 9 Kategori Teknik & 3 Tingkat Kesulitan. Jawaban otomatis dinilai dan skor bisa dibagikan (WhatsApp).</div>
+          </div>
+        </div>
+
+        <div class="card ai" style="text-align:left; padding: 18px 25px;">
+          <div class="card-icon" style="float:left; margin-right:15px; font-size:36px; margin-bottom:0">🔬</div>
+          <div>
+            <div class="card-title">AI Vision Analyzer</div>
+            <div class="card-sub">Upload/foto secara langsung kertas atau buku elektronik. Scanner OCR otomatis mengenali soal/komponen rangkaian dan mendeskripsikan kerjanya via LLaMA Scout.</div>
+          </div>
+        </div>
+
+        <div class="card ai" style="text-align:left; padding: 18px 25px;">
+          <div class="card-icon" style="float:left; margin-right:15px; font-size:36px; margin-bottom:0">🛠️</div>
+          <div>
+            <div class="card-title">AI Lab Project Generator</div>
+            <div class="card-sub">Merancang arsitektur Internet of Things/Arduino dari ide kasar. Menghasilkan bahan alat (BOM), skema pin, dan kode algoritma C++.</div>
+          </div>
+        </div>
+
+        <!-- INFRASTRUCTURE -->
+        <div style="height:5px"></div>
+        <div class="col-head grn-text"><div class="dot dot-grn"></div> Base Infrastructure</div>
+
+        <div style="display:flex; gap:15px">
+          <div class="card infra" style="flex:1; padding: 15px;">
+            <div class="card-title" style="font-size:14px; margin-bottom:4px">🔐 Keamanan Dasar</div>
+            <div class="card-sub" style="font-size:11px">Proteksi Private Key (.env)<br>CSP Headers, X-Frame DENY</div>
+          </div>
+          <div class="card infra" style="flex:1; padding: 15px;">
+            <div class="card-title" style="font-size:14px; margin-bottom:4px">📱 PWA Terintegrasi</div>
+            <div class="card-sub" style="font-size:11px">Dukungan Mode Offline (sw.js)<br>App Shell Caching Instan</div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <div class="legend">
+        <div class="legend-item"><div class="l-dot dot-blue"></div> Client-Side</div>
+        <div class="legend-item"><div class="l-dot dot-purp"></div> Serverless API</div>
+        <div class="legend-item"><div class="l-dot dot-pink"></div> AI Services</div>
+        <div class="legend-item"><div class="l-dot dot-grn"></div> Infra / Base</div>
+      </div>
+      <div class="techs">
+        <span class="tech">HTML5+CSS+JS</span>
+        <span class="tech">Vercel (Node)</span>
+        <span class="tech">Groq (LLaMA)</span>
+        <span class="tech">KaTeX</span>
+        <span class="tech">PWA / SW.js</span>
+      </div>
+    </div>
+
+  </div> <!-- end content -->
+</div> <!-- end a4-landscape -->
+
+<script>
+window.jsPDF = window.jspdf.jsPDF;
+
+async function generateHighResPDF() {
+  const btn = document.getElementById('generateBtn');
+  const status = document.getElementById('statusTxt');
+  
+  btn.disabled = true;
+  status.style.color = '#3b82f6';
+  status.innerHTML = '<b>Memproses...</b> Menyusun pixel demi pixel dari elemen HTML (ini butuh waktu beberapa detik ⏳)';
+
+  try {
+    const el = document.getElementById('flowchartCapture');
+    
+    // Konfigurasi html2canvas ultra-tinggi untuk presisi cetak
+    const canvas = await html2canvas(el, {
+      scale: 3, // Kualitas rendering 3x lipat
+      useCORS: true,
+      backgroundColor: '#0a0e1a',
+      logging: false
+    });
+
+    status.innerHTML = '<b>Mengonversi...</b> Menyatukan hasil proses ke format PDF A4...';
+
+    // Buat objek PDF A4 Landscape
+    const pdf = new jsPDF({
+      orientation: 'landscape',
+      unit: 'mm',
+      format: 'a4'
+    });
+
+    // Ambil data gambar (kualitas maksimal JPEG untuk size reasonable)
+    const imgData = canvas.toDataURL('image/jpeg', 1.0);
+    
+    // Fit image perfectly without cutting
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    // Cukup hitung rasio asli canvas agar proporsional
+    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+    
+    // Fit the image ke keseluruhan form PDF
+    pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+    
+    // Unduh File
+    pdf.save('ElektroDict_Flow_Diagram_HQ.pdf');
+    
+    status.style.color = '#10b981';
+    status.innerHTML = '✅ <b>PDF beres!</b> Cek folder Downloads kamu.';
+    
+  } catch (error) {
+    status.style.color = '#ef4444';
+    status.innerHTML = '❌ <b>Terjadi kesalahan:</b> ' + error.message;
+    console.error("PDF Generate Error:", error);
+  } finally {
+    btn.disabled = false;
+    setTimeout(() => {
+        status.style.color = '';
+        status.innerHTML = 'Resolusi sangat tinggi (Lossless) | Mendukung Emoji 😎 & Gradien HTML';
+    }, 5000);
+  }
+}
+</script>
+
+</body>
+</html>
