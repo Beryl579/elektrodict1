@@ -2759,17 +2759,33 @@ function renderProjectDetail(prj) {
   const wokwiSectionHtml = wokwiPretty ? `
     <div class="pd-section">
       <h3 class="pd-section-h">🧪 Wokwi Circuit Simulator</h3>
-      <div style="display:flex; flex-wrap:wrap; gap:10px; margin-bottom:14px;">
-        <button class="pd-code-copy" style="background:var(--accent);color:#fff;padding:10px 18px;border-radius:8px;border:none;cursor:pointer;font-weight:600;font-size:13px;" onclick="copyPrjCode(this, 'wokwi')">📋 Copy Wiring (diagram.json)</button>
-        <a href="https://wokwi.com/projects/new/arduino-uno" target="_blank" rel="noopener" style="background:linear-gradient(135deg,#4ade80,#16a34a);color:#fff;padding:10px 18px;border-radius:8px;text-decoration:none;font-weight:600;font-size:13px;display:inline-flex;align-items:center;gap:6px;">🚀 Buka Wokwi Simulator</a>
+
+      <!-- Primary One-Click Launch -->
+      <button
+        onclick="openInWokwi()"
+        style="width:100%;padding:14px;background:linear-gradient(135deg,#4ade80,#16a34a);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:700;cursor:pointer;margin-bottom:12px;letter-spacing:.3px;box-shadow:0 4px 18px rgba(22,163,74,.35);transition:transform .15s;"
+        onmouseover="this.style.transform='translateY(-2px)'"
+        onmouseout="this.style.transform=''"
+      >🚀 Jalankan di Wokwi (Otomatis)</button>
+
+      <!-- Secondary Manual Buttons -->
+      <div style="display:flex;flex-wrap:wrap;gap:9px;margin-bottom:12px;">
+        <button class="pd-code-copy" style="flex:1;min-width:140px;" onclick="copyPrjCode(this,'cpp')">📋 Copy Code (sketch.ino)</button>
+        <button class="pd-code-copy" style="flex:1;min-width:140px;" onclick="copyPrjCode(this,'wokwi')">📋 Copy Wiring (diagram.json)</button>
       </div>
-      <p style="font-size:12px;color:var(--text3);margin-bottom:10px;">💡 Cara pakai: Klik Buka Wokwi → klik <b>+</b> → pilih <b>Upload Files</b> → paste isi <b>diagram.json</b> di bawah ini.</p>
+
+      <!-- Disclaimer Box -->
+      <div style="background:rgba(250,176,5,.08);border:1px solid rgba(250,176,5,.3);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--text2);line-height:1.6;margin-bottom:14px;">
+        ⚠️ <b>Catatan:</b> Jika komponen asli tidak tersedia di Wokwi, AI menggunakan <b>Potensiometer</b> sebagai pengganti input analog. Cek panduan wiring untuk alat fisik!
+      </div>
+
+      <!-- diagram.json preview -->
       <div class="pd-code-wrap">
         <div class="pd-code-header">
           <div class="pd-code-lang">diagram.json</div>
-          <button class="pd-code-copy" onclick="copyPrjCode(this, 'wokwi')">📋 Copy diagram.json</button>
+          <button class="pd-code-copy" onclick="copyPrjCode(this,'wokwi')">📋 Copy diagram.json</button>
         </div>
-        <pre class="pd-code-pre" style="max-height:280px;"><code id="code-content-wokwi">${safeWokwi}</code></pre>
+        <pre class="pd-code-pre" style="max-height:260px;"><code id="code-content-wokwi">${safeWokwi}</code></pre>
       </div>
     </div>` : '';
 
@@ -2866,6 +2882,54 @@ function copyPrjCode(btn, type) {
 
 // Legacy alias (backward compat)
 function copyPrjCodeDirect(btn) { copyPrjCode(btn, 'cpp'); }
+
+/**
+ * One-Click Wokwi Launcher via hidden POST form
+ * Creates a form targeting https://wokwi.com/_api/setup/arduino-uno
+ * and submits sketch.ino + diagram.json in a new tab.
+ */
+function openInWokwi() {
+  const content = document.getElementById('project-detail-content');
+  const cppCode   = content?.dataset.cppCode   || document.getElementById('code-content-cpp')?.textContent   || '';
+  const wokwiJson = content?.dataset.wokwi      || document.getElementById('code-content-wokwi')?.textContent || '';
+
+  if (!cppCode || !wokwiJson) {
+    alert('Data proyek belum siap. Generate ulang dulu ya!');
+    return;
+  }
+
+  // Ensure wokwiJson is valid JSON string (not double-encoded)
+  let diagramStr = wokwiJson;
+  try {
+    // If it's already an object (shouldn't be but just in case), stringify it
+    const parsed = typeof wokwiJson === 'object' ? wokwiJson : JSON.parse(wokwiJson);
+    diagramStr = JSON.stringify(parsed);
+  } catch(e) {
+    diagramStr = wokwiJson; // use as-is
+  }
+
+  // Build hidden form
+  const form = document.createElement('form');
+  form.method = 'POST';
+  form.action = 'https://wokwi.com/_api/setup/arduino-uno';
+  form.target = '_blank';
+  form.style.display = 'none';
+
+  const addField = (name, value) => {
+    const inp = document.createElement('input');
+    inp.type  = 'hidden';
+    inp.name  = name;
+    inp.value = value;
+    form.appendChild(inp);
+  };
+
+  addField('sketch.ino',   cppCode);
+  addField('diagram.json', diagramStr);
+
+  document.body.appendChild(form);
+  form.submit();
+  setTimeout(() => document.body.removeChild(form), 2000);
+}
 
 function togglePrjStep(id, idx) {
   const row = document.getElementById(`step-${id}-${idx}`);
