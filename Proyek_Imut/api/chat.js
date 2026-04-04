@@ -25,8 +25,11 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: { message: `Method ${req.method} Not Allowed` } });
   }
 
-  const GROQ_API_KEY = process.env.GROQ_API_KEY;
-  if (!GROQ_API_KEY) {
+  let keysStr = process.env.GROQ_API_KEYS;
+  let fallbackKey = process.env.GROQ_API_KEY;
+  let keys = keysStr ? keysStr.split(',').map(k => k.trim()).filter(Boolean) : (fallbackKey ? [fallbackKey] : []);
+
+  if (keys.length === 0) {
     console.error("[Backend] API Key is missing in process.env");
     return res.status(500).json({ error: { message: "API Key belum dikonfigurasi di Vercel!" } });
   }
@@ -61,14 +64,32 @@ export default async function handler(req, res) {
       stream: false 
     };
 
-    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+    let response;
+    let currentKey = keys[Math.floor(Math.random() * keys.length)];
+
+    response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${GROQ_API_KEY}`,
+        "Authorization": `Bearer ${currentKey}`,
         "Content-Type": "application/json"
       },
       body: JSON.stringify(groqPayload)
     });
+
+    if (response.status === 429) {
+      keys = keys.filter(k => k !== currentKey);
+      if (keys.length > 0) {
+        currentKey = keys[Math.floor(Math.random() * keys.length)];
+        response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${currentKey}`,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(groqPayload)
+        });
+      }
+    }
 
     if (!response.ok) {
       const errorData = await response.json();

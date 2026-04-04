@@ -24,8 +24,11 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: { message: `Method ${req.method} Not Allowed` } });
   }
 
-  const GROQ_API_KEY = process.env.GROQ_API_KEY;
-  if (!GROQ_API_KEY) {
+  let keysStr = process.env.GROQ_API_KEYS;
+  let fallbackKey = process.env.GROQ_API_KEY;
+  let keys = keysStr ? keysStr.split(',').map(k => k.trim()).filter(Boolean) : (fallbackKey ? [fallbackKey] : []);
+
+  if (keys.length === 0) {
     return res.status(500).json({ error: { message: "API Key belum dikonfigurasi di Vercel!" } });
   }
 
@@ -68,24 +71,48 @@ RULES:
 
     // Helper: attempt a single Groq call with the given model
     async function callGroq(model) {
-      const resp = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      if (keys.length === 0) {
+        return { ok: false, status: 429, json: async () => ({ error: { message: "All API keys exhausted." } }) };
+      }
+      
+      let currentKey = keys[Math.floor(Math.random() * keys.length)];
+      
+      const getPayload = () => ({
+        model,
+        response_format: { type: "json_object" },
+        messages: [
+          { role: "system", content: systemPrompt },
+          { role: "user",   content: `Buatkan tutorial untuk proyek: ${idea}` }
+        ],
+        temperature: 0.7,
+        max_tokens: 4000,
+        stream: false
+      });
+
+      let resp = await fetch("https://api.groq.com/openai/v1/chat/completions", {
         method: "POST",
         headers: {
-          "Authorization": `Bearer ${GROQ_API_KEY}`,
+          "Authorization": `Bearer ${currentKey}`,
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({
-          model,
-          response_format: { type: "json_object" },
-          messages: [
-            { role: "system", content: systemPrompt },
-            { role: "user",   content: `Buatkan tutorial untuk proyek: ${idea}` }
-          ],
-          temperature: 0.7,
-          max_tokens: 4000,
-          stream: false
-        })
+        body: JSON.stringify(getPayload())
       });
+      
+      if (resp.status === 429) {
+        keys = keys.filter(k => k !== currentKey);
+        if (keys.length > 0) {
+          currentKey = keys[Math.floor(Math.random() * keys.length)];
+          resp = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+            method: "POST",
+            headers: {
+              "Authorization": `Bearer ${currentKey}`,
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(getPayload())
+          });
+        }
+      }
+      
       return resp;
     }
 
