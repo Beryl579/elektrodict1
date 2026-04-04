@@ -2544,35 +2544,74 @@ let currentAIProject = null;
 window.mlcEngine = null;
 window.isMLCReady = false;
 
-window.initWebLLMIfNeeded = async function(checked) {
-  // checked value might not be passed if called via html inline string without args, so check DOM
-  const isChecked = typeof checked === 'boolean' ? checked : document.getElementById('local-ai-toggle')?.checked;
+window.initWebLLMIfNeeded = async function(bypassCheck = false) {
+  const toggle = document.getElementById('local-ai-toggle');
+  if (bypassCheck && toggle) toggle.checked = true;
+  
+  const isChecked = toggle?.checked;
   if (isChecked && !window.mlcEngine) {
     const progressEl = document.getElementById('webllm-progress');
+    const progressBar = document.getElementById('webllm-progress-bar');
+    const badge = document.getElementById('ai-status-badge');
+    const btn = document.getElementById('enable-local-ai-btn');
+
     const initProgressCallback = (initProgress) => {
       if (progressEl) {
         progressEl.innerText = initProgress.text;
       }
+      if (progressBar && initProgress.progress >= 0) {
+        progressBar.style.width = Math.round(initProgress.progress * 100) + '%';
+      }
     };
     
     try {
-      progressEl.innerText = "⏳ Loading model (Downloading ~1.5GB)...";
+      if (btn) {
+        btn.disabled = true;
+        btn.style.opacity = 0.5;
+        btn.innerText = "⏳ Initializing...";
+      }
+      if (badge) {
+        badge.innerHTML = "⚡ Initializing...";
+        badge.style.color = "var(--amber)";
+        badge.style.borderColor = "var(--amber)";
+        badge.style.background = "rgba(245, 158, 11, 0.15)";
+      }
       
       if (!window.CreateMLCEngine) {
-        throw new Error("CreateMLCEngine is not loaded. Cek koneksi internet untuk download module config pertama.");
+        throw new Error("CreateMLCEngine module not loaded (Offline/Network Error).");
       }
       
       window.mlcEngine = await window.CreateMLCEngine(
         "Llama-3.2-1B-Instruct-q4f32_1-MLC",
         { initProgressCallback: initProgressCallback }
       );
+      
       window.isMLCReady = true;
-      progressEl.innerText = "✅ Model AI Offline Aktif";
-      setTimeout(()=> { progressEl.innerText = "✅ Offline Ready"; }, 4000);
+      if (progressEl) progressEl.innerText = "✅ Model AI Offline Aktif & Siap!";
+      if (badge) {
+        badge.innerHTML = "⚡ Local Mode (WebLLM)";
+        badge.style.color = "var(--accent)";
+        badge.style.borderColor = "var(--accent)";
+        badge.style.background = "rgba(79, 156, 249, 0.15)";
+      }
+      if (btn) {
+        btn.innerText = "✅ Local AI Enabled";
+      }
     } catch(err) {
       console.error("Local ML Engine fail:", err);
-      if(progressEl) progressEl.innerText = "❌ Gagal Load Model";
-      document.getElementById('local-ai-toggle').checked = false;
+      if(progressEl) progressEl.innerText = "❌ Gagal: " + err.message;
+      if(toggle) toggle.checked = false;
+      if(btn) {
+        btn.disabled = false;
+        btn.style.opacity = 1;
+        btn.innerText = "⚡ Enable Local AI (Offline Mode)";
+      }
+      if(badge) {
+        badge.innerHTML = "🟢 Cloud Mode (Groq)";
+        badge.style.color = "var(--green)";
+        badge.style.borderColor = "var(--green)";
+        badge.style.background = "rgba(16, 185, 129, 0.15)";
+      }
     }
   }
 }

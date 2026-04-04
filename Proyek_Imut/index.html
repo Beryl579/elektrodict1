@@ -547,12 +547,31 @@
         <span class="btn-ico">💡</span>
         <span class="btn-txt">Generate Proyek</span>
       </button>
-      <div style="margin-top: 12px; display: flex; align-items: center; justify-content: space-between; font-size: 13px; color: var(--text2); background: var(--bg4); padding: 8px 12px; border-radius: 8px; border: 1px solid var(--line);">
-        <label style="display:flex; align-items:center; gap:8px; cursor:pointer;" title="Bypass rate limit & jalankan secara offline. Download ~1.5GB di awal.">
-          <input type="checkbox" id="local-ai-toggle" onchange="if(window.initWebLLMIfNeeded) window.initWebLLMIfNeeded()"> 
-          <b>Bypass Offline (Llama 3 Local)</b>
-        </label>
-        <span id="webllm-progress" style="font-family: var(--mono); font-size: 11px; color: var(--accent); font-weight:700;"></span>
+      <div class="webllm-panel" style="margin-top: 24px; background: var(--bg3); padding: 18px; border-radius: 12px; border: 1px solid var(--line); box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <h4 style="font-size: 14px; font-weight: 700; margin: 0; color: var(--text);">Hybrid Engine</h4>
+          <span id="ai-status-badge" style="background: rgba(16, 185, 129, 0.15); color: var(--green); border: 1px solid var(--green); padding: 4px 10px; border-radius: 99px; font-size: 11px; font-family: var(--mono); font-weight: 600; white-space: nowrap;">🟢 Cloud Mode (Groq)</span>
+        </div>
+        
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <p style="font-size: 12px; color: var(--text2); margin: 0; line-height: 1.5;">Gunakan AI secara lokal (offline) sepenuhnya untuk mem-bypass limit server. <b>Butuh download model pertama kali (~1.5GB)</b>.</p>
+          
+          <div style="display: flex; align-items: stretch; gap: 14px; flex-wrap: wrap;">
+            <button id="enable-local-ai-btn" onclick="javascript:if(window.initWebLLMIfNeeded) window.initWebLLMIfNeeded(true)" style="background: linear-gradient(135deg, var(--accent), #2563eb); border: none; color: white; padding: 10px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: opacity 0.2s; font-family: var(--font); box-shadow: 0 4px 12px rgba(37,99,235,0.3); flex-shrink:0;">
+              ⚡ Enable Local AI (Offline Mode)
+            </button>
+            
+            <div style="flex: 1; min-width: 180px; display: flex; flex-direction: column; justify-content: center; gap: 6px;">
+              <span id="webllm-progress" style="font-family: var(--mono); font-size: 11px; color: var(--accent); font-weight: 600;">Menunggu...</span>
+              <div style="width: 100%; height: 6px; background: var(--bg4); border-radius: 3px; overflow: hidden; border: 1px solid var(--line);">
+                <div id="webllm-progress-bar" style="height: 100%; width: 0%; background: var(--accent); transition: width 0.1s linear;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Hidden checkbox to link up with original generate logic gracefully -->
+        <input type="checkbox" id="local-ai-toggle" style="display: none;">
       </div>
     </div>
 
