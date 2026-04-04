@@ -1662,3 +1662,85 @@ body.light .led-bulb.on .led-val { color:#fff; }
 .bbl tr:nth-child(even) td {
   background: rgba(255,255,255,0.02);
 }
+
+/* ═══════════════════ PRINT CSS FOR PDF EXPORT ═══════════════════ */
+@media print {
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+  
+  /* Sembunyikan navigasi & UI yang ga perlu di-print */
+  .nav, .bottom-nav, .chat-sidebar, .fab, .chat-fab-left, .chat-fab-left-wrap, .tour-trigger, .sbar, .fbar, .pdf-btn, .wm {
+    display: none !important;
+  }
+  
+  .page {
+    padding: 0 !important;
+    margin: 0 !important;
+    display: block !important;
+  }
+  
+  /* General Print Cleanup: cegah patah di tengah card */
+  .card {
+    page-break-inside: avoid !important;
+    border: 1px solid #ccc !important;
+    box-shadow: none !important;
+    background: #fff !important;
+    margin-bottom: 12px !important;
+    transform: none !important;
+  }
+  
+  /* Fix Text Overlap: pisahkan judul dan subtitle dgn margin/gap */
+  .cleft {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 6px !important;
+  }
+  .cen, .cid {
+    display: block !important;
+    margin: 0 !important;
+  }
+  .cen { color: #000 !important; }
+  .cid { color: #444 !important; font-style: italic !important; }
+
+  /* Fix Stretched Text */
+  .cdesc, .etext {
+    text-align: left !important;
+    letter-spacing: normal !important;
+    color: #222 !important;
+  }
+
+  .ctop {
+    align-items: flex-start !important;
+  }
+
+  .ctag {
+    border: 1px solid #888 !important;
+    color: #222 !important;
+    background: transparent !important;
+  }
+
+  .cchev, .eask, .eformula button, .ambient-bg {
+    display: none !important;
+  }
+
+  /* Force Expand All Cards in Print */
+  .cexp {
+    max-height: none !important;
+    opacity: 1 !important;
+    display: block !important;
+    overflow: visible !important;
+  }
+  
+  .eformula {
+    background: #f8f9fa !important;
+    border: 1px solid #ddd !important;
+    color: #000 !important;
+    break-inside: avoid !important;
+  }
+  .katex {
+    color: #000 !important;
+  }
+}
+

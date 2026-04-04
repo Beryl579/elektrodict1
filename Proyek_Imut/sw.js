@@ -26,6 +26,13 @@ self.addEventListener('fetch', (e) => {
   if (e.request.url.includes('/api/')) return;
   
   e.respondWith(
-    caches.match(e.request).then((response) => response || fetch(e.request))
+    caches.match(e.request).then((response) => {
+      return response || fetch(e.request).catch((err) => {
+        if (e.request.mode === 'navigate') {
+          return caches.match('/index.html');
+        }
+        throw err;
+      });
+    })
   );
 });

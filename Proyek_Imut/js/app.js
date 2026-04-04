@@ -2213,36 +2213,59 @@ let tourIdx = 0;
 let tourActive = false;
 
 function startTour(){
-  // switch ke kamus dulu biar target ada di DOM
-  switchTab('kamus');
-  tourIdx = 0;
-  tourActive = true;
-  document.getElementById('tour-overlay').classList.remove('off');
-  renderTourStep();
+  if (tourActive) return; // Prevent double execution
+  try {
+    tourIdx = 0;
+    tourActive = true;
+    switchTab('kamus');
+    
+    // Apply extremely high z-index
+    document.getElementById('tour-overlay').style.zIndex = '9998';
+    document.getElementById('tour-spotlight').style.zIndex = '9998';
+    document.getElementById('tour-tip').style.zIndex = '9999';
+    
+    document.getElementById('tour-overlay').classList.remove('off');
+    renderTourStep();
+  } catch (err) {
+    console.error("Tour initialization error:", err);
+    endTour();
+  }
 }
 
 function renderTourStep(){
-  const step = TOUR_STEPS[tourIdx];
-  const total = TOUR_STEPS.length;
-  const target = document.getElementById(step.target);
+  try {
+    console.log('Tour Step:', tourIdx);
+    const step = TOUR_STEPS[tourIdx];
+    const total = TOUR_STEPS.length;
+    const target = document.getElementById(step.target);
 
-  // update dots
-  document.getElementById('tour-dots').innerHTML = TOUR_STEPS.map((_,i)=>
-    `<div class="tour-dot${i===tourIdx?' on':''}"></div>`
-  ).join('');
+    // Safe DOM Checking
+    if(!target){
+      console.warn('Tour skipped step due to missing element:', step.target);
+      if(tourIdx >= total - 1) {
+        endTour();
+      } else {
+        tourNext(true); // Auto-forward
+      }
+      return;
+    }
 
-  document.getElementById('tour-step-lbl').textContent = `LANGKAH ${tourIdx+1} / ${total}`;
-  document.getElementById('tour-tip-title').textContent = step.title;
-  document.getElementById('tour-tip-desc').textContent = step.desc;
-  document.getElementById('tour-next-btn').textContent = tourIdx===total-1 ? 'Selesai ✓' : 'Selanjutnya →';
+    // update dots
+    document.getElementById('tour-dots').innerHTML = TOUR_STEPS.map((_,i)=>
+      `<div class="tour-dot${i===tourIdx?' on':''}"></div>`
+    ).join('');
 
-  // spotlight target element
-  const spotlight = document.getElementById('tour-spotlight');
-  const tip = document.getElementById('tour-tip');
-  spotlight.style.display = 'block';
-  tip.style.display = 'block';
+    document.getElementById('tour-step-lbl').textContent = `LANGKAH ${tourIdx+1} / ${total}`;
+    document.getElementById('tour-tip-title').textContent = step.title;
+    document.getElementById('tour-tip-desc').textContent = step.desc;
+    document.getElementById('tour-next-btn').textContent = tourIdx===total-1 ? 'Selesai ✓' : 'Selanjutnya →';
 
-  if(target){
+    // spotlight target element
+    const spotlight = document.getElementById('tour-spotlight');
+    const tip = document.getElementById('tour-tip');
+    spotlight.style.display = 'block';
+    tip.style.display = 'block';
+
     const rect = target.getBoundingClientRect();
     const pad = 6;
     spotlight.style.left   = (rect.left - pad) + 'px';
@@ -2263,10 +2286,14 @@ function renderTourStep(){
 
     tip.style.left = tipLeft + 'px';
     tip.style.top  = tipTop + 'px';
+
+  } catch(err) {
+    console.error("Error at rank", tourIdx, ":", err);
+    endTour();
   }
 }
 
-function tourNext(){
+function tourNext(autoSkip = false){
   if(tourIdx >= TOUR_STEPS.length - 1){
     endTour();
     return;
@@ -2280,17 +2307,23 @@ function tourNext(){
     'tab-kamus':'kamus','themeBtn':'kamus','searchInput':'kamus'
   };
   const targetTab = tabMap[step.target];
-  if(targetTab) switchTab(targetTab);
-  setTimeout(()=>renderTourStep(), 120);
+  if(targetTab && !autoSkip) switchTab(targetTab);
+  
+  if (autoSkip) renderTourStep();
+  else setTimeout(()=>renderTourStep(), 120);
 }
 
 function endTour(){
   tourActive = false;
-  document.getElementById('tour-overlay').classList.add('off');
-  document.getElementById('tour-spotlight').style.display = 'none';
-  document.getElementById('tour-tip').style.display = 'none';
+  tourIdx = 0; // State Management Cleanups
+  const ol = document.getElementById('tour-overlay');
+  if (ol) ol.classList.add('off');
+  const sp = document.getElementById('tour-spotlight');
+  if (sp) sp.style.display = 'none';
+  const tip = document.getElementById('tour-tip');
+  if (tip) tip.style.display = 'none';
+  
   localStorage.setItem('ed_tour_done','1');
-  switchTab('kamus');
 }
 
 // auto-start tour untuk user baru (setelah onboarding tutup)
@@ -2334,129 +2367,26 @@ function cleanLatexForPDF(str) {
 function exportKamusPDF(){
   const btn = document.querySelector('.pdf-btn');
   const origText = btn.innerHTML;
-  btn.innerHTML = '⏳ Generating...';
+  btn.innerHTML = '⏳ Menyiapkan PDF...';
   btn.disabled = true;
 
+  // Buka semua kartu biar konten detail dan rumusnya ke-print semua
+  const allCards = document.querySelectorAll('.card:not(.open)');
+  allCards.forEach(c => c.classList.add('open'));
+  
+  // Tunggu 800ms sebentar biar LaTeX/KaTeX beres ngerender di dalam DOM
   setTimeout(()=>{
     try {
-      const { jsPDF } = window.jspdf;
-      const doc = new jsPDF({ orientation:'portrait', unit:'mm', format:'a4' });
-
-      const pageW = 210, pageH = 297;
-      const ml = 14, mr = 14, mt = 18;
-      const contentW = pageW - ml - mr;
-      let y = mt;
-
-      const checkPage = (needed=10)=>{
-        if(y + needed > pageH - 14){
-          doc.addPage();
-          y = mt;
-          // header baris atas tiap halaman
-          doc.setFontSize(8).setTextColor(100,100,100);
-          doc.text('ElektroDict — Engineering Cheat Sheet', ml, 10);
-          doc.setDrawColor(200,200,200);
-          doc.setLineWidth(0.3);
-          doc.line(ml, 12, pageW-mr, 12);
-          y = mt;
-        }
-      };
-
-      // ── COVER ──
-      // Clean white background, no fill needed (default is white)
-      doc.setFontSize(32).setTextColor(15, 82, 186); // Deep blue
-      doc.setFont('helvetica','bold');
-      doc.text('ElektroDict', pageW/2, 80, {align:'center'});
-      
-      doc.setFontSize(14).setTextColor(50, 50, 50);
-      doc.setFont('helvetica','normal');
-      doc.text('Engineering Cheat Sheet', pageW/2, 92, {align:'center'});
-      
-      doc.setFontSize(10).setTextColor(100, 100, 100);
-      doc.text(`${KAMUS.length} Istilah · ${Object.keys(QUIZ_CATS).length} Kategori`, pageW/2, 102, {align:'center'});
-      
-      doc.setFontSize(9).setTextColor(120, 120, 120);
-      doc.text('by Beryl Nathaniel Sinaga', pageW/2, 270, {align:'center'});
-      doc.text(`Dicetak pada: ${new Date().toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'})}`, pageW/2, 276, {align:'center'});
-
-      // ── HALAMAN ISI ──
-      doc.addPage();
-      y = mt;
-
-      // header halaman isi pertama
-      doc.setFontSize(8).setTextColor(100, 100, 100);
-      doc.text('ElektroDict — Engineering Cheat Sheet', ml, 10);
-      doc.setDrawColor(200, 200, 200);
-      doc.setLineWidth(0.3);
-      doc.line(ml, 12, pageW-mr, 12);
-
-      const grouped = {};
-      KAMUS.forEach(k=>{ if(!grouped[k.kat]) grouped[k.kat]=[]; grouped[k.kat].push(k); });
-
-      const katColors = {
-        dasar:[46, 139, 87], komponen:[28, 107, 186], rangkaian:[225, 115, 0],
-        daya:[200, 50, 50], elektronika:[120, 75, 180], pengukuran:[0, 139, 139],
-        digital:[180, 80, 120], sinyal:[225, 115, 0], terbarukan:[34, 139, 34]
-      };
-
-      Object.entries(grouped).forEach(([kat_key, items])=>{
-        checkPage(24);
-        
-        // Kategori header (Solid colored bar, white text)
-        const kc = katColors[kat_key] || [80,80,80];
-        doc.setFillColor(...kc).setDrawColor(...kc);
-        doc.roundedRect(ml, y, contentW, 10, 1.5, 1.5, 'F');
-        doc.setFontSize(11).setTextColor(255,255,255).setFont('helvetica','bold');
-        doc.text(kat_key.toUpperCase(), ml+4, y+6.5);
-        doc.setFontSize(9).setTextColor(240,240,240).setFont('helvetica','normal');
-        doc.text(`${items.length} istilah`, pageW-mr-4, y+6.5, {align:'right'});
-        y += 13;
-
-        items.forEach(item=>{
-          // Calculate dynamic height because of description length
-          const fullText = item.desc + (item.detail ? " — " + item.detail : "");
-          const descLines = doc.splitTextToSize(fullText, contentW-8);
-          const blockHeight = 13 + (descLines.length * 4); // base title + desc lines
-          
-          checkPage(blockHeight + 4);
-
-          // Card Background (Light grey with border)
-          doc.setFillColor(252, 252, 252).setDrawColor(210, 210, 215);
-          doc.setLineWidth(0.3);
-          doc.roundedRect(ml, y, contentW, blockHeight, 1.5, 1.5, 'FD');
-
-          // Title
-          doc.setFontSize(10).setTextColor(30, 30, 30).setFont('helvetica','bold');
-          doc.text(item.en, ml+4, y+6.5);
-          // ID name
-          doc.setFontSize(9).setTextColor(120, 120, 120).setFont('helvetica','italic');
-          doc.text(`(${item.id})`, ml+4 + doc.getTextWidth(item.en) + 2, y+6.5);
-
-          // Formula Top Right
-          if(item.formula) {
-            const cleanFormula = cleanLatexForPDF(item.formula);
-            doc.setFontSize(9).setTextColor(...kc).setFont('helvetica','bold');
-            doc.text(cleanFormula, pageW-mr-3, y+6.5, {align:'right'});
-          }
-
-          // Descriptions
-          doc.setFontSize(9).setTextColor(60, 60, 60).setFont('helvetica','normal');
-          doc.text(descLines, ml+4, y+12.5);
-
-          y += blockHeight + 2; 
-        });
-        y += 6; // space after category block
-      });
-
-      // ── SIMPAN ──
-      doc.save(`ElektroDict_Cheat_Sheet_${new Date().toISOString().slice(0,10)}.pdf`);
-
-    } catch(e){
-      alert('Gagal generate PDF: '+e.message+'\nPastikan koneksi internet aktif (butuh jsPDF CDN).');
+      window.print();
+    } catch(e) {
+      console.error(e);
+      alert('Gagal generate PDF: ' + e.message);
     }
-
+    
+    // Kembalikan tombol statenya
     btn.innerHTML = origText;
     btn.disabled = false;
-  }, 100);
+  }, 1000);
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -2610,6 +2540,43 @@ function initProjects() {
 
 let currentAIProject = null;
 
+// ── WEBLMM LOGIC ──
+window.mlcEngine = null;
+window.isMLCReady = false;
+
+window.initWebLLMIfNeeded = async function(checked) {
+  // checked value might not be passed if called via html inline string without args, so check DOM
+  const isChecked = typeof checked === 'boolean' ? checked : document.getElementById('local-ai-toggle')?.checked;
+  if (isChecked && !window.mlcEngine) {
+    const progressEl = document.getElementById('webllm-progress');
+    const initProgressCallback = (initProgress) => {
+      if (progressEl) {
+        progressEl.innerText = initProgress.text;
+      }
+    };
+    
+    try {
+      progressEl.innerText = "⏳ Loading model (Downloading ~1.5GB)...";
+      
+      if (!window.CreateMLCEngine) {
+        throw new Error("CreateMLCEngine is not loaded. Cek koneksi internet untuk download module config pertama.");
+      }
+      
+      window.mlcEngine = await window.CreateMLCEngine(
+        "Llama-3.2-1B-Instruct-q4f32_1-MLC",
+        { initProgressCallback: initProgressCallback }
+      );
+      window.isMLCReady = true;
+      progressEl.innerText = "✅ Model AI Offline Aktif";
+      setTimeout(()=> { progressEl.innerText = "✅ Offline Ready"; }, 4000);
+    } catch(err) {
+      console.error("Local ML Engine fail:", err);
+      if(progressEl) progressEl.innerText = "❌ Gagal Load Model";
+      document.getElementById('local-ai-toggle').checked = false;
+    }
+  }
+}
+
 async function generateAIProject() {
   const input = document.getElementById('prj-idea-input');
   const idea = input.value.trim();
@@ -2628,9 +2595,35 @@ async function generateAIProject() {
   btn.disabled  = true;
   btn.innerHTML = '🛠️ Sabar ya, lagi ngerakit kabel virtual buat kamu...';
   loading.classList.remove('hide');
+  
+  const isLocalMode = document.getElementById('local-ai-toggle')?.checked;
 
   try {
-    const data = await window.ElektroAPI.generateProject(idea);
+    let data;
+    
+    if (isLocalMode && window.isMLCReady && window.mlcEngine) {
+      // ── LOCAL OFFLINE AI GENERATION ──
+      btn.innerHTML = '🧠 Llama-3.2 Local Generating...';
+      const prompt = `Return ONLY rigid valid JSON for an Arduino project using this schema (No markdown, no backticks, no comments, no explanation! MUST start with {): 
+{
+"title": "...", "description": "...", 
+"components": ["...", "..."], 
+"wiring_table": [{"komponen": "...", "pin_komponen": "...", "koneksi_arduino": "..."}], 
+"code": "C++ code string", 
+"steps": ["step1", "step2"], 
+"difficulty": "Menengah"
+}
+
+User Idea: ${idea}`;
+
+      const reply = await window.mlcEngine.chat.completions.create({
+        messages: [{ role: "user", content: prompt }]
+      });
+      data = { result: reply.choices[0].message.content };
+    } else {
+      // ── REMOTE GROQ API GENERATION ──
+      data = await window.ElektroAPI.generateProject(idea);
+    }
 
     // 1. Retrieve raw content
     let rawContent = data.result;

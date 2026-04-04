@@ -46,14 +46,16 @@ export default async function handler(req, res) {
     let targetModel = requestedModel || "llama-3.3-70b-versatile";
     let messages = Array.isArray(payload.messages) ? [...payload.messages] : [];
     
+    const latexRules = "Strict Requirement: You MUST use LaTeX formatting for any mathematical formulas or equations. Inline Math: MUST be wrapped in single dollar signs ($). Example: $V = IR$. Block/Display Math: MUST be wrapped in double dollar signs ($$) on their own lines. Example: $$P = VI$$. STRICTLY FORBID using plain parentheses (...) or square brackets [...] to enclose LaTeX code.";
+
     if (targetModel === 'openai/gpt-oss-120b') {
       if (messages.length > 0 && messages[0].role === 'system') {
-        messages[0].content = "Persona of a senior electrical engineering student who is highly technical, a theory expert, and answers in a casual, student-friendly tone.\nStrict Requirement: You MUST use LaTeX formatting for any mathematical formulas or equations (e.g. \\(V = IR\\) for inline and $$P = VI$$ for display block).";
+        messages[0].content = `Persona of a senior electrical engineering student who is highly technical, a theory expert, and answers in a casual, student-friendly tone.\n${latexRules}`;
       }
     } else {
       // Default to Flash Response persona for LLaMA and anything else
       if (messages.length > 0 && messages[0].role === 'system') {
-        messages[0].content = "Persona of an assistant who is highly responsive, to-the-point, and also uses a casual tone.\nStrict Requirement: You MUST use LaTeX formatting for any mathematical formulas or equations (e.g. \\(V = IR\\) for inline and $$P = VI$$ for display block).";
+        messages[0].content = `Persona of an assistant who is highly responsive, to-the-point, and also uses a casual tone.\n${latexRules}`;
       }
     }
 

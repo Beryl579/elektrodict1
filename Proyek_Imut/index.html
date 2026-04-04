@@ -547,6 +547,13 @@
         <span class="btn-ico">💡</span>
         <span class="btn-txt">Generate Proyek</span>
       </button>
+      <div style="margin-top: 12px; display: flex; align-items: center; justify-content: space-between; font-size: 13px; color: var(--text2); background: var(--bg4); padding: 8px 12px; border-radius: 8px; border: 1px solid var(--line);">
+        <label style="display:flex; align-items:center; gap:8px; cursor:pointer;" title="Bypass rate limit & jalankan secara offline. Download ~1.5GB di awal.">
+          <input type="checkbox" id="local-ai-toggle" onchange="if(window.initWebLLMIfNeeded) window.initWebLLMIfNeeded()"> 
+          <b>Bypass Offline (Llama 3 Local)</b>
+        </label>
+        <span id="webllm-progress" style="font-family: var(--mono); font-size: 11px; color: var(--accent); font-weight:700;"></span>
+      </div>
     </div>
 
     <div id="prj-loading" class="prj-loading hide">
@@ -647,6 +654,12 @@
       });
     });
   }
+</script>
+
+<!-- WebLLM Injection -->
+<script type="module">
+  import { CreateMLCEngine } from "https://esm.run/@mlc-ai/web-llm";
+  window.CreateMLCEngine = CreateMLCEngine;
 </script>
 </body>
 </html>
