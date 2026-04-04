@@ -2581,7 +2581,7 @@ window.initWebLLMIfNeeded = async function(bypassCheck = false) {
         badge.style.background = "rgba(245, 158, 11, 0.15)";
       }
       
-      if (!window.CreateMLCEngine) {
+      if (!window.webllm || !window.webllm.CreateMLCEngine) {
         throw new Error("CreateMLCEngine module not loaded (Offline/Network Error).");
       }
       
@@ -2589,7 +2589,7 @@ window.initWebLLMIfNeeded = async function(bypassCheck = false) {
       const modelId = "Llama-3.2-1B-Instruct-q4f32_1-MLC";
       
       // Create engine with automatic model caching in IndexedDB (default in web-llm)
-      window.mlcEngine = await window.CreateMLCEngine(modelId, { 
+      window.mlcEngine = await window.webllm.CreateMLCEngine(modelId, { 
         initProgressCallback: initProgressCallback
       });
       

@@ -684,8 +684,8 @@
 
 <!-- WebLLM Injection -->
 <script type="module">
-  import { CreateMLCEngine } from "https://esm.run/@mlc-ai/web-llm";
-  window.CreateMLCEngine = CreateMLCEngine;
+  import * as webllm from "https://esm.run/@mlc-ai/web-llm";
+  window.webllm = webllm;
 </script>
 </body>
 </html>
