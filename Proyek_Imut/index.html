@@ -340,6 +340,13 @@
         <div class="onboard-feat"><span class="onboard-feat-icon">🧠</span><div class="onboard-feat-info"><div class="onboard-feat-title">Latihan Soal AI</div><div class="onboard-feat-desc">Soal random di-generate tiap sesi</div></div></div>
         <div class="onboard-feat"><span class="onboard-feat-icon">🔢</span><div class="onboard-feat-info"><div class="onboard-feat-title">Kalkulator & Konversi</div><div class="onboard-feat-desc">Ohm, RLC, daya, satuan & lainnya</div></div></div>
         <div class="onboard-feat"><span class="onboard-feat-icon">💬</span><div class="onboard-feat-info"><div class="onboard-feat-title">ElektroBot AI</div><div class="onboard-feat-desc">Tanya soal elektro, jawab gaul & akurat</div></div></div>
+        <div class="onboard-feat" id="onboard-local-ai-card" style="cursor: pointer; border: 1px solid var(--line); transition: border-color 0.2s, background 0.2s;" onclick="if(window.initWebLLMIfNeeded){ window.initWebLLMIfNeeded(true); this.style.borderColor='var(--accent)'; this.style.background='var(--accent-d)'; }">
+          <span class="onboard-feat-icon">⚡</span>
+          <div class="onboard-feat-info">
+            <div class="onboard-feat-title" style="color:var(--accent);">Local AI Mode (Offline)</div>
+            <div class="onboard-feat-desc" id="onboard-local-ai-desc">Download model (~1.5GB) untuk akses AI tanpa internet & tanpa limit.</div>
+          </div>
+        </div>
         <!-- scroll hint step — only shown on mobile -->
         <div class="onboard-feat" id="onboard-scroll-hint" style="display:none;background:var(--accent-d);border-color:#2a5a9a">
           <span class="onboard-feat-icon">👆</span>

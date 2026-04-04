@@ -2554,6 +2554,7 @@ window.initWebLLMIfNeeded = async function(bypassCheck = false) {
     const progressBar = document.getElementById('webllm-progress-bar');
     const badge = document.getElementById('ai-status-badge');
     const btn = document.getElementById('enable-local-ai-btn');
+    const onboardDesc = document.getElementById('onboard-local-ai-desc');
 
     const initProgressCallback = (initProgress) => {
       if (progressEl) {
@@ -2561,6 +2562,9 @@ window.initWebLLMIfNeeded = async function(bypassCheck = false) {
       }
       if (progressBar && initProgress.progress >= 0) {
         progressBar.style.width = Math.round(initProgress.progress * 100) + '%';
+      }
+      if (onboardDesc) {
+        onboardDesc.innerText = initProgress.text;
       }
     };
     
@@ -2581,10 +2585,13 @@ window.initWebLLMIfNeeded = async function(bypassCheck = false) {
         throw new Error("CreateMLCEngine module not loaded (Offline/Network Error).");
       }
       
-      window.mlcEngine = await window.CreateMLCEngine(
-        "Llama-3.2-1B-Instruct-q4f32_1-MLC",
-        { initProgressCallback: initProgressCallback }
-      );
+      // Explicit Model ID as requested: Llama-3.2-1B-Instruct-q4f32_1-MLC
+      const modelId = "Llama-3.2-1B-Instruct-q4f32_1-MLC";
+      
+      // Create engine with automatic model caching in IndexedDB (default in web-llm)
+      window.mlcEngine = await window.CreateMLCEngine(modelId, { 
+        initProgressCallback: initProgressCallback
+      });
       
       window.isMLCReady = true;
       if (progressEl) progressEl.innerText = "✅ Model AI Offline Aktif & Siap!";
@@ -2597,9 +2604,13 @@ window.initWebLLMIfNeeded = async function(bypassCheck = false) {
       if (btn) {
         btn.innerText = "✅ Local AI Enabled";
       }
+      if (onboardDesc) {
+        onboardDesc.innerText = "✅ Model AI Offline sudah tersimpan di browser & siap pakai!";
+      }
     } catch(err) {
       console.error("Local ML Engine fail:", err);
       if(progressEl) progressEl.innerText = "❌ Gagal: " + err.message;
+      if(onboardDesc) onboardDesc.innerText = "❌ Download model gagal. Cek koneksi Anda.";
       if(toggle) toggle.checked = false;
       if(btn) {
         btn.disabled = false;
