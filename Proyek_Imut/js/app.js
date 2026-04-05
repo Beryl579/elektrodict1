@@ -366,6 +366,10 @@ function onSearch(q){
 function clearSearch(){document.getElementById('searchInput').value='';onSearch('');}
 
 const CORE_IDS = ['tegangan', 'arus', 'ohm', 'daya', 'kapasitor', 'resistor', 'transistor', 'induktor'];
+const CORE_ICONS = {
+  tegangan: '⚡', arus: '🌊', ohm: '♎', daya: '💡', 
+  kapasitor: '🔋', resistor: '〰️', transistor: '⏀', induktor: '🌀'
+};
 
 function renderGrid(data){
   const g=document.getElementById('grid'),e=document.getElementById('empty');
@@ -403,13 +407,35 @@ function renderGrid(data){
 }
 
 function renderCard(d, i, isFeature) {
-  return `
-    <div class="card ${isFeature?'core-card':''}" id="c${i}" onclick="tog(${i})" style="animation-delay:${i * 0.03}s">
-      <div class="ctop">
-        <div class="cleft">
-          <div class="cen">${isFeature ? '⚡ ' : ''}${d.en}</div>
-          <div class="cid">${d.id}</div>
+  const icon = isFeature ? (CORE_ICONS[d.id?.toLowerCase()] || '⚡') : '';
+  
+  if (isFeature) {
+    return `
+    <div class="card core-card" id="c${i}" onclick="tog(${i})" style="animation-delay:${i * 0.03}s">
+      <div class="ccore-body">
+        <div class="ccore-icon">${icon}</div>
+        <div class="ccore-content">
+          <div class="ccore-title">${d.en}</div>
+          <div class="ccore-sub">${d.id}</div>
         </div>
+        <div class="ctag t-${d.kat}">${d.kat}</div>
+      </div>
+      <div class="cexp" id="cx${i}">
+        <div class="expbody">
+          <div class="elabel">PENJELASAN</div>
+          <div class="etext">${d.detail}</div>
+          ${d.formula?`<div class="elabel">RUMUS</div><div class="eformula" id="ef${i}" data-latex="${d.formula.replace(/"/g,'&quot;')}"></div>`:''}
+          <div class="etags">${(d.tags||[]).map(t=>`<span class="etag">#${t}</span>`).join('')}</div>
+          <button class="eask" onclick="askCard(event,'${d.en.replace(/'/g,'\\\'').replace(/"/g,'')}','${d.id.replace(/'/g,'\\\'').replace(/"/g,'')}')"><span>💬</span> Tanya ElektroBot</button>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  return `
+    <div class="card" id="c${i}" onclick="tog(${i})" style="animation-delay:${i * 0.03}s">
+      <div class="ctop">
+        <div class="cleft"><div class="cen">${d.en}</div><div class="cid">${d.id}</div></div>
         <div class="ctag t-${d.kat}">${d.kat}</div>
       </div>
       <div class="cdesc">${d.desc}</div>
@@ -3278,7 +3304,7 @@ function drawScope() {
 }
 
 /**
- * Export Project to PDF via jsPDF
+ * Professional AI Project Report Generator (PDF)
  */
 function exportProjectToPdf() {
     const prj = window.currentPrjForExport;
@@ -3287,106 +3313,170 @@ function exportProjectToPdf() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
     const margin = 20;
-    let y = 20;
+    const pageWidth = doc.internal.pageSize.width;
+    let y = 25;
 
-    // Helper: Add wrapping text
-    const addWrappedText = (text, fontSize = 10, fontStyle = 'normal', color = [30, 41, 59]) => {
+    // Helper: Add wrapping text with spacing control
+    const addWrappedText = (text, fontSize = 10, fontStyle = 'normal', color = [51, 65, 85], lineSpacing = 1.1) => {
         doc.setFont('helvetica', fontStyle);
         doc.setFontSize(fontSize);
         doc.setTextColor(...color);
-        const splitText = doc.splitTextToSize(text, 170);
+        const splitText = doc.splitTextToSize(text, pageWidth - (margin * 2));
         doc.text(splitText, margin, y);
-        y += (splitText.length * (fontSize * 0.5)) + 5;
+        y += (splitText.length * (fontSize * 0.4 * lineSpacing)) + 5;
     };
 
-    // Header / Brand
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(22);
-    doc.setTextColor(79, 156, 249);
-    doc.text('ElektroDict', margin, y);
-    doc.setFontSize(10);
-    doc.setFont('helvetica', 'normal');
-    doc.setTextColor(100, 116, 139);
-    doc.text('AI Project Generator Report', 140, y);
-    y += 10;
-    doc.setDrawColor(226, 232, 240);
-    doc.line(margin, y, 190, y);
-    y += 15;
+    // Helper: Draw section header with accent
+    const drawSectionHeader = (title) => {
+        if (y > 250) { doc.addPage(); y = 25; }
+        // Left accent bar
+        doc.setFillColor(79, 156, 249);
+        doc.rect(margin, y - 5, 3, 7, 'F');
+        
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(12);
+        doc.setTextColor(15, 23, 42);
+        doc.text(title.toUpperCase(), margin + 6, y);
+        y += 8;
+        
+        doc.setDrawColor(226, 232, 240);
+        doc.line(margin, y, pageWidth - margin, y);
+        y += 10;
+    };
 
-    // Title
-    addWrappedText(prj.title?.toUpperCase() || 'UNTITLED PROJECT', 16, 'bold', [15, 23, 42]);
-    
-    // Difficulty Badge
-    doc.setFillColor(241, 245, 249);
-    doc.roundedRect(margin, y - 2, 40, 7, 2, 2, 'F');
-    doc.setFontSize(8);
-    doc.setTextColor(71, 85, 105);
-    doc.text(`Difficulty: ${prj.difficulty || 'Normal'}`, margin + 5, y + 3);
+    // Helper: Draw Page Header/Footer
+    const drawBranding = (docInstance) => {
+        const pageCount = docInstance.internal.getNumberOfPages();
+        for (let i = 1; i <= pageCount; i++) {
+            docInstance.setPage(i);
+            // Header
+            docInstance.setFont('helvetica', 'bold');
+            docInstance.setFontSize(10);
+            docInstance.setTextColor(79, 156, 249);
+            docInstance.text('ELEKTRODICT', margin, 12);
+            
+            docInstance.setFont('helvetica', 'normal');
+            docInstance.setTextColor(148, 163, 184);
+            docInstance.text('AI PROJECT REPORT', pageWidth - margin - 40, 12);
+            
+            docInstance.setDrawColor(241, 245, 249);
+            docInstance.line(margin, 15, pageWidth - margin, 15);
+            
+            // Footer
+            docInstance.setFontSize(8);
+            docInstance.setTextColor(148, 163, 184);
+            docInstance.text(`Generated by ElektroDict AI Assistant`, margin, 285);
+            docInstance.text(`Page ${i} of ${pageCount}`, pageWidth - margin - 20, 285);
+        }
+    };
+
+    // 1. Initial Header (Brand + Title)
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(24);
+    doc.setTextColor(15, 23, 42);
+    doc.text(prj.title || 'Untitled Project', margin, y);
     y += 12;
 
-    // Description
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(12);
-    doc.setTextColor(15, 23, 42);
-    doc.text('Description', margin, y);
-    y += 7;
-    addWrappedText(prj.description || 'No description provided.', 10, 'normal', [51, 65, 85]);
+    doc.setFontSize(9);
+    doc.setTextColor(100, 116, 139);
+    doc.text(`Difficulty: ${prj.difficulty || 'Normal'}  |  Type: AI Generated Lab`, margin, y);
+    y += 15;
 
-    // Components (BOM)
+    // 2. Description
+    drawSectionHeader('Description');
+    addWrappedText(prj.description || 'No description provided.', 10, 'normal');
+    y += 5;
+
+    // 3. Component List (BOM)
+    drawSectionHeader('Bill of Materials (BOM)');
     const components = prj.bom || prj.components || [];
     if (components.length) {
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(12);
-        doc.text('Components List', margin, y);
-        y += 7;
-        components.forEach(c => {
-            doc.setFont('helvetica', 'normal');
-            doc.setFontSize(10);
-            doc.text(`• ${c}`, margin + 5, y);
-            y += 6;
-            if (y > 270) { doc.addPage(); y = 20; }
+        const tableData = [];
+        // Split into 2 columns if more than 6 components
+        if (components.length > 6) {
+           const mid = Math.ceil(components.length / 2);
+           for(let i=0; i<mid; i++) {
+               tableData.push([`• ${components[i]}`, components[mid+i] ? `• ${components[mid+i]}` : '']);
+           }
+        } else {
+           components.forEach(c => tableData.push([`• ${c}`, '']));
+        }
+
+        doc.autoTable({
+            startY: y,
+            theme: 'plain',
+            body: tableData,
+            styles: { fontSize: 9, cellPadding: 1, textColor: [51, 65, 85] },
+            margin: { left: margin },
+            columnStyles: { 0: { cellWidth: 80 }, 1: { cellWidth: 80 } }
         });
-        y += 5;
+        y = doc.lastAutoTable.finalY + 12;
     }
 
-    // Wiring Guide
+    // 4. Wiring Guide (Table)
+    drawSectionHeader('Wiring & Connections');
     const wiring = prj.wiring_guide || prj.wiring_table || [];
     if (wiring.length) {
-        doc.setFont('helvetica', 'bold');
-        doc.setFontSize(12);
-        doc.text('Wiring Guide', margin, y);
-        y += 7;
-        wiring.forEach(w => {
-            const line = `${w.komponen}: ${w.pin_komponen || '-'} -> ${w.koneksi_arduino || '-'}`;
-            doc.setFont('helvetica', 'normal');
-            doc.setFontSize(10);
-            doc.text(`- ${line}`, margin + 5, y);
-            y += 6;
-            if (y > 270) { doc.addPage(); y = 20; }
+        const tableBody = wiring.map(w => [w.komponen, w.pin_komponen || '-', w.koneksi_arduino || '-']);
+        doc.autoTable({
+            startY: y,
+            head: [['Component', 'Pin', 'Arduino Pin']],
+            body: tableBody,
+            headStyles: { fillColor: [51, 65, 85], textColor: 255, fontSize: 9, halign: 'center' },
+            bodyStyles: { fontSize: 9, halign: 'left', textColor: [51, 65, 85] },
+            alternateRowStyles: { fillColor: [248, 250, 252] },
+            margin: { left: margin, right: margin }
         });
-        y += 5;
+        y = doc.lastAutoTable.finalY + 12;
     }
 
-    // Arduino Code Section
-    if (y > 200) { doc.addPage(); y = 20; }
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(12);
-    doc.text('Arduino Sketch (.ino)', margin, y);
-    y += 7;
-    
-    doc.setFont('courier', 'normal');
-    doc.setFontSize(9);
+    // 5. Arduino Sketch (Dark Mode Box)
+    if (y > 210) { doc.addPage(); y = 25; }
+    drawSectionHeader('Arduino Sketch (.ino)');
+
     const code = prj.cpp_code || 'No code provided.';
-    const splitCode = doc.splitTextToSize(code, 160);
+    doc.setFont('courier', 'normal');
+    const fontSize = 8.5;
+    doc.setFontSize(fontSize);
     
-    // Handle multi-page code blocks
-    splitCode.forEach(line => {
-        if (y > 280) { doc.addPage(); y = 20; }
-        doc.text(line, margin + 5, y);
-        y += 5;
+    const splitCode = doc.splitTextToSize(code, pageWidth - (margin * 2) - 10);
+    const boxPadding = 5;
+    const lineHeight = fontSize * 0.45;
+    
+    // Estimate total block height to see if we need a page break before starting
+    const blockHeight = (splitCode.length * lineHeight) + (boxPadding * 2);
+
+    // Render code line by line with background segments
+    doc.setFillColor(30, 35, 45); // Dark Slate Grey
+    doc.setTextColor(255, 255, 255);
+    doc.setFont('courier', 'normal');
+
+    // Draw the starting background box
+    let startY = y;
+    let boxHeight = Math.min(270 - startY, blockHeight);
+    doc.rect(margin, startY, pageWidth - (margin * 2), boxHeight, 'F');
+    y += boxPadding + (lineHeight/2);
+
+    splitCode.forEach((line, index) => {
+        if (y > 275) {
+            doc.addPage(); 
+            y = 25;
+            startY = y;
+            // Draw continuing background box
+            const remainingLines = splitCode.length - index;
+            const remHeight = Math.min(270 - startY, (remainingLines * lineHeight) + (boxPadding * 2));
+            doc.setFillColor(30,35,45);
+            doc.rect(margin, startY - 5, pageWidth - (margin * 2), remHeight, 'F');
+            y += boxPadding;
+        }
+        doc.text(line, margin + boxPadding, y);
+        y += lineHeight;
     });
 
+    // 6. Draw Final Header/Footer on all pages
+    drawBranding(doc);
+
     // Save PDF
-    const filename = `${(prj.title || 'Project').replace(/\s+/g, '_')}_ElektroDict.pdf`;
+    const filename = `${(prj.title || 'Project').replace(/\s+/g, '_')}_Report.pdf`;
     doc.save(filename);
 }
