@@ -36,7 +36,7 @@
                 <div class="chat-h-status"><span>●</span> Online & Ready</div>
             </div>
         </div>
-        <a href="index.html" class="chat-back">
+        <a href="index" class="chat-back">
             <span>←</span> Dashboard
         </a>
     </header>
@@ -59,9 +59,9 @@
 
     <script src="js/api.js"></script>
     <script src="js/chatbot.js"></script>
-    <!-- Smooth Navigation SPA-like Feel -->
     <script>
-      document.querySelectorAll('a[href^="index.html"]').forEach(link => {
+      // Smooth Navigation for Clean URLs
+      document.querySelectorAll('a[href^="index"]').forEach(link => {
         link.addEventListener('click', e => {
           e.preventDefault();
           document.body.classList.add('fade-out');

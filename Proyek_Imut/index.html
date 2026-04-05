@@ -121,7 +121,7 @@
     <span class="bnav-label">Synth</span>
   </button>
   <div class="hspace" style="height:12px;width:1px;opacity:0.2;background:var(--text3);margin:10px auto;display:none" id="bnav-sep-chat"></div>
-  <a class="bnav-item" href="chatbot.html" id="bnav-chat-page" style="text-decoration:none">
+  <a class="bnav-item" href="chatbot" id="bnav-chat-page" style="text-decoration:none">
     <div class="bnav-dot"></div>
     <span class="bnav-icon">💬</span>
     <span class="bnav-label" style="color:var(--accent);font-weight:700">Bertanya Disini</span>
@@ -647,7 +647,8 @@
 
 <!-- Smooth Navigation SPA-like Feel -->
 <script>
-  document.querySelectorAll('a[href^="chatbot.html"], a[href^="index.html"]').forEach(link => {
+  // Smooth Navigation SPA-like Feel for Clean URLs
+  document.querySelectorAll('a[href^="chatbot"], a[href^="index"]').forEach(link => {
     link.addEventListener('click', e => {
       if (link.target === '_blank') return;
       e.preventDefault();
