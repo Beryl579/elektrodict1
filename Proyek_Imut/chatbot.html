@@ -44,15 +44,28 @@
     <main class="chat-history" id="chatHistory">
         <!-- AI Welcome Message -->
         <div class="chat-bubble chat-bubble-ai">
-            Halo! Saya **ElektroBot**, asisten AI ahli teknik elektro Anda. Ada yang bisa saya bantu jelaskan hari ini? ⚡
+            Halo! Saya **ElektroBot**, asisten AI Engineer ahli teknik elektro Anda. Saya sekarang punya "mata" dan bisa bantu jelasin skema atau foto komponen Sobat. Ada yang bisa saya bantu? ⚡
         </div>
     </main>
 
+    <!-- Image Preview Bar -->
+    <div id="imagePreviewBar" class="image-preview-bar" style="display: none;">
+        <div class="preview-container">
+            <img id="previewImg" src="" alt="Preview">
+            <button class="remove-img-btn" onclick="clearImage()">×</button>
+        </div>
+    </div>
+
     <div class="chat-input-area">
         <div class="chat-input-wrap">
+            <input type="file" id="imageInput" accept="image/*" style="display: none;" onchange="handleImageSelect(this)">
+            <button class="chat-tool-btn" onclick="document.getElementById('imageInput').click()" title="Unggah Gambar">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M12 11c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm6 2c0-3.31-2.69-6-6-6s-6 2.69-6 6 2.69 6 6 6 6-2.69 6-6zm1.45-5L18 6.45 16.55 5H7.45L6 6.45 4.55 8H3v10h18V8h-1.55zM12 17c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z"/></svg>
+            </button>
             <input type="text" id="chatInput" placeholder="Tanya soal sirkuit, komponen, atau teori..." onkeydown="if(event.key==='Enter') sendMessage()">
-            <button class="chat-send-btn" onclick="sendMessage()">
-                <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+            <button class="chat-send-btn" id="sendBtn" onclick="sendMessage()">
+                <svg id="sendIcon" viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+                <div id="sendSpinner" class="chat-spinner" style="display: none;"></div>
             </button>
         </div>
     </div>
