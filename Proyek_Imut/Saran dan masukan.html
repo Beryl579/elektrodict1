@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https: 'unsafe-inline' 'unsafe-eval'; connect-src 'self' https://api.groq.com https://cdnjs.cloudflare.com https://docs.google.com; frame-src https://docs.google.com; img-src 'self' data: https:; font-src 'self' https:; style-src 'self' 'unsafe-inline' https:;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https: 'unsafe-inline' 'unsafe-eval'; connect-src 'self' https://api.groq.com https://cdnjs.cloudflare.com https://script.google.com https://script.googleusercontent.com; img-src 'self' data: https:; font-src 'self' https:; style-src 'self' 'unsafe-inline' https:;">
     <title>Saran & Masukan — ElektroDict</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
@@ -153,23 +153,15 @@
             <div class="f-title">Kirim Masukan 🚀</div>
             <p class="f-sub">Bantu kami mengembangkan ElektroDict lebih baik lagi.</p>
             
-            <!-- Hidden Iframe to handle Google Form Response -->
-            <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
-            
-            <form id="feedbackForm" 
-                  action="https://docs.google.com/forms/d/e/1FAIpQLSeJ1az2Bndm2-i25UfIoNkJ8rxDwtQ2Hot0_4u8CI4fB74jfA/formResponse" 
-                  method="POST" 
-                  target="hidden_iframe"
-                  onsubmit="submitted=true;">
-                
+            <form id="feedbackForm">
                 <div class="f-group">
-                    <label for="name">Nama (Boleh Anonim)</label>
-                    <input type="text" id="name" name="entry.1620652186" class="f-input" placeholder="Contoh: Budi atau Nama Keren Kamu">
+                    <label for="nama">Nama (Boleh Anonim)</label>
+                    <input type="text" id="nama" class="f-input" placeholder="Contoh: Budi atau Nama Keren Kamu">
                 </div>
                 
                 <div class="f-group">
-                    <label for="message">Pesan / Masukan</label>
-                    <textarea id="message" name="entry.1431774547" class="f-textarea" placeholder="Tuliskan saran, kritik, atau ide fitur baru di sini..." required></textarea>
+                    <label for="pesan">Pesan / Masukan</label>
+                    <textarea id="pesan" class="f-textarea" placeholder="Tuliskan saran, kritik, atau ide fitur baru di sini..." required></textarea>
                 </div>
                 
                 <button type="submit" class="f-btn" id="submitBtn">
@@ -179,37 +171,53 @@
         </div>
     </div>
 
-    <div id="toast" class="toast">✅ Terima kasih! Masukan Anda telah terkirim.</div>
+    <div id="toast" class="toast">✅ Masukan lu udah nyampe ke Beryl! Makasih ya!</div>
 
     <script>
-        let submitted = false;
         const form = document.getElementById('feedbackForm');
         const submitBtn = document.getElementById('submitBtn');
         const toast = document.getElementById('toast');
-        const iframe = document.getElementById('hidden_iframe');
 
-        // Handle Iframe Load (Completion)
-        iframe.onload = function() {
-            if (submitted) {
-                showToast();
-                form.reset();
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = 'Kirim Sekarang <span>⚡</span>';
-                submitted = false;
-            }
-        };
-
-        // Add loading state on submit
-        form.addEventListener('submit', () => {
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const nama = document.getElementById('nama').value.trim() || "Anonim";
+            const pesan = document.getElementById('pesan').value.trim();
+            
             submitBtn.disabled = true;
             submitBtn.innerHTML = 'Mengirim... ⏳';
+
+            const API_URL = 'https://script.google.com/macros/s/AKfycbyrjDZMGV2J41ZwzjLEC3WGBH0Qu36o1HMr8GhqZ0XIFl80DJZCJEmkCHwHWqOK7rfW2g/exec';
+            
+            const params = new URLSearchParams();
+            params.append('nama', nama);
+            params.append('pesan', pesan);
+
+            try {
+                // Post using Plan B (Apps Script Web App)
+                await fetch(API_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: params
+                });
+
+                // Immediate feedback for UX
+                showToast();
+                form.reset();
+            } catch (error) {
+                console.error('Submission error:', error);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'Kirim Sekarang <span>⚡</span>';
+            }
         });
 
         function showToast() {
             toast.classList.add('show');
             setTimeout(() => {
                 toast.classList.remove('show');
-            }, 4000);
+            }, 5000);
         }
 
         // SPA-like back button logic
