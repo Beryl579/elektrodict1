@@ -26,6 +26,16 @@
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="katexLoaded=true;renderPendingMath()"></script>
 <link rel="stylesheet" href="css/style.css">
+<!-- WebLLM Global Injection (Critical for Offline AI) -->
+<script type="module">
+  try {
+    const webllm = await import("https://esm.run/@mlc-ai/web-llm");
+    window.webllm = webllm;
+  } catch (e) {
+    console.error("WebLLM CDN Error:", e);
+    alert("WebLLM Library failed to load from CDN.");
+  }
+</script>
 </head>
 <body>
   <!-- Splash Screen Launch Animation -->
@@ -682,10 +692,5 @@
   }
 </script>
 
-<!-- WebLLM Injection -->
-<script type="module">
-  import * as webllm from "https://esm.run/@mlc-ai/web-llm";
-  window.webllm = webllm;
-</script>
 </body>
 </html>

@@ -2589,9 +2589,10 @@ window.initWebLLMIfNeeded = async function(bypassCheck = false) {
       const modelId = "Llama-3.2-1B-Instruct-q4f32_1-MLC";
       
       // Create engine with automatic model caching in IndexedDB (default in web-llm)
-      window.mlcEngine = await window.webllm.CreateMLCEngine(modelId, { 
+      const engine = await window.webllm.CreateMLCEngine(modelId, { 
         initProgressCallback: initProgressCallback
       });
+      window.mlcEngine = engine;
       
       window.isMLCReady = true;
       if (progressEl) progressEl.innerText = "✅ Model AI Offline Aktif & Siap!";
