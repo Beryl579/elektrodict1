@@ -3,10 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://api.groq.com https://script.google.com https://script.googleusercontent.com; img-src 'self' data:;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://api.groq.com https://cjikzpxhqstvgnblxfpv.supabase.co; img-src 'self' data:;">
     <title>Saran & Masukan — ElektroDict</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
+    <!-- Supabase Library -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         .feedback-body {
             min-height: 100vh;
@@ -171,42 +173,40 @@
         </div>
     </div>
 
-    <div id="toast" class="toast">✅ Masukan lu udah nyampe ke Beryl! Makasih ya!</div>
+    <div id="toast" class="toast">✅ Terima kasih! Masukan Anda telah terkirim.</div>
 
     <script>
         const form = document.getElementById('feedbackForm');
         const submitBtn = document.getElementById('submitBtn');
         const toast = document.getElementById('toast');
 
+        // Initialize Supabase
+        const supabaseUrl = 'https://cjikzpxhqstvgnblxfpv.supabase.co';
+        const supabaseKey = 'sb_publishable_VS1PwyzDFcQfApzUy7stCg_ySMUYQ5a';
+        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             
-            const nama = document.getElementById('nama').value.trim() || "Anonim";
-            const pesan = document.getElementById('pesan').value.trim();
+            const valNama = document.getElementById('nama').value.trim() || "Anonim";
+            const valPesan = document.getElementById('pesan').value.trim();
             
             submitBtn.disabled = true;
             submitBtn.innerHTML = 'Mengirim... ⏳';
 
-            const API_URL = 'https://script.google.com/macros/s/AKfycbyrjDZMGV2J41ZwzjLEC3WGBH0Qu36o1HMr8GhqZ0XIFl80DJZCJEmkCHwHWqOK7rfW2g/exec';
-            
-            const params = new URLSearchParams();
-            params.append('nama', nama);
-            params.append('pesan', pesan);
-
             try {
-                // Post using Plan B (Apps Script Web App)
-                await fetch(API_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: params
-                });
+                const { error } = await supabase
+                    .from('feedback')
+                    .insert([{ nama: valNama, pesan: valPesan }]);
 
-                // Immediate feedback for UX
+                if (error) throw error;
+
+                // Success
                 showToast();
                 form.reset();
             } catch (error) {
-                console.error('Submission error:', error);
+                console.error('Submission error:', error.message);
+                alert('Gagal mengirim: ' + error.message);
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = 'Kirim Sekarang <span>⚡</span>';
