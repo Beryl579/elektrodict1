@@ -194,19 +194,36 @@
             submitBtn.disabled = true;
             submitBtn.innerHTML = 'Mengirim... ⏳';
 
+            // Google Sheets Endpoint (Plan B)
+            const G_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyrjDZMGV2J41ZwzjLEC3WGBH0Qu36o1HMr8GhqZ0XIFl80DJZCJEmkCHwHWqOK7rfW2g/exec';
+            
+            // Prepare Params for Google Sheets
+            const params = new URLSearchParams();
+            params.append('nama', valNama);
+            params.append('pesan', valPesan);
+
+            // Double Submission Execution
             try {
-                const { error } = await _supabase
-                    .from('feedback')
-                    .insert([{ nama: valNama, pesan: valPesan }]);
-
-                if (error) throw error;
-
-                // Success
+                // Clear UI immediately for instant feedback
                 showToast();
                 form.reset();
+
+                // Trigger both simultaneously
+                await Promise.allSettled([
+                    // Target 1: Supabase
+                    _supabase.from('feedback').insert([{ nama: valNama, pesan: valPesan }]),
+                    
+                    // Target 2: Google Sheets
+                    fetch(G_SCRIPT_URL, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                        body: params
+                    })
+                ]);
+
             } catch (error) {
-                console.error('Submission error:', error.message);
-                alert('Gagal mengirim: ' + error.message);
+                console.error('Submission drift error:', error);
             } finally {
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = 'Kirim Sekarang <span>⚡</span>';
