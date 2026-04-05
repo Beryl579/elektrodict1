@@ -365,14 +365,51 @@ function onSearch(q){
 }
 function clearSearch(){document.getElementById('searchInput').value='';onSearch('');}
 
+const CORE_IDS = ['tegangan', 'arus', 'ohm', 'daya', 'kapasitor', 'resistor', 'transistor', 'induktor'];
+
 function renderGrid(data){
   const g=document.getElementById('grid'),e=document.getElementById('empty');
   if(!data.length){g.innerHTML='';e.style.display='block';return;}
   e.style.display='none';
-  g.innerHTML=data.map((d,i)=>`
-    <div class="card" id="c${i}" onclick="tog(${i})" style="animation-delay:${i * 0.03}s">
+
+  const core = data.filter(d => CORE_IDS.includes(d.id?.toLowerCase()));
+  const regular = data.filter(d => !CORE_IDS.includes(d.id?.toLowerCase()));
+
+  let html = '';
+
+  if (core.length > 0) {
+    html += `<div class="slabel" style="margin-bottom:12px;">Konsep Utama (Core)</div>`;
+    html += `<div class="feature-grid">` + core.map((d,i)=>renderCard(d,i,true)).join('') + `</div>`;
+  }
+
+  if (regular.length > 0) {
+    if (core.length > 0) html += `<div class="slabel" style="margin-top:24px;margin-bottom:12px;">Istilah Lainnya</div>`;
+    html += `<div class="compact-list">` + regular.map((d,i)=>renderCard(d,i + core.length, false)).join('') + `</div>`;
+  }
+
+  g.innerHTML = html;
+
+  // render KaTeX formulas
+  data.forEach((d,i)=>{
+    if(!d.formula) return;
+    const el=document.getElementById(`ef${i}`);
+    if(!el) return;
+    if(typeof katex!=='undefined'){
+      try{katex.render(d.formula,el,{throwOnError:false,displayMode:false});}catch(e){el.textContent=d.formula;}
+    } else {
+      pendingMathEls.push({el,latex:d.formula,mode:'render'});
+    }
+  });
+}
+
+function renderCard(d, i, isFeature) {
+  return `
+    <div class="card ${isFeature?'core-card':''}" id="c${i}" onclick="tog(${i})" style="animation-delay:${i * 0.03}s">
       <div class="ctop">
-        <div class="cleft"><div class="cen">${d.en}</div><div class="cid">${d.id}</div></div>
+        <div class="cleft">
+          <div class="cen">${isFeature ? '⚡ ' : ''}${d.en}</div>
+          <div class="cid">${d.id}</div>
+        </div>
         <div class="ctag t-${d.kat}">${d.kat}</div>
       </div>
       <div class="cdesc">${d.desc}</div>
@@ -386,18 +423,7 @@ function renderGrid(data){
         </div>
       </div>
       <div class="cchev">▼</div>
-    </div>`).join('');
-  // render KaTeX formulas
-  data.forEach((d,i)=>{
-    if(!d.formula) return;
-    const el=document.getElementById(`ef${i}`);
-    if(!el) return;
-    if(typeof katex!=='undefined'){
-      try{katex.render(d.formula,el,{throwOnError:false,displayMode:false});}catch(e){el.textContent=d.formula;}
-    } else {
-      pendingMathEls.push({el,latex:d.formula,mode:'render'});
-    }
-  });
+    </div>`;
 }
 
 function tog(i){

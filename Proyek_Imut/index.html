@@ -45,7 +45,7 @@
 <nav class="nav">
   <div class="nav-inner">
     <a class="logo" href="#"><div class="logo-mark">⚡</div><div class="logo-name">Elektro<span>Dict</span></div></a>
-    <div class="hspace"></div>
+    <div class="hbadge" style="background:rgba(16,185,129,0.1); border-color:rgba(16,185,129,0.2); color:var(--green); margin-right:12px;">AI Engine: <span style="font-weight:700">Groq ⚡</span></div>
     <div class="hbadge"><b id="totalCount">0</b> istilah</div>
     <button class="theme-btn" id="themeBtn" onclick="toggleTheme()" title="Ganti tema">🌙</button>
     <!-- PWA Install Button — muncul otomatis kalau browser support -->
@@ -255,7 +255,8 @@
 </div>
 
 <!-- FAB + MOBILE CHAT -->
-<button class="fab" onclick="openM()">💬</button>
+<!-- FAB + MOBILE CHAT -->
+<button class="fab" id="chat-fab-trigger" onclick="openM()" title="Chat ElektroBot (SaaS Mode)">⚡</button>
 <div class="chat-mobile" id="chatM">
   <div class="chat-handle"></div>
   <div class="chead" style="background:linear-gradient(135deg,var(--accent-d),var(--bg3));border-bottom:1px solid var(--line2)">
@@ -431,8 +432,8 @@
     <!-- result -->
     <div class="aiv-result" id="aiv-result">
       <div class="aiv-result-head">
-        <div class="aiv-result-ava">🔬</div>
-        <div class="aiv-result-name">AI Vision ⚡</div>
+        <div class="aiv-result-ava">⚡</div>
+        <div class="aiv-result-name">ElektroBot AI ⚡</div>
       </div>
       <div class="aiv-result-bubble" id="aiv-result-bubble"></div>
       <button class="aiv-reset" onclick="resetAIVResult()">🔄 Analisis Gambar Lain</button>
