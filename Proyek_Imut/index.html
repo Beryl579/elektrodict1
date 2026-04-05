@@ -126,11 +126,6 @@
     <span class="bnav-icon">💬</span>
     <span class="bnav-label" style="color:var(--accent);font-weight:700">Bertanya Disini</span>
   </a>
-  <a class="bnav-item" href="Saran dan masukan.html" id="bnav-feedback" style="text-decoration:none">
-    <div class="bnav-dot"></div>
-    <span class="bnav-icon">💡</span>
-    <span class="bnav-label">Saran & Masukan</span>
-  </a>
 </div>
 <div class="page on" id="page-kamus">
   <div class="sbar"><div class="sfield">
@@ -464,22 +459,8 @@
   </div>
 </div>
 
-<!-- Tour trigger -->
-<button class="tour-trigger" onclick="startTour()" title="Mulai Tour Fitur">🗺️</button>
-
-<!-- Tour overlay -->
-<div class="tour-overlay off" id="tour-overlay"></div>
-<div class="tour-spotlight" id="tour-spotlight" style="display:none"></div>
-<div class="tour-tip" id="tour-tip" style="display:none">
-  <div class="tour-tip-step" id="tour-step-lbl">LANGKAH 1 / 8</div>
-  <div class="tour-tip-title" id="tour-tip-title">Judul</div>
-  <div class="tour-tip-desc" id="tour-tip-desc">Deskripsi</div>
-  <div class="tour-tip-btns">
-    <button class="tour-tip-skip" onclick="endTour()">Lewati</button>
-    <button class="tour-tip-next" id="tour-next-btn" onclick="tourNext()">Selanjutnya →</button>
-    <div class="tour-tip-dots" id="tour-dots"></div>
-  </div>
-</div>
+<!-- ═══════ FEEDBACK FLOATING BUTTON (Replacing Tour) ═══════ -->
+<a href="Saran dan masukan.html" class="tour-trigger" title="Kirim Saran & Masukan" style="text-decoration:none; display:flex; align-items:center; justify-content:center; padding:0; line-height:1;">💡</a>
 
 <!-- ═══════ LOGIKA SIMULATOR PAGE ═══════ -->
 <div class="page" id="page-logika">

@@ -67,11 +67,29 @@ function renderBubble(content, role) {
     const bubble = document.createElement('div');
     bubble.className = `chat-bubble chat-bubble-${role}`;
     
-    // Simple markdown-to-html for bolding (regex)
-    let formatted = content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-    
-    bubble.innerHTML = formatted;
+    // Parse Markdown if marked.js is available
+    if (typeof marked !== 'undefined') {
+        bubble.innerHTML = marked.parse(content);
+    } else {
+        // Fallback simple bolding
+        bubble.innerHTML = content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    }
+
     chatHistory.appendChild(bubble);
+
+    // Render Math if KaTeX auto-render is available
+    if (typeof renderMathInElement === 'function') {
+        renderMathInElement(bubble, {
+            delimiters: [
+                {left: "$$", right: "$$", display: true},
+                {left: "$", right: "$", display: false},
+                {left: "\\(", right: "\\)", display: false},
+                {left: "\\[", right: "\\]", display: true}
+            ],
+            throwOnError: false
+        });
+    }
+    
     scrollToBottom();
 }
 

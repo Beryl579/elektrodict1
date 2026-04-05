@@ -980,7 +980,7 @@ body.light .chat-fab-left{
 .era-digital{background:#1a0a30;border-color:#9b72e633;color:var(--purple)}
 .era-kontemporer{background:#0a1e1e;border-color:#2ec4b633;color:var(--teal)}
 
-/* ═══════════════════ ONBOARDING TOUR ═══════════════════ */
+/* ═══════════════════ FEEDBACK FLOATING BUTTON ═══════════════════ */
 .tour-overlay{
   position:fixed;inset:0;z-index:900;pointer-events:none;
   transition:opacity .3s;
@@ -2037,6 +2037,37 @@ body.fade-out {
 .bnav-item, .chat-back {
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
+/* ── Markdown & Math Chat Enhancements ── */
+.chat-bubble p { margin: 0; }
+.chat-bubble p + p { margin-top: 10px; }
+.chat-bubble ul, .chat-bubble ol { margin: 10px 0; padding-left: 20px; }
+.chat-bubble li { margin-bottom: 4px; }
+.chat-bubble code {
+  background: rgba(0,0,0,0.3);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.9em;
+}
+.chat-bubble pre {
+  background: #0f172a;
+  padding: 12px;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 10px 0;
+  border: 1px solid var(--line);
+}
+.chat-bubble pre code { background: none; padding: 0; }
+
+/* KaTeX Overflow Fix */
+.katex-display {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 8px 0;
+  margin: 0.5em 0;
+}
+.chat-bubble .katex { font-size: 1.1em; }
 
 @media(max-width: 768px) {
   .chat-input-wrap { left: 10px; right: 10px; }
