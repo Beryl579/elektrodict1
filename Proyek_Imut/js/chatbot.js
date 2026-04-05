@@ -10,7 +10,10 @@ const sendIcon = document.getElementById('sendIcon');
 const sendSpinner = document.getElementById('sendSpinner');
 const imagePreviewBar = document.getElementById('imagePreviewBar');
 const previewImg = document.getElementById('previewImg');
+const fileInfo = document.getElementById('fileInfo');
+const fileNameDisplay = document.getElementById('fileName');
 const imageInput = document.getElementById('imageInput');
+const modelSelector = document.getElementById('modelSelector');
 
 // Branding Keywords & Custom Response
 const BRANDING_KEYWORDS = [
@@ -24,40 +27,51 @@ const BRANDING_RESPONSE = `Halo Sob! ElektroDict ini dirancang dan dikoding lang
 
 // State
 let isTyping = false;
-let selectedImageBase64 = null;
-let selectedImageType = null;
+let selectedFileBase64 = null;
+let selectedFileType = null;
+let selectedFileName = null;
 
 /**
- * Handle Image Selection
+ * Handle File Selection (Images & Documents)
  */
 function handleImageSelect(input) {
     const file = input.files[0];
     if (!file) return;
 
-    if (!file.type.startsWith('image/')) {
-        alert('Cuma bisa upload gambar ya Sob!');
-        return;
-    }
+    selectedFileName = file.name;
+    selectedFileType = file.type;
 
-    const reader = new FileReader();
-    reader.onload = (e) => {
-        selectedImageBase64 = e.target.result.split(',')[1];
-        selectedImageType = file.type;
-        
-        // Show Preview
-        previewImg.src = e.target.result;
+    const isImage = file.type.startsWith('image/');
+    
+    if (isImage) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            selectedFileBase64 = e.target.result.split(',')[1];
+            previewImg.src = e.target.result;
+            previewImg.style.display = 'block';
+            fileInfo.style.display = 'none';
+            imagePreviewBar.style.display = 'flex';
+            scrollToBottom();
+        };
+        reader.readAsDataURL(file);
+    } else {
+        // Document selection
+        selectedFileBase64 = null; // Currently only images sent to Vision
+        previewImg.style.display = 'none';
+        fileNameDisplay.textContent = file.name;
+        fileInfo.style.display = 'flex';
         imagePreviewBar.style.display = 'flex';
         scrollToBottom();
-    };
-    reader.readAsDataURL(file);
+    }
 }
 
 /**
- * Clear Selected Image
+ * Clear Selected File
  */
 function clearImage() {
-    selectedImageBase64 = null;
-    selectedImageType = null;
+    selectedFileBase64 = null;
+    selectedFileType = null;
+    selectedFileName = null;
     imageInput.value = '';
     imagePreviewBar.style.display = 'none';
 }
@@ -67,19 +81,22 @@ function clearImage() {
  */
 async function sendMessage() {
     const text = chatInput.value.trim();
-    if ((!text && !selectedImageBase64) || isTyping) return;
+    if ((!text && !selectedFileBase64 && !selectedFileName) || isTyping) return;
 
     const userText = text;
-    const userImg = selectedImageBase64 ? previewImg.src : null;
+    const userImg = selectedFileBase64 ? previewImg.src : null;
+    const userFile = !selectedFileBase64 && selectedFileName ? selectedFileName : null;
+    const selectedModel = modelSelector.value;
 
     // Reset Input UI
     chatInput.value = '';
-    const currentBase64 = selectedImageBase64;
-    const currentType = selectedImageType;
+    const currentBase64 = selectedFileBase64;
+    const currentType = selectedFileType;
+    const currentFileName = selectedFileName;
     clearImage();
 
     // Render User Bubble
-    renderBubble(userText, 'user', userImg);
+    renderBubble(userText, 'user', userImg, userFile);
 
     setLoading(true);
 
@@ -92,18 +109,23 @@ async function sendMessage() {
             renderBubble(BRANDING_RESPONSE, 'ai');
         } else {
             // High-End AI Engineer Persona
-            const systemRole = "Anda adalah ElektroBot, asisten AI Engineer teknik elektro yang cerdas dan bersahabat. Anda memiliki 'mata' dan bisa menganalisis foto sirkuit atau komponen. Gunakan bahasa Indonesia yang teknis tapi santai (panggil 'Sob' atau 'Bro'). Selalu gunakan LaTeX ($...$ atau $$...$$) untuk rumus matematika agar terlihat profesional.";
+            const systemRole = "Anda adalah ElektroBot, asisten AI Engineer teknik elektro yang cerdas dan bersahabat. Gunakan bahasa Indonesia yang teknis tapi santai (panggil 'Sob' atau 'Bro'). Selalu gunakan LaTeX ($...$ atau $$...$$) untuk rumus matematika agar terlihat profesional.";
 
             let response;
             if (currentBase64) {
-                // Vision API Call
+                // Vision API Call (Always uses Vision model)
                 response = await window.ElektroAPI.analyzeImage(currentBase64, currentType, userText || "Apa yang ada di gambar ini Sob?");
             } else {
-                // Standard Chat Call
+                // Standard Chat Call (Uses selected model)
+                let fullPrompt = userText;
+                if (currentFileName && !currentBase64) {
+                    fullPrompt = `[Lampiran File: ${currentFileName}]\n\n${userText || "Saya menglampirkan file ini Sob, ada yang bisa dibantu?"}`;
+                }
+
                 response = await window.ElektroAPI.chat([
                     { role: 'system', content: systemRole },
-                    { role: 'user', content: userText }
-                ]);
+                    { role: 'user', content: fullPrompt }
+                ], { model: selectedModel });
             }
 
             const aiMsg = response.choices?.[0]?.message?.content || 'Aduh Sob, sirkuit logika gue lagi overload nih! ⚡ Coba tanya lagi pake bahasa yang lebih teknis.';
@@ -139,7 +161,7 @@ function setLoading(loading) {
 /**
  * UI Rendering Helpers
  */
-function renderBubble(content, role, imageSrc = null) {
+function renderBubble(content, role, imageSrc = null, fileName = null) {
     const bubble = document.createElement('div');
     bubble.className = `chat-bubble chat-bubble-${role}`;
     
@@ -149,6 +171,14 @@ function renderBubble(content, role, imageSrc = null) {
         img.src = imageSrc;
         img.className = 'user-msg-img';
         bubble.appendChild(img);
+    }
+    
+    // Add Filename if User sent a document
+    if (fileName && !imageSrc) {
+        const fInfo = document.createElement('div');
+        fInfo.className = 'chat-file-attachment';
+        fInfo.innerHTML = `<span>📄</span> ${fileName}`;
+        bubble.appendChild(fInfo);
     }
 
     const textContainer = document.createElement('div');

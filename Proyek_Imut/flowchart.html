@@ -95,10 +95,37 @@
     .a4-landscape { transform: scale(0.85); margin-bottom: -150px; }
   }
   @media (max-width: 1200px) {
-    .a4-landscape { transform: scale(0.5); margin-bottom: -500px; }
+    .a4-landscape { transform: scale(0.65); margin-bottom: -350px; }
   }
-  @media (max-width: 600px) {
-    .a4-landscape { transform: scale(0.25); margin-bottom: -800px; }
+  @media (max-width: 768px) {
+    body { padding: 15px; }
+    .actions { padding: 15px; gap: 10px; width: 100%; }
+    .btn { width: 100%; padding: 14px; font-size: 14px; }
+    
+    .a4-landscape { 
+      width: 100%; 
+      height: auto; 
+      transform: none; 
+      margin-bottom: 0; 
+      padding: 40px 20px;
+      border-radius: 12px;
+    }
+    .a4-landscape::before { border-radius: 12px; }
+    
+    .header { flex-direction: column; align-items: center; text-align: center; gap: 20px; }
+    .meta { text-align: center; }
+    
+    .columns { flex-direction: column; gap: 40px; }
+    .col { width: 100%; }
+
+    .feat-grid { grid-template-columns: 1fr; }
+    
+    .footer { flex-direction: column; gap: 20px; text-align: center; }
+    .legend { flex-wrap: wrap; justify-content: center; gap: 15px; }
+    .techs { flex-wrap: wrap; justify-content: center; }
+    
+    /* Ensure arrows point down in vertical flow */
+    .arrow { margin: 10px 0; }
   }
 
   /* Deep Background Gradient */
@@ -327,7 +354,7 @@
           <div class="card-icon" style="float:left; margin-right:15px; font-size:36px; margin-bottom:0">💬</div>
           <div>
             <div class="card-title">ElektroBot AI (Standalone Interface)</div>
-            <div class="card-sub">Laman khusus chatbot.html dengan UI modern SaaS. Mendukung Developer Branding Guard (Beryl Sinaga Recognition), Persona Switcher, render tabel Markdown/LaTeX, dan sistem Auto-Recovery (429).</div>
+            <div class="card-sub">Laman khusus chatbot.html dengan UI modern SaaS. Mendukung Developer Branding Guard, Persona Switcher, render tabel Markdown/LaTeX, dan sistem Auto-Recovery (429).</div>
           </div>
         </div>
 
