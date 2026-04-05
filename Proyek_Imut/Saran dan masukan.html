@@ -153,15 +153,23 @@
             <div class="f-title">Kirim Masukan 🚀</div>
             <p class="f-sub">Bantu kami mengembangkan ElektroDict lebih baik lagi.</p>
             
-            <form id="feedbackForm">
+            <!-- Hidden Iframe to handle Google Form Response -->
+            <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
+            
+            <form id="feedbackForm" 
+                  action="https://docs.google.com/forms/d/e/1FAIpQLSeJ1az2Bndm2-i25UfIoNkJ8rxDwtQ2Hot0_4u8CI4fB74jfA/formResponse" 
+                  method="POST" 
+                  target="hidden_iframe"
+                  onsubmit="submitted=true;">
+                
                 <div class="f-group">
                     <label for="name">Nama (Boleh Anonim)</label>
-                    <input type="text" id="name" class="f-input" placeholder="Contoh: Budi atau Nama Keren Kamu">
+                    <input type="text" id="name" name="entry.1620652186" class="f-input" placeholder="Contoh: Budi atau Nama Keren Kamu">
                 </div>
                 
                 <div class="f-group">
                     <label for="message">Pesan / Masukan</label>
-                    <textarea id="message" class="f-textarea" placeholder="Tuliskan saran, kritik, atau ide fitur baru di sini..." required></textarea>
+                    <textarea id="message" name="entry.1431774547" class="f-textarea" placeholder="Tuliskan saran, kritik, atau ide fitur baru di sini..." required></textarea>
                 </div>
                 
                 <button type="submit" class="f-btn" id="submitBtn">
@@ -174,44 +182,27 @@
     <div id="toast" class="toast">✅ Terima kasih! Masukan Anda telah terkirim.</div>
 
     <script>
+        let submitted = false;
         const form = document.getElementById('feedbackForm');
         const submitBtn = document.getElementById('submitBtn');
         const toast = document.getElementById('toast');
+        const iframe = document.getElementById('hidden_iframe');
 
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const name = document.getElementById('name').value.trim() || "Anonim";
-            const message = document.getElementById('message').value.trim();
-            
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = 'Mengirim... ⏳';
-
-            const GOOGLE_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSeJ1az2Bndm2-i25UfIoNkJ8rxDwtQ2Hot0_4u8CI4fB74jfA/formResponse';
-            
-            // Field mapping
-            const formData = new FormData();
-            formData.append('entry.1620652186', name);
-            formData.append('entry.1431774547', message);
-
-            try {
-                // Gunakan mode: 'no-cors' karena Google Form tidak dukung CORS
-                await fetch(GOOGLE_FORM_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    body: formData
-                });
-
-                // Tampilkan sukses (karena no-cors tidak bisa baca respon, kita asumsi sukses jika fetch selesai)
+        // Handle Iframe Load (Completion)
+        iframe.onload = function() {
+            if (submitted) {
                 showToast();
                 form.reset();
-            } catch (error) {
-                console.error('Submission error:', error);
-                alert('Terjadi kesalahan saat mengirim. Silakan coba lagi.');
-            } finally {
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = 'Kirim Sekarang <span>⚡</span>';
+                submitted = false;
             }
+        };
+
+        // Add loading state on submit
+        form.addEventListener('submit', () => {
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = 'Mengirim... ⏳';
         });
 
         function showToast() {
