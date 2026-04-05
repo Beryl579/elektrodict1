@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>Saran & Masukan — ElektroDict</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .feedback-body {
+            min-height: 100vh;
+            background: var(--bg);
+            display: flex;
+            flex-direction: column;
+            font-family: var(--font);
+            animation: pageFadeIn 0.4s ease-out;
+        }
+        .f-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .f-card {
+            background: var(--bg2);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--line);
+            border-radius: 24px;
+            padding: 40px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        .f-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(79, 156, 249, 0.05) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .f-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 8px;
+            text-align: center;
+        }
+        .f-sub {
+            font-size: 14px;
+            color: var(--text2);
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .f-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .f-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text2);
+            margin-bottom: 8px;
+            margin-left: 4px;
+        }
+        .f-input, .f-textarea {
+            width: 100%;
+            background: var(--bg3);
+            border: 1px solid var(--line2);
+            border-radius: 12px;
+            padding: 14px 18px;
+            color: var(--text);
+            font-size: 15px;
+            font-family: var(--font);
+            transition: all 0.2s;
+            outline: none;
+        }
+        .f-input:focus, .f-textarea:focus {
+            border-color: var(--accent);
+            background: var(--bg4);
+            box-shadow: 0 0 0 4px rgba(79, 156, 249, 0.1);
+        }
+        .f-textarea {
+            height: 150px;
+            resize: none;
+        }
+        .f-btn {
+            width: 100%;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 14px;
+            padding: 16px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 8px 20px rgba(79, 156, 249, 0.25);
+        }
+        .f-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(79, 156, 249, 0.4);
+            background: #3b82f6;
+        }
+        .f-btn:active { transform: scale(0.98); }
+        .f-btn span { font-size: 20px; }
+
+        .toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-100px);
+            background: #10b981;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 99px;
+            font-weight: 600;
+            font-size: 14px;
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+            z-index: 1000;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .toast.show { transform: translateX(-50%) translateY(0); }
+    </style>
+</head>
+<body class="feedback-body">
+    <header class="chat-header">
+        <div class="chat-title-wrap">
+            <div class="chat-logo">💡</div>
+            <div class="chat-h-info">
+                <div class="chat-h-name">Saran & Masukan</div>
+                <div class="chat-h-status">Suara Anda penting bagi kami</div>
+            </div>
+        </div>
+        <a href="index.html" class="chat-back" id="backBtn">
+            <span>←</span> Dashboard
+        </a>
+    </header>
+
+    <div class="f-container">
+        <div class="f-card">
+            <div class="f-title">Kirim Masukan 🚀</div>
+            <p class="f-sub">Bantu kami mengembangkan ElektroDict lebih baik lagi.</p>
+            
+            <form id="feedbackForm">
+                <div class="f-group">
+                    <label for="name">Nama (Boleh Anonim)</label>
+                    <input type="text" id="name" class="f-input" placeholder="Contoh: Budi atau Nama Keren Kamu">
+                </div>
+                
+                <div class="f-group">
+                    <label for="message">Pesan / Masukan</label>
+                    <textarea id="message" class="f-textarea" placeholder="Tuliskan saran, kritik, atau ide fitur baru di sini..." required></textarea>
+                </div>
+                
+                <button type="submit" class="f-btn" id="submitBtn">
+                    Kirim Sekarang <span>⚡</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <div id="toast" class="toast">✅ Terima kasih! Masukan Anda telah terkirim.</div>
+
+    <script>
+        const form = document.getElementById('feedbackForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const toast = document.getElementById('toast');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const name = document.getElementById('name').value.trim() || "Anonim";
+            const message = document.getElementById('message').value.trim();
+            
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = 'Mengirim... ⏳';
+
+            const GOOGLE_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSeJ1az2Bndm2-i25UfIoNkJ8rxDwtQ2Hot0_4u8CI4fB74jfA/formResponse';
+            
+            // Field mapping
+            const formData = new FormData();
+            formData.append('entry.1620652186', name);
+            formData.append('entry.1431774547', message);
+
+            try {
+                // Gunakan mode: 'no-cors' karena Google Form tidak dukung CORS
+                await fetch(GOOGLE_FORM_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    body: formData
+                });
+
+                // Tampilkan sukses (karena no-cors tidak bisa baca respon, kita asumsi sukses jika fetch selesai)
+                showToast();
+                form.reset();
+            } catch (error) {
+                console.error('Submission error:', error);
+                alert('Terjadi kesalahan saat mengirim. Silakan coba lagi.');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = 'Kirim Sekarang <span>⚡</span>';
+            }
+        });
+
+        function showToast() {
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 4000);
+        }
+
+        // SPA-like back button logic
+        document.getElementById('backBtn').addEventListener('click', e => {
+            e.preventDefault();
+            document.body.classList.add('fade-out');
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 250);
+        });
+    </script>
+</body>
+</html>

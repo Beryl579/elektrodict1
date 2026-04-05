@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>ElektroBot AI — Chat Eksklusif</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Outfit:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Force dark theme for better SaaS aesthetic on this page */
+        :root {
+            --bg: #0f172a;
+            --bg2: #1e293b;
+            --bg3: #334155;
+            --bg4: #020617;
+            --text: #f8fafc;
+            --text2: #94a3b8;
+            --text3: #64748b;
+            --line: rgba(255,255,255,0.1);
+            --line2: rgba(255,255,255,0.05);
+            --accent: #4f9cf9;
+        }
+    </style>
+</head>
+<body class="chat-page-body">
+    <header class="chat-header">
+        <div class="chat-title-wrap">
+            <div class="chat-logo">⚡</div>
+            <div class="chat-h-info">
+                <div class="chat-h-name">ElektroBot AI</div>
+                <div class="chat-h-status"><span>●</span> Online & Ready</div>
+            </div>
+        </div>
+        <a href="index.html" class="chat-back">
+            <span>←</span> Dashboard
+        </a>
+    </header>
+
+    <main class="chat-history" id="chatHistory">
+        <!-- AI Welcome Message -->
+        <div class="chat-bubble chat-bubble-ai">
+            Halo! Saya **ElektroBot**, asisten AI ahli teknik elektro Anda. Ada yang bisa saya bantu jelaskan hari ini? ⚡
+        </div>
+    </main>
+
+    <div class="chat-input-area">
+        <div class="chat-input-wrap">
+            <input type="text" id="chatInput" placeholder="Tanya soal sirkuit, komponen, atau teori..." onkeydown="if(event.key==='Enter') sendMessage()">
+            <button class="chat-send-btn" onclick="sendMessage()">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+            </button>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/chatbot.js"></script>
+    <!-- Smooth Navigation SPA-like Feel -->
+    <script>
+      document.querySelectorAll('a[href^="index.html"]').forEach(link => {
+        link.addEventListener('click', e => {
+          e.preventDefault();
+          document.body.classList.add('fade-out');
+          setTimeout(() => {
+            window.location.href = link.href;
+          }, 250);
+        });
+      });
+    </script>
+</body>
+</html>

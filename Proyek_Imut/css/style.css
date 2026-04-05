@@ -1861,3 +1861,184 @@ body.light .led-bulb.on .led-val { color:#fff; }
 .pdf-btn { background: var(--accent) !important; border-radius: 10px !important; padding: 10px 20px !important; font-weight: 700 !important; box-shadow: 0 4px 15px rgba(79, 156, 249, 0.2) !important; }
 .pdf-btn:hover { transform: translateY(-2px) !important; box-shadow: 0 6px 20px rgba(79, 156, 249, 0.3) !important; }
 
+/* ── Dedicated Chatbot Page Styles ── */
+.chat-page-body {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  overflow: hidden;
+  font-family: var(--font);
+}
+.chat-header {
+  padding: 16px 20px;
+  background: rgba(15, 23, 42, 0.82);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 100;
+}
+.chat-back {
+  background: var(--bg3);
+  border: 1px solid var(--line2);
+  color: var(--text);
+  padding: 8px 16px;
+  border-radius: 99px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+.chat-back:hover { background: var(--bg4); transform: translateX(-4px); }
+.chat-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.chat-logo {
+  width: 34px;
+  height: 34px;
+  background: var(--accent);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: white;
+}
+.chat-h-info .chat-h-name { font-weight: 700; font-size: 16px; color: var(--text); }
+.chat-h-info .chat-h-status { font-size: 11px; color: var(--green); display: flex; align-items: center; gap: 4px; }
+.chat-history {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px 20px 120px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  scroll-behavior: smooth;
+  max-width: 900px;
+  margin: 0 auto;
+  width: 100%;
+}
+.chat-bubble {
+  max-width: 85%;
+  padding: 14px 20px;
+  border-radius: 20px;
+  font-size: 15px;
+  line-height: 1.6;
+  position: relative;
+  animation: bubbleAppear 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+@keyframes bubbleAppear {
+  from { opacity: 0; transform: translateY(15px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.chat-bubble-user {
+  align-self: flex-end;
+  background: linear-gradient(135deg, var(--accent), #3b82f6);
+  color: white;
+  border-bottom-right-radius: 4px;
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2);
+}
+.chat-bubble-ai {
+  align-self: flex-start;
+  background: var(--bg2);
+  color: var(--text);
+  border: 1px solid var(--line);
+  border-bottom-left-radius: 4px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+}
+.chat-input-area {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20px;
+  background: linear-gradient(to top, var(--bg) 60%, transparent);
+  pointer-events: none;
+}
+.chat-input-wrap {
+  pointer-events: auto;
+  background: rgba(30, 41, 59, 0.85);
+  backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 24px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 800px;
+  margin: 0 auto;
+  box-shadow: 0 10px 50px rgba(0,0,0,0.5);
+}
+.chat-input-wrap input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: white;
+  padding: 10px 16px;
+  font-size: 16px;
+  font-family: var(--font);
+}
+.chat-send-btn {
+  width: 48px;
+  height: 48px;
+  background: var(--accent);
+  border: none;
+  border-radius: 18px;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.chat-send-btn:hover { transform: scale(1.08) rotate(5deg); background: #3b82f6; }
+.chat-branding-link {
+  display: inline-block;
+  color: var(--accent);
+  font-weight: 700;
+  text-decoration: none;
+  padding: 4px 8px;
+  background: rgba(79, 156, 249, 0.1);
+  border-radius: 6px;
+  margin-top: 4px;
+  border: 1px solid rgba(79, 156, 249, 0.2);
+}
+
+/* ── SPA-Style View Transitions ── */
+@view-transition {
+  navigation: auto;
+}
+
+body {
+  animation: pageFadeIn 0.3s ease-out;
+}
+
+body.fade-out {
+  opacity: 0;
+  transform: translateY(-5px);
+  transition: opacity 0.3s ease-in, transform 0.3s ease-in;
+}
+
+@keyframes pageFadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Smooth Navigation Overrides ── */
+.bnav-item, .chat-back {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@media(max-width: 768px) {
+  .chat-input-wrap { left: 10px; right: 10px; }
+}
+
