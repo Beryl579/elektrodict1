@@ -26,16 +26,6 @@
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="katexLoaded=true;renderPendingMath()"></script>
 <link rel="stylesheet" href="css/style.css">
-<!-- WebLLM Global Injection (Critical for Offline AI) -->
-<script type="module">
-  try {
-    const webllm = await import("https://esm.run/@mlc-ai/web-llm");
-    window.webllm = webllm;
-  } catch (e) {
-    console.error("WebLLM CDN Error:", e);
-    alert("WebLLM Library failed to load from CDN.");
-  }
-</script>
 </head>
 <body>
   <!-- Splash Screen Launch Animation -->
@@ -267,6 +257,7 @@
 <!-- FAB + MOBILE CHAT -->
 <button class="fab" onclick="openM()">💬</button>
 <div class="chat-mobile" id="chatM">
+  <div class="chat-handle"></div>
   <div class="chead" style="background:linear-gradient(135deg,var(--accent-d),var(--bg3));border-bottom:1px solid var(--line2)">
     <div class="cava" style="background:linear-gradient(135deg,var(--accent),#2563eb);border:none;box-shadow:0 2px 8px #4f9cf966">⚡</div>
     <div class="cinfo">
@@ -350,13 +341,6 @@
         <div class="onboard-feat"><span class="onboard-feat-icon">🧠</span><div class="onboard-feat-info"><div class="onboard-feat-title">Latihan Soal AI</div><div class="onboard-feat-desc">Soal random di-generate tiap sesi</div></div></div>
         <div class="onboard-feat"><span class="onboard-feat-icon">🔢</span><div class="onboard-feat-info"><div class="onboard-feat-title">Kalkulator & Konversi</div><div class="onboard-feat-desc">Ohm, RLC, daya, satuan & lainnya</div></div></div>
         <div class="onboard-feat"><span class="onboard-feat-icon">💬</span><div class="onboard-feat-info"><div class="onboard-feat-title">ElektroBot AI</div><div class="onboard-feat-desc">Tanya soal elektro, jawab gaul & akurat</div></div></div>
-        <div class="onboard-feat" id="onboard-local-ai-card" style="cursor: pointer; border: 1px solid var(--line); transition: border-color 0.2s, background 0.2s;" onclick="if(window.initWebLLMIfNeeded){ window.initWebLLMIfNeeded(true); this.style.borderColor='var(--accent)'; this.style.background='var(--accent-d)'; }">
-          <span class="onboard-feat-icon">⚡</span>
-          <div class="onboard-feat-info">
-            <div class="onboard-feat-title" style="color:var(--accent);">Local AI Mode (Offline)</div>
-            <div class="onboard-feat-desc" id="onboard-local-ai-desc">Download model (~1.5GB) untuk akses AI tanpa internet & tanpa limit.</div>
-          </div>
-        </div>
         <!-- scroll hint step — only shown on mobile -->
         <div class="onboard-feat" id="onboard-scroll-hint" style="display:none;background:var(--accent-d);border-color:#2a5a9a">
           <span class="onboard-feat-icon">👆</span>
@@ -564,31 +548,6 @@
         <span class="btn-ico">💡</span>
         <span class="btn-txt">Generate Proyek</span>
       </button>
-      <div class="webllm-panel" style="margin-top: 24px; background: var(--bg3); padding: 18px; border-radius: 12px; border: 1px solid var(--line); box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-          <h4 style="font-size: 14px; font-weight: 700; margin: 0; color: var(--text);">Hybrid Engine</h4>
-          <span id="ai-status-badge" style="background: rgba(16, 185, 129, 0.15); color: var(--green); border: 1px solid var(--green); padding: 4px 10px; border-radius: 99px; font-size: 11px; font-family: var(--mono); font-weight: 600; white-space: nowrap;">🟢 Cloud Mode (Groq)</span>
-        </div>
-        
-        <div style="display: flex; flex-direction: column; gap: 12px;">
-          <p style="font-size: 12px; color: var(--text2); margin: 0; line-height: 1.5;">Gunakan AI secara lokal (offline) sepenuhnya untuk mem-bypass limit server. <b>Butuh download model pertama kali (~1.5GB)</b>.</p>
-          
-          <div style="display: flex; align-items: stretch; gap: 14px; flex-wrap: wrap;">
-            <button id="enable-local-ai-btn" onclick="javascript:if(window.initWebLLMIfNeeded) window.initWebLLMIfNeeded(true)" style="background: linear-gradient(135deg, var(--accent), #2563eb); border: none; color: white; padding: 10px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: opacity 0.2s; font-family: var(--font); box-shadow: 0 4px 12px rgba(37,99,235,0.3); flex-shrink:0;">
-              ⚡ Enable Local AI (Offline Mode)
-            </button>
-            
-            <div style="flex: 1; min-width: 180px; display: flex; flex-direction: column; justify-content: center; gap: 6px;">
-              <span id="webllm-progress" style="font-family: var(--mono); font-size: 11px; color: var(--accent); font-weight: 600;">Menunggu...</span>
-              <div style="width: 100%; height: 6px; background: var(--bg4); border-radius: 3px; overflow: hidden; border: 1px solid var(--line);">
-                <div id="webllm-progress-bar" style="height: 100%; width: 0%; background: var(--accent); transition: width 0.1s linear;"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Hidden checkbox to link up with original generate logic gracefully -->
-        <input type="checkbox" id="local-ai-toggle" style="display: none;">
       </div>
     </div>
 

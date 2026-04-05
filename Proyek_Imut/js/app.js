@@ -2540,94 +2540,6 @@ function initProjects() {
 
 let currentAIProject = null;
 
-// ── WEBLMM LOGIC ──
-window.mlcEngine = null;
-window.isMLCReady = false;
-
-window.initWebLLMIfNeeded = async function(bypassCheck = false) {
-  const toggle = document.getElementById('local-ai-toggle');
-  if (bypassCheck && toggle) toggle.checked = true;
-  
-  const isChecked = toggle?.checked;
-  if (isChecked && !window.mlcEngine) {
-    const progressEl = document.getElementById('webllm-progress');
-    const progressBar = document.getElementById('webllm-progress-bar');
-    const badge = document.getElementById('ai-status-badge');
-    const btn = document.getElementById('enable-local-ai-btn');
-    const onboardDesc = document.getElementById('onboard-local-ai-desc');
-
-    const initProgressCallback = (initProgress) => {
-      if (progressEl) {
-        progressEl.innerText = initProgress.text;
-      }
-      if (progressBar && initProgress.progress >= 0) {
-        progressBar.style.width = Math.round(initProgress.progress * 100) + '%';
-      }
-      if (onboardDesc) {
-        onboardDesc.innerText = initProgress.text;
-      }
-    };
-    
-    try {
-      if (btn) {
-        btn.disabled = true;
-        btn.style.opacity = 0.5;
-        btn.innerText = "⏳ Initializing...";
-      }
-      if (badge) {
-        badge.innerHTML = "⚡ Initializing...";
-        badge.style.color = "var(--amber)";
-        badge.style.borderColor = "var(--amber)";
-        badge.style.background = "rgba(245, 158, 11, 0.15)";
-      }
-      
-      if (!window.webllm || !window.webllm.CreateMLCEngine) {
-        throw new Error("CreateMLCEngine module not loaded (Offline/Network Error).");
-      }
-      
-      // Explicit Model ID as requested: Llama-3.2-1B-Instruct-q4f32_1-MLC
-      const modelId = "Llama-3.2-1B-Instruct-q4f32_1-MLC";
-      
-      // Create engine with automatic model caching in IndexedDB (default in web-llm)
-      const engine = await window.webllm.CreateMLCEngine(modelId, { 
-        initProgressCallback: initProgressCallback
-      });
-      window.mlcEngine = engine;
-      
-      window.isMLCReady = true;
-      if (progressEl) progressEl.innerText = "✅ Model AI Offline Aktif & Siap!";
-      if (badge) {
-        badge.innerHTML = "⚡ Local Mode (WebLLM)";
-        badge.style.color = "var(--accent)";
-        badge.style.borderColor = "var(--accent)";
-        badge.style.background = "rgba(79, 156, 249, 0.15)";
-      }
-      if (btn) {
-        btn.innerText = "✅ Local AI Enabled";
-      }
-      if (onboardDesc) {
-        onboardDesc.innerText = "✅ Model AI Offline sudah tersimpan di browser & siap pakai!";
-      }
-    } catch(err) {
-      console.error("Local ML Engine fail:", err);
-      if(progressEl) progressEl.innerText = "❌ Gagal: " + err.message;
-      if(onboardDesc) onboardDesc.innerText = "❌ Download model gagal. Cek koneksi Anda.";
-      if(toggle) toggle.checked = false;
-      if(btn) {
-        btn.disabled = false;
-        btn.style.opacity = 1;
-        btn.innerText = "⚡ Enable Local AI (Offline Mode)";
-      }
-      if(badge) {
-        badge.innerHTML = "🟢 Cloud Mode (Groq)";
-        badge.style.color = "var(--green)";
-        badge.style.borderColor = "var(--green)";
-        badge.style.background = "rgba(16, 185, 129, 0.15)";
-      }
-    }
-  }
-}
-
 async function generateAIProject() {
   const input = document.getElementById('prj-idea-input');
   const idea = input.value.trim();
@@ -2647,34 +2559,8 @@ async function generateAIProject() {
   btn.innerHTML = '🛠️ Sabar ya, lagi ngerakit kabel virtual buat kamu...';
   loading.classList.remove('hide');
   
-  const isLocalMode = document.getElementById('local-ai-toggle')?.checked;
-
   try {
-    let data;
-    
-    if (isLocalMode && window.isMLCReady && window.mlcEngine) {
-      // ── LOCAL OFFLINE AI GENERATION ──
-      btn.innerHTML = '🧠 Llama-3.2 Local Generating...';
-      const prompt = `Return ONLY rigid valid JSON for an Arduino project using this schema (No markdown, no backticks, no comments, no explanation! MUST start with {): 
-{
-"title": "...", "description": "...", 
-"components": ["...", "..."], 
-"wiring_table": [{"komponen": "...", "pin_komponen": "...", "koneksi_arduino": "..."}], 
-"code": "C++ code string", 
-"steps": ["step1", "step2"], 
-"difficulty": "Menengah"
-}
-
-User Idea: ${idea}`;
-
-      const reply = await window.mlcEngine.chat.completions.create({
-        messages: [{ role: "user", content: prompt }]
-      });
-      data = { result: reply.choices[0].message.content };
-    } else {
-      // ── REMOTE GROQ API GENERATION ──
-      data = await window.ElektroAPI.generateProject(idea);
-    }
+    const data = await window.ElektroAPI.generateProject(idea);
 
     // 1. Retrieve raw content
     let rawContent = data.result;
@@ -2769,6 +2655,9 @@ function openProject(id) {
 function renderProjectDetail(prj) {
   const content = document.getElementById('project-detail-content');
   if(!content) return;
+  
+  // Save current project for PDF export access
+  window.currentPrjForExport = prj;
 
   // Load progress
   const progress = JSON.parse(localStorage.getItem(`ed_prj_progress_${prj.id}`) || '[]');
@@ -2949,7 +2838,10 @@ function renderProjectDetail(prj) {
 
   content.innerHTML = `
     <div class="pd-header">
-      <h1 class="pd-title">${prj.title}</h1>
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:16px; margin-bottom:12px;">
+        <h1 class="pd-title" style="margin:0">${prj.title}</h1>
+        <button class="pdf-btn" onclick="exportProjectToPdf()" style="background:var(--accent); color:white; border:none; padding:8px 16px; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:6px; flex-shrink:0; box-shadow:0 4px 12px rgba(79,156,249,0.3)">📄 Export PDF</button>
+      </div>
       <div class="pd-meta">
         <div class="prj-card-diff diff-${diffClass}">${diffLabel}</div>
         <div style="font-size: 12px; color: var(--text2); font-family: var(--mono);">${prj.id}</div>
@@ -3357,4 +3249,118 @@ function drawScope() {
   }
 
   ctx.stroke();
+}
+
+/**
+ * Export Project to PDF via jsPDF
+ */
+function exportProjectToPdf() {
+    const prj = window.currentPrjForExport;
+    if (!prj) return;
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    const margin = 20;
+    let y = 20;
+
+    // Helper: Add wrapping text
+    const addWrappedText = (text, fontSize = 10, fontStyle = 'normal', color = [30, 41, 59]) => {
+        doc.setFont('helvetica', fontStyle);
+        doc.setFontSize(fontSize);
+        doc.setTextColor(...color);
+        const splitText = doc.splitTextToSize(text, 170);
+        doc.text(splitText, margin, y);
+        y += (splitText.length * (fontSize * 0.5)) + 5;
+    };
+
+    // Header / Brand
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(22);
+    doc.setTextColor(79, 156, 249);
+    doc.text('ElektroDict', margin, y);
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(100, 116, 139);
+    doc.text('AI Project Generator Report', 140, y);
+    y += 10;
+    doc.setDrawColor(226, 232, 240);
+    doc.line(margin, y, 190, y);
+    y += 15;
+
+    // Title
+    addWrappedText(prj.title?.toUpperCase() || 'UNTITLED PROJECT', 16, 'bold', [15, 23, 42]);
+    
+    // Difficulty Badge
+    doc.setFillColor(241, 245, 249);
+    doc.roundedRect(margin, y - 2, 40, 7, 2, 2, 'F');
+    doc.setFontSize(8);
+    doc.setTextColor(71, 85, 105);
+    doc.text(`Difficulty: ${prj.difficulty || 'Normal'}`, margin + 5, y + 3);
+    y += 12;
+
+    // Description
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(12);
+    doc.setTextColor(15, 23, 42);
+    doc.text('Description', margin, y);
+    y += 7;
+    addWrappedText(prj.description || 'No description provided.', 10, 'normal', [51, 65, 85]);
+
+    // Components (BOM)
+    const components = prj.bom || prj.components || [];
+    if (components.length) {
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(12);
+        doc.text('Components List', margin, y);
+        y += 7;
+        components.forEach(c => {
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(10);
+            doc.text(`• ${c}`, margin + 5, y);
+            y += 6;
+            if (y > 270) { doc.addPage(); y = 20; }
+        });
+        y += 5;
+    }
+
+    // Wiring Guide
+    const wiring = prj.wiring_guide || prj.wiring_table || [];
+    if (wiring.length) {
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(12);
+        doc.text('Wiring Guide', margin, y);
+        y += 7;
+        wiring.forEach(w => {
+            const line = `${w.komponen}: ${w.pin_komponen || '-'} -> ${w.koneksi_arduino || '-'}`;
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(10);
+            doc.text(`- ${line}`, margin + 5, y);
+            y += 6;
+            if (y > 270) { doc.addPage(); y = 20; }
+        });
+        y += 5;
+    }
+
+    // Arduino Code Section
+    if (y > 200) { doc.addPage(); y = 20; }
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(12);
+    doc.text('Arduino Sketch (.ino)', margin, y);
+    y += 7;
+    
+    doc.setFont('courier', 'normal');
+    doc.setFontSize(9);
+    const code = prj.cpp_code || 'No code provided.';
+    const splitCode = doc.splitTextToSize(code, 160);
+    
+    // Handle multi-page code blocks
+    splitCode.forEach(line => {
+        if (y > 280) { doc.addPage(); y = 20; }
+        doc.text(line, margin + 5, y);
+        y += 5;
+    });
+
+    // Save PDF
+    const filename = `${(prj.title || 'Project').replace(/\s+/g, '_')}_ElektroDict.pdf`;
+    doc.save(filename);
 }
