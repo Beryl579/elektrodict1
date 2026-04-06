@@ -24,11 +24,12 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: { message: `Method ${req.method} Not Allowed` } });
   }
 
-  let keysStr = process.env.GROQ_API_KEYS;
-  let fallbackKey = process.env.GROQ_API_KEY;
-  let keys = keysStr ? keysStr.split(',').map(k => k.trim()).filter(Boolean) : (fallbackKey ? [fallbackKey] : []);
+  let openRouterKey = process.env.OPENROUTER_API_KEY;
+  let groqKeysStr = process.env.GROQ_API_KEYS;
+  let groqFallbackKey = process.env.GROQ_API_KEY;
+  let groqKeys = groqKeysStr ? groqKeysStr.split(',').map(k => k.trim()).filter(Boolean) : (groqFallbackKey ? [groqFallbackKey] : []);
 
-  if (keys.length === 0) {
+  if (!openRouterKey && groqKeys.length === 0) {
     return res.status(500).json({ error: { message: "API Key belum dikonfigurasi di Vercel!" } });
   }
 
@@ -69,76 +70,82 @@ RULES:
   REQUIRED: ["lcd:VSS","uno:GND.1","black",[]],["lcd:VDD","uno:5V","red",[]],["lcd:V0","uno:GND.2","black",[]],["lcd:RS","uno:12","green",[]],["lcd:RW","uno:GND.3","black",[]],["lcd:E","uno:11","yellow",[]],["lcd:D4","uno:5","blue",[]],["lcd:D5","uno:4","blue",[]],["lcd:D6","uno:3","blue",[]],["lcd:D7","uno:2","blue",[]],["lcd:A","uno:5V","red",[]],["lcd:K","uno:GND.1","black",[]]
   C++: LiquidCrystal lcd(12,11,5,4,3,2);`;
 
-    // Helper: attempt a single Groq call with the given model
-    async function callGroq(model) {
-      if (keys.length === 0) {
-        return { ok: false, status: 429, json: async () => ({ error: { message: "All API keys exhausted." } }) };
-      }
-      
-      let currentKey = keys[Math.floor(Math.random() * keys.length)];
-      
-      const getPayload = () => ({
-        model,
-        response_format: { type: "json_object" },
-        messages: [
-          { role: "system", content: systemPrompt },
-          { role: "user",   content: `Buatkan tutorial untuk proyek: ${idea}` }
-        ],
-        temperature: 0.7,
-        max_tokens: 4000,
-        stream: false
-      });
+    const getPayload = (model) => ({
+      model,
+      response_format: { type: "json_object" },
+      messages: [
+        { role: "system", content: systemPrompt },
+        { role: "user",   content: `Buatkan tutorial untuk proyek: ${idea}` }
+      ],
+      temperature: 0.7,
+      max_tokens: 4000,
+      stream: false
+    });
 
-      let resp = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${currentKey}`,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(getPayload())
-      });
-      
-      if (resp.status === 429) {
-        keys = keys.filter(k => k !== currentKey);
-        if (keys.length > 0) {
-          currentKey = keys[Math.floor(Math.random() * keys.length)];
-          resp = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-            method: "POST",
-            headers: {
-              "Authorization": `Bearer ${currentKey}`,
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify(getPayload())
-          });
+    let response;
+
+    // 1. Try OpenRouter (Qwen) first
+    if (openRouterKey) {
+      try {
+        response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${openRouterKey}`,
+            "Content-Type": "application/json",
+            "HTTP-Referer": "https://elektrodict.vercel.app",
+            "X-Title": "ElektroBot AI"
+          },
+          body: JSON.stringify(getPayload("qwen/qwen-2.5-72b-instruct:free"))
+        });
+      } catch (err) {
+        console.warn("[Backend] OpenRouter project-gen failed, falling back to Groq...", err);
+      }
+    }
+
+    // 2. Try Groq as fallback
+    if ((!response || !response.ok) && groqKeys.length > 0) {
+      const callGroq = async (model) => {
+        let currentKey = groqKeys[Math.floor(Math.random() * groqKeys.length)];
+        let resp = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${currentKey}`,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(getPayload(model))
+        });
+        
+        if (resp.status === 429) {
+          groqKeys = groqKeys.filter(k => k !== currentKey);
+          if (groqKeys.length > 0) {
+            currentKey = groqKeys[Math.floor(Math.random() * groqKeys.length)];
+            resp = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+              method: "POST",
+              headers: {
+                "Authorization": `Bearer ${currentKey}`,
+                "Content-Type": "application/json"
+              },
+              body: JSON.stringify(getPayload(model))
+            });
+          }
         }
+        return resp;
+      };
+
+      response = await callGroq("llama-3.3-70b-versatile");
+      if (response.status === 429 || response.status === 500) {
+        response = await callGroq("llama-3.1-8b-instant");
       }
-      
-      return resp;
     }
 
-    // ── PRIMARY attempt: 70B model ──
-    let response = await callGroq("llama-3.3-70b-versatile");
-
-    // ── FALLBACK: retry with fast 8B model on 429 / 500 ──
-    if (response.status === 429 || response.status === 500) {
-      console.warn(`[Backend] Primary model failed (${response.status}), falling back to llama-3.1-8b-instant...`);
-      response = await callGroq("llama-3.1-8b-instant");
-    }
-
-    // ── Final failure handling with structured status codes ──
-    if (!response.ok) {
-      const status = response.status;
-      const errBody = await response.json().catch(() => ({}));
-      if (status === 429) {
-        return res.status(429).json({ status: "limit_reached", error: { message: "Quota AI habis di kedua model. Coba lagi dalam 1-2 menit." } });
-      }
+    if (!response || !response.ok) {
+      const status = response?.status || 500;
+      const errBody = await response?.json().catch(() => ({}));
       return res.status(status).json({ status: "ai_fainted", error: { message: errBody?.error?.message || "AI gagal generate. Coba instruksi yang lebih simpel." } });
     }
 
     const data = await response.json();
     const result = data.choices[0].message.content;
-
-    // Send back the raw JSON string (the client will parse it)
     return res.status(200).json({ result });
 
   } catch (error) {
