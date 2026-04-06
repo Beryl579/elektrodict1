@@ -103,11 +103,6 @@ export default async function handler(req, res) {
 
     // 2. Try Groq as Fallback (or if primary)
     if ((!response || !response.ok) && groqKeys.length > 0) {
-      // If the model was Qwen, we must switch to a Groq-compatible one
-      if (targetModel.includes('qwen')) {
-        aiPayload.model = "llama-3.3-70b-versatile";
-      }
-
       let currentKey = groqKeys[Math.floor(Math.random() * groqKeys.length)];
       response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
         method: "POST",

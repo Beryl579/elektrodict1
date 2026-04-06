@@ -64,18 +64,28 @@ const ElektroQuiz = {
       sulit: 'tingkat kesulitan sulit (analisis rangkaian, perhitungan multi-langkah, konsep lanjut)'
     };
 
-    const prompt = `Kamu adalah pembuat soal teknik elektro profesional. Buat TEPAT 5 soal pilihan ganda tentang topik "${cat.label}" (${cat.desc}) dengan ${diffMap[qDiff]}.
+    const prompt = `Kamu adalah ElektroBot, Senior Electronics Engineer dan expert pembuat soal ujian kompetensi teknik (SMK/D3/S1). 
+Buat TEPAT 5 soal pilihan ganda tentang topik "${cat.label}" (${cat.desc}).
 
-PENTING — kembalikan HANYA JSON valid, tanpa teks lain, tanpa markdown, tanpa backtick:
-{"soal":[{"q":"pertanyaan","opts":["A","B","C","D"],"ans":0,"exp":"penjelasan singkat mengapa jawaban benar"}]}
+DOMAIN SOAL:
+1. Logic: Analisis logika rangkaian.
+2. Formulas: Gunakan perhitungan unit (V, I, R, P, F, H, dll).
+3. Troubleshooting: Diagnosa kerusakan sirkuit (Sirkuit Putus, Short, dll).
 
-Aturan:
-- "ans" adalah INDEX jawaban benar (0=A, 1=B, 2=C, 3=D)
-- Soal dalam bahasa Indonesia yang jelas
-- Pilihan jawaban harus masuk akal
-- Penjelasan singkat tapi informatif
-- Gunakan rumus KaTeX jika diperlukan (misal: \\(V=IR\\) atau $$P=VI$$)
-- Pastikan SEMUA 5 soal ada dalam array`;
+DIFFICULTY LEVEL: ${qDiff.toUpperCase()}
+- MUDAH: Konsep dasar, komponen, dan rumus dasar (V=IR).
+- SEDANG: Aplikasi rumus, kombinasi seri/paralel, dan pembagi tegangan.
+- SULIT: Analisis daya, reaktansi, desain sistem, dan troubleshooting multi-langkah.
+
+JSON OUTPUT REQUIREMENT:
+Kembalikan HANYA JSON valid tanpa teks penjelasan di luar JSON. Fokus pada akurasi unit.
+Format:
+{"soal":[{"q":"pertanyaan","opts":["A","B","C","D"],"ans":0,"exp":"penjelasan teknis kenapa jawaban benar"}]}
+
+Rules:
+- "ans": Index jawaban benar (0-3).
+- Gunakan LaTeX KaTeX ($...$ atau $$...$$) untuk semua simbol fisik dan rumus.
+- Jangan gunakan markdown box, cukup raw JSON.`;
 
     try {
       const data = await ElektroAPI.generateQuiz(prompt);
