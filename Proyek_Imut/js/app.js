@@ -11,22 +11,13 @@ const VERCEL_URL = (window.ElektroAPI && window.ElektroAPI.VERCEL_URL) || "/api/
  * Menggunakan window.ElektroAPI dari /js/api.js 
  */
 async function callAI(payload) {
+  // Always use the unified API layer to ensure consistency (handles timeouts, 404s, etc.)
   if (!window.ElektroAPI) {
-    console.warn("[ElektroDict] ElektroAPI not loaded! Falling back to raw fetch.");
-    try {
-      const r = await fetch("/api/chat", {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-      return await r.json();
-    } catch(e) {
-      return { error: { message: "Gagal terhubung ke API. Cek koneksi atau status deploy." } };
-    }
+    console.error("[ElektroDict] ElektroAPI not loaded!");
+    return { error: { message: "ElektroAPI layer is missing. Please refresh the page." } };
   }
 
   try {
-    // Gunakan fungsi chat dari API layer (sudah ada timeout & error handling)
     return await window.ElektroAPI.chat(payload.messages, {
       model: payload.model,
       temperature: payload.temperature,
@@ -34,7 +25,6 @@ async function callAI(payload) {
     });
   } catch (e) {
     console.error("[ElektroDict] API Error:", e);
-    // Re-throw rate limit errors so the UI can handle them gracefully
     if (e.isRateLimit) throw e;
     return { error: { message: e.message || "Gagal terhubung ke AI." } };
   }

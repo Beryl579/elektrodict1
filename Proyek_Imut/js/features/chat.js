@@ -19,7 +19,7 @@ PERSONALITY & TONE:
 - Style: Smart, helpful, and encouraging. Never be a 'rigid robot'.`;
 
 const MAX_HIST = 40;
-const HIST_STORAGE_KEY = 'elektrobot_history';
+const HIST_STORAGE_KEY = 'homepage_bot_history';
 const WELCOME_LINES = 'Yo! Gua ElektroBot ⚡\nMau nanya soal teknik elektro? Gas aja, gua siap bantu! 🔥';
 
 let chatHistory = [];
