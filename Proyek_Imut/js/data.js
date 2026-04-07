@@ -378,3 +378,106 @@ const PROJECTS = [
     ]
   }
 ];
+
+const STANDARDS_DATA = {
+  puil2011: [
+    { label: "Line 1 (Fasa 1)", id: "L1", color: "Cokelat", hex: "#8B4513" },
+    { label: "Line 2 (Fasa 2)", id: "L2", color: "Hitam", hex: "#000000" },
+    { label: "Line 3 (Fasa 3)", id: "L3", color: "Abu-abu", hex: "#808080" },
+    { label: "Netral", id: "N", color: "Biru", hex: "#0000FF" },
+    { label: "Protective Earth", id: "PE", color: "Hijau-Kuning", hex: "linear-gradient(90deg, #00FF00 50%, #FFFF00 50%)" }
+  ],
+  symbols: [
+    { name: "Resistor", iec: "Kotak Persegi Panjang", ansi: "Garis Zigzag" },
+    { name: "Kapasitor", iec: "Dua Garis Sejajar", ansi: "Satu Lurus, Satu Lengkung" },
+    { name: "Induktor", iec: "Kotak Hitam / Lengkung", ansi: "Lilitan Bergelombang" },
+    { name: "Potensiometer", iec: "Kotak dengan Panah", ansi: "Zigzag dengan Panah" },
+    { name: "Ground", iec: "Garis Horizontal Menipis", ansi: "Tiga Garis Horizontal" }
+  ]
+};
+
+const AWG_TABLE = [
+  { awg: 10, area: 6.0 }, { awg: 12, area: 4.0 }, { awg: 14, area: 2.5 }, 
+  { awg: 16, area: 1.5 }, { awg: 17, area: 1.0 }, { awg: 18, area: 0.75 }, 
+  { awg: 20, area: 0.5 }, { awg: 22, area: 0.34 }, { awg: 24, area: 0.25 },
+  { awg: 26, area: 0.14 }, { awg: 28, area: 0.08 },{ awg: 30, area: 0.05 }
+];
+
+const CHIP_DATA = [
+  {
+    id: "ne555", 
+    name: "NE555 Precision Timer", 
+    type: "DIP-8",
+    desc: "IC timer legendaris untuk pembangkit pulsa dan osilator.",
+    pins: [
+      { n: 1, label: "GND", desc: "Ground (0V)" },
+      { n: 2, label: "TRIG", desc: "Trigger Input (< 1/3 Vcc)" },
+      { n: 3, label: "OUT", desc: "Output" },
+      { n: 4, label: "RESET", desc: "Reset (Active Low)" },
+      { n: 5, label: "CTRL", desc: "Control Voltage" },
+      { n: 6, label: "THRES", desc: "Threshold Input (> 2/3 Vcc)" },
+      { n: 7, label: "DISCH", desc: "Discharge" },
+      { n: 8, label: "Vcc", desc: "Supply Voltage (4.5V - 15V)" }
+    ],
+    datasheet: "https://www.ti.com/lit/ds/symlink/ne555.pdf"
+  },
+  {
+    id: "lm741", 
+    name: "LM741 Operational Amplifier", 
+    type: "DIP-8",
+    desc: "Op-amp serbaguna untuk penguatan sinyal analog.",
+    pins: [
+      { n: 1, label: "OFF1", desc: "Offset Null 1" },
+      { n: 2, label: "INV", desc: "Inverting Input (-)" },
+      { n: 3, label: "NON-INV", desc: "Non-Inverting Input (+)" },
+      { n: 4, label: "V-", desc: "Negative Supply" },
+      { n: 5, label: "OFF2", desc: "Offset Null 2" },
+      { n: 6, label: "OUT", desc: "Output" },
+      { n: 7, label: "V+", desc: "Positive Supply" },
+      { n: 8, label: "NC", desc: "Not Connected" }
+    ],
+    datasheet: "https://www.ti.com/lit/ds/symlink/lm741.pdf"
+  },
+  {
+    id: "7805", 
+    name: "LM7805 Regulator", 
+    type: "TO-220",
+    desc: "Fixed +5V voltage regulator.",
+    pins: [
+      { n: 1, label: "VIN", desc: "Input Unregulated (>7V)" },
+      { n: 2, label: "GND", desc: "Ground" },
+      { n: 3, label: "VOUT", desc: "Output Regulated (+5V)" }
+    ],
+    datasheet: "https://www.st.com/resource/en/datasheet/l78.pdf"
+  },
+  {
+    id: "uno", 
+    name: "Arduino Uno Pinout", 
+    type: "MCU",
+    desc: "Peta pin mikrokontroler ATmega328P pada papan Uno.",
+    pins: [
+      { n: "D0", label: "RX", desc: "UART Receive" },
+      { n: "D1", label: "TX", desc: "UART Transmit" },
+      { n: "D3", label: "PWM", desc: "Digital/PWM" },
+      { n: "A0", label: "ADC0", desc: "Analog Input 0" },
+      { n: "5V", label: "5V", desc: "Regulated 5V" },
+      { n: "GND", label: "GND", desc: "Ground" }
+    ],
+    datasheet: "https://docs.arduino.cc/resources/datasheets/A000066-datasheet.pdf"
+  },
+  {
+    id: "esp32", 
+    name: "ESP32 DevKit V1", 
+    type: "MCU",
+    desc: "SoC dengan Wi-Fi & Bluetooth ganda (30-pin version).",
+    pins: [
+      { n: "EN", label: "EN", desc: "Enable/Reset" },
+      { n: "D2", label: "LED", desc: "Built-in LED" },
+      { n: "G21", label: "SDA", desc: "I2C Data" },
+      { n: "G22", label: "SCL", desc: "I2C Clock" },
+      { n: "3V3", label: "3V3", desc: "Output 3.3V" },
+      { n: "GND", label: "GND", desc: "Ground" }
+    ],
+    datasheet: "https://www.espressif.com/sites/default/files/documentation/esp32_datasheet_en.pdf"
+  }
+];

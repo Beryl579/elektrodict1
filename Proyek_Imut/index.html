@@ -26,6 +26,115 @@
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="katexLoaded=true;renderPendingMath()"></script>
 <link rel="stylesheet" href="css/style.css">
+<style>
+  /* Mastery Card */
+  #quiz-mastery-container { margin-bottom: 24px; }
+  .mastery-card {
+    background: var(--bg2);
+    border-radius: 16px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+  }
+  .mastery-card:hover { transform: translateY(-3px); }
+  .m-left { display: flex; align-items: center; gap: 14px; }
+  .m-emoji { font-size: 32px; filter: drop-shadow(0 2px 5px rgba(0,0,0,0.2)); }
+  .m-rank { font-size: 18px; font-weight: 800; color: var(--text1); line-height: 1.2; }
+  .m-sub { font-size: 11px; color: var(--text3); font-weight: 500; }
+  .m-right { flex: 1; max-width: 180px; text-align: right; }
+  .m-xp { font-size: 12px; font-weight: 700; color: var(--text2); margin-bottom: 6px; font-family: var(--mono); }
+  .m-bar-bg { height: 6px; background: var(--bg4); border-radius: 10px; overflow: hidden; }
+  .m-bar-fill { height: 100%; border-radius: 10px; transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1); }
+
+  @media (max-width: 480px) {
+    .mastery-card { flex-direction: column; align-items: flex-start; }
+    .m-right { max-width: 100%; width: 100%; text-align: left; }
+  }
+
+  /* Standards & Chips Styles */
+  .s-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; padding: 20px; margin-bottom: 80px;}
+  .s-card { background: var(--bg2); border-radius: 12px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 1px solid var(--line); }
+  .s-card.full-w { grid-column: 1 / -1; }
+  .s-card-head { font-size: 16px; font-weight: 700; color: var(--accent); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--bg4); padding-bottom: 10px; }
+  .s-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .s-table th { text-align: left; padding: 10px; border-bottom: 2px solid var(--bg4); color: var(--text3); }
+  .s-table td { padding: 12px 10px; border-bottom: 1px solid var(--bg4); color: var(--text2); }
+  .s-badge { background: var(--bg4); padding: 2px 8px; border-radius: 4px; font-family: var(--mono); font-size: 11px; color: var(--accent); }
+  .color-swatch { width: 16px; height: 16px; border-radius: 4px; border: 1px solid rgba(255,255,255,0.2); flex-shrink: 0; }
+  .awg-flex { display: flex; align-items: center; gap: 30px; background: var(--bg1); padding: 20px; border-radius: 12px; margin-bottom: 12px; flex-wrap: wrap;}
+  .awg-input-wrap { flex: 1; min-width: 150px; }
+  .awg-val { font-size: 42px; font-weight: 800; color: var(--accent); font-family: var(--font); }
+  .awg-unit { font-size: 14px; color: var(--text3); margin-top: -5px;}
+  #awg-select { background: var(--bg4); color: var(--text1); border: 1px solid var(--line); padding: 12px; border-radius: 10px; font-size: 16px; width: 100%; outline: none; transition: 0.3s; }
+  #awg-select:focus { border-color: var(--accent); box-shadow: 0 0 10px rgba(79, 156, 249, 0.2); }
+  .s-note { font-size: 11px; color: var(--text3); opacity: 0.7; font-style: italic; }
+
+  .c-search-bar { padding: 0 20px 10px; }
+  #chip-search { width: 100%; padding: 14px 20px; border-radius: 12px; background: var(--bg2); border: 1px solid var(--line); color: var(--text1); font-size: 15px; outline: none; transition: 0.3s; }
+  #chip-search:focus { border-color: var(--accent); background: var(--bg3); }
+  .c-flex { display: flex; gap: 20px; padding: 0 20px 100px; height: calc(100vh - 280px); }
+  .c-list-side { width: 280px; overflow-y: auto; background: var(--bg2); border-radius: 12px; padding: 8px; border: 1px solid var(--line); }
+  .c-viewer-side { flex: 1; background: var(--bg2); border-radius: 12px; padding: 24px; overflow-y: auto; position: relative; border: 1px solid var(--line); }
+  .c-item { padding: 14px 16px; border-radius: 10px; cursor: pointer; transition: 0.2s; margin-bottom: 6px; border: 1px solid transparent; }
+  .c-item:hover { background: var(--bg3); border-color: var(--line); }
+  .c-item.active { background: var(--accent); color: white; box-shadow: 0 4px 15px rgba(79, 156, 249, 0.3); }
+  .c-item.active .c-item-type { color: rgba(255,255,255,0.8); }
+  .c-item-name { font-weight: 700; font-size: 14px; margin-bottom: 2px;}
+  .c-item-type { font-size: 11px; opacity: 0.7; font-family: var(--mono); }
+  .chip-header { margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--bg4); }
+  .chip-header h3 { font-size: 22px; margin-bottom: 6px; color: var(--text1); font-weight: 800; }
+  .chip-badge { background: var(--bg4); padding: 4px 12px; border-radius: 20px; font-size: 11px; color: var(--accent); font-weight: 700; }
+  .pinout-visual-container { margin: 40px 0; display: flex; justify-content: center; }
+  
+  /* Visuals */
+  .dip-visual { width: 220px; background: #0f0f0f; border-radius: 6px; border: 2px solid #333; position: relative; display: flex; box-shadow: 0 15px 40px rgba(0,0,0,0.8); }
+  .dip-notch { position: absolute; top: -1px; left: 50%; transform: translateX(-50%); width: 40px; height: 12px; background: var(--bg2); border: 2px solid #333; border-top: none; border-radius: 0 0 20px 20px; }
+  .dip-side { flex: 1; display: flex; flex-direction: column; gap: 18px; padding: 30px 0; }
+  .pin { display: flex; align-items: center; gap: 10px; padding: 6px 14px; font-size: 12px; color: #aaa; white-space: nowrap; transition: 0.2s; cursor: help;}
+  .pin:hover { background: rgba(79, 156, 249, 0.1); color: #fff; }
+  .pin span { font-family: var(--mono); opacity: 0.4; width: 14px; font-weight: 500; }
+  .pin strong { color: var(--accent); font-weight: 800; width: 55px; font-size: 13px;}
+  .left .pin { flex-direction: row; border-left: 8px solid #2a2a2a; border-radius: 0 4px 4px 0; margin-left: -4px; border-top: 1px solid #333; border-bottom: 1px solid #000; }
+  .right .pin { flex-direction: row-reverse; border-right: 8px solid #2a2a2a; border-radius: 4px 0 0 4px; margin-right: -4px; border-top: 1px solid #333; border-bottom: 1px solid #000; }
+  
+  .to-220-visual { width: 140px; display: flex; flex-direction: column; align-items: center; gap: 0; }
+  .to-hex-tab { width: 100px; height: 60px; background: #222; border-radius: 8px 8px 0 0; border: 2px solid #444; display: flex; align-items: center; justify-content: center; position: relative; }
+  .to-hex-tab::after { content: ''; width: 24px; height: 24px; background: var(--bg2); border-radius: 50%; border: 2px solid #444; }
+  .to-body { width: 130px; height: 100px; background: #111; border-radius: 4px; border: 2px solid #333; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+  .to-label { color: #555; font-size: 14px; font-weight: 800; transform: rotate(-90deg); letter-spacing: 2px; }
+  .to-pins { display: flex; gap: 20px; align-items: flex-start; margin-top: -2px; }
+  .pin-to { width: 12px; height: 80px; background: #333; border-radius: 0 0 4px 4px; display: flex; flex-direction: column; align-items: center; padding-top: 40px; position: relative; cursor: help;}
+  .pin-to strong { position: absolute; bottom: -25px; color: var(--accent); font-size: 12px; font-weight: 800; }
+  .pin-to span { position: absolute; bottom: -45px; color: var(--text3); font-size: 10px; }
+
+  .mcu-visual { width: 100%; max-width: 500px; border: 2px solid var(--line); border-radius: 12px; overflow: hidden; background: var(--bg3); }
+  .mcu-body { padding: 12px 20px; background: var(--bg4); font-size: 13px; font-weight: 800; color: var(--text2); text-align: center; border-bottom: 1px solid var(--line); }
+  .mcu-pins-list { padding: 8px; }
+  .mcu-pin-row { display: flex; align-items: center; gap: 12px; padding: 10px 16px; border-bottom: 1px solid var(--bg4); transition: 0.2s; cursor: help;}
+  .mcu-pin-row:hover { background: rgba(79, 156, 249, 0.05); }
+  .mcu-pin-row:last-child { border-bottom: none; }
+  .mcu-pn { width: 30px; color: var(--text3); font-family: var(--mono); font-size: 11px; font-weight: 600; }
+  .mcu-pl { width: 80px; color: var(--accent); font-weight: 800; font-size: 13px; }
+  .mcu-pd { font-size: 12px; color: var(--text2); }
+
+  .chip-actions { display: flex; gap: 12px; margin-top: 30px; }
+  .chip-btn-ds { padding: 14px 20px; background: var(--bg4); color: var(--text1); border-radius: 10px; text-decoration: none; font-size: 13px; font-weight: 700; flex: 1; text-align: center; border: 1px solid var(--line); transition: 0.3s; }
+  .chip-btn-ds:hover { background: var(--bg3); border-color: var(--accent); color: var(--accent); }
+  .chip-btn-ask { padding: 14px 20px; background: var(--accent); color: white; border-radius: 10px; font-weight: 700; flex: 1; border: none; cursor: pointer; transition: 0.3s; }
+  .chip-btn-ask:hover { opacity: 0.9; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(79, 156, 249, 0.4); }
+
+  .c-empty-view { display: flex; align-items: center; justify-content: center; height: 100%; color: var(--text3); font-size: 15px; font-style: italic; }
+
+  @media (max-width: 992px) {
+    .c-viewer-side { padding: 16px; }
+    .c-flex { flex-direction: column; height: auto; padding-bottom: 120px;}
+    .c-list-side { width: 100%; max-height: 250px; }
+  }
+</style>
 </head>
 <body>
   <!-- Splash Screen Launch Animation -->
@@ -69,6 +178,16 @@
     <div class="bnav-dot"></div>
     <span class="bnav-icon">📖</span>
     <span class="bnav-label">Kamus</span>
+  </button>
+  <button class="bnav-item" id="bnav-standards" onclick="switchTab('standards')">
+    <div class="bnav-dot"></div>
+    <span class="bnav-icon">📜</span>
+    <span class="bnav-label">Standar</span>
+  </button>
+  <button class="bnav-item" id="bnav-chips" onclick="switchTab('chips')">
+    <div class="bnav-dot"></div>
+    <span class="bnav-icon">💾</span>
+    <span class="bnav-label">Chip Lib</span>
   </button>
   <div class="hspace" style="height:12px;width:1px;opacity:0.2;background:var(--text3);margin:10px auto;display:none" id="bnav-sep-chat"></div>
   <a class="bnav-item" href="chatbot" id="bnav-chat-page" style="text-decoration:none">
@@ -131,8 +250,8 @@
 <div class="page on" id="page-kamus">
   <div class="sbar"><div class="sfield">
     <span class="sico">🔍</span>
-    <input type="text" id="searchInput" placeholder="Cari istilah, rumus, kata kunci..." oninput="onSearch(this.value)">
-    <button class="sx" id="sx" onclick="clearSearch()">×</button>
+    <input type="text" id="searchInput" placeholder="Cari istilah, rumus, kata kunci..." oninput="ElektroKamus.onSearch(this.value)">
+    <button class="sx" id="sx" onclick="ElektroKamus.clearSearch()">×</button>
   </div></div>
   <div class="fbar" id="fbar"></div>
   <div class="kbody">
@@ -141,7 +260,7 @@
         <div class="slabel" id="slabel">Semua Istilah</div>
         <div style="display:flex;align-items:center;gap:8px">
           <div class="scount" id="scount"></div>
-          <button class="pdf-btn" onclick="exportKamusPDF()" title="Export PDF">
+          <button class="pdf-btn" onclick="ElektroUtils.exportKamusPDF()" title="Export PDF">
             <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 1.5L18.5 9H13V3.5zM8 17h8v1H8v-1zm0-3h8v1H8v-1zm0-3h5v1H8v-1z"/></svg>
             Export PDF
           </button>
@@ -187,6 +306,14 @@
 
 <!-- ═══════ QUIZ PAGE ═══════ -->
 <div class="page" id="page-quiz">
+  <div class="h-top">
+    <h2 class="h-title">🧪 Latihan Soal AI</h2>
+    <p class="h-sub">Uji pemahamanmu dengan soal yang di-generate langsung oleh AI.</p>
+  </div>
+  
+  <!-- Mastery Progress -->
+  <div id="quiz-mastery-container"></div>
+
   <div class="quiz-wrap">
     <div class="quiz-header">
       <h2>🧠 Latihan Soal</h2>
@@ -195,16 +322,16 @@
 
     <!-- difficulty -->
     <div class="quiz-diff" id="quiz-diff">
-      <button class="qdiff-btn on" onclick="setDiff(this,'mudah')">😊 Mudah</button>
-      <button class="qdiff-btn" onclick="setDiff(this,'sedang')">🔥 Sedang</button>
-      <button class="qdiff-btn" onclick="setDiff(this,'sulit')">💀 Sulit</button>
+      <button class="qdiff-btn on" onclick="ElektroQuiz.setDiff(this,'mudah')">😊 Mudah</button>
+      <button class="qdiff-btn" onclick="ElektroQuiz.setDiff(this,'sedang')">🔥 Sedang</button>
+      <button class="qdiff-btn" onclick="ElektroQuiz.setDiff(this,'sulit')">💀 Sulit</button>
     </div>
 
     <!-- kategori -->
     <div class="quiz-cats" id="quiz-cats"></div>
 
     <!-- tombol mulai -->
-    <button class="quiz-start-btn" id="quiz-start-btn" onclick="startAIQuiz()" disabled>
+    <button class="quiz-start-btn" id="quiz-start-btn" onclick="ElektroQuiz.start()" disabled>
       ⚡ Pilih Kategori dulu
     </button>
 
@@ -220,9 +347,9 @@
 
     <!-- nav -->
     <div class="quiz-nav" id="quiz-nav" style="display:none">
-      <button class="qbtn qbtn-p" id="qbtn-prev" onclick="prevQ()">← Sebelumnya</button>
+      <button class="qbtn qbtn-p" id="qbtn-prev" onclick="ElektroQuiz.prevQ()">← Sebelumnya</button>
       <div class="q-prog" id="q-prog"></div>
-      <button class="qbtn qbtn-n" id="qbtn-next" onclick="nextQ()">Selanjutnya →</button>
+      <button class="qbtn qbtn-n" id="qbtn-next" onclick="ElektroQuiz.nextQ()">Selanjutnya →</button>
     </div>
 
     <!-- skor -->
@@ -236,11 +363,11 @@
         <div class="sd"><div class="sd-num" id="sc-t" style="color:var(--accent)">0</div><div class="sd-lbl">Total</div></div>
       </div>
       <div style="display:flex;flex-direction:column;gap:10px;align-items:center;margin-top:8px">
-        <button class="share-btn" onclick="shareScore()">📤 Share Hasil ke WhatsApp</button>
-        <button class="share-copy-btn" onclick="copyScore()">📋 Copy Teks Hasil</button>
+        <button class="share-btn" onclick="ElektroQuiz.shareScore()">📤 Share Hasil ke WhatsApp</button>
+        <button class="share-copy-btn" onclick="ElektroQuiz.copyScore()">📋 Copy Teks Hasil</button>
         <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
-          <button class="qbtn qbtn-n" onclick="retryQuiz()" style="padding:10px 24px">🔄 Soal Baru</button>
-          <button class="qbtn qbtn-p" onclick="resetQuiz()" style="padding:10px 24px">← Ganti Kategori</button>
+          <button class="qbtn qbtn-n" onclick="ElektroQuiz.retry()" style="padding:10px 24px">🔄 Soal Baru</button>
+          <button class="qbtn qbtn-p" onclick="ElektroQuiz.reset()" style="padding:10px 24px">← Ganti Kategori</button>
         </div>
       </div>
     </div>
@@ -298,6 +425,13 @@
     </button>
   </div>
 </div>
+
+<!-- ═══════ STANDARDS PAGE ═══════ -->
+<div class="page" id="page-standards"></div>
+
+<!-- ═══════ CHIPS PAGE ═══════ -->
+<div class="page" id="page-chips"></div>
+
 <div class="overlay" id="overlay" onclick="closeM()"></div>
 
 <!-- ═══════ KODE WARNA RESISTOR PAGE ═══════ -->
@@ -308,8 +442,8 @@
       <p>Baca nilai resistor dari gelang warna secara instan</p>
     </div>
     <div class="resist-mode">
-      <button class="rmode-btn on" onclick="setResistMode(this,4)" id="rmode4">4 Gelang</button>
-      <button class="rmode-btn" onclick="setResistMode(this,5)" id="rmode5">5 Gelang</button>
+      <button class="rmode-btn on" onclick="ElektroResistor.setMode(this,4)" id="rmode4">4 Gelang</button>
+      <button class="rmode-btn" onclick="ElektroResistor.setMode(this,5)" id="rmode5">5 Gelang</button>
     </div>
     <div class="resist-svg-wrap" id="resist-svg-wrap"></div>
     <div class="resist-bands" id="resist-bands"></div>
@@ -392,14 +526,14 @@
 
     <!-- mode selector -->
     <div class="aiv-modes">
-      <button class="aivm-btn on" id="aivm-soal" onclick="setAIVMode(this,'soal')">
+      <button class="aivm-btn on" id="aivm-soal" onclick="ElektroVision.setMode(this,'soal')">
         <span class="aivm-icon">📝</span>
         <div class="aivm-info">
           <div class="aivm-title">Soal dari Foto</div>
           <div class="aivm-desc">Foto soal ujian, AI jawab step-by-step</div>
         </div>
       </button>
-      <button class="aivm-btn" id="aivm-rangkaian" onclick="setAIVMode(this,'rangkaian')">
+      <button class="aivm-btn" id="aivm-rangkaian" onclick="ElektroVision.setMode(this,'rangkaian')">
         <span class="aivm-icon">🔌</span>
         <div class="aivm-info">
           <div class="aivm-title">Rangkaian Analyzer</div>
@@ -412,8 +546,8 @@
     <div class="aiv-upload" id="aiv-upload"
       ondragover="event.preventDefault();this.classList.add('drag')"
       ondragleave="this.classList.remove('drag')"
-      ondrop="handleAIVDrop(event)">
-      <input type="file" accept="image/*" onchange="handleAIVFile(this.files[0])">
+      ondrop="ElektroVision.handleDrop(event)">
+      <input type="file" accept="image/*" onchange="ElektroVision.handleFile(this.files[0])">
       <div class="aiv-upload-icon">📷</div>
       <div class="aiv-upload-txt">Tap untuk pilih foto</div>
       <div class="aiv-upload-sub" id="aiv-upload-sub">atau drag & drop gambar di sini</div>
@@ -422,11 +556,11 @@
     <!-- preview -->
     <div class="aiv-preview" id="aiv-preview">
       <img id="aiv-img" src="" alt="preview">
-      <button class="aiv-preview-del" onclick="resetAIV()">✕</button>
+      <button class="aiv-preview-del" onclick="ElektroVision.reset()">✕</button>
     </div>
 
     <!-- analyze button -->
-    <button class="aiv-analyze-btn" id="aiv-analyze-btn" onclick="analyzeImage()" disabled>
+    <button class="aiv-analyze-btn" id="aiv-analyze-btn" onclick="ElektroVision.analyze()" disabled>
       🔬 Analisis dengan AI
     </button>
 
@@ -443,7 +577,7 @@
         <div class="aiv-result-name">ElektroBot AI ⚡</div>
       </div>
       <div class="aiv-result-bubble" id="aiv-result-bubble"></div>
-      <button class="aiv-reset" onclick="resetAIVResult()">🔄 Analisis Gambar Lain</button>
+      <button class="aiv-reset" onclick="ElektroVision.reset()">🔄 Analisis Gambar Lain</button>
     </div>
   </div>
 </div>
@@ -477,18 +611,18 @@
         <div class="logic-inputs">
           <div class="l-input">
             <div class="l-lbl">A</div>
-            <div class="l-switch" id="swA" onclick="toggleSwitch('A')"></div>
+            <div class="l-switch" id="swA" onclick="ElektroSimulator.toggleSwitch('A')"></div>
           </div>
           <div class="l-input" id="row-swB">
             <div class="l-lbl">B</div>
-            <div class="l-switch" id="swB" onclick="toggleSwitch('B')"></div>
+            <div class="l-switch" id="swB" onclick="ElektroSimulator.toggleSwitch('B')"></div>
           </div>
         </div>
 
         <!-- Gate Selector -->
         <div class="logic-gate">
           <div class="gate-label">GERBANG (GATE)</div>
-          <select class="gate-select" id="gateSelect" onchange="updateLogic()">
+          <select class="gate-select" id="gateSelect" onchange="ElektroSimulator.updateLogic()">
             <option value="AND">AND</option>
             <option value="OR">OR</option>
             <option value="NOT">NOT</option>
@@ -536,9 +670,9 @@
     
     <div class="prj-generator-box">
       <div class="prj-input-wrapper">
-        <input type="text" id="prj-idea-input" placeholder="Contoh: Sistem penyiram tanaman otomatis..." onkeyup="if(event.key==='Enter') generateAIProject()">
+        <input type="text" id="prj-idea-input" placeholder="Contoh: Sistem penyiram tanaman otomatis..." onkeyup="if(event.key==='Enter') ElektroProject.generate()">
       </div>
-      <button class="prj-gen-btn" id="prj-gen-btn" onclick="generateAIProject()">
+      <button class="prj-gen-btn" id="prj-gen-btn" onclick="ElektroProject.generate()">
         <span class="btn-ico">💡</span>
         <span class="btn-txt">Generate Proyek</span>
       </button>
@@ -584,7 +718,7 @@
     <!-- Synth Controls -->
     <div class="synth-controls">
       <div class="synth-main-btn-wrap">
-        <button id="synth-play-btn" class="synth-play-btn" onclick="toggleSynth()">
+        <button id="synth-play-btn" class="synth-play-btn" onclick="ElektroSynth.toggle()">
           <span class="p-ico">▶</span> Mulai Sinyal
         </button>
       </div>
@@ -592,7 +726,7 @@
       <div class="synth-grid">
         <div class="synth-ctrl-group">
           <label>Bentuk Gelombang</label>
-          <select id="synth-wave-type" onchange="updateSynthSettings()">
+          <select id="synth-wave-type" onchange="ElektroSynth.update()">
             <option value="sine">Sine (Sinus)</option>
             <option value="square">Square (Kotak)</option>
             <option value="sawtooth">Sawtooth (Gergaji)</option>
@@ -602,13 +736,13 @@
 
         <div class="synth-ctrl-group">
           <label>Frekuensi: <span id="val-freq">50</span> Hz</label>
-          <input type="range" id="synth-freq" min="20" max="2000" step="1" value="50" oninput="updateSynthSettings()">
+          <input type="range" id="synth-freq" min="20" max="2000" step="1" value="50" oninput="ElektroSynth.update()">
           <div class="range-labels"><span>20Hz</span><span>2kHz</span></div>
         </div>
 
         <div class="synth-ctrl-group">
           <label>Volume: <span id="val-vol">10</span>%</label>
-          <input type="range" id="synth-vol" min="0" max="1" step="0.01" value="0.1" oninput="updateSynthSettings()">
+          <input type="range" id="synth-vol" min="0" max="1" step="0.01" value="0.1" oninput="ElektroSynth.update()">
         </div>
       </div>
     </div>
@@ -631,6 +765,17 @@
 
 <script src="js/data.js"></script>
 <script src="js/api.js"></script>
+<script src="js/modules/utils.js"></script>
+<script src="js/modules/kamus.js"></script>
+<script src="js/modules/quiz.js"></script>
+<script src="js/modules/calculator.js"></script>
+<script src="js/modules/converter.js"></script>
+<script src="js/modules/resistor.js"></script>
+<script src="js/modules/vision.js"></script>
+<script src="js/modules/simulator.js"></script>
+<script src="js/modules/project-lab.js"></script>
+<script src="js/modules/synth.js"></script>
+<script src="js/modules/timeline.js"></script>
 <script src="js/app.js"></script>
 
 <!-- Service Worker Registration -->
@@ -660,5 +805,7 @@
     });
   });
 </script>
+<script defer src="js/modules/standards.js"></script>
+<script defer src="js/modules/chips.js"></script>
 </body>
 </html>

@@ -2433,3 +2433,51 @@ body.fade-out {
     height: 40px;
   }
 }
+/* ═══════════════════ PRINT STYLES ═══════════════════ */
+@media print {
+  /* Sembunyikan semua UI Kontrol & Chat */
+  .nav, 
+  .bottom-nav, 
+  .chat-sidebar, 
+  .chat-fab-left-wrap, 
+  .chat-mobile, 
+  .pdf-btn, 
+  .theme-btn, 
+  .wm, 
+  .sbar, 
+  .fbar, 
+  .chat-tooltip,
+  #overlay {
+    display: none !important;
+  }
+
+  /* Reset layout halaman untuk kertas */
+  .page {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding: 0 !important;
+    display: block !important;
+    width: 100% !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+
+  .card {
+    break-inside: avoid;
+    border: 1px solid #ddd !important;
+    box-shadow: none !important;
+    background: #fff !important;
+    margin-bottom: 20px !important;
+  }
+
+  /* Indikator konten utama */
+  .h-title {
+    color: #000 !important;
+    margin-top: 0 !important;
+  }
+}
