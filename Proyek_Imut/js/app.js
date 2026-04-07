@@ -3,7 +3,7 @@
 // ═══════════════════════════════════════════════════════════
 
 // Konstanta diambil dari ElektroAPI di js/api.js jika tersedia
-const API_MODEL = (window.ElektroAPI && window.ElektroAPI.MODEL_TEXT) || "llama-3.3-70b-versatile";
+const API_MODEL = (window.ElektroAPI && window.ElektroAPI.MODEL_TEXT) || "openai/gpt-oss-120b";
 const VERCEL_URL = (window.ElektroAPI && window.ElektroAPI.VERCEL_URL) || "/api/chat";
 
 /** 
