@@ -30,12 +30,13 @@ let isTyping = false;
 let selectedFileBase64 = null;
 let selectedFileType = null;
 let selectedFileName = null;
-let chatHistoryState = JSON.parse(localStorage.getItem('elektrobot_history')) || [];
+let chatHistoryState = JSON.parse(localStorage.getItem('main_chatbot_history')) || [];
 
 // --- Custom Marked Renderer for Code Blocks ---
 if (typeof marked !== 'undefined') {
     const renderer = new marked.Renderer();
     renderer.code = function(code, language) {
+        if (typeof code !== 'string') code = String(code);
         const id = 'code-' + Math.random().toString(36).substr(2, 9);
         return `
             <div class="code-block-wrapper">
@@ -250,7 +251,7 @@ function renderBubble(content, role, imageSrc = null, fileName = null) {
  */
 function saveToHistory(role, content, image = null, file = null) {
     chatHistoryState.push({ role, content, image, file, timestamp: Date.now() });
-    localStorage.setItem('elektrobot_history', JSON.stringify(chatHistoryState));
+    localStorage.setItem('main_chatbot_history', JSON.stringify(chatHistoryState));
 }
 
 function loadHistory() {
@@ -265,7 +266,7 @@ function loadHistory() {
 function confirmClearHistory() {
     if (confirm("Hapus seluruh riwayat chat Sob? Tindakan ini gak bisa dibatalin.")) {
         chatHistoryState = [];
-        localStorage.removeItem('elektrobot_history');
+        localStorage.removeItem('main_chatbot_history');
         chatHistory.innerHTML = '<div class="chat-bubble chat-bubble-ai">Riwayat dihapus. Ada yang baru yang bisa saya bantu, Sob? ⚡</div>';
     }
 }

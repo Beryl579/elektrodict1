@@ -68,9 +68,11 @@ export default async function handler(req, res) {
     
     ${latexRules}`;
 
-    if (messages.length > 0 && messages[0].role === 'system') {
-      messages[0].content = elektroBotPersona;
-    } else {
+    // --- PERSONA LOGIC ---
+    // Only apply the default persona if no system prompt is provided by the frontend.
+    // This allows the Homepage bot and Main Chatbot to have different personalities.
+    const hasSystemPrompt = messages.some(m => m.role === 'system');
+    if (!hasSystemPrompt) {
       messages.unshift({ role: 'system', content: elektroBotPersona });
     }
 
