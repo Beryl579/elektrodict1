@@ -401,6 +401,37 @@ const STANDARDS_DATA = {
     { name: "Potensiometer", iec: "Kotak dengan Panah", ansi: "Zigzag dengan Panah" },
     { name: "Ground", iec: "Garis Horizontal Menipis", ansi: "Tiga Garis Horizontal" },
     { name: "Dioda", iec: "Segitiga & Garis (Garis Tipis)", ansi: "Segitiga & Garis (Garis Tebal)" }
+  ],
+  kha: [
+    { size: "1.5 mm²", cap: "16 Ampere", load: "Max 3500 Watt" },
+    { size: "2.5 mm²", cap: "20 Ampere", load: "Max 4400 Watt" },
+    { size: "4.0 mm²", cap: "25 Ampere", load: "Max 5500 Watt" },
+    { size: "6.0 mm²", cap: "32 Ampere", load: "Max 7000 Watt" },
+    { size: "10.0 mm²", cap: "40 Ampere", load: "Max 8800 Watt" }
+  ],
+  ip_ratings: [
+    { code: "IP20", solid: "Benda > 12.5mm", liquid: "Tanpa Proteksi", usage: "Indoor / Panel" },
+    { code: "IP54", solid: "Tahan Debu (Terbatas)", liquid: "Percikan Air", usage: "Outdoor Standar" },
+    { code: "IP65", solid: "Kedap Debu Total", liquid: "Semprotan Air Kuat", usage: "Outdoor / Industri" },
+    { code: "IP67", solid: "Kedap Debu Total", liquid: "Rendaman (1m, 30m)", usage: "Extreme / Waterproof" },
+    { code: "IP68", solid: "Kedap Debu Total", liquid: "Rendaman Kontinu", usage: "Submersible / Dalam Air" }
+  ],
+  resistor_guide: {
+    e12: [10, 12, 15, 18, 22, 27, 33, 39, 47, 56, 68, 82],
+    bands: [
+      { color: "Hitam", val: 0, mult: "1", tol: "—" },
+      { color: "Cokelat", val: 1, mult: "10", tol: "±1%" },
+      { color: "Merah", val: 2, mult: "100", tol: "±2%" },
+      { color: "Emas", val: "—", mult: "0.1", tol: "±5%" },
+      { color: "Perak", val: "—", mult: "0.01", tol: "±10%" }
+    ]
+  },
+  smd_sizes: [
+    { imp: "0402", met: "1005", dim: "1.0 x 0.5 mm" },
+    { imp: "0603", met: "1608", dim: "1.6 x 0.8 mm" },
+    { imp: "0805", met: "2012", dim: "2.0 x 1.25 mm" },
+    { imp: "1206", met: "3216", dim: "3.2 x 1.6 mm" },
+    { imp: "2512", met: "6332", dim: "6.3 x 3.2 mm" }
   ]
 };
 
