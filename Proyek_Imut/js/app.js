@@ -111,16 +111,20 @@ function switchTab(t) {
 }
 
 function toggleTheme() {
-  const isLight = document.body.classList.toggle('light');
+  const isDark = document.body.classList.toggle('dark');
   const btn = document.getElementById('themeBtn');
-  if (btn) btn.textContent = isLight ? '🌙' : '☀️';
-  localStorage.setItem('theme', isLight ? 'light' : 'dark');
+  if (btn) btn.textContent = isDark ? '☀️' : '🌙';
+  localStorage.setItem('theme', isDark ? 'dark' : 'light');
 }
 
 function initTheme() {
-  const saved = localStorage.getItem('theme');
-  if (saved === 'light') {
-    document.body.classList.add('light');
+  const saved = localStorage.getItem('theme') || 'light';
+  if (saved === 'dark') {
+    document.body.classList.add('dark');
+    const btn = document.getElementById('themeBtn');
+    if (btn) btn.textContent = '☀️';
+  } else {
+    document.body.classList.remove('dark');
     const btn = document.getElementById('themeBtn');
     if (btn) btn.textContent = '🌙';
   }

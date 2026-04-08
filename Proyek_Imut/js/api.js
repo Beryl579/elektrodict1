@@ -5,7 +5,7 @@
 
 (function() {
   const VERCEL_URL = '/api/chat';
-  const MODEL_TEXT = 'llama-3.3-70b-versatile';
+  const MODEL_TEXT = 'openai/gpt-oss-120b';
   const MODEL_VISION = 'llama-3.2-11b-vision-preview';
   const TIMEOUT_TEXT_MS = 60000;
   const TIMEOUT_VISION_MS = 120000;

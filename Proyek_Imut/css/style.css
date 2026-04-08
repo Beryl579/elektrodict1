@@ -1,16 +1,29 @@
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-:root{
-  --bg: #030408; --bg2: #090b11; --bg3: #11141d; --bg4: #181d28; --bg5: #1e2533;
-  --line: rgba(255,255,255,0.04); --line2: rgba(255,255,255,0.08);
-  --accent: #4f9cf9; --accent-glow: rgba(79, 156, 249, 0.4); --accent-d: rgba(79, 156, 249, 0.1);
-  --text: #f8fafc; --text2: #94a3b8; --text3: #475569;
-  --green: #10b981; --amber: #f59e0b; --rose: #ef4444; --purple: #9b72e6;
+:root {
+  /* LIGHT THEME (Default) - Crisp SaaS White */
+  --bg: #f8fafc; --bg2: #ffffff; --bg3: #f1f5f9; --bg4: #e2e8f0; --bg5: #fdfdfd;
+  --line: rgba(0,0,0,0.06); --line2: rgba(0,0,0,0.1);
+  --accent: #2563eb; --accent-glow: rgba(37, 99, 235, 0.2); --accent-d: rgba(37, 99, 235, 0.05);
+  --text: #0f172a; --text2: #475569; --text3: #94a3b8;
+  --green: #10b981; --amber: #f59e0b; --rose: #ef4444; --purple: #8b5cf6;
   --font: 'Plus Jakarta Sans', sans-serif; --font-h: 'Outfit', sans-serif; --mono: 'Fira Code', monospace;
   --r: 18px; --r2: 12px; --r3: 8px;
-  --glass: rgba(3, 4, 8, 0.75); --blur: 32px;
-  --shadow: 0 10px 40px rgba(0,0,0,0.5);
-  --glow: 0 0 25px rgba(79,156,249,0.25);
+  --glass: rgba(248, 250, 252, 0.8); --blur: 24px;
+  --shadow: 0 10px 40px rgba(0,0,0,0.05);
+  --glow: 0 0 20px rgba(37,99,235,0.1);
 }
+
+body.dark {
+  /* DARK THEME (Monochrome) - ChatGPT/Gemini Style */
+  --bg: #000000; --bg2: #0a0a0a; --bg3: #111111; --bg4: #1a1a1a; --bg5: #222222;
+  --line: #222222; --line2: #333333;
+  --accent: #ffffff; --accent-glow: rgba(255, 255, 255, 0.2); --accent-d: #111111;
+  --text: #ffffff; --text2: #a0a0a0; --text3: #606060;
+  --glass: rgba(0, 0, 0, 0.8);
+  --shadow: 0 10px 40px rgba(0,0,0,0.5);
+  --glow: 0 0 20px rgba(255,255,255,0.1);
+}
+
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:100vh;overflow-x:hidden;transition:background .3s ease,color .3s ease}
 ::-webkit-scrollbar{width:5px}
