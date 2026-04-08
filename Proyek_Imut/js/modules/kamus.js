@@ -92,13 +92,12 @@ const ElektroKamus = {
 
     g.innerHTML = html;
 
-    // Use requestAnimationFrame for smoother and more reliable DOM interaction
+    // 1000% Success Lock: Force render all visible cards immediately
     requestAnimationFrame(() => {
-      if (typeof window.renderMath === 'function') {
-        window.renderMath(g);
-      } else if (typeof renderMath === 'function') {
-        renderMath(g);
-      }
+      sorted.forEach((_, i) => {
+        const card = document.getElementById(`c${i}`);
+        if (card) this.renderCardMath(card);
+      });
     });
   },
 
@@ -156,15 +155,36 @@ const ElektroKamus = {
     if (!isOpen) {
       c.classList.add('open');
       
-      // Ensure math is rendered when expanded
-      if (typeof window.renderMath === 'function') {
-        window.renderMath(c);
-      } else if (typeof renderMath === 'function') {
-        renderMath(c);
-      }
+      // Forceful Hook: Render math exactly when expanded
+      this.renderCardMath(c);
 
       setTimeout(() => c.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
     }
+  },
+
+  renderCardMath(card) {
+    const formulaDiv = card.querySelector('.eformula');
+    if (!formulaDiv) return;
+
+    const latex = formulaDiv.getAttribute('data-latex');
+    if (!latex || latex === 'null') {
+      formulaDiv.style.display = 'none';
+      return;
+    }
+
+    // Force render only if not yet rendered to ensure performance
+    if (formulaDiv.innerHTML.trim() === '') {
+      const k = window.katex || (typeof katex !== 'undefined' ? katex : null);
+      if (k) {
+        k.render(latex, formulaDiv, {
+          throwOnError: false,
+          displayMode: true
+        });
+      } else {
+        formulaDiv.textContent = latex;
+      }
+    }
+    formulaDiv.style.display = 'flex';
   },
 
   askCard(e, en, id) {
