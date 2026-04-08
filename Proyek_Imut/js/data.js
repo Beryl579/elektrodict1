@@ -381,18 +381,26 @@ const PROJECTS = [
 
 const STANDARDS_DATA = {
   puil2011: [
-    { label: "Line 1 (Fasa 1)", id: "L1", color: "Cokelat", hex: "#8B4513" },
-    { label: "Line 2 (Fasa 2)", id: "L2", color: "Hitam", hex: "#000000" },
-    { label: "Line 3 (Fasa 3)", id: "L3", color: "Abu-abu", hex: "#808080" },
-    { label: "Netral", id: "N", color: "Biru", hex: "#0000FF" },
-    { label: "Protective Earth", id: "PE", color: "Hijau-Kuning", hex: "linear-gradient(90deg, #00FF00 50%, #FFFF00 50%)" }
+    { title: "Warna Kabel Phase (L1/R)", color: "#92400e", label: "Cokelat" },
+    { title: "Warna Kabel Phase (L2/S)", color: "#000000", label: "Hitam" },
+    { title: "Warna Kabel Phase (L3/T)", color: "#6b7280", label: "Abu-abu" },
+    { title: "Warna Kabel Netral (N)", color: "#3b82f6", label: "Biru" },
+    { title: "Warna Kabel Ground (PE)", color: "#eab308", label: "Kuning-Hijau" }
+  ],
+  k3: [
+    { rule: "Gunakan APD LKP (Alat Pelindung Diri)", desc: "Helm, sepatu safety isolasi, sarung tangan karet." },
+    { rule: "LOTO (Lock Out Tag Out)", desc: "Kunci panel dan beri label saat melakukan pemeliharaan." },
+    { rule: "Gunakan Tool Terisolasi", desc: "Obeng/tang dengan rating tegangan (VDE) yang sesuai." },
+    { rule: "Cek Tegangan Sebelum Sentuh", desc: "Selalu gunakan Test Pen atau Multimeter untuk verifikasi." },
+    { rule: "Hindari Kontak Air", desc: "Pastikan area kerja kering dan tidak ada kebocoran air." }
   ],
   symbols: [
     { name: "Resistor", iec: "Kotak Persegi Panjang", ansi: "Garis Zigzag" },
     { name: "Kapasitor", iec: "Dua Garis Sejajar", ansi: "Satu Lurus, Satu Lengkung" },
     { name: "Induktor", iec: "Kotak Hitam / Lengkung", ansi: "Lilitan Bergelombang" },
     { name: "Potensiometer", iec: "Kotak dengan Panah", ansi: "Zigzag dengan Panah" },
-    { name: "Ground", iec: "Garis Horizontal Menipis", ansi: "Tiga Garis Horizontal" }
+    { name: "Ground", iec: "Garis Horizontal Menipis", ansi: "Tiga Garis Horizontal" },
+    { name: "Dioda", iec: "Segitiga & Garis (Garis Tipis)", ansi: "Segitiga & Garis (Garis Tebal)" }
   ]
 };
 
@@ -408,7 +416,7 @@ const CHIP_DATA = [
     id: "ne555", 
     name: "NE555 Precision Timer", 
     type: "DIP-8",
-    desc: "IC timer legendaris untuk pembangkit pulsa dan osilator.",
+    desc: "IC timer legendaris untuk pembangkit pulsa, osilator, dan timer. Digunakan dalam berbagai proyek modulasi dan timing.",
     pins: [
       { n: 1, label: "GND", desc: "Ground (0V)" },
       { n: 2, label: "TRIG", desc: "Trigger Input (< 1/3 Vcc)" },
@@ -417,7 +425,7 @@ const CHIP_DATA = [
       { n: 5, label: "CTRL", desc: "Control Voltage" },
       { n: 6, label: "THRES", desc: "Threshold Input (> 2/3 Vcc)" },
       { n: 7, label: "DISCH", desc: "Discharge" },
-      { n: 8, label: "Vcc", desc: "Supply Voltage (4.5V - 15V)" }
+      { n: 8, label: "VCC", desc: "Supply Voltage (4.5V - 15V)" }
     ],
     datasheet: "https://www.ti.com/lit/ds/symlink/ne555.pdf"
   },
@@ -425,59 +433,168 @@ const CHIP_DATA = [
     id: "lm741", 
     name: "LM741 Operational Amplifier", 
     type: "DIP-8",
-    desc: "Op-amp serbaguna untuk penguatan sinyal analog.",
+    desc: "Op-amp serbaguna untuk penguatan sinyal analog, filter, dan komparator.",
     pins: [
-      { n: 1, label: "OFF1", desc: "Offset Null 1" },
-      { n: 2, label: "INV", desc: "Inverting Input (-)" },
-      { n: 3, label: "NON-INV", desc: "Non-Inverting Input (+)" },
-      { n: 4, label: "V-", desc: "Negative Supply" },
-      { n: 5, label: "OFF2", desc: "Offset Null 2" },
+      { n: 1, label: "OFFSET-", desc: "Offset Null 1" },
+      { n: 2, label: "INV-", desc: "Inverting Input (-)" },
+      { n: 3, label: "NON-INV+", desc: "Non-Inverting Input (+)" },
+      { n: 4, label: "V-", desc: "Negative Supply / GND" },
+      { n: 5, label: "OFFSET+", desc: "Offset Null 2" },
       { n: 6, label: "OUT", desc: "Output" },
-      { n: 7, label: "V+", desc: "Positive Supply" },
+      { n: 7, label: "V+", desc: "Positive Supply (Vcc)" },
       { n: 8, label: "NC", desc: "Not Connected" }
     ],
     datasheet: "https://www.ti.com/lit/ds/symlink/lm741.pdf"
   },
   {
+    id: "lm358", 
+    name: "LM358 Dual Op-Amp", 
+    type: "DIP-8",
+    desc: "Low power dual operational amplifier. Berisi dua op-amp dalam satu kemasan.",
+    pins: [
+      { n: 1, label: "OUT1", desc: "Output Op-Amp 1" },
+      { n: 2, label: "IN1-", desc: "Inverting Input Op-Amp 1" },
+      { n: 3, label: "IN1+", desc: "Non-Inverting Input Op-Amp 1" },
+      { n: 4, label: "GND", desc: "Ground / Negative Supply" },
+      { n: 5, label: "IN2+", desc: "Non-Inverting Input Op-Amp 2" },
+      { n: 6, label: "IN2-", desc: "Inverting Input Op-Amp 2" },
+      { n: 7, label: "OUT2", desc: "Output Op-Amp 2" },
+      { n: 8, label: "VCC", desc: "Positive Supply" }
+    ],
+    datasheet: "https://www.ti.com/lit/ds/symlink/lm358.pdf"
+  },
+  {
     id: "7805", 
     name: "LM7805 Regulator", 
     type: "TO-220",
-    desc: "Fixed +5V voltage regulator.",
+    desc: "Fixed positive 5V voltage regulator. Sangat stabil untuk supply TTL dan Arduino.",
     pins: [
-      { n: 1, label: "VIN", desc: "Input Unregulated (>7V)" },
-      { n: 2, label: "GND", desc: "Ground" },
-      { n: 3, label: "VOUT", desc: "Output Regulated (+5V)" }
+      { n: 1, label: "INPUT", desc: "Voltage Input (>7V)" },
+      { n: 2, label: "GND", desc: "Common Ground" },
+      { n: 3, label: "OUTPUT", desc: "Fixed 5V Output" }
     ],
     datasheet: "https://www.st.com/resource/en/datasheet/l78.pdf"
   },
   {
-    id: "uno", 
-    name: "Arduino Uno Pinout", 
-    type: "MCU",
-    desc: "Peta pin mikrokontroler ATmega328P pada papan Uno.",
+    id: "lm317", 
+    name: "LM317 Adjustable Regulator", 
+    type: "TO-220",
+    desc: "Adjustable positive voltage regulator. Output bisa diatur dari 1.25V hingga 37V.",
     pins: [
-      { n: "D0", label: "RX", desc: "UART Receive" },
-      { n: "D1", label: "TX", desc: "UART Transmit" },
-      { n: "D3", label: "PWM", desc: "Digital/PWM" },
-      { n: "A0", label: "ADC0", desc: "Analog Input 0" },
-      { n: "5V", label: "5V", desc: "Regulated 5V" },
-      { n: "GND", label: "GND", desc: "Ground" }
+      { n: 1, label: "ADJ", desc: "Adjustment Pin" },
+      { n: 2, label: "VOUT", desc: "Output Voltage" },
+      { n: 3, label: "VIN", desc: "Input Voltage" }
+    ],
+    datasheet: "https://www.ti.com/lit/ds/symlink/lm317.pdf"
+  },
+  {
+    id: "ams1117", 
+    name: "AMS1117-3.3 LDO", 
+    type: "TO-220",
+    desc: "3.3V Fixed Low Dropout Regulator. Populer untuk modul ESP8266 dan ESP32.",
+    pins: [
+      { n: 1, label: "GND/ADJ", desc: "Ground / Adjustment" },
+      { n: 2, label: "VOUT", desc: "Fixed 3.3V Output" },
+      { n: 3, label: "VIN", desc: "Input Voltage (Max 15V)" }
+    ],
+    datasheet: "http://www.advanced-monolithic.com/pdf/ds1117.pdf"
+  },
+  {
+    id: "74ls00", 
+    name: "74LS00 Quad NAND", 
+    type: "DIP-14",
+    desc: "Berisi 4 gerbang NAND 2-input. Universal logic element.",
+    pins: [
+      { n: 1, label: "1A", desc: "Input A1" }, { n: 2, label: "1B", desc: "Input B1" }, { n: 3, label: "1Y", desc: "Output Y1" },
+      { n: 4, label: "2A", desc: "Input A2" }, { n: 5, label: "2B", desc: "Input B2" }, { n: 6, label: "2Y", desc: "Output Y2" },
+      { n: 7, label: "GND", desc: "Ground" },
+      { n: 8, label: "3Y", desc: "Output Y3" }, { n: 9, label: "3A", desc: "Input A3" }, { n: 10, label: "3B", desc: "Input B3" },
+      { n: 11, label: "4Y", desc: "Output Y4" }, { n: 12, label: "4A", desc: "Input A4" }, { n: 13, label: "4B", desc: "Input B4" },
+      { n: 14, label: "VCC", desc: "Supply Voltage 5V" }
+    ],
+    datasheet: "https://www.ti.com/lit/ds/symlink/sn74ls00.pdf"
+  },
+  {
+    id: "74ls04", 
+    name: "74LS04 Hex Inverter", 
+    type: "DIP-14",
+    desc: "Berisi 6 gerbang NOT (Inverter).",
+    pins: [
+      { n: 1, label: "1A", desc: "Input A1" }, { n: 2, label: "1Y", desc: "Output Y1" },
+      { n: 3, label: "2A", desc: "Input A2" }, { n: 4, label: "2Y", desc: "Output Y2" },
+      { n: 5, label: "3A", desc: "Input A3" }, { n: 6, label: "3Y", desc: "Output Y3" },
+      { n: 7, label: "GND", desc: "Ground" },
+      { n: 8, label: "4Y", desc: "Output Y4" }, { n: 9, label: "4A", desc: "Input A4" },
+      { n: 10, label: "5Y", desc: "Output Y5" }, { n: 11, label: "5A", desc: "Input A5" },
+      { n: 12, label: "6Y", desc: "Output Y6" }, { n: 13, label: "6A", desc: "Input A6" },
+      { n: 14, label: "VCC", desc: "Supply Voltage 5V" }
+    ],
+    datasheet: "https://www.ti.com/lit/ds/symlink/sn74ls04.pdf"
+  },
+  {
+    id: "74ls08", 
+    name: "74LS08 Quad AND", 
+    type: "DIP-14",
+    desc: "Berisi 4 gerbang AND 2-input.",
+    pins: [
+      { n: 1, label: "1A", desc: "Input A1" }, { n: 2, label: "1B", desc: "Input B1" }, { n: 3, label: "1Y", desc: "Output Y1" },
+      { n: 4, label: "2A", desc: "Input A2" }, { n: 5, label: "2B", desc: "Input B2" }, { n: 6, label: "2Y", desc: "Output Y2" },
+      { n: 7, label: "GND", desc: "Ground" },
+      { n: 8, label: "3Y", desc: "Output Y3" }, { n: 9, label: "3A", desc: "Input A3" }, { n: 10, label: "3B", desc: "Input B3" },
+      { n: 11, label: "4Y", desc: "Output Y4" }, { n: 12, label: "4A", desc: "Input A4" }, { n: 13, label: "4B", desc: "Input B4" },
+      { n: 14, label: "VCC", desc: "Supply Voltage 5V" }
+    ],
+    datasheet: "https://www.ti.com/lit/ds/symlink/sn74ls08.pdf"
+  },
+  {
+    id: "uno", 
+    name: "Arduino Uno", 
+    type: "MCU",
+    desc: "Open-source microcontroller board berbasis ATmega328P.",
+    pins: [
+      { n: "POWER", label: "5V, 3.3V, GND", desc: "Power supply pins" },
+      { n: "ANALOG", label: "A0 - A5", desc: "10-bit Analog to Digital pins" },
+      { n: "DIGITAL", label: "0 - 13", desc: "Digital I/O pins, ~ include PWM" },
+      { n: "COMM", label: "I2C, SPI, UART", desc: "SDA (A4), SCL (A5), RX/TX (0,1)" }
     ],
     datasheet: "https://docs.arduino.cc/resources/datasheets/A000066-datasheet.pdf"
   },
   {
     id: "esp32", 
-    name: "ESP32 DevKit V1", 
+    name: "ESP32 SoC", 
     type: "MCU",
-    desc: "SoC dengan Wi-Fi & Bluetooth ganda (30-pin version).",
+    desc: "Powerful Wi-Fi + BT + BLE MCU. Dual-core with wide peripheral support.",
     pins: [
-      { n: "EN", label: "EN", desc: "Enable/Reset" },
-      { n: "D2", label: "LED", desc: "Built-in LED" },
-      { n: "G21", label: "SDA", desc: "I2C Data" },
-      { n: "G22", label: "SCL", desc: "I2C Clock" },
-      { n: "3V3", label: "3V3", desc: "Output 3.3V" },
-      { n: "GND", label: "GND", desc: "Ground" }
+      { n: "ADC/DAC", label: "GPIO 12-39", desc: "Analog inputs and Digital-to-Analog outputs" },
+      { n: "TOUCH", label: "TOUCH0-9", desc: "Capacitive touch sensing pins" },
+      { n: "POWER", label: "3V3, GND, EN", desc: "Enable and supply pins" },
+      { n: "COMM", label: "I2C, SPI, UART", desc: "Highly configurable peripheral pins" }
     ],
     datasheet: "https://www.espressif.com/sites/default/files/documentation/esp32_datasheet_en.pdf"
+  },
+  {
+    id: "l298n", 
+    name: "L298N Motor Driver", 
+    type: "MODULE",
+    desc: "Dual H-Bridge motor driver. Mengontrol arah dan kecepatan 2 motor DC.",
+    pins: [
+      { n: "POWER", label: "12V, 5V, GND", desc: "Power supply and logical supply" },
+      { n: "LOGIC", label: "IN1-4, ENA, ENB", desc: "Direction and PWM Speed controls" },
+      { n: "OUT", label: "OUT1-OUT4", desc: "Motor A and Motor B outputs" }
+    ],
+    datasheet: "https://www.epitome-e.com/L298N.pdf"
+  },
+  {
+    id: "pc817", 
+    name: "PC817 Optocoupler", 
+    type: "DIP-4",
+    desc: "Photocoupler untuk isolasi sinyal tegangan tinggi.",
+    pins: [
+      { n: 1, label: "ANODE", desc: "Input LED Anode" },
+      { n: 2, label: "CATHODE", desc: "Input LED Cathode" },
+      { n: 3, label: "EMITTER", desc: "Output Phototransistor Emitter" },
+      { n: 4, label: "COLLEC", desc: "Output Phototransistor Collector" }
+    ],
+    datasheet: "https://www.sharp-world.com/products/device/lineup/data/pdf/datasheet/pc817_e.pdf"
   }
 ];

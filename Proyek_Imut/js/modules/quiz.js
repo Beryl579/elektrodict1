@@ -3,13 +3,16 @@
  * AI Powered Question Generation & Scoring
  */
 
-const QUIZ_CATS = {
-  dasar: { emoji: '🔋', label: 'Komponen Dasar', desc: 'Resistor, Kapasitor, Induktor, Hukum Ohm' },
-  semi: { emoji: '🔌', label: 'Semikonduktor', desc: 'Dioda, Transistor, IC, FET' },
-  digital: { emoji: '🔢', label: 'Elektronika Digital', desc: 'Gerbang Logika, Flip-flop, Counter' },
-  micro: { emoji: '🤖', label: 'Mikrokontroler', desc: 'Arduino, ESP32, Sensor, Aktuator' },
-  power: { emoji: '⚡', label: 'Sistem Tenaga', desc: 'Transformator, Motor Listrik, Instalasi' }
-};
+// Rely on QUIZ_CATS from data.js if available, else use fallback
+if (typeof QUIZ_CATS === 'undefined') {
+  window.QUIZ_CATS = {
+    dasar: { emoji: '🔋', label: 'Komponen Dasar', desc: 'Resistor, Kapasitor, Induktor, Hukum Ohm' },
+    komponen: { emoji: '🔌', label: 'Komponen', desc: 'Dioda, Transistor, IC, FET' },
+    digital: { emoji: '🔢', label: 'Digital', desc: 'Gerbang Logika, Flip-flop, Counter' },
+    micro: { emoji: '🤖', label: 'Mikrokontroler', desc: 'Arduino, ESP32, Sensor, Aktuator' },
+    power: { emoji: '⚡', label: 'Sistem Tenaga', desc: 'Transformator, Motor Listrik, Instalasi' }
+  };
+}
 
 let qCat='', qDiff='mudah', qList=[], qIdx=0, qScore=0, qWrong=0, qAnswered=[], qGenerating=false;
 
@@ -201,7 +204,7 @@ Aturan:
     }
   },
 
-  next() {
+  nextQ() {
     if(qIdx<qList.length-1){
       qIdx++;
       this.render();
@@ -210,7 +213,7 @@ Aturan:
     }
   },
 
-  prev() {
+  prevQ() {
     if(qIdx>0){
       qIdx--;
       this.render();
@@ -334,12 +337,12 @@ Aturan:
     return `${medal} Hasil Latihan ElektroDict\n\n⚡ Kategori: ${cat} (${diff})\n📊 Skor: ${pct}\n✅ Benar: ${benar}/${total}\n❌ Salah: ${salah}/${total}\n\n🔗 kamuselektro.tiiny.site`;
   },
 
-  share() {
+  shareScore() {
     const text = encodeURIComponent(this.getScoreText());
     window.open(`https://wa.me/?text=${text}`,'_blank');
   },
 
-  copy() {
+  copyScore() {
     const text = this.getScoreText();
     navigator.clipboard.writeText(text).then(()=>{
       const btn = event.target;

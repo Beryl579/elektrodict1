@@ -295,6 +295,10 @@ const ElektroSimulator = {
     this.updateLogic();
   },
 
+  initLogic() {
+    this.init();
+  },
+
   initSkema() {
     const list = document.getElementById('skema-list');
     if (!list) return;
