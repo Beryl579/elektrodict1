@@ -294,12 +294,12 @@ function exportToPDF() {
         margin:       [15, 15],
         filename:     'ElektroBot_Chat_History.pdf',
         image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#0f172a' },
+        html2canvas:  { scale: 2, useCORS: true, backgroundColor: '#000000' },
         jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
     };
 
     const header = document.createElement('div');
-    header.style.color = '#4f9cf9';
+    header.style.color = '#ffffff';
     header.style.fontSize = '24px';
     header.style.fontWeight = 'bold';
     header.style.marginBottom = '20px';

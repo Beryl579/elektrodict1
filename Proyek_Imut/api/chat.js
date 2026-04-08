@@ -42,7 +42,7 @@ export default async function handler(req, res) {
     }
 
     // --- MODEL HANDLING ---
-    let targetModel = payload.model || "openai/gpt-oss-120b"; 
+    let targetModel = payload.model || "llama-3.3-70b-versatile"; 
     let messages = Array.isArray(payload.messages) ? [...payload.messages] : [];
     
     const latexRules = "Strict Requirement: You MUST use LaTeX formatting for any mathematical formulas or equations. Inline Math: MUST be wrapped in single dollar signs ($). Example: $V = IR$. Block/Display Math: MUST be wrapped in double dollar signs ($$) on their own lines. Example: $$P = VI$$. STRICTLY FORBID using plain parentheses (...) or square brackets [...] to enclose LaTeX code.";

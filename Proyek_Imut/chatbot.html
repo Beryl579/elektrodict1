@@ -12,34 +12,97 @@
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
     <style>
-        /* Force dark theme for better SaaS aesthetic on this page */
+        /* Modern Monochrome Dark Theme (ChatGPT/Gemini Style) */
         :root {
-            --bg: #0f172a;
-            --bg2: #1e293b;
-            --bg3: #334155;
-            --bg4: #020617;
-            --text: #f8fafc;
-            --text2: #94a3b8;
-            --text3: #64748b;
-            --line: rgba(255,255,255,0.1);
-            --line2: rgba(255,255,255,0.05);
-            --accent: #4f9cf9;
+            --bg: #000000;
+            --bg2: #0a0a0a;
+            --bg3: #111111;
+            --bg4: #000000;
+            --text: #ffffff;
+            --text2: #a0a0a0;
+            --text3: #606060;
+            --line: #222222;
+            --line2: #151515;
+            --accent: #ffffff;
+            --accent-glow: rgba(255,255,255,0.1);
+        }
+
+        body.chat-page-body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .chat-header {
+            background: rgba(0,0,0,0.8);
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--line);
+            padding: 12px 24px;
+        }
+
+        .chat-bubble-ai {
+            background: var(--bg2);
+            border: 1px solid var(--line);
+            color: var(--text);
+            border-radius: 12px;
+            box-shadow: none;
+        }
+
+        .chat-bubble-user {
+            background: #2563eb; /* Slightly blue but kept professional, or #fff for pure B&W */
+            color: #fff;
+            border-radius: 12px;
+        }
+        
+        /* User's request for pure B&W */
+        .chat-bubble-user {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            color: #fff;
+        }
+
+        .chat-input-wrap {
+            background: var(--bg2);
+            border: 1px solid var(--line);
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+
+        .chat-add-btn, .chat-send-btn {
+            color: var(--text2);
+        }
+
+        .chat-add-btn:hover, .chat-send-btn:hover {
+            color: var(--text);
+        }
+
+        .model-selector-header {
+            background: var(--bg3);
+            border-color: var(--line);
+            color: var(--text1);
+        }
+        
+        /* Marked rendering override for B&W */
+        .code-block-wrapper {
+            border: 1px solid var(--line);
+            background: #050505;
         }
     </style>
 </head>
 <body class="chat-page-body">
     <header class="chat-header">
         <div class="chat-title-wrap">
-            <div class="chat-logo">⚡</div>
+            <div class="chat-logo" style="color:#fff">⚡</div>
             <div class="chat-h-info">
                 <div class="chat-h-name">ElektroBot AI</div>
-                <div class="chat-h-status"><span>●</span> <span class="u-hide-mobile">Online & Ready</span></div>
+                <div class="chat-h-status"><span style="color:#22c55e">●</span> <span class="u-hide-mobile">Online</span></div>
             </div>
         </div>
         <div class="chat-model-switcher-header">
             <select id="modelSelector" class="model-selector-header">
-                <option value="llama-3.3-70b-versatile" selected>Llama 3.3 (Cepat)</option>
-                <option value="openai/gpt-oss-120b">GPT-OSS (Master Logic)</option>
+                <option value="llama-3.3-70b-versatile" selected>Llama 3.3 (High Speed)</option>
+                <option value="llama-3.2-11b-vision-preview">Llama Vision (Pro)</option>
             </select>
         </div>
         <div class="chat-header-actions">
@@ -56,7 +119,7 @@
                 </svg>
             </button>
         </div>
-        <a href="index" class="chat-back">
+        <a href="index" class="chat-back" style="color:var(--text2)">
             <span>←</span> <span class="u-hide-mobile">Dashboard</span>
         </a>
     </header>

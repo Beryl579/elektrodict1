@@ -57,13 +57,21 @@ const ElektroUtils = {
 
   renderMath(el) {
     if (typeof katex === 'undefined') return;
-    el.querySelectorAll('[data-latex]').forEach(span => {
-      const latex = span.getAttribute('data-latex');
-      const display = span.getAttribute('data-display') === 'true';
+    
+    // Support both the element itself and its children
+    const process = (target) => {
+      const latex = target.getAttribute('data-latex');
+      const display = target.getAttribute('data-display') === 'true';
       try {
-        katex.render(latex, span, {throwOnError:false, displayMode:display, output:'html'});
-      } catch(e){ span.textContent = latex; }
-    });
+        katex.render(latex, target, {throwOnError:false, displayMode:display, output:'html'});
+      } catch(e){ target.textContent = latex; }
+    };
+
+    if (el.hasAttribute('data-latex')) {
+      process(el);
+    } else {
+      el.querySelectorAll('[data-latex]').forEach(process);
+    }
     if (typeof renderMathInElement === 'function') {
       renderMathInElement(el, {
         delimiters:[
@@ -92,7 +100,33 @@ const ElektroUtils = {
     return clean.replace(/\s+/g, ' ').trim();
   },
 
-  // 3. Export
+  // 3. UI & Onboarding
+  async prefetchQuote() {
+    const qt = document.getElementById('oq-text');
+    const qs = document.getElementById('oq-src');
+    if (!qt) return;
+
+    // High Contrast Placeholder
+    qt.style.color = 'var(--text1)';
+    qt.textContent = "Mencari inspirasi elektro untukmu, Sob! (Cek Hukum Ohm: V = I × R)";
+    if (qs) qs.textContent = "ElektroDict AI";
+
+    try {
+      const prompt = "Berikan satu kutipan inspiratif singkat atau tips teknis menarik tentang teknik elektro (kelistrikan, komponen, atau sejarah). Maksimal 15 kata. Berikan format: Kutipan - Penulis/Sumber. Contoh: Arus listrik adalah nafas peradaban - Nikola Tesla.";
+      const res = await window.ElektroAPI.fetchQuote(prompt);
+      const full = res.choices?.[0]?.message?.content;
+      
+      if (full && full.includes(' - ')) {
+        const parts = full.split(' - ');
+        qt.textContent = `"${parts[0].trim()}"`;
+        if (qs) qs.textContent = parts[1].trim();
+      }
+    } catch (e) {
+      console.warn("Quote fetch failed, keeping placeholder.");
+    }
+  },
+
+  // 4. Export
   exportKamusPDF() {
     if (typeof window.jspdf === 'undefined' || !window.KAMUS) {
       alert("PDF library or data not loaded.");
@@ -134,9 +168,12 @@ KNOWLEDGE BASE:
 - Navigation: Guide users to tabs like 📖 Kamus, 🧠 Latihan, 🔬 AI Vision, 🔢 Kalkulator.`
 };
 
+// Global Exports
 window.ElektroUtils = ElektroUtils;
 window.parseAIText = ElektroUtils.parseAIText;
+window.renderMath = ElektroUtils.renderMath;
 window.renderAIVMath = ElektroUtils.renderMath;
+window.prefetchQuote = () => ElektroUtils.prefetchQuote();
 window.escapeHTML = ElektroUtils.escapeHTML;
 window.cleanTextForSpeech = ElektroUtils.cleanTextForSpeech;
 window.exportKamusPDF = ElektroUtils.exportKamusPDF;
