@@ -81,6 +81,12 @@ function initModule(name) {
 // 3. NAVIGATION & UI
 // ═══════════════════════════════════════════════════════════
 function switchTab(t) {
+  // Close more menu if open (mobile)
+  const overlay = document.getElementById('moreMenuOverlay');
+  if (overlay && overlay.classList.contains('active')) {
+    toggleMoreMenu();
+  }
+
   // Lazy load module
   initModule(t);
 
@@ -346,6 +352,31 @@ function closeM() {
   document.getElementById('chatM').classList.remove('open');
   document.getElementById('overlay').classList.remove('on');
 }
+
+/** Toggle for the 'Lainnya' Bottom Sheet (Mobile) */
+function toggleMoreMenu() {
+  const overlay = document.getElementById('moreMenuOverlay');
+  const sheet = document.getElementById('moreMenuSheet');
+  if (!overlay || !sheet) return;
+
+  const isOpen = overlay.classList.contains('active');
+  if (isOpen) {
+    sheet.style.transform = 'translateY(100%)';
+    setTimeout(() => {
+      overlay.classList.remove('active');
+      document.body.style.overflow = '';
+    }, 300);
+  } else {
+    overlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => {
+      sheet.style.transform = 'translateY(0)';
+    }, 10);
+  }
+}
+
+window.toggleMoreMenu = toggleMoreMenu;
+
 
 // Quote & Onboarding
 function prefetchQuote() {

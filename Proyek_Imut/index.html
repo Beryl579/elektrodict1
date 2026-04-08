@@ -164,7 +164,7 @@
   </div>
 </nav>
 
-<!-- ═══════ FLOATING CHAT BUBBLE (mobile left) ═══════ -->
+<!-- ═══════ FLOATING CHAT BUBBLE ═══════ -->
 <div class="chat-fab-left-wrap" id="chatFabWrap">
   <div class="chat-tooltip" id="chatTooltip">Ada yang bisa saya bantu? 💬</div>
   <button class="chat-fab-left" id="bnav-chat" onclick="openM()" title="Chat ElektroBot">
@@ -179,21 +179,10 @@
     <span class="bnav-icon">📖</span>
     <span class="bnav-label">Kamus</span>
   </button>
-  <button class="bnav-item" id="bnav-standards" onclick="switchTab('standards')">
-    <div class="bnav-dot"></div>
-    <span class="bnav-icon">📜</span>
-    <span class="bnav-label">Standar</span>
-  </button>
-  <button class="bnav-item" id="bnav-chips" onclick="switchTab('chips')">
-    <div class="bnav-dot"></div>
-    <span class="bnav-icon">💾</span>
-    <span class="bnav-label">Chip Lib</span>
-  </button>
-  <div class="hspace" style="height:12px;width:1px;opacity:0.2;background:var(--text3);margin:10px auto;display:none" id="bnav-sep-chat"></div>
   <a class="bnav-item" href="chatbot" id="bnav-chat-page" style="text-decoration:none">
     <div class="bnav-dot"></div>
     <span class="bnav-icon">💬</span>
-    <span class="bnav-label" style="color:var(--accent);font-weight:700">Asisten AI</span>
+    <span class="bnav-label">Asisten AI</span>
   </a>
   <button class="bnav-item" id="bnav-quiz" onclick="switchTab('quiz')">
     <div class="bnav-dot"></div>
@@ -205,46 +194,91 @@
     <span class="bnav-icon">🔬</span>
     <span class="bnav-label">AI Vision</span>
   </button>
-  <button class="bnav-item" id="bnav-kalk" onclick="switchTab('kalk')">
+  <button class="bnav-item" id="bnav-more" onclick="toggleMoreMenu()">
     <div class="bnav-dot"></div>
-    <span class="bnav-icon">🔢</span>
-    <span class="bnav-label">Kalkulator</span>
+    <span class="bnav-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+    </span>
+    <span class="bnav-label">Lainnya</span>
   </button>
-  <button class="bnav-item" id="bnav-skema" onclick="switchTab('skema')">
-    <div class="bnav-dot"></div>
-    <span class="bnav-icon">⚡</span>
-    <span class="bnav-label">Skema</span>
-  </button>
-  <button class="bnav-item" id="bnav-projects" onclick="switchTab('projects')">
-    <div class="bnav-dot"></div>
-    <span class="bnav-icon">🛠️</span>
-    <span class="bnav-label">Lab Proyek</span>
-  </button>
-  <button class="bnav-item" id="bnav-resistor" onclick="switchTab('resistor')">
-    <div class="bnav-dot"></div>
-    <span class="bnav-icon">🎨</span>
-    <span class="bnav-label">Resistor</span>
-  </button>
-  <button class="bnav-item" id="bnav-konversi" onclick="switchTab('konversi')">
-    <div class="bnav-dot"></div>
-    <span class="bnav-icon">🔄</span>
-    <span class="bnav-label">Konversi</span>
-  </button>
-  <button class="bnav-item" id="bnav-timeline" onclick="switchTab('timeline')">
-    <div class="bnav-dot"></div>
-    <span class="bnav-icon">🕰️</span>
-    <span class="bnav-label">Timeline</span>
-  </button>
-  <button class="bnav-item" id="bnav-logika" onclick="switchTab('logika')">
-    <div class="bnav-dot"></div>
-    <span class="bnav-icon">🕹️</span>
-    <span class="bnav-label">Logika</span>
-  </button>
-  <button class="bnav-item" id="bnav-synth" onclick="switchTab('synth')">
-    <div class="bnav-dot"></div>
-    <span class="bnav-icon">🎸</span>
-    <span class="bnav-label">Synth</span>
-  </button>
+</div>
+
+<!-- ═══════ 'LAINNYA' BOTTOM SHEET ═══════ -->
+<div class="more-menu-overlay" id="moreMenuOverlay" onclick="toggleMoreMenu()">
+  <div class="more-menu-sheet" id="moreMenuSheet" onclick="event.stopPropagation()">
+    <div class="more-menu-handle"></div>
+    <div class="more-menu-header">
+      <h3>Fitur Lainnya</h3>
+      <button class="more-menu-close" onclick="toggleMoreMenu()">×</button>
+    </div>
+    <div class="more-menu-grid">
+      <button class="more-item" onclick="switchTab('standards')">
+        <span class="more-icon">📜</span>
+        <div class="more-info">
+          <div class="more-title">Standar & K3</div>
+          <div class="more-desc">Warna kabel, AWG, & K3</div>
+        </div>
+      </button>
+      <button class="more-item" onclick="switchTab('chips')">
+        <span class="more-icon">💾</span>
+        <div class="more-info">
+          <div class="more-title">Chip Lib & Pinout</div>
+          <div class="more-desc">Database IC & Mikrokontroler</div>
+        </div>
+      </button>
+      <button class="more-item" onclick="switchTab('kalk')">
+        <span class="more-icon">🔢</span>
+        <div class="more-info">
+          <div class="more-title">Kalkulator & Konversi</div>
+          <div class="more-desc">Ohm, RLC, & Satuan Teknik</div>
+        </div>
+      </button>
+      <button class="more-item" onclick="switchTab('skema')">
+        <span class="more-icon">⚡</span>
+        <div class="more-info">
+          <div class="more-title">Skema & Simbol</div>
+          <div class="more-desc">Diagram rangkaian interaktif</div>
+        </div>
+      </button>
+      <button class="more-item" onclick="switchTab('projects')">
+        <span class="more-icon">🛠️</span>
+        <div class="more-info">
+          <div class="more-title">Lab Proyek</div>
+          <div class="more-desc">AI Project Generator</div>
+        </div>
+      </button>
+      <!-- Extended features -->
+      <button class="more-item" onclick="switchTab('resistor')">
+        <span class="more-icon">🎨</span>
+        <div class="more-info">
+          <div class="more-title">Kode Warna</div>
+          <div class="more-desc">Baca nilai gelang resistor</div>
+        </div>
+      </button>
+      <button class="more-item" onclick="switchTab('timeline')">
+        <span class="more-icon">🕰️</span>
+        <div class="more-info">
+          <div class="more-title">Timeline</div>
+          <div class="more-desc">Sejarah penemuan listrik</div>
+        </div>
+      </button>
+      <button class="more-item" onclick="switchTab('logika')">
+        <span class="more-icon">🕹️</span>
+        <div class="more-info">
+          <div class="more-title">Logika</div>
+          <div class="more-desc">Simulator gerbang digital</div>
+        </div>
+      </button>
+      <button class="more-item" onclick="switchTab('synth')">
+        <span class="more-icon">🎸</span>
+        <div class="more-info">
+          <div class="more-title">Synth</div>
+          <div class="more-desc">Audio signal visualizer</div>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>
 
 </div>
 <div class="page on" id="page-kamus">
