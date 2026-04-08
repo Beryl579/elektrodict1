@@ -92,21 +92,14 @@ const ElektroKamus = {
 
     g.innerHTML = html;
 
-    // Trigger KaTeX with a safer delay and consistent indexing
-    setTimeout(() => {
-      sorted.forEach((d, i) => {
-        if (!d.formula) return;
-        const el = document.getElementById(`ef${i}`);
-        if (!el) return;
-        
-        // Use global window access for reliability
-        if (typeof window.renderMath === 'function') {
-          window.renderMath(el);
-        } else if (typeof renderMath === 'function') {
-          renderMath(el);
-        }
-      });
-    }, 50);
+    // Use requestAnimationFrame for smoother and more reliable DOM interaction
+    requestAnimationFrame(() => {
+      if (typeof window.renderMath === 'function') {
+        window.renderMath(g);
+      } else if (typeof renderMath === 'function') {
+        renderMath(g);
+      }
+    });
   },
 
   renderCard(d, i, isFeature) {
@@ -162,6 +155,14 @@ const ElektroKamus = {
     document.querySelectorAll('.card.open').forEach(x => x.classList.remove('open'));
     if (!isOpen) {
       c.classList.add('open');
+      
+      // Ensure math is rendered when expanded
+      if (typeof window.renderMath === 'function') {
+        window.renderMath(c);
+      } else if (typeof renderMath === 'function') {
+        renderMath(c);
+      }
+
       setTimeout(() => c.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
     }
   },

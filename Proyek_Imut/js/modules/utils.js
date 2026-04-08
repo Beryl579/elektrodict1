@@ -56,34 +56,56 @@ const ElektroUtils = {
   },
 
   renderMath(el) {
-    if (typeof katex === 'undefined') return;
+    const k = window.katex || (typeof katex !== 'undefined' ? katex : null);
+    if (!k) {
+      console.warn("KaTeX not loaded yet. Retrying automatically...");
+      return;
+    }
     
-    // Support both the element itself and its children
     const process = (target) => {
       const latex = target.getAttribute('data-latex');
-      if (!latex) return;
-      const display = target.classList.contains('inline-math') ? false : true;
+      if (!latex || latex === 'null') {
+        target.style.display = 'none';
+        return;
+      }
+      
+      const isDisplay = target.getAttribute('data-display') === 'true' || !target.classList.contains('inline-math');
+      
       try {
-        window.katex.render(latex, target, {throwOnError:false, displayMode:display});
-      } catch(e){ target.textContent = latex; }
+        k.render(latex, target, {
+          throwOnError: false,
+          displayMode: isDisplay,
+          output: 'html'
+        });
+      } catch (err) {
+        console.error("KaTeX Render Error:", err);
+        target.style.display = 'none'; // Fallback: sembunyikan jika gagal
+      }
     };
 
-    if (el.hasAttribute('data-latex')) {
-      process(el);
+    if (el) {
+      if (el.hasAttribute('data-latex')) process(el);
+      else el.querySelectorAll('[data-latex]').forEach(process);
     } else {
-      el.querySelectorAll('[data-latex]').forEach(process);
+      document.querySelectorAll('.eformula, [data-latex]').forEach(process);
     }
+
+    // Also run auto-render if available for standard text markers
     if (typeof renderMathInElement === 'function') {
-      renderMathInElement(el, {
-        delimiters:[
-          {left:'$$', right:'$$', display:true},
-          {left:'\\(', right:'\\)', display:false},
-          {left:'\\[', right:'\\]', display:true},
-          {left:'$', right:'$', display:false}
+      renderMathInElement(el || document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '\\[', right: '\\]', display: true},
+          {left: '$', right: '$', display: false},
+          {left: '\\(', right: '\\)', display: false}
         ],
-        throwOnError:false
+        throwOnError: false
       });
     }
+  },
+
+  renderAllMath() {
+    this.renderMath();
   },
 
   // 2. String Helpers

@@ -209,6 +209,12 @@
         const saved = localStorage.getItem('theme') || 'light';
         if (saved === 'dark') document.body.classList.add('dark');
         else document.body.classList.remove('dark');
+        
+        // Initial math render for welcome message
+        setTimeout(() => {
+          if (typeof window.renderMath === 'function') window.renderMath();
+          else if (typeof renderMath === 'function') renderMath();
+        }, 300);
       }
       initTheme();
 
