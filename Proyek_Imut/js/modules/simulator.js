@@ -329,6 +329,10 @@ const ElektroSimulator = {
           </div>
         </div>`;
     }).join('');
+
+    setTimeout(() => {
+      if (typeof renderMath === 'function') renderMath(list);
+    }, 100);
   },
 
   toggleSkema(skId, tId, val) {

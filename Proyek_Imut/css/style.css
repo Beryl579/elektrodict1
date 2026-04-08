@@ -2494,3 +2494,46 @@ body.fade-out {
     margin-top: 0 !important;
   }
 }
+
+/* ── KaTeX Math Upgrade ── */
+.eformula {
+  background: var(--bg3);
+  border: 1px solid var(--line);
+  padding: 14px 18px;
+  border-radius: var(--r2);
+  margin: 12px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow-x: auto;
+  color: var(--text);
+  min-height: 60px;
+  transition: all 0.3s ease;
+}
+.eformula:hover {
+  border-color: var(--accent);
+  background: var(--accent-d);
+}
+.katex {
+  font-size: 1.15em !important;
+  color: inherit !important;
+}
+.katex-display {
+  margin: 0 !important;
+}
+body.dark .eformula {
+  background: #0a0a0a;
+  border-color: #222;
+}
+body.dark .eformula:hover {
+  border-color: #ffffff;
+  background: #111;
+}
+
+/* Responsive Tweak for Formulas */
+@media (max-width: 600px) {
+  .eformula {
+    padding: 10px 12px;
+    font-size: 0.95em;
+  }
+}

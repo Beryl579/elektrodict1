@@ -120,7 +120,7 @@ const ElektroKamus = {
           <div class="expbody">
             <div class="elabel">PENJELASAN</div>
             <div class="etext">${d.detail}</div>
-            ${d.formula?`<div class="elabel">RUMUS</div><div class="eformula" id="ef${i}" data-latex="${d.formula.replace(/"/g,'&quot;')}"></div>`:''}
+            ${(d.formula && d.formula !== 'null') ? `<div class="elabel">RUMUS</div><div class="eformula" id="ef${i}" data-latex="${d.formula.replace(/"/g,'&quot;')}"></div>` : ''}
             <div class="etags">${(d.tags||[]).map(t=>`<span class="etag">#${t}</span>`).join('')}</div>
             <button class="eask" onclick="ElektroKamus.askCard(event,'${d.en.replace(/'/g,'\\\'').replace(/"/g,'')}','${d.id.replace(/'/g,'\\\'').replace(/"/g,'')}')"><span>💬</span> Tanya ElektroBot</button>
           </div>
@@ -139,7 +139,7 @@ const ElektroKamus = {
           <div class="expbody">
             <div class="elabel">PENJELASAN</div>
             <div class="etext">${d.detail}</div>
-            ${d.formula?`<div class="elabel">RUMUS</div><div class="eformula" id="ef${i}" data-latex="${d.formula.replace(/"/g,'&quot;')}"></div>`:''}
+            ${(d.formula && d.formula !== 'null') ? `<div class="elabel">RUMUS</div><div class="eformula" id="ef${i}" data-latex="${d.formula.replace(/"/g,'&quot;')}"></div>` : ''}
             <div class="etags">${(d.tags||[]).map(t=>`<span class="etag">#${t}</span>`).join('')}</div>
             <button class="eask" onclick="ElektroKamus.askCard(event,'${d.en.replace(/'/g,'\\\'').replace(/"/g,'')}','${d.id.replace(/'/g,'\\\'').replace(/"/g,'')}')"><span>💬</span> Tanya ElektroBot</button>
           </div>
