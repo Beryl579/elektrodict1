@@ -61,9 +61,10 @@ const ElektroUtils = {
     // Support both the element itself and its children
     const process = (target) => {
       const latex = target.getAttribute('data-latex');
-      const display = target.getAttribute('data-display') === 'true';
+      if (!latex) return;
+      const display = target.classList.contains('inline-math') ? false : true;
       try {
-        katex.render(latex, target, {throwOnError:false, displayMode:display, output:'html'});
+        window.katex.render(latex, target, {throwOnError:false, displayMode:display});
       } catch(e){ target.textContent = latex; }
     };
 

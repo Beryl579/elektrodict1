@@ -77,6 +77,7 @@ const ElektroKamus = {
 
     const core = data.filter(d => CORE_IDS.includes(d.id?.toLowerCase()));
     const regular = data.filter(d => !CORE_IDS.includes(d.id?.toLowerCase()));
+    const sorted = [...core, ...regular];
 
     let html = '';
     if (core.length > 0) {
@@ -91,15 +92,21 @@ const ElektroKamus = {
 
     g.innerHTML = html;
 
-    // render KaTeX formulas
-    data.forEach((d, i) => {
-      if (!d.formula) return;
-      const el = document.getElementById(`ef${i}`);
-      if (!el) return;
-      if (typeof renderMath === 'function') {
-        renderMath(el);
-      }
-    });
+    // Trigger KaTeX with a safer delay and consistent indexing
+    setTimeout(() => {
+      sorted.forEach((d, i) => {
+        if (!d.formula) return;
+        const el = document.getElementById(`ef${i}`);
+        if (!el) return;
+        
+        // Use global window access for reliability
+        if (typeof window.renderMath === 'function') {
+          window.renderMath(el);
+        } else if (typeof renderMath === 'function') {
+          renderMath(el);
+        }
+      });
+    }, 50);
   },
 
   renderCard(d, i, isFeature) {

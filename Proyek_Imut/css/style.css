@@ -2391,9 +2391,14 @@ body.fade-out {
     order: 4;
     padding: 6px 12px;
     font-size: 11px;
-    position: absolute;
-    right: 14px;
-    top: 52px; /* Position next to/below selector */
+    background: var(--bg2);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    margin-top: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: fit-content;
   }
   
   /* Make model switcher its own row on mobile */
@@ -2417,8 +2422,10 @@ body.fade-out {
   }
 
   .chat-history {
-    padding: 12px 12px 150px; /* Extra bottom space for 2-row fixed input */
+    padding: 20px 12px 150px; /* Increased top padding to 20px + header height */
+    margin-top: 0;
     gap: 12px;
+    scroll-padding-top: 100px;
   }
 
   .chat-bubble {

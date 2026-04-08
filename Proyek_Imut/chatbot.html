@@ -72,6 +72,8 @@
             .chat-header {
                 padding: 10px 15px;
                 gap: 8px;
+                background: var(--bg); /* Ensure solid background */
+                z-index: 1000;
             }
             .chat-title-wrap {
                 width: 100%;
@@ -85,8 +87,20 @@
             .chat-header-actions {
                 order: 2;
             }
+            .chat-back {
+                order: 4;
+                width: 100%;
+                justify-content: center;
+                margin-top: 8px;
+                padding: 8px;
+                background: var(--bg3);
+                border: 1px solid var(--line);
+                border-radius: 8px;
+            }
             .chat-history {
-                height: calc(100vh - 180px); /* Adjust for larger header */
+                padding-top: 20px; /* Add space for sticky header dynamic height */
+                margin-top: 10px;
+                height: calc(100vh - 200px); /* Adjust for 3-row header */
             }
         }
 
