@@ -113,7 +113,7 @@ const ElektroKamus = {
             <div class="ccore-title">${d.en}</div>
             <div class="ccore-sub">${d.id}</div>
           </div>
-          <div class="ctag t-${d.kat}">${d.kat}</div>
+          <div class="ctag">${d.kat}</div>
         </div>
         <div class="cexp" id="cx${i}">
           <div class="expbody">
@@ -131,7 +131,7 @@ const ElektroKamus = {
       <div class="card" id="c${i}" onclick="ElektroKamus.tog(${i})" style="animation-delay:${i * 0.03}s">
         <div class="ctop">
           <div class="cleft"><div class="cen">${d.en}</div><div class="cid">${d.id}</div></div>
-          <div class="ctag t-${d.kat}">${d.kat}</div>
+          <div class="ctag">${d.kat}</div>
         </div>
         <div class="cdesc">${d.desc}</div>
         <div class="cexp" id="cx${i}">
@@ -146,6 +146,7 @@ const ElektroKamus = {
         <div class="cchev">▼</div>
       </div>`;
   },
+
 
   tog(i) {
     const c = document.getElementById(`c${i}`);

@@ -12,135 +12,35 @@
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
     <style>
-        /* Modern Theme System for Chatbot (Light Default, B&W Dark) */
+        /* Force dark theme for better SaaS aesthetic on this page */
         :root {
-            --bg: #f8fafc; --bg2: #ffffff; --bg3: #f1f5f9; --bg4: #e2e8f0; --bg5: #fdfdfd;
-            --line: rgba(0,0,0,0.06); --line2: rgba(0,0,0,0.1);
-            --text: #0f172a; --text2: #475569; --text3: #94a3b8;
-            --accent: #2563eb;
-        }
-
-        body.dark {
-            --bg: #000000; --bg2: #0a0a0a; --bg3: #111111; --bg4: #000000;
-            --text: #ffffff; --text2: #a0a0a0; --text3: #606060;
-            --line: #222222; --line2: #151515; --accent: #ffffff;
-        }
-
-        body.chat-page-body {
-            background: var(--bg);
-            color: var(--text);
-            font-family: 'Inter', 'Plus Jakarta Sans', sans-serif;
-            transition: background 0.3s ease, color 0.3s ease;
-        }
-
-        .chat-header {
-            background: var(--bg);
-            border-bottom: 1px solid var(--line);
-            padding: 12px 20px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            flex-wrap: wrap; /* Allow wrapping on mobile */
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .chat-title-wrap {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex-shrink: 0;
-        }
-
-        .chat-model-switcher-header {
-            flex: 1;
-            min-width: 140px; /* Ensure visibility */
-        }
-
-        .model-selector-header {
-            width: 100%;
-            padding: 6px 10px;
-            background: var(--bg3);
-            border: 1px solid var(--line);
-            border-radius: 8px;
-            color: var(--text);
-            font-size: 13px;
-        }
-
-        @media (max-width: 600px) {
-            .chat-header {
-                padding: 10px 15px;
-                gap: 8px;
-                background: var(--bg); /* Ensure solid background */
-                z-index: 1000;
-            }
-            .chat-title-wrap {
-                width: 100%;
-                justify-content: space-between;
-                margin-bottom: 4px;
-            }
-            .chat-model-switcher-header {
-                width: 100%;
-                order: 3; /* Move below on mobile */
-            }
-            .chat-header-actions {
-                order: 2;
-            }
-            .chat-back {
-                order: 4;
-                width: 100%;
-                justify-content: center;
-                margin-top: 8px;
-                padding: 8px;
-                background: var(--bg3);
-                border: 1px solid var(--line);
-                border-radius: 8px;
-            }
-            .chat-history {
-                padding-top: 20px; /* Add space for sticky header dynamic height */
-                margin-top: 10px;
-                height: calc(100vh - 200px); /* Adjust for 3-row header */
-            }
-        }
-
-        .chat-bubble-ai {
-            background: var(--bg2);
-            border: 1px solid var(--line);
-            color: var(--text);
-            border-radius: 12px;
-            padding: 12px 16px;
-            margin-bottom: 12px;
-            font-size: 14px;
-            line-height: 1.5;
-        }
-
-        .chat-bubble-user {
-            background: var(--bg3);
-            border: 1px solid var(--line);
-            color: var(--text);
-            border-radius: 12px;
-            padding: 12px 16px;
-            margin-bottom: 12px;
-            font-size: 14px;
-            margin-left: auto;
-            max-width: 85%;
+            --bg: #0f172a;
+            --bg2: #1e293b;
+            --bg3: #334155;
+            --bg4: #020617;
+            --text: #f8fafc;
+            --text2: #94a3b8;
+            --text3: #64748b;
+            --line: rgba(255,255,255,0.1);
+            --line2: rgba(255,255,255,0.05);
+            --accent: #4f9cf9;
         }
     </style>
 </head>
 <body class="chat-page-body">
     <header class="chat-header">
         <div class="chat-title-wrap">
-            <div class="chat-logo" style="color:#fff">⚡</div>
+            <div class="chat-logo">⚡</div>
             <div class="chat-h-info">
                 <div class="chat-h-name">ElektroBot AI</div>
-                <div class="chat-h-status"><span style="color:#22c55e">●</span> <span class="u-hide-mobile">Online</span></div>
+                <div class="chat-h-status"><span>●</span> <span class="u-hide-mobile">Online & Ready</span></div>
             </div>
         </div>
         <div class="chat-model-switcher-header">
             <select id="modelSelector" class="model-selector-header">
-                <option value="llama-3.3-70b-versatile" selected>Llama 3.3 (Cepat & Stabil)</option>
-                <option value="openai/gpt-oss-120b">GPT-OSS (Logika Elektro Tingkat Tinggi)</option>
+                <option value="qwen/qwen-2.5-72b-instruct:free" selected>Qwen 2.5 (Gratis)</option>
+                <option value="meta-llama/llama-3.3-70b-instruct">Llama 3.3 (Cepat)</option>
+                <option value="openai/gpt-oss-120b">GPT-OSS (Master Logic)</option>
             </select>
         </div>
         <div class="chat-header-actions">
@@ -157,7 +57,7 @@
                 </svg>
             </button>
         </div>
-        <a href="index" class="chat-back" style="color:var(--text2)">
+        <a href="index" class="chat-back">
             <span>←</span> <span class="u-hide-mobile">Dashboard</span>
         </a>
     </header>
@@ -204,20 +104,6 @@
     <script src="js/api.js"></script>
     <script src="js/chatbot.js"></script>
     <script>
-      // Theme Logic for Standalone Chatbot
-      function initTheme() {
-        const saved = localStorage.getItem('theme') || 'light';
-        if (saved === 'dark') document.body.classList.add('dark');
-        else document.body.classList.remove('dark');
-        
-        // Initial math render for welcome message
-        setTimeout(() => {
-          if (typeof window.renderMath === 'function') window.renderMath();
-          else if (typeof renderMath === 'function') renderMath();
-        }, 300);
-      }
-      initTheme();
-
       // Smooth Navigation for Clean URLs
       document.querySelectorAll('a[href^="index"]').forEach(link => {
         link.addEventListener('click', e => {

@@ -25,13 +25,14 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: { message: `Method ${req.method} Not Allowed` } });
   }
 
+  let openRouterKey = process.env.OPENROUTER_API_KEY;
   let groqKeysStr = process.env.GROQ_API_KEYS;
   let groqFallbackKey = process.env.GROQ_API_KEY;
   let groqKeys = groqKeysStr ? groqKeysStr.split(',').map(k => k.trim()).filter(Boolean) : (groqFallbackKey ? [groqFallbackKey] : []);
 
-  if (groqKeys.length === 0) {
-    console.error("[Backend] Groq API Key is missing in process.env");
-    return res.status(500).json({ error: { message: "API Key Groq belum dikonfigurasi di Vercel!" } });
+  if (!openRouterKey && groqKeys.length === 0) {
+    console.error("[Backend] API Key is missing in process.env");
+    return res.status(500).json({ error: { message: "API Key belum dikonfigurasi di Vercel!" } });
   }
 
   try {
@@ -41,8 +42,9 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: { message: "Payload tidak valid." } });
     }
 
-    // --- MODEL HANDLING ---
-    let targetModel = payload.model || "llama-3.3-70b-versatile"; 
+    // --- MODEL SWITCHER LOGIC ---
+    let requestedModel = payload.model;
+    let targetModel = requestedModel || "qwen/qwen-2.5-72b-instruct:free"; 
     let messages = Array.isArray(payload.messages) ? [...payload.messages] : [];
     
     const latexRules = "Strict Requirement: You MUST use LaTeX formatting for any mathematical formulas or equations. Inline Math: MUST be wrapped in single dollar signs ($). Example: $V = IR$. Block/Display Math: MUST be wrapped in double dollar signs ($$) on their own lines. Example: $$P = VI$$. STRICTLY FORBID using plain parentheses (...) or square brackets [...] to enclose LaTeX code.";
@@ -66,6 +68,9 @@ export default async function handler(req, res) {
     
     ${latexRules}`;
 
+    // --- PERSONA LOGIC ---
+    // Only apply the default persona if no system prompt is provided by the frontend.
+    // This allows the Homepage bot and Main Chatbot to have different personalities.
     const hasSystemPrompt = messages.some(m => m.role === 'system');
     if (!hasSystemPrompt) {
       messages.unshift({ role: 'system', content: elektroBotPersona });
@@ -80,26 +85,49 @@ export default async function handler(req, res) {
 
     let response;
     
-    // --- Groq Execution with Key Rotation/Pool ---
-    let currentKey = groqKeys[Math.floor(Math.random() * groqKeys.length)];
-    const callGroq = async (key) => {
-      return await fetch("https://api.groq.com/openai/v1/chat/completions", {
+    // 1. Try OpenRouter First if key exists
+    if (openRouterKey && (targetModel.includes('qwen') || !groqKeys.length)) {
+      try {
+        response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${openRouterKey}`,
+            "Content-Type": "application/json",
+            "HTTP-Referer": "https://elektrodict.vercel.app",
+            "X-Title": "ElektroBot AI"
+          },
+          body: JSON.stringify(aiPayload)
+        });
+      } catch (err) {
+        console.warn("[Backend] OpenRouter failed, falling back to Groq...", err);
+      }
+    }
+
+    // 2. Try Groq as Fallback (or if primary)
+    if ((!response || !response.ok) && groqKeys.length > 0) {
+      let currentKey = groqKeys[Math.floor(Math.random() * groqKeys.length)];
+      response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
         method: "POST",
         headers: {
-          "Authorization": `Bearer ${key}`,
+          "Authorization": `Bearer ${currentKey}`,
           "Content-Type": "application/json"
         },
         body: JSON.stringify(aiPayload)
       });
-    };
 
-    response = await callGroq(currentKey);
-
-    if (response.status === 429) {
-      groqKeys = groqKeys.filter(k => k !== currentKey);
-      if (groqKeys.length > 0) {
-        currentKey = groqKeys[Math.floor(Math.random() * groqKeys.length)];
-        response = await callGroq(currentKey);
+      if (response.status === 429) {
+        groqKeys = groqKeys.filter(k => k !== currentKey);
+        if (groqKeys.length > 0) {
+          currentKey = groqKeys[Math.floor(Math.random() * groqKeys.length)];
+          response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+            method: "POST",
+            headers: {
+              "Authorization": `Bearer ${currentKey}`,
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(aiPayload)
+          });
+        }
       }
     }
 

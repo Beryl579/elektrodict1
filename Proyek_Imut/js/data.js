@@ -1,20 +1,20 @@
 const KAMUS = [
   // ── DASAR ──
-  {en:"Voltage",id:"Tegangan",kat:"dasar",desc:"Beda potensial listrik antara dua titik.",detail:"Tegangan adalah energi per satuan muatan untuk memindahkan muatan antar dua titik. Simbol V, satuan Volt.",formula:"V = I \\cdot R \\;\\; \\text{atau} \\;\\; V = \\frac{P}{I}",tags:["volt","potensial","EMF"]},
-  {en:"Current",id:"Arus Listrik",kat:"dasar",desc:"Aliran muatan listrik per satuan waktu.",detail:"Laju aliran muatan melalui konduktor. DC mengalir satu arah, AC berubah arah periodik.",formula:"I = \\frac{V}{R} \\;\\; \\text{atau} \\;\\; I = \\frac{Q}{t}",tags:["ampere","DC","AC","muatan"]},
-  {en:"Resistance",id:"Hambatan",kat:"dasar",desc:"Kemampuan bahan menghambat arus listrik.",detail:"Bergantung pada jenis material, panjang, luas penampang, dan suhu konduktor.",formula:"R = \\frac{V}{I} \\;\\; \\text{atau} \\;\\; R = \\rho \\cdot \\frac{L}{A}",tags:["resistor","ohm","konduktivitas"]},
-  {en:"Ohm's Law",id:"Hukum Ohm",kat:"dasar",desc:"Hubungan tegangan, arus, dan hambatan.",detail:"Arus berbanding lurus dengan tegangan dan berbanding terbalik dengan hambatan (suhu konstan).",formula:"V = I \\cdot R \\;\\; I = \\frac{V}{R} \\;\\; R = \\frac{V}{I}",tags:["hukum dasar","rangkaian"]},
-  {en:"Power",id:"Daya Listrik",kat:"daya",desc:"Energi listrik yang digunakan per satuan waktu.",detail:"Dalam AC: daya aktif (W), reaktif (VAR), dan semu (VA). Diukur dalam Watt.",formula:"P = V \\cdot I = I^2 R = \\frac{V^2}{R}",tags:["watt","energi","efisiensi"]},
+  {en:"Voltage",id:"Tegangan",kat:"dasar",desc:"Beda potensial listrik antara dua titik.",detail:"Tegangan adalah energi per satuan muatan untuk memindahkan muatan antar dua titik. Simbol V, satuan Volt.",formula:"V = IR",tags:["volt","potensial","EMF"]},
+  {en:"Current",id:"Arus Listrik",kat:"dasar",desc:"Aliran muatan listrik per satuan waktu.",detail:"Laju aliran muatan melalui konduktor. DC mengalir satu arah, AC berubah arah periodik.",formula:"I = \\frac{Q}{t}",tags:["ampere","DC","AC","muatan"]},
+  {en:"Resistance",id:"Hambatan",kat:"dasar",desc:"Kemampuan bahan menghambat arus listrik.",detail:"Bergantung pada jenis material, panjang, luas penampang, dan suhu konduktor.",formula:"R = \\rho \\cdot \\frac{L}{A}",tags:["resistor","ohm","konduktivitas"]},
+  {en:"Ohm's Law",id:"Hukum Ohm",kat:"dasar",desc:"Hubungan tegangan, arus, dan hambatan.",detail:"Arus berbanding lurus dengan tegangan dan berbanding terbalik dengan hambatan (suhu konstan).",formula:"V = IR \\;\\; I = \\frac{V}{R} \\;\\; R = \\frac{V}{I}",tags:["hukum dasar","rangkaian"]},
+  {en:"Power",id:"Daya Listrik",kat:"daya",desc:"Energi listrik yang digunakan per satuan waktu.",detail:"Dalam AC: daya aktif (W), reaktif (VAR), dan semu (VA). Diukur dalam Watt.",formula:"P = VI = I^2R = \\frac{V^2}{R}",tags:["watt","energi","efisiensi"]},
   {en:"Frequency",id:"Frekuensi",kat:"dasar",desc:"Jumlah siklus gelombang per detik.",detail:"PLN Indonesia menggunakan frekuensi 50 Hz. Frekuensi berkaitan dengan periode melalui f = 1/T.",formula:"f = \\frac{1}{T} \\;\\; \\omega = 2\\pi f",tags:["Hz","periode","PLN 50Hz"]},
-  {en:"Ground",id:"Ground / Arde",kat:"dasar",desc:"Titik referensi potensial nol.",detail:"Ground sinyal = referensi 0V rangkaian. Ground proteksi = terhubung ke tanah untuk keselamatan.",formula:null,tags:["arde","GND","referensi","keselamatan"]},
+  {en:"Ground",id:"Ground / Arde",kat:"dasar",desc:"Titik referensi potensial nol.",detail:"Ground sinyal = referensi 0V rangkaian. Ground proteksi = terhubung ke tanah untuk keselamatan.",formula:"V_{GND} = 0\\text{ V}",tags:["arde","GND","referensi","keselamatan"]},
   {en:"Short Circuit",id:"Hubung Singkat",kat:"dasar",desc:"Koneksi langsung antar titik bertegangan berbeda.",detail:"Menyebabkan arus sangat besar karena hambatan mendekati nol. Dapat merusak komponen dan menyebabkan kebakaran.",formula:"R \\to 0 \\Rightarrow I \\to \\infty",tags:["korsleting","MCB","sekering","proteksi"]},
   {en:"Open Circuit",id:"Rangkaian Terbuka",kat:"dasar",desc:"Jalur arus yang terputus — arus tidak mengalir.",detail:"Terjadi ketika konduktor putus atau sakelar terbuka. Tegangan sumber tetap ada tapi arus = 0.",formula:"I = 0 \\;\\; V_{oc} = V_s",tags:["putus","sakelar","tegangan terbuka"]},
-  {en:"Conductance",id:"Konduktansi",kat:"dasar",desc:"Kebalikan dari hambatan — kemampuan menghantarkan arus.",detail:"Semakin besar konduktansi, semakin mudah arus mengalir. Simbol G, satuan Siemens (S).",formula:"G = \\frac{1}{R}",tags:["siemens","konduktor","G"]},
+  {en:"Conductance",id:"Konduktansi",kat:"dasar",desc:"Kebalikan dari hambatan — kemampuan menghantarkan arus.",detail:"Semakin besar konduktansi, semakin mudah arus mengalir. Simbol G, satuan Siemens (S).",formula:"G = \\frac{1}{R} \\;\\; (\\text{Siemens})",tags:["siemens","konduktor","G"]},
   {en:"Electromotive Force",id:"Gaya Gerak Listrik",kat:"dasar",desc:"Tegangan yang dihasilkan oleh sumber energi.",detail:"GGL adalah energi per satuan muatan yang diberikan sumber kepada rangkaian. Berbeda dengan tegangan terminal karena ada resistansi internal.",formula:"V_{terminal} = \\varepsilon - I \\cdot r",tags:["GGL","EMF","baterai","sumber"]},
-  {en:"Electric Field",id:"Medan Listrik",kat:"dasar",desc:"Wilayah di sekitar muatan listrik yang memiliki gaya.",detail:"Medan listrik menunjukkan arah dan besar gaya pada muatan uji positif. Makin dekat ke sumber, makin kuat medan.",formula:"E = \\frac{F}{q} = \\frac{V}{d}",tags:["medan","gaya","elektrostatik"]},
+  {en:"Electric Field",id:"Medan Listrik",kat:"dasar",desc:"Wilayah di sekitar muatan listrik yang memiliki gaya.",detail:"Medan listrik menunjukkan arah dan besar gaya pada muatan uji positif. Makin dekat ke sumber, makin kuat medan.",formula:"E = \\frac{F}{q} = \\frac{V}{d} \\;\\; (V/m)",tags:["medan","gaya","elektrostatik"]},
   // ── KOMPONEN ──
   {en:"Resistor",id:"Resistor",kat:"komponen",desc:"Komponen penghambat arus listrik.",detail:"Membatasi arus, membagi tegangan, mengatur sinyal. Nilai dibaca dari kode warna atau angka.",formula:"R_{seri}=\\sum R_i \\;\\; \\frac{1}{R_{par}}=\\sum\\frac{1}{R_i}",tags:["kode warna","pembagi tegangan"]},
-  {en:"Capacitor",id:"Kapasitor",kat:"komponen",desc:"Dua pelat konduktor dipisahkan dielektrik.",detail:"Digunakan untuk filter, decoupling, dan menyimpan energi. Kapasitas (C) ditentukan oleh luas pelat, jarak, dan material dielektrik.",formula:"Q = C \\cdot V \\;\\; C = \\varepsilon_0 \\varepsilon_r \\frac{A}{d} \\;\\; (\\text{Farad})",tags:["farad","dielektrik","filter","coupling"]},
+  {en:"Capacitor",id:"Kapasitor",kat:"komponen",desc:"Komponen penyimpan muatan listrik.",detail:"Dua pelat konduktor dipisahkan dielektrik. Digunakan untuk filter, decoupling, dan menyimpan energi.",formula:"Q = CV \\;\\; C = \\varepsilon\\frac{A}{d} \\;\\; (\\text{Farad})",tags:["farad","dielektrik","filter","coupling"]},
   {en:"Inductor",id:"Induktor",kat:"komponen",desc:"Komponen penyimpan energi dalam medan magnet.",detail:"Kumparan yang menentang perubahan arus. Digunakan dalam filter, transformator, dan osilator.",formula:"V_L = L\\frac{dI}{dt} \\;\\; (\\text{Henry})",tags:["henry","kumparan","induktansi","koil"]},
   {en:"Transformer",id:"Transformator",kat:"komponen",desc:"Perangkat pengubah level tegangan AC.",detail:"Bekerja berdasarkan induksi elektromagnetik — kopling dua kumparan melalui inti besi.",formula:"\\frac{V_s}{V_p} = \\frac{N_s}{N_p} = \\frac{I_p}{I_s}",tags:["step-up","step-down","lilitan","PLN"]},
   {en:"Diode",id:"Dioda",kat:"komponen",desc:"Komponen semikonduktor satu arah aliran arus.",detail:"Memungkinkan arus dari anoda ke katoda (forward bias). Digunakan dalam penyearah dan proteksi.",formula:"V_f \\approx 0.7\\text{V (Si)},\\; 0.3\\text{V (Ge)}",tags:["penyearah","PN junction","LED","zener"]},
@@ -30,7 +30,7 @@ const KAMUS = [
   // ── RANGKAIAN ──
   {en:"Kirchhoff's Current Law",id:"KCL — Hukum Kirchhoff Arus",kat:"rangkaian",desc:"Jumlah arus masuk = jumlah arus keluar di node.",detail:"Berdasarkan hukum kekekalan muatan listrik. Total arus yang masuk ke suatu simpul sama dengan total arus yang keluar.",formula:"\\sum I_{masuk} = \\sum I_{keluar}",tags:["KCL","node","simpul","analisis rangkaian"]},
   {en:"Kirchhoff's Voltage Law",id:"KVL — Hukum Kirchhoff Tegangan",kat:"rangkaian",desc:"Jumlah tegangan dalam satu loop tertutup = 0.",detail:"Berdasarkan hukum kekekalan energi. Tegangan naik (sumber) sama dengan tegangan jatuh (beban) dalam satu mesh.",formula:"\\sum V = 0 \\;\\; (\\text{satu loop})",tags:["KVL","loop","mesh","analisis rangkaian"]},
-  {en:"Impedance",id:"Impedansi",kat:"rangkaian",desc:"Hambatan total dalam rangkaian AC (resistif + reaktif).",detail:"Generalisasi resistansi untuk AC. Mencakup resistansi R, reaktansi induktif XL, dan reaktansi kapasitif XC.",formula:"Z = \\sqrt{R^2 + (X_L - X_C)^2}",tags:["reaktansi","AC","fasor","kompleks"]},
+  {en:"Impedance",id:"Impedansi",kat:"rangkaian",desc:"Hambatan total dalam rangkaian AC (resistif + reaktif).",detail:"Generalisasi resistansi untuk AC. Mencakup resistansi R, reaktansi induktif XL, dan reaktansi kapasitif XC.",formula:"Z = R + j(X_L-X_C) \\;\\; |Z|=\\sqrt{R^2+(X_L-X_C)^2}",tags:["reaktansi","AC","fasor","kompleks"]},
   {en:"Reactance",id:"Reaktansi",kat:"rangkaian",desc:"Oposisi terhadap arus AC dari induktor atau kapasitor.",detail:"Reaktansi induktif XL bertambah dengan frekuensi, reaktansi kapasitif XC berkurang dengan frekuensi.",formula:"X_L = \\omega L \\;\\; X_C = \\frac{1}{\\omega C}",tags:["induktif","kapasitif","frekuensi","AC"]},
   {en:"Resonance",id:"Resonansi",kat:"rangkaian",desc:"Kondisi saat XL = XC dalam rangkaian RLC.",detail:"Pada resonansi, impedansi minimal (seri) atau maksimal (paralel). Arus maksimum mengalir. Frekuensi resonansi tergantung L dan C.",formula:"f_r = \\frac{1}{2\\pi\\sqrt{LC}}",tags:["RLC","frekuensi resonansi","bandpass","filter"]},
   {en:"Voltage Divider",id:"Pembagi Tegangan",kat:"rangkaian",desc:"Rangkaian resistor untuk mendapatkan tegangan yang lebih kecil.",detail:"Dua resistor seri membagi tegangan input proporsional. Digunakan untuk bias transistor dan referensi tegangan.",formula:"V_{out} = V_{in} \\cdot \\frac{R_2}{R_1+R_2}",tags:["pembagi","bias","resistor","referensi"]},
@@ -376,256 +376,5 @@ const PROJECTS = [
         "alur_rangkaian": "Setelah kode diunggah, buka Serial Monitor di Arduino IDE untuk melihat hasil pengukuran jarak."
       }
     ]
-  }
-];
-
-const STANDARDS_DATA = {
-  puil2011: [
-    { title: "Warna Kabel Phase (L1/R)", color: "#92400e", label: "Cokelat" },
-    { title: "Warna Kabel Phase (L2/S)", color: "#000000", label: "Hitam" },
-    { title: "Warna Kabel Phase (L3/T)", color: "#6b7280", label: "Abu-abu" },
-    { title: "Warna Kabel Netral (N)", color: "#3b82f6", label: "Biru" },
-    { title: "Warna Kabel Ground (PE)", color: "#eab308", label: "Kuning-Hijau" }
-  ],
-  k3: [
-    { rule: "Gunakan APD LKP (Alat Pelindung Diri)", desc: "Helm, sepatu safety isolasi, sarung tangan karet." },
-    { rule: "LOTO (Lock Out Tag Out)", desc: "Kunci panel dan beri label saat melakukan pemeliharaan." },
-    { rule: "Gunakan Tool Terisolasi", desc: "Obeng/tang dengan rating tegangan (VDE) yang sesuai." },
-    { rule: "Cek Tegangan Sebelum Sentuh", desc: "Selalu gunakan Test Pen atau Multimeter untuk verifikasi." },
-    { rule: "Hindari Kontak Air", desc: "Pastikan area kerja kering dan tidak ada kebocoran air." }
-  ],
-  symbols: [
-    { name: "Resistor", iec: "Kotak Persegi Panjang", ansi: "Garis Zigzag" },
-    { name: "Kapasitor", iec: "Dua Garis Sejajar", ansi: "Satu Lurus, Satu Lengkung" },
-    { name: "Induktor", iec: "Kotak Hitam / Lengkung", ansi: "Lilitan Bergelombang" },
-    { name: "Potensiometer", iec: "Kotak dengan Panah", ansi: "Zigzag dengan Panah" },
-    { name: "Ground", iec: "Garis Horizontal Menipis", ansi: "Tiga Garis Horizontal" },
-    { name: "Dioda", iec: "Segitiga & Garis (Garis Tipis)", ansi: "Segitiga & Garis (Garis Tebal)" }
-  ],
-  kha: [
-    { size: "1.5 mm²", cap: "16 Ampere", load: "Max 3500 Watt" },
-    { size: "2.5 mm²", cap: "20 Ampere", load: "Max 4400 Watt" },
-    { size: "4.0 mm²", cap: "25 Ampere", load: "Max 5500 Watt" },
-    { size: "6.0 mm²", cap: "32 Ampere", load: "Max 7000 Watt" },
-    { size: "10.0 mm²", cap: "40 Ampere", load: "Max 8800 Watt" }
-  ],
-  ip_ratings: [
-    { code: "IP20", solid: "Benda > 12.5mm", liquid: "Tanpa Proteksi", usage: "Indoor / Panel" },
-    { code: "IP54", solid: "Tahan Debu (Terbatas)", liquid: "Percikan Air", usage: "Outdoor Standar" },
-    { code: "IP65", solid: "Kedap Debu Total", liquid: "Semprotan Air Kuat", usage: "Outdoor / Industri" },
-    { code: "IP67", solid: "Kedap Debu Total", liquid: "Rendaman (1m, 30m)", usage: "Extreme / Waterproof" },
-    { code: "IP68", solid: "Kedap Debu Total", liquid: "Rendaman Kontinu", usage: "Submersible / Dalam Air" }
-  ],
-  resistor_guide: {
-    e12: [10, 12, 15, 18, 22, 27, 33, 39, 47, 56, 68, 82],
-    bands: [
-      { color: "Hitam", val: 0, mult: "1", tol: "—" },
-      { color: "Cokelat", val: 1, mult: "10", tol: "±1%" },
-      { color: "Merah", val: 2, mult: "100", tol: "±2%" },
-      { color: "Emas", val: "—", mult: "0.1", tol: "±5%" },
-      { color: "Perak", val: "—", mult: "0.01", tol: "±10%" }
-    ]
-  },
-  smd_sizes: [
-    { imp: "0402", met: "1005", dim: "1.0 x 0.5 mm" },
-    { imp: "0603", met: "1608", dim: "1.6 x 0.8 mm" },
-    { imp: "0805", met: "2012", dim: "2.0 x 1.25 mm" },
-    { imp: "1206", met: "3216", dim: "3.2 x 1.6 mm" },
-    { imp: "2512", met: "6332", dim: "6.3 x 3.2 mm" }
-  ]
-};
-
-const AWG_TABLE = [
-  { awg: 10, area: 6.0 }, { awg: 12, area: 4.0 }, { awg: 14, area: 2.5 }, 
-  { awg: 16, area: 1.5 }, { awg: 17, area: 1.0 }, { awg: 18, area: 0.75 }, 
-  { awg: 20, area: 0.5 }, { awg: 22, area: 0.34 }, { awg: 24, area: 0.25 },
-  { awg: 26, area: 0.14 }, { awg: 28, area: 0.08 },{ awg: 30, area: 0.05 }
-];
-
-const CHIP_DATA = [
-  {
-    id: "ne555", 
-    name: "NE555 Precision Timer", 
-    type: "DIP-8",
-    desc: "IC timer legendaris untuk pembangkit pulsa, osilator, dan timer. Digunakan dalam berbagai proyek modulasi dan timing.",
-    pins: [
-      { n: 1, label: "GND", desc: "Ground (0V)" },
-      { n: 2, label: "TRIG", desc: "Trigger Input (< 1/3 Vcc)" },
-      { n: 3, label: "OUT", desc: "Output" },
-      { n: 4, label: "RESET", desc: "Reset (Active Low)" },
-      { n: 5, label: "CTRL", desc: "Control Voltage" },
-      { n: 6, label: "THRES", desc: "Threshold Input (> 2/3 Vcc)" },
-      { n: 7, label: "DISCH", desc: "Discharge" },
-      { n: 8, label: "VCC", desc: "Supply Voltage (4.5V - 15V)" }
-    ],
-    datasheet: "https://www.ti.com/lit/ds/symlink/ne555.pdf"
-  },
-  {
-    id: "lm741", 
-    name: "LM741 Operational Amplifier", 
-    type: "DIP-8",
-    desc: "Op-amp serbaguna untuk penguatan sinyal analog, filter, dan komparator.",
-    pins: [
-      { n: 1, label: "OFFSET-", desc: "Offset Null 1" },
-      { n: 2, label: "INV-", desc: "Inverting Input (-)" },
-      { n: 3, label: "NON-INV+", desc: "Non-Inverting Input (+)" },
-      { n: 4, label: "V-", desc: "Negative Supply / GND" },
-      { n: 5, label: "OFFSET+", desc: "Offset Null 2" },
-      { n: 6, label: "OUT", desc: "Output" },
-      { n: 7, label: "V+", desc: "Positive Supply (Vcc)" },
-      { n: 8, label: "NC", desc: "Not Connected" }
-    ],
-    datasheet: "https://www.ti.com/lit/ds/symlink/lm741.pdf"
-  },
-  {
-    id: "lm358", 
-    name: "LM358 Dual Op-Amp", 
-    type: "DIP-8",
-    desc: "Low power dual operational amplifier. Berisi dua op-amp dalam satu kemasan.",
-    pins: [
-      { n: 1, label: "OUT1", desc: "Output Op-Amp 1" },
-      { n: 2, label: "IN1-", desc: "Inverting Input Op-Amp 1" },
-      { n: 3, label: "IN1+", desc: "Non-Inverting Input Op-Amp 1" },
-      { n: 4, label: "GND", desc: "Ground / Negative Supply" },
-      { n: 5, label: "IN2+", desc: "Non-Inverting Input Op-Amp 2" },
-      { n: 6, label: "IN2-", desc: "Inverting Input Op-Amp 2" },
-      { n: 7, label: "OUT2", desc: "Output Op-Amp 2" },
-      { n: 8, label: "VCC", desc: "Positive Supply" }
-    ],
-    datasheet: "https://www.ti.com/lit/ds/symlink/lm358.pdf"
-  },
-  {
-    id: "7805", 
-    name: "LM7805 Regulator", 
-    type: "TO-220",
-    desc: "Fixed positive 5V voltage regulator. Sangat stabil untuk supply TTL dan Arduino.",
-    pins: [
-      { n: 1, label: "INPUT", desc: "Voltage Input (>7V)" },
-      { n: 2, label: "GND", desc: "Common Ground" },
-      { n: 3, label: "OUTPUT", desc: "Fixed 5V Output" }
-    ],
-    datasheet: "https://www.st.com/resource/en/datasheet/l78.pdf"
-  },
-  {
-    id: "lm317", 
-    name: "LM317 Adjustable Regulator", 
-    type: "TO-220",
-    desc: "Adjustable positive voltage regulator. Output bisa diatur dari 1.25V hingga 37V.",
-    pins: [
-      { n: 1, label: "ADJ", desc: "Adjustment Pin" },
-      { n: 2, label: "VOUT", desc: "Output Voltage" },
-      { n: 3, label: "VIN", desc: "Input Voltage" }
-    ],
-    datasheet: "https://www.ti.com/lit/ds/symlink/lm317.pdf"
-  },
-  {
-    id: "ams1117", 
-    name: "AMS1117-3.3 LDO", 
-    type: "TO-220",
-    desc: "3.3V Fixed Low Dropout Regulator. Populer untuk modul ESP8266 dan ESP32.",
-    pins: [
-      { n: 1, label: "GND/ADJ", desc: "Ground / Adjustment" },
-      { n: 2, label: "VOUT", desc: "Fixed 3.3V Output" },
-      { n: 3, label: "VIN", desc: "Input Voltage (Max 15V)" }
-    ],
-    datasheet: "http://www.advanced-monolithic.com/pdf/ds1117.pdf"
-  },
-  {
-    id: "74ls00", 
-    name: "74LS00 Quad NAND", 
-    type: "DIP-14",
-    desc: "Berisi 4 gerbang NAND 2-input. Universal logic element.",
-    pins: [
-      { n: 1, label: "1A", desc: "Input A1" }, { n: 2, label: "1B", desc: "Input B1" }, { n: 3, label: "1Y", desc: "Output Y1" },
-      { n: 4, label: "2A", desc: "Input A2" }, { n: 5, label: "2B", desc: "Input B2" }, { n: 6, label: "2Y", desc: "Output Y2" },
-      { n: 7, label: "GND", desc: "Ground" },
-      { n: 8, label: "3Y", desc: "Output Y3" }, { n: 9, label: "3A", desc: "Input A3" }, { n: 10, label: "3B", desc: "Input B3" },
-      { n: 11, label: "4Y", desc: "Output Y4" }, { n: 12, label: "4A", desc: "Input A4" }, { n: 13, label: "4B", desc: "Input B4" },
-      { n: 14, label: "VCC", desc: "Supply Voltage 5V" }
-    ],
-    datasheet: "https://www.ti.com/lit/ds/symlink/sn74ls00.pdf"
-  },
-  {
-    id: "74ls04", 
-    name: "74LS04 Hex Inverter", 
-    type: "DIP-14",
-    desc: "Berisi 6 gerbang NOT (Inverter).",
-    pins: [
-      { n: 1, label: "1A", desc: "Input A1" }, { n: 2, label: "1Y", desc: "Output Y1" },
-      { n: 3, label: "2A", desc: "Input A2" }, { n: 4, label: "2Y", desc: "Output Y2" },
-      { n: 5, label: "3A", desc: "Input A3" }, { n: 6, label: "3Y", desc: "Output Y3" },
-      { n: 7, label: "GND", desc: "Ground" },
-      { n: 8, label: "4Y", desc: "Output Y4" }, { n: 9, label: "4A", desc: "Input A4" },
-      { n: 10, label: "5Y", desc: "Output Y5" }, { n: 11, label: "5A", desc: "Input A5" },
-      { n: 12, label: "6Y", desc: "Output Y6" }, { n: 13, label: "6A", desc: "Input A6" },
-      { n: 14, label: "VCC", desc: "Supply Voltage 5V" }
-    ],
-    datasheet: "https://www.ti.com/lit/ds/symlink/sn74ls04.pdf"
-  },
-  {
-    id: "74ls08", 
-    name: "74LS08 Quad AND", 
-    type: "DIP-14",
-    desc: "Berisi 4 gerbang AND 2-input.",
-    pins: [
-      { n: 1, label: "1A", desc: "Input A1" }, { n: 2, label: "1B", desc: "Input B1" }, { n: 3, label: "1Y", desc: "Output Y1" },
-      { n: 4, label: "2A", desc: "Input A2" }, { n: 5, label: "2B", desc: "Input B2" }, { n: 6, label: "2Y", desc: "Output Y2" },
-      { n: 7, label: "GND", desc: "Ground" },
-      { n: 8, label: "3Y", desc: "Output Y3" }, { n: 9, label: "3A", desc: "Input A3" }, { n: 10, label: "3B", desc: "Input B3" },
-      { n: 11, label: "4Y", desc: "Output Y4" }, { n: 12, label: "4A", desc: "Input A4" }, { n: 13, label: "4B", desc: "Input B4" },
-      { n: 14, label: "VCC", desc: "Supply Voltage 5V" }
-    ],
-    datasheet: "https://www.ti.com/lit/ds/symlink/sn74ls08.pdf"
-  },
-  {
-    id: "uno", 
-    name: "Arduino Uno", 
-    type: "MCU",
-    desc: "Open-source microcontroller board berbasis ATmega328P.",
-    pins: [
-      { n: "POWER", label: "5V, 3.3V, GND", desc: "Power supply pins" },
-      { n: "ANALOG", label: "A0 - A5", desc: "10-bit Analog to Digital pins" },
-      { n: "DIGITAL", label: "0 - 13", desc: "Digital I/O pins, ~ include PWM" },
-      { n: "COMM", label: "I2C, SPI, UART", desc: "SDA (A4), SCL (A5), RX/TX (0,1)" }
-    ],
-    datasheet: "https://docs.arduino.cc/resources/datasheets/A000066-datasheet.pdf"
-  },
-  {
-    id: "esp32", 
-    name: "ESP32 SoC", 
-    type: "MCU",
-    desc: "Powerful Wi-Fi + BT + BLE MCU. Dual-core with wide peripheral support.",
-    pins: [
-      { n: "ADC/DAC", label: "GPIO 12-39", desc: "Analog inputs and Digital-to-Analog outputs" },
-      { n: "TOUCH", label: "TOUCH0-9", desc: "Capacitive touch sensing pins" },
-      { n: "POWER", label: "3V3, GND, EN", desc: "Enable and supply pins" },
-      { n: "COMM", label: "I2C, SPI, UART", desc: "Highly configurable peripheral pins" }
-    ],
-    datasheet: "https://www.espressif.com/sites/default/files/documentation/esp32_datasheet_en.pdf"
-  },
-  {
-    id: "l298n", 
-    name: "L298N Motor Driver", 
-    type: "MODULE",
-    desc: "Dual H-Bridge motor driver. Mengontrol arah dan kecepatan 2 motor DC.",
-    pins: [
-      { n: "POWER", label: "12V, 5V, GND", desc: "Power supply and logical supply" },
-      { n: "LOGIC", label: "IN1-4, ENA, ENB", desc: "Direction and PWM Speed controls" },
-      { n: "OUT", label: "OUT1-OUT4", desc: "Motor A and Motor B outputs" }
-    ],
-    datasheet: "https://www.epitome-e.com/L298N.pdf"
-  },
-  {
-    id: "pc817", 
-    name: "PC817 Optocoupler", 
-    type: "DIP-4",
-    desc: "Photocoupler untuk isolasi sinyal tegangan tinggi.",
-    pins: [
-      { n: 1, label: "ANODE", desc: "Input LED Anode" },
-      { n: 2, label: "CATHODE", desc: "Input LED Cathode" },
-      { n: 3, label: "EMITTER", desc: "Output Phototransistor Emitter" },
-      { n: 4, label: "COLLEC", desc: "Output Phototransistor Collector" }
-    ],
-    datasheet: "https://www.sharp-world.com/products/device/lineup/data/pdf/datasheet/pc817_e.pdf"
   }
 ];
