@@ -155,21 +155,6 @@
         console.error('[ElektroAPI] Project Generation Error:', error);
         throw error;
       }
-    },
-
-    // --- NEW: TECH NEWS API (GNEWS) ---
-    async fetchTechNews() {
-      const apiKey = "2b23538b513fbc92c5c464f5c1a7924a";
-      const url = `https://gnews.io/api/v4/search?q=teknologi+OR+elektro&lang=id&country=id&max=5&apikey=${apiKey}`;
-      
-      try {
-        const response = await fetch(url);
-        if (!response.ok) throw new Error(`GNews Error: ${response.status}`);
-        return await response.json();
-      } catch (e) {
-        console.error("[ElektroAPI] GNews Fetch Error:", e);
-        throw e;
-      }
     }
   };
 })();

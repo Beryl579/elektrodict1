@@ -55,8 +55,6 @@ window.addEventListener('load',()=>{
     const s=document.getElementById('splash-screen');
     if(s)s.classList.add('fade-out');
   },1500);
-  // Initialize Tech News
-  fetchTechNews();
 });
 // katexLoaded is handled below
 // pendingMathEls stores either: DOM element (for auto-render) or {el, latex} object (for katex.render)
@@ -352,53 +350,8 @@ function initTheme(){
 }
 
 // ═══════════════════════════════════════════════════════════
-// KILAS TEKNO — GNEWS API
+// KAMUS LOGIC
 // ═══════════════════════════════════════════════════════════
-let techNewsData = null;
-
-async function fetchTechNews() {
-  const container = document.getElementById('news-container');
-  if (!window.ElektroAPI || !container) return;
-
-  try {
-    const data = await window.ElektroAPI.fetchTechNews();
-    const articles = data.articles || [];
-    
-    const newsContainer = document.getElementById('news-container');
-    if (!newsContainer) return;
-
-    newsContainer.innerHTML = ''; // Clear loading text
-
-    if (articles.length === 0) {
-      document.getElementById('tech-news-wrapper')?.remove();
-      return;
-    }
-
-    articles.forEach(article => {
-      // 1. Check for valid image, fallback to a high-quality tech placeholder
-      const placeholder = "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=400&q=80";
-      const validImg = (article.image && article.image.startsWith('http')) ? article.image : placeholder;
-
-      // 2. Create the HTML string (Wrap the ENTIRE card in an <a> tag)
-      // Note: Map --text-color to --text, --muted-text-color to --text2, --surface-color to --bg3
-      const cardHTML = `
-        <a href="${article.url}" target="_blank" rel="noopener noreferrer" style="text-decoration: none; min-width: 280px; max-width: 300px; flex-shrink: 0; display: flex; flex-direction: column; background: var(--bg3); border-radius: 12px; overflow: hidden; scroll-snap-align: start; box-shadow: 0 4px 6px rgba(0,0,0,0.2); border: 1px solid var(--line); transition: transform 0.2s;">
-          <img src="${validImg}" alt="News Image" onerror="this.onerror=null; this.src='${placeholder}';" style="height: 140px; width: 100%; object-fit: cover;">
-          <div style="padding: 12px; display: flex; flex-direction: column; gap: 8px;">
-            <h4 style="margin: 0; color: var(--text); font-size: 1rem; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${article.title}</h4>
-            <span style="color: var(--text2); font-size: 0.8rem;">${new Date(article.publishedAt).toLocaleDateString('id-ID')}</span>
-          </div>
-        </a>
-      `;
-      // 3. Append to container
-      newsContainer.innerHTML += cardHTML;
-    });
-
-  } catch (error) {
-    console.error("News fetch failed:", error);
-    document.getElementById('tech-news-wrapper')?.remove();
-  }
-}
 
 let kat='Semua';
 
@@ -441,23 +394,12 @@ function renderGrid(data){
     html += `<div class="feature-grid">` + core.map((d,i)=>renderCard(d,i,true)).join('') + `</div>`;
   }
 
-  // --- KILAS TEKNO WRAPPER ---
-  html += `
-  <div id="tech-news-wrapper" style="margin: 2rem 0;">
-    <h3 class="slabel" style="margin-bottom: 1rem;">Kilas Tekno 🌐</h3>
-    <div id="news-container" class="hide-scrollbar" style="display: flex; gap: 16px; overflow-x: auto; padding-bottom: 12px; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;">
-      <p style="color: var(--text2); font-size: 0.9rem; padding: 10px;">Memuat berita teknologi terbaru...</p>
-    </div>
-  </div>`;
-
   if (regular.length > 0) {
     if (core.length > 0) html += `<div class="slabel" style="margin-top:24px;margin-bottom:12px;">Istilah Lainnya</div>`;
     html += `<div class="compact-list">` + regular.map((d,i)=>renderCard(d,i + core.length, false)).join('') + `</div>`;
   }
 
   g.innerHTML = html;
-  // Trigger news render if elements are now in DOM
-  if (typeof fetchTechNews === 'function') fetchTechNews();
 
   // render KaTeX formulas
   data.forEach((d,i)=>{
