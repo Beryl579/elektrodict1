@@ -83,8 +83,9 @@ Format:
 {"soal":[{"q":"pertanyaan","opts":["A","B","C","D"],"ans":0,"exp":"penjelasan teknis kenapa jawaban benar"}]}
 
 Rules:
-- "ans": Index jawaban benar (0-3).
-- Gunakan LaTeX KaTeX ($...$ atau $$...$$) untuk semua simbol fisik dan rumus.
+- Gunakan LaTeX KaTeX ($...$ atau $$...$$) untuk SEMUA simbol fisik, satuan, dan rumus (misal: $V$, $I$, $R$, $\Omega$, $\pi$, $\mu F$, $10\text{V}$). 
+- DILARANG menggunakan simbol unicode mentah seperti Ω atau π; gunakan \Omega dan \pi.
+- Kembalikan HANYA JSON valid tanpa teks penjelasan di luar JSON. Fokus pada akurasi unit.
 - Jangan gunakan markdown box, cukup raw JSON.`;
 
     try {
@@ -139,12 +140,12 @@ Rules:
     const box = document.getElementById('quiz-box');
     box.innerHTML = `
       <div class="q-num">SOAL ${qIdx + 1} / ${qList.length} &nbsp;·&nbsp; ${QUIZ_CATS[qCat]?.label || qCat} &nbsp;·&nbsp; ${qDiff.toUpperCase()}</div>
-      <div class="q-text" id="qtext">${q.q}</div>
+      <div class="q-text" id="qtext">${ElektroUtils.parseAIText(q.q)}</div>
       <div class="q-opts">
         ${q.opts.map((o, i) => `
           <button class="qopt" id="qopt${i}" onclick="ElektroQuiz.answerQuestion(${i})">
             <span class="q-letter">${'ABCD'[i]}</span>
-            <span id="qopttext${i}">${o}</span>
+            <span id="qopttext${i}">${ElektroUtils.parseAIText(o)}</span>
           </button>`).join('')}
       </div>
       <div class="q-explain" id="qexplain">💡 <strong>Penjelasan:</strong> <span id="qexptext"></span></div>`;
@@ -179,8 +180,12 @@ Rules:
 
     const expEl = document.getElementById('qexplain');
     expEl.classList.add('show');
-    document.getElementById('qexptext').textContent = q.exp;
-    setTimeout(() => ElektroUtils.renderMath(expEl), 50);
+    document.getElementById('qexptext').innerHTML = ElektroUtils.parseAIText(q.exp);
+    setTimeout(() => {
+      ElektroUtils.renderMath(document.getElementById('qtext'));
+      q.opts.forEach((_, k) => ElektroUtils.renderMath(document.getElementById('qopttext' + k)));
+      ElektroUtils.renderMath(expEl);
+    }, 50);
     this.updateNav();
   },
 
@@ -198,8 +203,12 @@ Rules:
     }
     const expEl = document.getElementById('qexplain');
     expEl.classList.add('show');
-    document.getElementById('qexptext').textContent = q.exp;
-    setTimeout(() => ElektroUtils.renderMath(expEl), 50);
+    document.getElementById('qexptext').innerHTML = ElektroUtils.parseAIText(q.exp);
+    setTimeout(() => {
+      ElektroUtils.renderMath(document.getElementById('qtext'));
+      q.opts.forEach((_, k) => ElektroUtils.renderMath(document.getElementById('qopttext' + k)));
+      ElektroUtils.renderMath(expEl);
+    }, 50);
   },
 
   /**

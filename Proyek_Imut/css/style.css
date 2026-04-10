@@ -30,25 +30,6 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
   100%{transform:translate(40px,-60px) scale(1.05)}
 }
 
-/* ── ONBOARDING MODAL (FIXED & EXTRACTED) ── */
-.onboard-overlay{
-  position:fixed;
-  inset:0;
-  width:100vw;
-  height:100vh;
-  background:rgba(0,0,0,0.9);
-  z-index:9999;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:20px;
-  opacity:0;
-  visibility:hidden;
-  transition:all 0.4s cubic-bezier(0.16, 1, 0.3, 1)
-}
-.onboard-overlay.on{opacity:1;visibility:visible}
-.onboard-overlay.hide{opacity:0;transform:scale(0.95);transition:0.3s ease}
-
 /* ── TOP NAV (desktop) ── */
 .nav{position:sticky;top:0;z-index:100;background:var(--glass);backdrop-filter:blur(var(--blur));border-bottom:1px solid var(--line);transition:all 0.3s ease;}
 .nav-inner{max-width:1400px;margin:0 auto;padding:0 20px;display:flex;align-items:center;gap:0;height:54px}
@@ -2510,7 +2491,11 @@ body.fade-out {
   justify-content: center;
   padding: 1rem;
   backdrop-filter: blur(8px);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
+.onboard-overlay.on { opacity: 1; visibility: visible; }
 
 .onboard-card {
   width: 100%;
@@ -2632,4 +2617,155 @@ body.fade-out {
   opacity: 0;
   transition: opacity 0.3s ease;
   pointer-events: none;
+}
+
+/* ── AI PARSER & KATEX SUPPORT ── */
+.katex-display-wrap {
+  margin: 1.5rem 0 !important;
+  padding: 1rem !important;
+  background: var(--bg4);
+  border-radius: 12px;
+  overflow-x: auto;
+  border: 1px solid var(--line);
+}
+.katex-inline-wrap {
+  padding: 0 2px;
+}
+.q-explain br {
+  margin-bottom: 0.5rem;
+}
+.q-text div { /* For the ▸ list items from parseAIText */
+  margin: 0.5rem 0;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   ── PRINT STYLES (PDF EXPORT) ──
+   ═══════════════════════════════════════════════════════════ */
+@media print {
+  /* Hide all non-essential UI */
+  .nav, .bottom-nav, .chat-sidebar, .fab, .chat-mobile, .overlay, 
+  .pdf-btn, .sbar, .fbar, .chat-fab-left-wrap, .wm, 
+  .sheet-overlay, .more-sheet, .theme-btn, #pwa-install-btn,
+  .csend, .cmic, .cback, .quick, .cinp, .chat-tooltip {
+    display: none !important;
+  }
+
+  /* Force white background and black text */
+  html, body {
+    background: #fff !important;
+    color: #000 !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  .page {
+    display: block !important;
+    margin: 0 !important;
+    padding: 20px !important;
+    width: 100% !important;
+    max-width: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    background: #fff !important;
+  }
+
+  /* Reset Card Styles for Printing */
+  .grid {
+    display: block !important;
+    gap: 0 !important;
+  }
+
+  .card {
+    background: #fff !important;
+    border: 1px solid #ddd !important;
+    border-radius: 8px !important;
+    margin-bottom: 20px !important;
+    padding: 15px !important;
+    box-shadow: none !important;
+    transform: none !important;
+    page-break-inside: avoid !important;
+  }
+
+  .card:hover { transform: none !important; }
+  .card::before { display: none !important; }
+
+  /* Expanded content visibility */
+  .cexp {
+    max-height: none !important;
+    opacity: 1 !important;
+    display: block !important;
+  }
+
+  .expbody {
+    border-top: 1px solid #eee !important;
+  }
+
+  /* Text colors for high contrast */
+  .cen, .cname, .ccore-title, .onboard-title {
+    color: #000 !important;
+  }
+
+  .cid, .cdesc, .etext, .ccore-sub, .onboard-sub {
+    color: #333 !important;
+  }
+
+  /* Formulas */
+  .eformula {
+    background: #f9f9f9 !important;
+    border: 1px solid #eee !important;
+  }
+  
+  .katex {
+    color: #000 !important;
+  }
+
+  /* Table of contents or specific print header if needed */
+  .smeta {
+    border-bottom: 2px solid #000 !important;
+    margin-bottom: 30px !important;
+    padding-bottom: 10px !important;
+  }
+
+  .slabel {
+    font-size: 24px !important;
+    font-weight: 800 !important;
+    color: #000 !important;
+    letter-spacing: normal !important;
+  }
+
+  .scount {
+    font-size: 14px !important;
+    color: #666 !important;
+  }
+
+  /* Footer for each page */
+  footer {
+    display: none !important;
+  }
+}
+
+/* ── KILAS TEKNO (NEWS CAROUSEL) ── */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.news-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent) !important;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3) !important;
+}
+
+body.light .news-card {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important;
+  background: #ffffff !important;
+  border: 1px solid #eeeeee !important;
+}
+
+body.light .news-card:hover {
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1) !important;
+  border-color: var(--accent) !important;
 }

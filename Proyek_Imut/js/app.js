@@ -55,6 +55,8 @@ window.addEventListener('load',()=>{
     const s=document.getElementById('splash-screen');
     if(s)s.classList.add('fade-out');
   },1500);
+  // Fetch Tech News on Init
+  fetchTechNews();
 });
 // katexLoaded is handled below
 // pendingMathEls stores either: DOM element (for auto-render) or {el, latex} object (for katex.render)
@@ -350,8 +352,71 @@ function initTheme(){
 }
 
 // ═══════════════════════════════════════════════════════════
-// KAMUS LOGIC
+// KILAS TEKNO — GNEWS API
 // ═══════════════════════════════════════════════════════════
+let techNewsData = null;
+
+async function fetchTechNews() {
+  const container = document.getElementById('news-container');
+  if (techNewsData) {
+    renderTechNewsCards();
+    return;
+  }
+  
+  if (container) container.innerHTML = '<div style="color:var(--text3);font-size:12px;padding:20px;">Memuat berita teknologi terbaru... 🌐</div>';
+
+  const MOCK_NEWS = [
+    { title: "Masa Depan Semikonduktor: Chip 2nm Mulai Diproduksi Massal", image: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&q=80", url: "#", publishedAt: new Date().toISOString() },
+    { title: "Inovasi Baterai Solid-State: Cas 5 Menit untuk Jarak 1000 KM", image: "https://images.unsplash.com/photo-1593941707882-a5bba14938c7?w=600&q=80", url: "#", publishedAt: new Date().toISOString() },
+    { title: "Robotika AI: Bagaimana Android Sekarang Bisa Menangani Komponen Mikro", image: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=600&q=80", url: "#", publishedAt: new Date().toISOString() },
+    { title: "Eksplorasi Ruang Angkasa: Satelit Baru Gunakan Tenaga Ion Murni", image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=600&q=80", url: "#", publishedAt: new Date().toISOString() },
+    { title: "Cybersecurity 2026: Ancaman Kuantum dan Cara Mengatasinya", image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=600&q=80", url: "#", publishedAt: new Date().toISOString() }
+  ];
+
+  try {
+    const apikey = "2b23538b513fbc92c5c464f5c1a7924a";
+    const url = `https://gnews.io/api/v4/search?q=teknologi+OR+elektro&lang=id&country=id&max=5&apikey=${apikey}`;
+    
+    // Periksa apakah berjalan di file:///
+    if (window.location.protocol === 'file:') {
+      throw new Error("CORS-FILE-PROTOCOL"); // Paksa mock data jika di lokal
+    }
+
+    const response = await fetch(url);
+    const data = await response.json();
+    
+    if (data.articles && data.articles.length > 0) {
+      techNewsData = data.articles;
+      renderTechNewsCards();
+    } else {
+      throw new Error("No articles found");
+    }
+  } catch (error) {
+    console.warn("News fetch failed (Using Mock Data):", error);
+    techNewsData = MOCK_NEWS;
+    renderTechNewsCards();
+  }
+}
+
+function renderTechNewsCards() {
+  const container = document.getElementById('news-container');
+  if (!container || !techNewsData) return;
+
+  container.innerHTML = techNewsData.map(article => {
+    const date = new Date(article.publishedAt).toLocaleDateString('id-ID', { day:'numeric', month:'short', year:'numeric' });
+    return `
+      <a href="${article.url}" target="_blank" style="text-decoration: none;">
+        <div class="news-card" style="background:var(--bg3); border-radius:12px; min-width:280px; max-width:300px; display:flex; flex-direction:column; scroll-snap-align:start; overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,0.15); border:1px solid var(--line); height:100%; transition:transform 0.2s ease;">
+          <img src="${article.image}" alt="news" style="height:140px; width:100%; object-fit:cover; background:var(--bg4);">
+          <div style="padding:12px; display:flex; flex-direction:column; gap:6px;">
+            <div style="font-weight:700; font-size:14px; color:var(--text); line-height:1.4; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">${article.title}</div>
+            <div style="font-size:11px; color:var(--text3);">${date}</div>
+          </div>
+        </div>
+      </a>
+    `;
+  }).join('');
+}
 
 let kat='Semua';
 
@@ -394,12 +459,26 @@ function renderGrid(data){
     html += `<div class="feature-grid">` + core.map((d,i)=>renderCard(d,i,true)).join('') + `</div>`;
   }
 
+  // --- KILAS TEKNO (NEWS CAROUSEL) ---
+  html += `
+    <div id="tech-news-wrapper" style="margin: 24px 0;">
+      <h3 class="slabel" style="margin-bottom:16px;">Kilas Tekno 🌐</h3>
+      <div id="news-container" class="hide-scrollbar" style="display: flex; gap: 16px; overflow-x: auto; padding-bottom: 12px; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;">
+        <div style="color:var(--text3);font-size:12px;padding:20px;">Memuat berita teknologi terbaru... 🌐</div>
+      </div>
+    </div>
+  `;
+
   if (regular.length > 0) {
     if (core.length > 0) html += `<div class="slabel" style="margin-top:24px;margin-bottom:12px;">Istilah Lainnya</div>`;
     html += `<div class="compact-list">` + regular.map((d,i)=>renderCard(d,i + core.length, false)).join('') + `</div>`;
   }
 
   g.innerHTML = html;
+  
+  // Render news content after grid is in DOM
+  if (techNewsData) renderTechNewsCards();
+  else fetchTechNews();
 
   // render KaTeX formulas
   data.forEach((d,i)=>{
@@ -753,10 +832,10 @@ function getRandomQuote(){
 }
 
 function showQuoteInDOM(quote, src){
-  const el = document.getElementById('dynamic-quote');
-  const srcEl = document.querySelector('.onboard-top .quote-src .bot-name');
+  const el = document.getElementById('oq-text');
+  const srcEl = document.getElementById('oq-src');
   if(el) el.textContent = `"${quote}"`;
-  if(srcEl) srcEl.textContent = src.replace(/^—\s*/, '').replace(/⚡$/, '').trim();
+  if(srcEl) srcEl.textContent = src;
 }
 
 function loadCachedQuote(){
@@ -811,18 +890,17 @@ function prefetchQuote(){
 }
 
 function initOnboarding(){
-  // returning user
-  if(localStorage.getItem('ed_visited')){
-    if(window.innerWidth <= 639 && !localStorage.getItem('ed_bnav_seen')){
-      setTimeout(()=>showHintBar(), 800);
+  // Tampilkan modal TIAP KALI akses (sesuai request user)
+  const ov = document.getElementById('onboardOverlay');
+  if(ov) {
+    ov.classList.add('on');
+    // tampilkan scroll hint di onboarding (mobile only)
+    if(window.innerWidth <= 639){
+      const hint = document.getElementById('onboard-scroll-hint');
+      if(hint) hint.style.display = 'flex';
     }
-    return;
   }
-  // new user — tampilkan scroll hint di onboarding (mobile only)
-  if(window.innerWidth <= 639){
-    const hint = document.getElementById('onboard-scroll-hint');
-    if(hint) hint.style.display = 'flex';
-  }
+
   // Tampilkan quote INSTAN — dari cache kalau ada, fallback ke pool hardcode
   const cached = loadCachedQuote();
   if(cached){
@@ -2253,27 +2331,48 @@ function cleanLatexForPDF(str) {
 
 function exportKamusPDF(){
   const btn = document.querySelector('.pdf-btn');
+  if(!btn) return;
+  
   const origText = btn.innerHTML;
   btn.innerHTML = '⏳ Menyiapkan PDF...';
   btn.disabled = true;
 
-  // Buka semua kartu biar konten detail dan rumusnya ke-print semua
-  const allCards = document.querySelectorAll('.card:not(.open)');
-  allCards.forEach(c => c.classList.add('open'));
+  // 1. Catat state kartu yang emang udah kebuka biar nanti ga ketutup pas cleanup
+  const previouslyOpen = [];
+  document.querySelectorAll('.card.open').forEach(c => previouslyOpen.push(c));
+
+  // 2. Buka semua kartu biar konten detail & rumus ke-print
+  const cardsToOpen = document.querySelectorAll('.card:not(.open)');
+  cardsToOpen.forEach(c => c.classList.add('open'));
   
-  // Tunggu 800ms sebentar biar LaTeX/KaTeX beres ngerender di dalam DOM
+  // 3. Setup cleanup function
+  const cleanup = () => {
+    // Kembalikan kartu yang tadi ditutup ke state semula
+    cardsToOpen.forEach(c => c.classList.remove('open'));
+    // Pastikan yang emang kebuka tetep kebuka
+    previouslyOpen.forEach(c => c.classList.add('open'));
+    
+    btn.innerHTML = origText;
+    btn.disabled = false;
+    window.removeEventListener('afterprint', cleanup);
+  };
+
+  // Listen untuk event setelah print dialog ditutup (OK atau Cancel)
+  window.addEventListener('afterprint', cleanup);
+
+  // 4. Tunggu sebentar biar KaTeX beres ngerender semua rumus yang baru kebuka
   setTimeout(()=>{
     try {
       window.print();
+      // Untuk browser yang tidak support afterprint, panggil cleanup manual setelah jeda lama
+      // tapi mayoritas browser modern sudah support afterprint.
+      setTimeout(cleanup, 2000); 
     } catch(e) {
       console.error(e);
       alert('Gagal generate PDF: ' + e.message);
+      cleanup();
     }
-    
-    // Kembalikan tombol statenya
-    btn.innerHTML = origText;
-    btn.disabled = false;
-  }, 1000);
+  }, 1200);
 }
 
 // ═══════════════════════════════════════════════════════════

@@ -19,15 +19,38 @@ const ElektroUtils = {
    * Fungsi internal untuk auto-render KaTeX
    */
   doRenderMath(el) {
-    if (typeof renderMathInElement !== 'function') return;
-    renderMathInElement(el, {
-      delimiters: [
-        { left: "$$", right: "$$", display: true },
-        { left: "\\(", right: "\\)", display: false },
-        { left: "\\[", right: "\\]", display: true }
-      ],
-      throwOnError: false
-    });
+    if (typeof renderMathInElement === 'function') {
+      renderMathInElement(el, {
+        delimiters: [
+          { left: "$$", right: "$$", display: true },
+          { left: "$", right: "$", display: false },
+          { left: "\\(", right: "\\)", display: false },
+          { left: "\\[", right: "\\]", display: true }
+        ],
+        throwOnError: false
+      });
+    }
+
+    // Juga render elemen yang sudah di-parse oleh parseAIText (menggunakan atribut data-latex)
+    if (typeof katex !== 'undefined') {
+      el.querySelectorAll('[data-latex]').forEach(span => {
+        const latex = span.getAttribute('data-latex');
+        const display = span.getAttribute('data-display') === 'true';
+        try {
+          // Render ke dalam span tersebut
+          katex.render(latex, span, { 
+            throwOnError: false, 
+            displayMode: display,
+            output: 'html'
+          });
+          // Hapus atribut agar tidak ter-render dua kali jika fungsi dipanggil lagi
+          span.removeAttribute('data-latex');
+        } catch (e) {
+          console.error("KaTeX render error:", e);
+          span.textContent = latex;
+        }
+      });
+    }
   },
 
   /**
