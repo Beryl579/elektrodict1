@@ -290,6 +290,10 @@ const CALCS = [
 // TAB NAVIGATION
 // ═══════════════════════════════════════════════════════════
 function switchTab(t){
+  // If more menu is open, close it
+  const moreSheet = document.getElementById('moreSheet');
+  if(moreSheet && moreSheet.classList.contains('on')) toggleMoreMenu();
+
   // fade out current
   document.querySelectorAll('.page.on').forEach(p=>{
     p.classList.remove('visible');
@@ -320,6 +324,15 @@ function switchTab(t){
   }
 
   window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function toggleMoreMenu(){
+  const sheet = document.getElementById('moreSheet');
+  const overlay = document.getElementById('moreOverlay');
+  if(!sheet || !overlay) return;
+  const isOpen = sheet.classList.toggle('on');
+  overlay.classList.toggle('on', isOpen);
+  document.body.style.overflow = isOpen ? 'hidden' : '';
 }
 
 // ── THEME TOGGLE ──
@@ -740,10 +753,10 @@ function getRandomQuote(){
 }
 
 function showQuoteInDOM(quote, src){
-  const el = document.getElementById('oq-text');
-  const srcEl = document.getElementById('oq-src');
+  const el = document.getElementById('dynamic-quote');
+  const srcEl = document.querySelector('.onboard-top .quote-src .bot-name');
   if(el) el.textContent = `"${quote}"`;
-  if(srcEl) srcEl.textContent = src;
+  if(srcEl) srcEl.textContent = src.replace(/^—\s*/, '').replace(/⚡$/, '').trim();
 }
 
 function loadCachedQuote(){

@@ -35,21 +35,67 @@
       <div class="splash-text">Elektro<span>Dict</span></div>
     </div>
   </div>
-  <!-- Ambient Background Blobs -->
-  <div class="ambient-bg">
-    <div class="blob blob-1"></div>
-    <div class="blob blob-2"></div>
-    <div class="blob blob-3"></div>
+
+<!-- ═══════ WELCOME/ONBOARDING MODAL ═══════ -->
+<div id="onboardOverlay" class="onboard-overlay">
+  <div class="onboard-card">
+    <div class="onboard-top">
+      <div class="onboard-quote-box">
+        <span class="quote-icon">💡</span>
+        <div class="quote-content">
+          <p id="dynamic-quote">Memuat kutipan inspiratif...</p>
+          <p class="quote-src">— <span class="bot-name">ElektroBot</span> ⚡</p>
+        </div>
+      </div>
+    </div>
+    <div class="onboard-body">
+      <div class="feat-list">
+        <div class="feat-card">
+          <span class="feat-icon">📖</span>
+          <div class="feat-info">
+            <strong>100+ Istilah Elektro</strong>
+            <span>"Lengkap dengan rumus & penjelasan"</span>
+          </div>
+        </div>
+        <div class="feat-card">
+          <span class="feat-icon">🧠</span>
+          <div class="feat-info">
+            <strong>Latihan Soal AI</strong>
+            <span>"Soal random di-generate tiap sesi"</span>
+          </div>
+        </div>
+        <div class="feat-card">
+          <span class="feat-icon">🛠️</span>
+          <div class="feat-info">
+            <strong>Lab Proyek (AI)</strong>
+            <span>"Rancang proyek mikrokontroler instan"</span>
+          </div>
+        </div>
+        <div class="feat-card">
+          <span class="feat-icon">💬</span>
+          <div class="feat-info">
+            <strong>ElektroBot (AI)</strong>
+            <span>"Tanya soal elektro, jawab gaul & akurat"</span>
+          </div>
+        </div>
+      </div>
+      <div class="onboard-actions">
+        <button class="btn-pdf" onclick="window.open('flowchart.html', '_blank')">📄 Lihat Diagram Arsitektur (PDF)</button>
+        <button class="btn-primary" onclick="closeOnboard()">Gas Belajar! ⚡</button>
+      </div>
+    </div>
   </div>
+</div>
+
 
 <nav class="nav">
   <div class="nav-inner">
-    <a class="logo" href="#"><div class="logo-mark">⚡</div><div class="logo-name">Elektro<span>Dict</span></div></a>
+    <a class="logo" href="#"><div class="logo-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="m13 2-10 12h9l-1 8 10-12h-9l1-8z"/></svg></div><div class="logo-name">Elektro<span>Dict</span></div></a>
 
     <div class="hbadge"><b id="totalCount">0</b> istilah</div>
-    <button class="theme-btn" id="themeBtn" onclick="toggleTheme()" title="Ganti tema">🌙</button>
+    <button class="theme-btn" id="themeBtn" onclick="toggleTheme()" title="Ganti tema"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg></button>
     <!-- PWA Install Button — muncul otomatis kalau browser support -->
-    <button class="theme-btn" id="pwa-install-btn" onclick="installPWA()" title="Install App" style="display:none">📲</button>
+    <button class="theme-btn" id="pwa-install-btn" onclick="installPWA()" title="Install App" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"></rect><path d="M12 18h.01"></path></svg></button>
     <a href="flowchart.html" target="_blank" rel="noopener" class="theme-btn" title="Lihat Arsitektur Sistem" style="display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:16px;">📄</a>
     <a href="https://berylsinaga.netlify.app/" target="_blank" rel="noopener" class="nav-portfolio" title="Portfolio Beryl Sinaga">🔗</a>
   </div>
@@ -63,76 +109,92 @@
   </button>
 </div>
 
-<!-- ═══════ BOTTOM NAV (mobile only) ═══════ -->
+<!-- ═══════ NAVIGATION (Dual Mode) ═══════ -->
 <div class="bottom-nav" id="bottomNav">
-  <button class="bnav-item on" id="bnav-kamus" onclick="switchTab('kamus')">
+  <!-- PRIMARY: Visible on Both (Mobile Bottom Bar & Desktop Sidebar) -->
+  <button class="bnav-item on mobile-visible" id="bnav-kamus" onclick="switchTab('kamus')">
     <div class="bnav-dot"></div>
-    <span class="bnav-icon">📖</span>
+    <span class="bnav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span>
     <span class="bnav-label">Kamus</span>
   </button>
-  <div class="hspace" style="height:12px;width:1px;opacity:0.2;background:var(--text3);margin:10px auto;display:none" id="bnav-sep-chat"></div>
-  <a class="bnav-item" href="chatbot" id="bnav-chat-page" style="text-decoration:none">
+
+
+
+  <button class="bnav-item mobile-visible" id="bnav-quiz" onclick="switchTab('quiz')">
     <div class="bnav-dot"></div>
-    <span class="bnav-icon">💬</span>
-    <span class="bnav-label" style="color:var(--accent);font-weight:700">Asisten AI</span>
-  </a>
-  <button class="bnav-item" id="bnav-quiz" onclick="switchTab('quiz')">
-    <div class="bnav-dot"></div>
-    <span class="bnav-icon">🧠</span>
+    <span class="bnav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 11 3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></span>
     <span class="bnav-label">Latihan</span>
   </button>
-  <button class="bnav-item" id="bnav-aivision" onclick="switchTab('aivision')">
+
+  <button class="bnav-item mobile-visible" id="bnav-aivision" onclick="switchTab('aivision')">
     <div class="bnav-dot"></div>
-    <span class="bnav-icon">🔬</span>
+    <span class="bnav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3"/><path d="M21 8V5a2 2 0 0 0-2-2h-3"/><path d="M3 16v3a2 2 0 0 0 2 2h3"/><path d="M16 21h3a2 2 0 0 0 2-2v-3"/></svg></span>
     <span class="bnav-label">AI Vision</span>
   </button>
-  <button class="bnav-item" id="bnav-kalk" onclick="switchTab('kalk')">
-    <div class="bnav-dot"></div>
-    <span class="bnav-icon">🔢</span>
+
+  <button class="bnav-item desktop-only" id="bnav-kalk" onclick="switchTab('kalk')">
+    <span class="bnav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="16" height="20" x="4" y="2" rx="2"/><line x1="8" x2="16" y1="6" y2="6"/><line x1="16" x2="16" y1="14" y2="18"/><path d="M16 10h.01"/><path d="M12 10h.01"/><path d="M8 10h.01"/><path d="M12 14h.01"/><path d="M8 14h.01"/><path d="M12 18h.01"/><path d="M8 18h.01"/></svg></span>
     <span class="bnav-label">Kalkulator</span>
   </button>
-  <button class="bnav-item" id="bnav-skema" onclick="switchTab('skema')">
-    <div class="bnav-dot"></div>
-    <span class="bnav-icon">⚡</span>
+
+  <button class="bnav-item desktop-only" id="bnav-skema" onclick="switchTab('skema')">
+    <span class="bnav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m13 2-10 12h9l-1 8 10-12h-9l1-8z"/></svg></span>
     <span class="bnav-label">Skema</span>
   </button>
-  <button class="bnav-item" id="bnav-projects" onclick="switchTab('projects')">
+
+  <button class="bnav-item mobile-visible" id="bnav-projects" onclick="switchTab('projects')">
     <div class="bnav-dot"></div>
-    <span class="bnav-icon">🛠️</span>
+    <span class="bnav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12"/><path d="M8 3v11a4 4 0 0 1 8 0V3"/><path d="M9 3h6"/><path d="M11 11h2"/><path d="M12 18v2"/><path d="M12 22h.01"/></svg></span>
     <span class="bnav-label">Lab Proyek</span>
   </button>
-  <button class="bnav-item" id="bnav-resistor" onclick="switchTab('resistor')">
-    <div class="bnav-dot"></div>
-    <span class="bnav-icon">🎨</span>
+
+  <button class="bnav-item desktop-only" id="bnav-resistor" onclick="switchTab('resistor')">
+    <span class="bnav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></span>
     <span class="bnav-label">Resistor</span>
   </button>
-  <button class="bnav-item" id="bnav-konversi" onclick="switchTab('konversi')">
-    <div class="bnav-dot"></div>
-    <span class="bnav-icon">🔄</span>
+
+  <button class="bnav-item desktop-only" id="bnav-konversi" onclick="switchTab('konversi')">
+    <span class="bnav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 2.1l4 4-4 4"/><path d="M3 12.2v-2a4 4 0 0 1 4-4h14"/><path d="M7 21.9l-4-4 4-4"/><path d="M21 11.8v2a4 4 0 0 1-4 4H3"/></svg></span>
     <span class="bnav-label">Konversi</span>
   </button>
-  <button class="bnav-item" id="bnav-timeline" onclick="switchTab('timeline')">
-    <div class="bnav-dot"></div>
-    <span class="bnav-icon">🕰️</span>
+
+  <button class="bnav-item desktop-only" id="bnav-timeline" onclick="switchTab('timeline')">
+    <span class="bnav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
     <span class="bnav-label">Timeline</span>
   </button>
-  <button class="bnav-item" id="bnav-logika" onclick="switchTab('logika')">
-    <div class="bnav-dot"></div>
-    <span class="bnav-icon">🕹️</span>
+
+  <button class="bnav-item desktop-only" id="bnav-logika" onclick="switchTab('logika')">
+    <span class="bnav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/><path d="M15 3v18"/><path d="M3 9h18"/><path d="M3 15h18"/></svg></span>
     <span class="bnav-label">Logika</span>
   </button>
-  <button class="bnav-item" id="bnav-synth" onclick="switchTab('synth')">
-    <div class="bnav-dot"></div>
-    <span class="bnav-icon">🎸</span>
+
+  <button class="bnav-item desktop-only" id="bnav-synth" onclick="switchTab('synth')">
+    <span class="bnav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></span>
     <span class="bnav-label">Synth</span>
   </button>
 
+  <button class="bnav-item desktop-only" id="bnav-stds" onclick="switchTab('standards')">
+    <span class="bnav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></span>
+    <span class="bnav-label">Standar & K3</span>
+  </button>
+
+  <button class="bnav-item desktop-only" id="bnav-chips" onclick="switchTab('chips')">
+    <span class="bnav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 2v2M12 2v2M17 2v2M7 20v2M12 20v2M17 20v2M2 7h2M2 12h2M2 17h2M20 7h2M20 12h2M20 17h2M9 9h6v6H9z"/></svg></span>
+    <span class="bnav-label">Chip Lib</span>
+  </button>
+
+  <!-- MOBILE ONLY: 'Lainnya' Toggle -->
+  <button class="bnav-item mobile-visible" id="bnav-more" onclick="toggleMoreMenu()">
+    <div class="bnav-dot"></div>
+    <span class="bnav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></span>
+    <span class="bnav-label">Lainnya</span>
+  </button>
 </div>
 <div class="page on" id="page-kamus">
   <div class="sbar"><div class="sfield">
-    <span class="sico">🔍</span>
+    <span class="sico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg></span>
     <input type="text" id="searchInput" placeholder="Cari istilah, rumus, kata kunci..." oninput="onSearch(this.value)">
-    <button class="sx" id="sx" onclick="clearSearch()">×</button>
+    <button class="sx" id="sx" onclick="clearSearch()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button>
   </div></div>
   <div class="fbar" id="fbar"></div>
   <div class="kbody">
@@ -154,10 +216,10 @@
     <aside class="chat-sidebar">
       <div style="display:flex;flex-direction:column;height:100%">
         <div class="chead">
-          <div class="cava">⚡</div>
+          <div class="cava"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg></div>
           <div class="cinfo"><div class="cname">ElektroBot</div><div class="cstatus">● online</div></div>
-          <button class="ctts" id="tts-toggle-D" onclick="toggleTTS()" title="Mute/Unmute Suara">🔊</button>
-          <button class="cback" onclick="clearChatHistory()" title="Reset riwayat chat" style="font-size:13px">🗑️</button>
+          <button class="ctts" id="tts-toggle-D" onclick="toggleTTS()" title="Mute/Unmute Suara"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg></button>
+          <button class="cback" onclick="clearChatHistory()" title="Reset riwayat chat" style="font-size:13px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg></button>
         </div>
         <div class="cmsgs" id="msgsD"></div>
         <div class="quick">
@@ -175,7 +237,7 @@
           </select>
         </div>
         <div class="cinp">
-          <button class="cmic" id="mic-btn-D" onclick="toggleMic('D')" title="Bicara dengan AI (Voice)">🎤</button>
+          <button class="cmic" id="mic-btn-D" onclick="toggleMic('D')" title="Bicara dengan AI (Voice)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" x2="12" y1="19" y2="22"></line></svg></button>
           <textarea id="inpD" placeholder="Tanya soal elektro..." rows="1" oninput="rz(this)" onkeydown="ck(event,'D')"></textarea>
           <button class="csend" id="sendD" onclick="send('D')">
             <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg>
@@ -264,17 +326,17 @@
 
 <!-- FAB + MOBILE CHAT -->
 <!-- FAB + MOBILE CHAT -->
-<button class="fab" id="chat-fab-trigger" onclick="openM()" title="Chat ElektroBot (SaaS Mode)">⚡</button>
+<button class="fab" id="chat-fab-trigger" onclick="openM()" title="Chat ElektroBot (SaaS Mode)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg></button>
 <div class="chat-mobile" id="chatM">
   <div class="chat-handle"></div>
   <div class="chead" style="background:linear-gradient(135deg,var(--accent-d),var(--bg3));border-bottom:1px solid var(--line2)">
-    <div class="cava" style="background:linear-gradient(135deg,var(--accent),#2563eb);border:none;box-shadow:0 2px 8px #4f9cf966">⚡</div>
+    <div class="cava" style="background:linear-gradient(135deg,var(--accent),#2563eb);border:none;box-shadow:0 2px 8px #4f9cf966"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg></div>
     <div class="cinfo">
       <div class="cname">ElektroBot</div>
       <div class="cstatus">● online · siap bantu</div>
     </div>
-    <button class="ctts" id="tts-toggle-M" onclick="toggleTTS()" title="Mute/Unmute Suara">🔊</button>
-    <button class="cback" onclick="clearChatHistory()" title="Reset chat" style="font-size:13px;margin-right:4px">🗑️</button>
+    <button class="ctts" id="tts-toggle-M" onclick="toggleTTS()" title="Mute/Unmute Suara"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg></button>
+    <button class="cback" onclick="clearChatHistory()" title="Reset chat" style="font-size:13px;margin-right:4px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg></button>
     <button class="cback" onclick="closeM()" style="font-weight:700;font-size:16px">×</button>
   </div>
   <div class="cmsgs" id="msgsM"></div>
@@ -293,7 +355,7 @@
     </select>
   </div>
   <div class="cinp">
-    <button class="cmic" id="mic-btn-M" onclick="toggleMic('M')" title="Bicara dengan AI (Voice)">🎤</button>
+    <button class="cmic" id="mic-btn-M" onclick="toggleMic('M')" title="Bicara dengan AI (Voice)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" x2="12" y1="19" y2="22"></line></svg></button>
     <textarea id="inpM" placeholder="Tanya soal elektro..." rows="1" oninput="rz(this)" onkeydown="ck(event,'M')"></textarea>
     <button class="csend" id="sendM" onclick="send('M')">
       <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg>
@@ -335,11 +397,58 @@
   </div>
 </div>
 
+<!-- ═══════ LAINNYA BOTTOM SHEET ═══════ -->
+<div class="sheet-overlay" id="moreOverlay" onclick="toggleMoreMenu()"></div>
+<div class="more-sheet" id="moreSheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-grid">
+    <div class="sheet-item" onclick="switchTab('standards')">
+      <div class="sheet-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></div>
+      <div class="sheet-label">Standar & K3</div>
+    </div>
+    <div class="sheet-item" onclick="switchTab('chips')">
+      <div class="sheet-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px;"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 2v2M12 2v2M17 2v2M7 20v2M12 20v2M17 20v2M2 7h2M2 12h2M2 17h2M20 7h2M20 12h2M20 17h2M9 9h6v6H9z"/></svg></div>
+      <div class="sheet-label">Chip Lib</div>
+    </div>
+    <div class="sheet-item" onclick="switchTab('kalk')">
+      <div class="sheet-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px;"><rect width="16" height="20" x="4" y="2" rx="2"/><line x1="8" x2="16" y1="6" y2="6"/><line x1="16" x2="16" y1="14" y2="18"/><path d="M16 10h.01"/><path d="M12 10h.01"/><path d="M8 10h.01"/><path d="M12 14h.01"/><path d="M8 14h.01"/><path d="M12 18h.01"/><path d="M8 18h.01"/></svg></div>
+      <div class="sheet-label">Kalkulator</div>
+    </div>
+    <div class="sheet-item" onclick="switchTab('skema')">
+      <div class="sheet-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px;"><path d="m13 2-10 12h9l-1 8 10-12h-9l1-8z"/></svg></div>
+      <div class="sheet-label">Skema</div>
+    </div>
+
+    <div class="sheet-item" onclick="switchTab('resistor')">
+      <div class="sheet-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px;"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+      <div class="sheet-label">Resistor</div>
+    </div>
+    <div class="sheet-item" onclick="switchTab('konversi')">
+      <div class="sheet-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px;"><path d="M17 2.1l4 4-4 4"/><path d="M3 12.2v-2a4 4 0 0 1 4-4h14"/><path d="M7 21.9l-4-4 4-4"/><path d="M21 11.8v2a4 4 0 0 1-4 4H3"/></svg></div>
+      <div class="sheet-label">Konversi</div>
+    </div>
+    <div class="sheet-item" onclick="switchTab('timeline')">
+      <div class="sheet-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+      <div class="sheet-label">Timeline</div>
+    </div>
+    <div class="sheet-item" onclick="switchTab('logika')">
+      <div class="sheet-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px;"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/><path d="M15 3v18"/><path d="M3 9h18"/><path d="M3 15h18"/></svg></div>
+      <div class="sheet-label">Logika</div>
+    </div>
+    <div class="sheet-item" onclick="switchTab('synth')">
+      <div class="sheet-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px;"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div>
+      <div class="sheet-label">Synth</div>
+    </div>
+  </div>
+</div>
+
 <!-- ═══════ ONBOARDING POPUP ═══════ -->
+
+<!-- ═══════ ONBOARDING POPUP (EXTRACTED) ═══════ -->
 <div class="onboard-overlay" id="onboardOverlay">
   <div class="onboard-card">
     <div class="onboard-quote">
-      <div class="onboard-quote-icon">💡</div>
+      <div class="onboard-quote-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px;"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A5 5 0 0 0 8 8c0 1.3.5 2.6 1.5 3.5.8.8 1.3 1.5 1.5 2.5"></path><path d="M9 18h6"></path><path d="M10 22h4"></path></svg></div>
       <div class="onboard-quote-text" id="oq-text"></div>
       <div class="onboard-quote-src" id="oq-src"></div>
     </div>
@@ -347,13 +456,13 @@
       <div class="onboard-title">⚡ ElektroDict</div>
       <div class="onboard-sub">Kamus teknik elektro lengkap — buat mahasiswa, oleh mahasiswa</div>
       <div class="onboard-features">
-        <div class="onboard-feat"><span class="onboard-feat-icon">📖</span><div class="onboard-feat-info"><div class="onboard-feat-title">100+ Istilah Elektro</div><div class="onboard-feat-desc">Lengkap dengan rumus & penjelasan</div></div></div>
-        <div class="onboard-feat"><span class="onboard-feat-icon">🧠</span><div class="onboard-feat-info"><div class="onboard-feat-title">Latihan Soal AI</div><div class="onboard-feat-desc">Soal random di-generate tiap sesi</div></div></div>
-        <div class="onboard-feat"><span class="onboard-feat-icon">🔢</span><div class="onboard-feat-info"><div class="onboard-feat-title">Kalkulator & Konversi</div><div class="onboard-feat-desc">Ohm, RLC, daya, satuan & lainnya</div></div></div>
-        <div class="onboard-feat"><span class="onboard-feat-icon">💬</span><div class="onboard-feat-info"><div class="onboard-feat-title">ElektroBot AI</div><div class="onboard-feat-desc">Tanya soal elektro, jawab gaul & akurat</div></div></div>
+        <div class="onboard-feat"><span class="onboard-feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5z"></path><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path></svg></span><div class="onboard-feat-info"><div class="onboard-feat-title">100+ Istilah Elektro</div><div class="onboard-feat-desc">Lengkap dengan rumus & penjelasan</div></div></div>
+        <div class="onboard-feat"><span class="onboard-feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;"><circle cx="12" cy="12" r="10"></circle><path d="M9 12h6"></path><path d="M12 9v6"></path></svg></span><div class="onboard-feat-info"><div class="onboard-feat-title">Latihan Soal AI</div><div class="onboard-feat-desc">Soal random di-generate tiap sesi</div></div></div>
+        <div class="onboard-feat"><span class="onboard-feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;"><rect x="4" y="2" width="16" height="20" rx="2"></rect><line x1="8" y1="6" x2="16" y2="6"></line><line x1="16" y1="14" x2="16" y2="18"></line><path d="M16 10h.01"></path><path d="M12 10h.01"></path><path d="M8 10h.01"></path><path d="M12 14h.01"></path><path d="M8 14h.01"></path><path d="M12 18h.01"></path><path d="M8 18h.01"></path></svg></span><div class="onboard-feat-info"><div class="onboard-feat-title">Kalkulator & Konversi</div><div class="onboard-feat-desc">Ohm, RLC, daya, satuan & lainnya</div></div></div>
+        <div class="onboard-feat"><span class="onboard-feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path><path d="M8 9h8"></path><path d="M8 13h6"></path></svg></span><div class="onboard-feat-info"><div class="onboard-feat-title">ElektroBot AI</div><div class="onboard-feat-desc">Tanya soal elektro, jawab gaul & akurat</div></div></div>
         <!-- scroll hint step — only shown on mobile -->
         <div class="onboard-feat" id="onboard-scroll-hint" style="display:none;background:var(--accent-d);border-color:#2a5a9a">
-          <span class="onboard-feat-icon">👆</span>
+          <span class="onboard-feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;"><path d="m18 15-6-6-6 6"></path></svg></span>
           <div class="onboard-feat-info">
             <div class="onboard-feat-title" style="color:var(--accent)">Menu bisa digeser!</div>
             <div class="onboard-feat-desc">Tombol navigasi di bawah bisa di-<strong>swipe kanan</strong> untuk akses semua fitur</div>
@@ -463,7 +572,7 @@
 </div>
 
 <!-- ═══════ FEEDBACK FLOATING BUTTON (Replacing Tour) ═══════ -->
-<a href="Saran dan masukan.html" class="tour-trigger" title="Kirim Saran & Masukan" style="text-decoration:none; display:flex; align-items:center; justify-content:center; padding:0; line-height:1;">💡</a>
+<a href="Saran dan masukan.html" class="tour-trigger" title="Kirim Saran & Masukan" style="text-decoration:none; display:flex; align-items:center; justify-content:center; padding:0; line-height:1;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A5 5 0 0 0 8 8c0 1.3.5 2.6 1.5 3.5.8.8 1.3 1.5 1.5 2.5"></path><path d="M9 18h6"></path><path d="M10 22h4"></path></svg></a>
 
 <!-- ═══════ LOGIKA SIMULATOR PAGE ═══════ -->
 <div class="page" id="page-logika">
@@ -620,6 +729,174 @@
         <div class="s-info-title">💡 Tahukah Kamu?</div>
         <p>Frekuensi 50Hz adalah standar listrik PLN di Indonesia. Kamu bisa mendengarnya sebagai "hum" atau dengungan rendah. Coba naikkan ke 1kHz untuk mendengar "test tone" audio standar.</p>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ STANDAR & K3 PAGE ═══════ -->
+<div class="page" id="page-standards">
+  <div class="projects-wrap">
+    <div class="projects-header">
+      <h2>🛡️ Standar & K3 Listrik</h2>
+      <p>Pedoman Keselamatan & Standarisasi Teknik Elektro (PUIL/IEC)</p>
+    </div>
+
+    <div class="std-grid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:20px; margin-top:30px;">
+      <!-- PUIL Summary -->
+      <div class="std-card" style="background:var(--bg2); border:1px solid var(--line); border-radius:16px; padding:24px;">
+        <div style="font-size:12px; color:var(--accent); font-family:var(--mono); margin-bottom:8px;">SNI 0225:2011</div>
+        <h3 style="font-size:18px; margin-bottom:12px;">RUANG LINGKUP PUIL 2011</h3>
+        <p style="color:var(--text2); font-size:14px; line-height:1.6;">Standar wajib untuk perancangan, pemasangan, dan pemeriksaan instalasi listrik di Indonesia.</p>
+        <div style="margin-top:15px; display:flex; flex-direction:column; gap:8px;">
+          <div style="padding:10px; background:var(--bg3); border-radius:8px; font-size:12px;"><b>Proteksi:</b> Terhadap kejut listrik, efek termal, dan arus lebih.</div>
+          <div style="padding:10px; background:var(--bg3); border-radius:8px; font-size:12px;"><b>Isolasi:</b> Pengaturan jarak aman dan bahan isolasi standar.</div>
+        </div>
+      </div>
+
+      <!-- Wiring Color -->
+      <div class="std-card" style="background:var(--bg2); border:1px solid var(--line); border-radius:16px; padding:24px;">
+        <h3 style="font-size:18px; margin-bottom:12px;">IDENTIFIKASI WARNA KABEL</h3>
+        <div style="display:grid; gap:8px;">
+          <div style="display:flex; align-items:center; gap:10px; background:#000; padding:8px; border-radius:6px; color:#fff; font-size:12px;"><div style="width:12px; height:12px; background:#000; border:1px solid #333;"></div> Fasa R (L1) - Hitam</div>
+          <div style="display:flex; align-items:center; gap:10px; background:#795548; padding:8px; border-radius:6px; color:#fff; font-size:12px;"><div style="width:12px; height:12px; background:#795548; border:1px solid #333;"></div> Fasa S (L2) - Cokelat</div>
+          <div style="display:flex; align-items:center; gap:10px; background:#9e9e9e; padding:8px; border-radius:6px; color:#fff; font-size:12px;"><div style="width:12px; height:12px; background:#9e9e9e; border:1px solid #333;"></div> Fasa T (L3) - Abu-abu</div>
+          <div style="display:flex; align-items:center; gap:10px; background:#2196f3; padding:8px; border-radius:6px; color:#fff; font-size:12px;"><div style="width:12px; height:12px; background:#2196f3; border:1px solid #333;"></div> Netral (N) - Biru</div>
+          <div style="display:flex; align-items:center; gap:10px; background:linear-gradient(90deg, #ffeb3b 50%, #4caf50 50%); padding:8px; border-radius:6px; color:#333; font-size:12px; font-weight:bold;">Ground (PE) - Kuning/Hijau</div>
+        </div>
+      </div>
+
+      <!-- PPE PPE -->
+      <div class="std-card" style="background:var(--bg2); border:1px solid var(--line); border-radius:16px; padding:24px;">
+        <h3 style="font-size:18px; margin-bottom:12px;">APD (ALAT PELINDUNG DIRI)</h3>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+          <div style="text-align:center; padding:10px; background:var(--bg3); border-radius:10px;">
+            <div style="font-size:20px;">⛑️</div>
+            <div style="font-size:10px; margin-top:5px; font-weight:bold;">Helm Safety</div>
+          </div>
+          <div style="text-align:center; padding:10px; background:var(--bg3); border-radius:10px;">
+            <div style="font-size:20px;">🧤</div>
+            <div style="font-size:10px; margin-top:5px; font-weight:bold;">Sarung Tangan</div>
+          </div>
+          <div style="text-align:center; padding:10px; background:var(--bg3); border-radius:10px;">
+            <div style="font-size:20px;">🥾</div>
+            <div style="font-size:10px; margin-top:5px; font-weight:bold;">Sepatu Isolasi</div>
+          </div>
+          <div style="text-align:center; padding:10px; background:var(--bg3); border-radius:10px;">
+            <div style="font-size:20px;">🛡️</div>
+            <div style="font-size:10px; margin-top:5px; font-weight:bold;">Webbing Belt</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div style="margin-top:30px; padding:20px; background:rgba(255,158,11,0.05); border:1px solid var(--amber); border-radius:12px;">
+      <h4 style="color:var(--amber); margin-bottom:8px;">⚠️ Prinsip Keselamatan</h4>
+      <p style="font-size:13px; color:var(--text2); line-height:1.6;">Wajib melakukan <b>LOTO (Lock Out Tag Out)</b> sebelum pengerjaan. Pastikan tegangan nol dengan <i>multimeter</i> bersertifikat sebelum menyentuh konduktor.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ CHIP LIBRARY PAGE ═══════ -->
+<div class="page" id="page-chips">
+  <div class="projects-wrap">
+    <div class="projects-header">
+      <h2>💾 Chip Library</h2>
+      <p>Database Datasheet & Pinout IC Populer</p>
+    </div>
+
+    <div class="chips-grid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:24px; margin-top:30px;">
+      
+      <!-- NE555 -->
+      <div class="chip-card">
+        <div class="chip-visual-wrap">
+          <div class="chip-ic-body">
+            <!-- Pins Left -->
+            <div class="chip-ic-pin p-l" style="top:15px;"></div>
+            <div class="chip-ic-pin p-l" style="top:40px;"></div>
+            <div class="chip-ic-pin p-l" style="top:65px;"></div>
+            <div class="chip-ic-pin p-l" style="top:90px;"></div>
+            <!-- Pins Right -->
+            <div class="chip-ic-pin p-r" style="top:15px;"></div>
+            <div class="chip-ic-pin p-r" style="top:40px;"></div>
+            <div class="chip-ic-pin p-r" style="top:65px;"></div>
+            <div class="chip-ic-pin p-r" style="top:90px;"></div>
+            
+            <div class="chip-ic-label">NE555</div>
+          </div>
+        </div>
+        <div class="chip-info">
+          <h3 style="font-size:16px; margin-bottom:8px;">NE555 Precision Timer</h3>
+          <p style="font-size:12px; color:var(--text2); line-height:1.5;">IC legendaris yang digunakan untuk timer, pulsa, dan osilasi.</p>
+          <div style="margin-top:12px; font-size:11px; font-family:var(--mono);">
+            <div style="color:var(--text3); margin-bottom:4px;">Pin Utama:</div>
+            <div style="display:flex; flex-wrap:wrap; gap:5px;">
+              <span style="padding:2px 6px; background:var(--bg3); border-radius:4px;">1: GND</span>
+              <span style="padding:2px 6px; background:var(--bg3); border-radius:4px;">3: OUT</span>
+              <span style="padding:2px 6px; background:var(--bg3); border-radius:4px;">8: VCC</span>
+            </div>
+          </div>
+        </div>
+        <a href="https://www.ti.com/lit/ds/symlink/ne555.pdf" target="_blank" class="chip-source">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3"/></svg>
+          Source: Texas Instruments
+        </a>
+      </div>
+
+      <!-- ESP32 -->
+      <div class="chip-card">
+        <div class="chip-visual-wrap" style="height:140px;">
+          <div class="chip-ic-body" style="width:90px; height:90px; border-radius:8px;">
+            <div style="font-size:9px; color:#444; position:absolute; bottom:5px;">Espressif</div>
+            <div class="chip-ic-label">ESP32</div>
+            <!-- Pins scattered for MCU look -->
+            <div class="chip-ic-pin p-l" style="top:10px;"></div><div class="chip-ic-pin p-l" style="top:30px;"></div><div class="chip-ic-pin p-l" style="top:50px;"></div><div class="chip-ic-pin p-l" style="top:70px;"></div>
+            <div class="chip-ic-pin p-r" style="top:10px;"></div><div class="chip-ic-pin p-r" style="top:30px;"></div><div class="chip-ic-pin p-r" style="top:50px;"></div><div class="chip-ic-pin p-r" style="top:70px;"></div>
+          </div>
+        </div>
+        <div class="chip-info">
+          <h3 style="font-size:16px; margin-bottom:8px;">ESP32-WROOM-32</h3>
+          <p style="font-size:12px; color:var(--text2); line-height:1.5;">Powerful Wi-Fi + BT + BLE MCU untuk aplikasi IoT modern.</p>
+          <div style="margin-top:12px; font-size:11px; font-family:var(--mono);">
+            <div style="color:var(--text3); margin-bottom:4px;">Specs:</div>
+            <div style="display:flex; flex-wrap:wrap; gap:5px;">
+              <span style="padding:2px 6px; background:var(--bg3); border-radius:4px;">Dual Core</span>
+              <span style="padding:2px 6px; background:var(--bg3); border-radius:4px;">2.4GHz WiFi</span>
+            </div>
+          </div>
+        </div>
+        <a href="https://www.espressif.com/sites/default/files/documentation/esp32-wroom-32_datasheet_en.pdf" target="_blank" class="chip-source">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3"/></svg>
+          Source: Espressif Systems
+        </a>
+      </div>
+
+      <!-- 74HC00 -->
+      <div class="chip-card">
+        <div class="chip-visual-wrap">
+          <div class="chip-ic-body" style="width:110px; height:60px;">
+            <div class="chip-ic-label" style="font-size:10px;">74HC00</div>
+            <!-- More pins for Logic IC -->
+            <div class="chip-ic-pin p-l" style="top:5px;"></div><div class="chip-ic-pin p-l" style="top:15px;"></div><div class="chip-ic-pin p-l" style="top:25px;"></div><div class="chip-ic-pin p-l" style="top:35px;"></div><div class="chip-ic-pin p-l" style="top:45px;"></div>
+            <div class="chip-ic-pin p-r" style="top:5px;"></div><div class="chip-ic-pin p-r" style="top:15px;"></div><div class="chip-ic-pin p-r" style="top:25px;"></div><div class="chip-ic-pin p-r" style="top:35px;"></div><div class="chip-ic-pin p-r" style="top:45px;"></div>
+          </div>
+        </div>
+        <div class="chip-info">
+          <h3 style="font-size:16px; margin-bottom:8px;">74HC00 Quad NAND</h3>
+          <p style="font-size:12px; color:var(--text2); line-height:1.5;">IC Logika dasar yang berisi 4 gerbang NAND 2-input.</p>
+          <div style="margin-top:12px; font-size:11px; font-family:var(--mono);">
+            <div style="color:var(--text3); margin-bottom:4px;">Data:</div>
+            <div style="display:flex; flex-wrap:wrap; gap:5px;">
+              <span style="padding:2px 6px; background:var(--bg3); border-radius:4px;">CMOS</span>
+              <span style="padding:2px 6px; background:var(--bg3); border-radius:4px;">2V - 6V</span>
+            </div>
+          </div>
+        </div>
+        <a href="https://www.st.com/resource/en/datasheet/74hc00.pdf" target="_blank" class="chip-source">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3"/></svg>
+          Source: STMicroelectronics
+        </a>
+      </div>
+
     </div>
   </div>
 </div>
