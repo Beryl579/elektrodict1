@@ -380,8 +380,34 @@ const CORE_ICONS = {
 };
 
 function renderGrid(data){
-  const g=document.getElementById('grid'),e=document.getElementById('empty');
-  if(!data.length){g.innerHTML='';e.style.display='block';return;}
+  const g=document.getElementById('grid'), e=document.getElementById('empty');
+  const googleWrap = document.getElementById('google-search-wrap');
+  const emptyMsg = document.getElementById('empty-msg');
+  const searchInput = document.getElementById('searchInput');
+  const query = searchInput ? searchInput.value.trim() : '';
+
+  if(!data.length){
+    g.innerHTML='';
+    googleWrap.innerHTML = '';
+    
+    if (query) {
+      emptyMsg.innerHTML = `Istilah "<strong>${query}</strong>" tidak ditemukan.`;
+      googleWrap.innerHTML = `
+        <a href="https://www.google.com/search?q=${encodeURIComponent(query + ' teknik elektro')}" 
+           target="_blank" 
+           class="pdf-btn" 
+           style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px; background: var(--accent); border: 1px solid var(--line); color: var(--bg);">
+           <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor"><path d="M12.48 10.92v3.28h7.84c-.24 1.84-2.12 5.4-7.84 5.4-4.92 0-8.96-4.04-8.96-8.96 0-4.92 4.04-8.96 8.96-8.96 2.84 0 4.76 1.16 5.84 2.2l2.56-2.48C19.24 1.92 16.12 0 12.48 0 5.6 0 0 5.6 0 12.48s5.6 12.48 12.48 12.48c7.2 0 12-5.08 12-12.2 0-.84-.08-1.48-.2-2.12l-11.8 0z"/></svg>
+           Cari di Google
+        </a>
+      `;
+    } else {
+      emptyMsg.textContent = '🔌 Tidak ada istilah yang cocok di kategori ini';
+    }
+    
+    e.style.display='block';
+    return;
+  }
   e.style.display='none';
 
   const core = data.filter(d => CORE_IDS.includes(d.id?.toLowerCase()));
