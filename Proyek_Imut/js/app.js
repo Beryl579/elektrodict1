@@ -406,8 +406,8 @@ function renderTechNewsCards() {
     const date = new Date(article.publishedAt).toLocaleDateString('id-ID', { day:'numeric', month:'short', year:'numeric' });
     return `
       <a href="${article.url}" target="_blank" style="text-decoration: none;">
-        <div class="news-card" style="background:var(--bg3); border-radius:12px; min-width:280px; max-width:300px; display:flex; flex-direction:column; scroll-snap-align:start; overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,0.15); border:1px solid var(--line); height:100%; transition:transform 0.2s ease;">
-          <img src="${article.image}" alt="news" style="height:140px; width:100%; object-fit:cover; background:var(--bg4);">
+        <div class="news-card" style="background:var(--bg3); border-radius:12px; min-width:280px; max-width:300px; flex-shrink:0; display:flex; flex-direction:column; scroll-snap-align:start; overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,0.15); border:1px solid var(--line); height:100%; transition:transform 0.2s ease;">
+          <img src="${article.image}" alt="Berita Tekno" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=400&q=80';" style="height: 140px; width: 100%; object-fit: cover;">
           <div style="padding:12px; display:flex; flex-direction:column; gap:6px;">
             <div style="font-weight:700; font-size:14px; color:var(--text); line-height:1.4; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">${article.title}</div>
             <div style="font-size:11px; color:var(--text3);">${date}</div>
