@@ -1719,7 +1719,7 @@ async function send(v){
   showDots('D'); showDots('M');
 
   try{
-    const mc = document.getElementById('modelChoiceD') ? document.getElementById('modelChoiceD').value : 'qwen/qwen-2.5-72b-instruct:free';
+    const mc = document.getElementById('modelChoiceD') ? document.getElementById('modelChoiceD').value : 'llama-3.3-70b-versatile';
     // Sanitize history: remove 'file', 'image', or any extra properties before API call
     const cleanHistory = chatHistory.slice(-10).map(m => ({ role: m.role, content: m.content }));
     const data = await callAI({model: mc, messages:[{role:'system',content:SYS},...cleanHistory]});
