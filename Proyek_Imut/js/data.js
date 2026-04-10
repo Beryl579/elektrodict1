@@ -139,9 +139,14 @@ const QUIZ_CATS = {
   sinyal:     { label:'Sinyal',      emoji:'📡', desc:'Filter, modulasi, FFT, bandwidth, dB' },
   pengukuran: { label:'Pengukuran',  emoji:'📏', desc:'Multimeter, osiloskop, LCR meter' },
   terbarukan: { label:'EBT',         emoji:'☀️', desc:'Panel surya, turbin angin, inverter, MPPT, baterai' },
+  instalasi:  { label:'Instalasi',   emoji:'🧤', desc:'PUIL, grounding, kabel, MCB, safety K3' },
+  mesin:      { label:'Mesin',       emoji:'⚙️', desc:'Motor DC/AC, generator, trafo, mesin industri' },
+  kontrol:    { label:'Kontrol',     emoji:'🕹️', desc:'PLC, PID, feedback loop, robotik, otomasi' },
+  komunikasi: { label:'Komunikasi',  emoji:'📶', desc:'I2C, SPI, UART, RS485, protokol IoT' },
+  distribusi: { label:'Distribusi',  emoji:'🗼', desc:'Gardu induk, transmisi SUTET, isolator, jaringan' },
 };
 
-const KAT = ['Semua','dasar','komponen','rangkaian','daya','elektronika','pengukuran','digital','sinyal','terbarukan'];
+const KAT = ['Semua','dasar','komponen','rangkaian','daya','elektronika','pengukuran','digital','sinyal','terbarukan','instalasi','mesin','kontrol','komunikasi','distribusi'];
 
 const TIMELINE = [
   // ERA KUNO

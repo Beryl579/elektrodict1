@@ -713,15 +713,25 @@ body.light .chat-fab-left{
 .quiz-cats{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:16px}
 .qcat-btn{font-size:12px;font-family:var(--mono);padding:6px 16px;border-radius:99px;cursor:pointer;border:1px solid var(--line);background:transparent;color:var(--text2);transition:all .15s}
 .qcat-btn:hover,.qcat-btn.on{background:var(--accent-d);border-color:#2a2a2a;color:var(--accent)}
+.quiz-divider {
+  width: 40px;
+  height: 2px;
+  background: var(--line);
+  margin: 12px auto 20px;
+  border-radius: 2px;
+  opacity: 0.8;
+}
+
 
 /* start button */
 .quiz-start-btn{
   display:block;width:100%;max-width:300px;margin:0 auto 20px;
   background:var(--accent);border:none;border-radius:var(--r);
-  color:#fff;font-family:var(--font);font-size:14px;font-weight:600;
+  color:var(--bg);font-family:var(--font);font-size:14.5px;font-weight:700;
   padding:12px;cursor:pointer;transition:all .15s;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
-.quiz-start-btn:hover{background:#444444;transform:translateY(-1px)}
+.quiz-start-btn:hover:not(:disabled){background:var(--text);color:var(--bg);transform:translateY(-1px);box-shadow:0 6px 20px rgba(0,0,0,0.2)}
 .quiz-start-btn:disabled{background:var(--bg4);color:var(--text3);cursor:not-allowed;transform:none}
 
 /* loading state */
