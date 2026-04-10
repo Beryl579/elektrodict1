@@ -58,53 +58,44 @@ const ElektroQuiz = {
     document.getElementById('ql-sub').textContent = `Generate 5 soal · ${cat.label} · Level ${qDiff}`;
     document.getElementById('quiz-start-btn').disabled = true;
 
-    const diffMap = {
-      mudah: 'tingkat kesulitan mudah (konsep dasar, hafalan, definisi)',
-      sedang: 'tingkat kesulitan sedang (perhitungan sederhana, aplikasi rumus)',
-      sulit: 'tingkat kesulitan sulit (analisis rangkaian, perhitungan multi-langkah, konsep lanjut)'
-    };
-
-    const prompt = `Kamu adalah ElektroBot, Senior Electronics Engineer dan expert pembuat soal ujian kompetensi teknik (SMK/D3/S1). 
+    const prompt = `Kamu adalah ElektroBot, Senior Electronics Engineer dan expert pembuat soal kompetensi teknik. 
 Buat TEPAT 5 soal pilihan ganda tentang topik "${cat.label}" (${cat.desc}).
 
 DOMAIN SOAL:
 1. Logic: Analisis logika rangkaian.
 2. Formulas: Gunakan perhitungan unit (V, I, R, P, F, H, dll).
-3. Troubleshooting: Diagnosa kerusakan sirkuit (Sirkuit Putus, Short, dll).
+3. Troubleshooting: Diagnosa kerusakan sirkuit.
 
 DIFFICULTY LEVEL: ${qDiff.toUpperCase()}
-- MUDAH: Konsep dasar, komponen, dan rumus dasar (V=IR).
-- SEDANG: Aplikasi rumus, kombinasi seri/paralel, dan pembagi tegangan.
-- SULIT: Analisis daya, reaktansi, desain sistem, dan troubleshooting multi-langkah.
 
 JSON OUTPUT REQUIREMENT:
-Kembalikan HANYA JSON valid tanpa teks penjelasan di luar JSON. Fokus pada akurasi unit.
+Kembalikan HANYA JSON valid. Fokus pada akurasi unit.
 Format:
-{"soal":[{"q":"pertanyaan","opts":["A","B","C","D"],"ans":0,"exp":"penjelasan teknis kenapa jawaban benar"}]}
+{"soal":[{"q":"pertanyaan","opts":["A","B","C","D"],"ans":0,"exp":"penjelasan"}]}
 
-Rules:
-- Gunakan LaTeX KaTeX ($...$ atau $$...$$) untuk SEMUA simbol fisik, satuan, dan rumus (misal: $V$, $I$, $R$, $\Omega$, $\pi$, $\mu F$, $10\text{V}$). 
-- DILARANG menggunakan simbol unicode mentah seperti Ω atau π; gunakan \Omega dan \pi.
-- Kembalikan HANYA JSON valid tanpa teks penjelasan di luar JSON. Fokus pada akurasi unit.
-- Jangan gunakan markdown box, cukup raw JSON.`;
+CRITICAL RULES FOR VALID JSON:
+- SEMUA simbol fisik, satuan, dan rumus HARUS menggunakan LaTeX KaTeX ($...$ atau $$...$$).
+- WAJIB MENGGUNAKAN DOUBLE-BACKSLASH (\\\\) untuk semua simbol LaTeX di dalam JSON agar tidak merusak parsing (misal: \\\\Omega, \\\\pi, \\\\text{V}, \\\\frac{1}{2}).
+- DILARANG menggunakan simbol unicode mentah seperti Ω atau π.
+- Jangan gunakan markdown box, berikan RAW JSON string saja.`;
 
     try {
       const data = await ElektroAPI.generateQuiz(prompt);
-
-      let raw = data.choices?.[0]?.message?.content || '';
-      raw = raw.replace(/```json\s*|```\s*/gi, '').trim();
+      const raw = data.choices?.[0]?.message?.content || "";
+      
+      const cleanJSON = ElektroUtils.cleanAIJSON(raw);
+      if (!cleanJSON) throw new Error("AI tidak mengembalikan format JSON yang dapat dibaca.");
 
       let parsed;
       try {
-        parsed = JSON.parse(raw);
-      } catch (_) {
-        const start = raw.indexOf('{');
-        const end = raw.lastIndexOf('}');
-        if (start === -1 || end <= start) throw new Error('Format JSON tidak valid dari AI');
-        parsed = JSON.parse(raw.slice(start, end + 1));
+        parsed = JSON.parse(cleanJSON);
+      } catch (e) {
+        console.error("Original raw:", raw);
+        console.error("Cleaned JSON:", cleanJSON);
+        throw new Error(`Gagal memproses data soal: ${e.message}`);
       }
 
-      if (!parsed.soal || parsed.soal.length === 0) throw new Error('Soal kosong');
+      if (!parsed.soal || parsed.soal.length === 0) throw new Error("Soal kosong");
 
       qList = parsed.soal;
       qIdx = 0; qScore = 0; qWrong = 0; qAnswered = Array(qList.length).fill(null);

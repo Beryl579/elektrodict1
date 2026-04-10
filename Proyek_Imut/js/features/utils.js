@@ -145,6 +145,44 @@ const ElektroUtils = {
     });
 
     return result;
+  },
+
+  /**
+   * Pembersih JSON dari AI — menangani markdown, garbage text, dan karakter spesial yang tidak ter-escape.
+   */
+  cleanAIJSON(raw) {
+    if (!raw) return "";
+    let clean = raw.trim();
+
+    // 1. Hapus Markdown Code Blocks
+    clean = clean.replace(/```json\s*|```\s*/gi, "").trim();
+
+    // 2. Ambil blok JSON antara { dan } atau [ dan ]
+    const firstBrace = clean.indexOf("{");
+    const lastBrace = clean.lastIndexOf("}");
+    const firstBracket = clean.indexOf("[");
+    const lastBracket = clean.lastIndexOf("]");
+
+    let start = -1, end = -1;
+    if (firstBrace !== -1 && (firstBracket === -1 || firstBrace < firstBracket)) {
+      start = firstBrace; end = lastBrace;
+    } else if (firstBracket !== -1) {
+      start = firstBracket; end = lastBracket;
+    }
+
+    if (start !== -1 && end !== -1 && end > start) {
+      clean = clean.slice(start, end + 1);
+    }
+
+    // 3. Basic "Healing" — menangani raw backslashes yang sering merusak JSON dari AI
+    // Kita ganti backslash tunggal yang bukan bagian dari escape sequence JSON standar
+    // Regex: cari \ yang TIDAK diikuti oleh " \ / b f n r t u
+    // Namun ini berisiko jika AI sudah meng-escape sebagian.
+    // Cara lebih aman: Ganti semua \ dengan \\ KECUALI yang sudah di-escape atau di depan karakter kontrol.
+    // Untuk saat ini, kita gunakan pembersihan spasi baris baru yang sering merusak parsing
+    clean = clean.replace(/\n/g, " ").replace(/\r/g, "");
+
+    return clean;
   }
 };
 
