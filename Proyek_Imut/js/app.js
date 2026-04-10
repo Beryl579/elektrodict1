@@ -55,7 +55,7 @@ window.addEventListener('load',()=>{
     const s=document.getElementById('splash-screen');
     if(s)s.classList.add('fade-out');
   },1500);
-  // Fetch Tech News on Init
+  // Initialize Tech News
   fetchTechNews();
 });
 // katexLoaded is handled below
@@ -358,64 +358,46 @@ let techNewsData = null;
 
 async function fetchTechNews() {
   const container = document.getElementById('news-container');
-  if (techNewsData) {
-    renderTechNewsCards();
-    return;
-  }
-  
-  if (container) container.innerHTML = '<div style="color:var(--text3);font-size:12px;padding:20px;">Memuat berita teknologi terbaru... 🌐</div>';
-
-  const MOCK_NEWS = [
-    { title: "Masa Depan Semikonduktor: Chip 2nm Mulai Diproduksi Massal", image: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&q=80", url: "#", publishedAt: new Date().toISOString() },
-    { title: "Inovasi Baterai Solid-State: Cas 5 Menit untuk Jarak 1000 KM", image: "https://images.unsplash.com/photo-1593941707882-a5bba14938c7?w=600&q=80", url: "#", publishedAt: new Date().toISOString() },
-    { title: "Robotika AI: Bagaimana Android Sekarang Bisa Menangani Komponen Mikro", image: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=600&q=80", url: "#", publishedAt: new Date().toISOString() },
-    { title: "Eksplorasi Ruang Angkasa: Satelit Baru Gunakan Tenaga Ion Murni", image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=600&q=80", url: "#", publishedAt: new Date().toISOString() },
-    { title: "Cybersecurity 2026: Ancaman Kuantum dan Cara Mengatasinya", image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=600&q=80", url: "#", publishedAt: new Date().toISOString() }
-  ];
+  if (!window.ElektroAPI || !container) return;
 
   try {
-    const apikey = "2b23538b513fbc92c5c464f5c1a7924a";
-    const url = `https://gnews.io/api/v4/search?q=teknologi+OR+elektro&lang=id&country=id&max=5&apikey=${apikey}`;
+    const data = await window.ElektroAPI.fetchTechNews();
+    const articles = data.articles || [];
     
-    // Periksa apakah berjalan di file:///
-    if (window.location.protocol === 'file:') {
-      throw new Error("CORS-FILE-PROTOCOL"); // Paksa mock data jika di lokal
+    const newsContainer = document.getElementById('news-container');
+    if (!newsContainer) return;
+
+    newsContainer.innerHTML = ''; // Clear loading text
+
+    if (articles.length === 0) {
+      document.getElementById('tech-news-wrapper')?.remove();
+      return;
     }
 
-    const response = await fetch(url);
-    const data = await response.json();
-    
-    if (data.articles && data.articles.length > 0) {
-      techNewsData = data.articles;
-      renderTechNewsCards();
-    } else {
-      throw new Error("No articles found");
-    }
-  } catch (error) {
-    console.warn("News fetch failed (Using Mock Data):", error);
-    techNewsData = MOCK_NEWS;
-    renderTechNewsCards();
-  }
-}
+    articles.forEach(article => {
+      // 1. Check for valid image, fallback to a high-quality tech placeholder
+      const placeholder = "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=400&q=80";
+      const validImg = (article.image && article.image.startsWith('http')) ? article.image : placeholder;
 
-function renderTechNewsCards() {
-  const container = document.getElementById('news-container');
-  if (!container || !techNewsData) return;
-
-  container.innerHTML = techNewsData.map(article => {
-    const date = new Date(article.publishedAt).toLocaleDateString('id-ID', { day:'numeric', month:'short', year:'numeric' });
-    return `
-      <a href="${article.url}" target="_blank" style="text-decoration: none;">
-        <div class="news-card" style="background:var(--bg3); border-radius:12px; min-width:280px; max-width:300px; flex-shrink:0; display:flex; flex-direction:column; scroll-snap-align:start; overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,0.15); border:1px solid var(--line); height:100%; transition:transform 0.2s ease;">
-          <img src="${article.image}" alt="Berita Tekno" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=400&q=80';" style="height: 140px; width: 100%; object-fit: cover;">
-          <div style="padding:12px; display:flex; flex-direction:column; gap:6px;">
-            <div style="font-weight:700; font-size:14px; color:var(--text); line-height:1.4; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">${article.title}</div>
-            <div style="font-size:11px; color:var(--text3);">${date}</div>
+      // 2. Create the HTML string (Wrap the ENTIRE card in an <a> tag)
+      // Note: Map --text-color to --text, --muted-text-color to --text2, --surface-color to --bg3
+      const cardHTML = `
+        <a href="${article.url}" target="_blank" rel="noopener noreferrer" style="text-decoration: none; min-width: 280px; max-width: 300px; flex-shrink: 0; display: flex; flex-direction: column; background: var(--bg3); border-radius: 12px; overflow: hidden; scroll-snap-align: start; box-shadow: 0 4px 6px rgba(0,0,0,0.2); border: 1px solid var(--line); transition: transform 0.2s;">
+          <img src="${validImg}" alt="News Image" onerror="this.onerror=null; this.src='${placeholder}';" style="height: 140px; width: 100%; object-fit: cover;">
+          <div style="padding: 12px; display: flex; flex-direction: column; gap: 8px;">
+            <h4 style="margin: 0; color: var(--text); font-size: 1rem; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${article.title}</h4>
+            <span style="color: var(--text2); font-size: 0.8rem;">${new Date(article.publishedAt).toLocaleDateString('id-ID')}</span>
           </div>
-        </div>
-      </a>
-    `;
-  }).join('');
+        </a>
+      `;
+      // 3. Append to container
+      newsContainer.innerHTML += cardHTML;
+    });
+
+  } catch (error) {
+    console.error("News fetch failed:", error);
+    document.getElementById('tech-news-wrapper')?.remove();
+  }
 }
 
 let kat='Semua';
@@ -459,15 +441,14 @@ function renderGrid(data){
     html += `<div class="feature-grid">` + core.map((d,i)=>renderCard(d,i,true)).join('') + `</div>`;
   }
 
-  // --- KILAS TEKNO (NEWS CAROUSEL) ---
+  // --- KILAS TEKNO WRAPPER ---
   html += `
-    <div id="tech-news-wrapper" style="margin: 24px 0;">
-      <h3 class="slabel" style="margin-bottom:16px;">Kilas Tekno 🌐</h3>
-      <div id="news-container" class="hide-scrollbar" style="display: flex; gap: 16px; overflow-x: auto; padding-bottom: 12px; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;">
-        <div style="color:var(--text3);font-size:12px;padding:20px;">Memuat berita teknologi terbaru... 🌐</div>
-      </div>
+  <div id="tech-news-wrapper" style="margin: 2rem 0;">
+    <h3 class="slabel" style="margin-bottom: 1rem;">Kilas Tekno 🌐</h3>
+    <div id="news-container" class="hide-scrollbar" style="display: flex; gap: 16px; overflow-x: auto; padding-bottom: 12px; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;">
+      <p style="color: var(--text2); font-size: 0.9rem; padding: 10px;">Memuat berita teknologi terbaru...</p>
     </div>
-  `;
+  </div>`;
 
   if (regular.length > 0) {
     if (core.length > 0) html += `<div class="slabel" style="margin-top:24px;margin-bottom:12px;">Istilah Lainnya</div>`;
@@ -475,10 +456,8 @@ function renderGrid(data){
   }
 
   g.innerHTML = html;
-  
-  // Render news content after grid is in DOM
-  if (techNewsData) renderTechNewsCards();
-  else fetchTechNews();
+  // Trigger news render if elements are now in DOM
+  if (typeof fetchTechNews === 'function') fetchTechNews();
 
   // render KaTeX formulas
   data.forEach((d,i)=>{

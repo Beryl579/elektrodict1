@@ -2743,29 +2743,3 @@ body.fade-out {
     display: none !important;
   }
 }
-
-/* ── KILAS TEKNO (NEWS CAROUSEL) ── */
-.hide-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-.hide-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-.news-card:hover {
-  transform: translateY(-4px);
-  border-color: var(--accent) !important;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.3) !important;
-}
-
-body.light .news-card {
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05) !important;
-  background: #ffffff !important;
-  border: 1px solid #eeeeee !important;
-}
-
-body.light .news-card:hover {
-  box-shadow: 0 8px 24px rgba(0,0,0,0.1) !important;
-  border-color: var(--accent) !important;
-}
