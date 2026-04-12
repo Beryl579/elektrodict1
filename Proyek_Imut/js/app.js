@@ -3413,11 +3413,26 @@ async function generateDiagram(userPrompt) {
     const data = await window.ElektroAPI.chat(messages, { temperature: 0.2 });
     const responseText = data.choices[0].message.content;
 
-    // 3. Regex Extraction
-    const match = responseText.match(/```mermaid\n([\s\S]*?)```/);
+    // DEBUG: Simpan di console buat kalau gagal
+    console.log("[Lab Skema] AI Response:", responseText);
+
+    // 3. Regex Extraction - More flexible (handling space/newline after tag)
+    // Mencari: ```mermaid[optional stuff] \n [code] \n ```
+    let match = responseText.match(/```mermaid\s*([\s\S]*?)```/i);
+    
+    // Fallback: Jika tak ada tag mermaid, cari blok kode APA PUN (sebagai last resort)
+    if(!match) {
+      match = responseText.match(/```\s*([\s\S]*?)```/);
+    }
+
     if (match && match[1]) {
-      const code = match[1].trim();
+      let code = match[1].trim();
       
+      // Bersihkan jika masih ada kata 'mermaid' di awal (fallback case)
+      if(code.toLowerCase().startsWith('mermaid')) {
+        code = code.replace(/^mermaid/i, '').trim();
+      }
+
       // 4. Render
       out.innerHTML = `<div class="mermaid">${code}</div>`;
       
