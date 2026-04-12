@@ -290,6 +290,11 @@ const CALCS = [
 // TAB NAVIGATION
 // ═══════════════════════════════════════════════════════════
 function switchTab(t){
+  // Cek apakah ada sesi kuis yang aktif dan tab yang dituju bukan kuis
+  if (window.activeQuizSession && t !== 'quiz') {
+    alert("Selesaikan dulu soalnya bro! ⚡🏁");
+    return;
+  }
   // If more menu is open, close it
   const moreSheet = document.getElementById('moreSheet');
   if(moreSheet && moreSheet.classList.contains('on')) toggleMoreMenu();
@@ -533,6 +538,8 @@ function selectQuizCat(btn, c){
 async function startAIQuiz(){
   if(!qCat || qGenerating) return;
   qGenerating = true;
+  window.activeQuizSession = true; // Kunci tab navigasi
+
   const cat = QUIZ_CATS[qCat];
 
   // reset UI
@@ -592,6 +599,7 @@ Aturan:
     renderQuestion();
 
   } catch(err) {
+    window.activeQuizSession = false; // Buka kunci navigasi jika gagal
     document.getElementById('quiz-loading').classList.remove('show');
     document.getElementById('quiz-box').style.display = 'block';
     document.getElementById('quiz-box').innerHTML = `
@@ -677,6 +685,7 @@ function updateNav(){
 }
 
 function showScore(){
+  window.activeQuizSession = false; // Buka kunci navigasi setelah soal selesai
   document.getElementById('quiz-score').classList.add('show');
   document.getElementById('quiz-box').style.display='none';
   document.getElementById('quiz-nav').style.display='none';

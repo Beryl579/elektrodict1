@@ -3,501 +3,813 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Flow Diagram — ElektroDict System</title>
-<!-- html2canvas and jsPDF libraries for high quality PDF capture -->
+<title>ElektroDict — System Architecture</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #08080e;
+    --s1: #10101a;
+    --s2: #181825;
+    --s3: #22223a;
+    --border: #2a2a40;
+    --text: #e4e4f0;
+    --text2: #7e7e9a;
+    --blue: #60a5fa;
+    --purple: #a78bfa;
+    --rose: #fb7185;
+    --amber: #fbbf24;
+    --emerald: #34d399;
+    --cyan: #22d3ee;
+    --sans: 'Inter', system-ui, sans-serif;
+    --mono: 'JetBrains Mono', monospace;
+  }
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-  body {
-    font-family: 'Inter', sans-serif;
-    background: #f1f5f9;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 30px;
-    min-height: 100vh;
+  body { font-family: var(--sans); background: #050508; min-height: 100vh; overflow-x: hidden; }
+
+  /* ═══════════════════════════════════════════════════════
+     TOOLBAR
+  ═══════════════════════════════════════════════════════ */
+  .toolbar {
+    position: fixed; top: 20px; right: 20px; z-index: 999;
+    display: flex; gap: 10px;
+  }
+  .tb {
+    padding: 10px 20px; border-radius: 10px; border: 1px solid var(--border);
+    font-family: var(--sans); font-size: 13px; font-weight: 600;
+    cursor: pointer; display: flex; align-items: center; gap: 8px;
+    transition: all 0.2s; backdrop-filter: blur(10px);
+  }
+  .tb-primary { background: rgba(96,165,250,0.15); color: var(--blue); border-color: rgba(96,165,250,0.3); }
+  .tb-primary:hover { background: rgba(96,165,250,0.25); transform: translateY(-2px); box-shadow: 0 8px 25px rgba(96,165,250,0.2); }
+  .tb-green { background: rgba(52,211,153,0.15); color: var(--emerald); border-color: rgba(52,211,153,0.3); }
+  .tb-green:hover { background: rgba(52,211,153,0.25); transform: translateY(-2px); }
+  .tb-back { background: var(--s2); color: var(--text2); text-decoration: none; }
+  .tb-back:hover { color: var(--text); }
+
+  /* ═══════════════════════════════════════════════════════
+     INTERACTIVE VIEW — Full-screen Metro Map
+  ═══════════════════════════════════════════════════════ */
+  .interactive-view {
+    width: 100%; min-height: 100vh; padding: 80px 60px 60px;
+    position: relative; overflow: hidden;
   }
 
-  .actions {
-    background: #ffffff;
-    padding: 20px 30px;
-    border-radius: 12px;
-    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
-    margin-bottom: 30px;
-    display: flex;
-    flex-wrap: wrap;
+  /* Ambient background */
+  .interactive-view::before {
+    content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background:
+      radial-gradient(ellipse 600px 500px at 10% 20%, rgba(96,165,250,0.04), transparent),
+      radial-gradient(ellipse 500px 400px at 90% 80%, rgba(167,139,250,0.04), transparent),
+      radial-gradient(ellipse 400px 350px at 50% 50%, rgba(251,113,133,0.03), transparent);
+  }
+  .interactive-view > * { position: relative; z-index: 2; }
+
+  /* ── Header ── */
+  .iv-header { margin-bottom: 60px; }
+  .iv-header h1 { font-size: 48px; font-weight: 900; letter-spacing: -1px; color: #fff; margin-bottom: 8px; }
+  .iv-header h1 span { background: linear-gradient(135deg, var(--blue), var(--purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .iv-header p { font-family: var(--mono); font-size: 14px; color: var(--text2); letter-spacing: 2px; }
+
+  /* ── Metro SVG ── */
+  .metro-svg {
+    position: absolute; top: 160px; left: 0; width: 100%; height: calc(100% - 160px);
+    pointer-events: none; z-index: 1;
+  }
+  .metro-line {
+    fill: none; stroke-linecap: round; stroke-linejoin: round;
+    stroke-dasharray: 2000; stroke-dashoffset: 2000;
+    animation: drawLine 2s ease forwards;
+  }
+  @keyframes drawLine {
+    to { stroke-dashoffset: 0; }
+  }
+  .metro-line:nth-child(2) { animation-delay: 0.3s; }
+  .metro-line:nth-child(3) { animation-delay: 0.6s; }
+  .metro-line:nth-child(4) { animation-delay: 0.8s; }
+  .metro-line:nth-child(5) { animation-delay: 1s; }
+  .metro-line:nth-child(6) { animation-delay: 1.1s; }
+  .metro-line:nth-child(7) { animation-delay: 1.2s; }
+
+  /* ── Data Packets (animated dots traveling along lines) ── */
+  .packet {
+    fill: #fff; filter: drop-shadow(0 0 6px currentColor);
+  }
+
+  /* ── Station Nodes ── */
+  .stations-layer {
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 50px;
+    max-width: 1400px; margin: 0 auto;
+  }
+
+  .station-col { display: flex; flex-direction: column; gap: 24px; }
+  .station-col:nth-child(2) { padding-top: 80px; }
+  .station-col:nth-child(3) { padding-top: 40px; }
+
+  /* Station Card */
+  .st {
+    background: var(--s1); border: 1px solid var(--border); border-radius: 16px;
+    padding: 0; overflow: hidden; cursor: pointer;
+    transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0; transform: translateY(30px);
+    animation: fadeUp 0.6s ease forwards;
+  }
+  @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+  .st:nth-child(1) { animation-delay: 0.2s; }
+  .st:nth-child(2) { animation-delay: 0.4s; }
+  .st:nth-child(3) { animation-delay: 0.6s; }
+  .st:nth-child(4) { animation-delay: 0.8s; }
+
+  .st:hover {
+    border-color: var(--accent-color, var(--blue));
+    transform: translateY(-6px);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5), 0 0 30px var(--glow-color, rgba(96,165,250,0.15));
+  }
+
+  .st-top {
+    padding: 20px 24px 16px; display: flex; align-items: center; gap: 14px;
+    border-bottom: 1px solid var(--border); transition: 0.3s;
+  }
+  .st:hover .st-top { background: rgba(255,255,255,0.02); }
+
+  .st-dot2 {
+    width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0;
+    box-shadow: 0 0 12px currentColor;
+    animation: dotGlow 3s ease-in-out infinite alternate;
+  }
+  @keyframes dotGlow { 0% { box-shadow: 0 0 8px currentColor; } 100% { box-shadow: 0 0 20px currentColor; } }
+
+  .st-title { font-size: 16px; font-weight: 700; color: #fff; flex: 1; }
+  .st-badge {
+    font-family: var(--mono); font-size: 10px; font-weight: 600; padding: 3px 8px;
+    border-radius: 5px; background: rgba(255,255,255,0.06); color: var(--text2);
+    border: 1px solid var(--border); white-space: nowrap;
+  }
+
+  .st-body {
+    padding: 0 24px; max-height: 0; overflow: hidden;
+    transition: max-height 0.45s cubic-bezier(0.4, 0, 0.2, 1), padding 0.45s;
+  }
+  .st.open .st-body {
+    max-height: 400px; padding: 16px 24px 20px;
+  }
+
+  .st-desc { font-size: 13px; color: var(--text2); line-height: 1.7; }
+  .st-desc strong { color: var(--text); }
+  .st-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+  .st-chip {
+    padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 600;
+    background: var(--s2); border: 1px solid var(--border); color: var(--text2);
+  }
+
+  /* Expand indicator */
+  .st-expand {
+    padding: 10px 24px; text-align: center; font-size: 11px; color: var(--text2);
+    opacity: 0.5; transition: 0.2s;
+  }
+  .st:hover .st-expand { opacity: 1; color: var(--blue); }
+  .st.open .st-expand .arrow { transform: rotate(180deg); }
+  .st-expand .arrow { display: inline-block; transition: transform 0.3s; }
+
+  /* ── Feature strip (floating) ── */
+  .feat-strip {
+    display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 50px;
     justify-content: center;
-    align-items: center;
-    gap: 15px;
-    z-index: 10;
-    max-width: 90vw;
+  }
+  .fs-pill {
+    display: flex; align-items: center; gap: 7px;
+    padding: 8px 16px; border-radius: 10px;
+    background: var(--s1); border: 1px solid var(--border);
+    font-size: 13px; font-weight: 600; color: var(--text);
+    opacity: 0; animation: fadeUp 0.5s ease forwards;
+    transition: all 0.25s;
+  }
+  .fs-pill:hover { border-color: var(--blue); transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,0,0,0.4); }
+
+  /* Legend floating */
+  .legend-float {
+    position: fixed; bottom: 24px; left: 24px; z-index: 100;
+    background: var(--s1); border: 1px solid var(--border); border-radius: 12px;
+    padding: 16px 20px; display: flex; gap: 16px; align-items: center;
+    backdrop-filter: blur(10px); box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+  }
+  .lf-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text2); }
+  .lf-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+  /* ═══════════════════════════════════════════════════════
+     PDF VIEW — Hidden, rendered only on export
+  ═══════════════════════════════════════════════════════ */
+  .pdf-view {
+    position: fixed; left: -9999px; top: 0;
+    width: 1800px; height: 1272px;
+    background: #0a0a12;
+    color: var(--text);
+    padding: 50px 55px;
+    display: flex; flex-direction: column;
+    font-family: var(--sans);
+    z-index: -1;
+  }
+  .pdf-view.rendering {
+    position: fixed; left: 0; top: 0; z-index: 10000;
   }
 
-  .btn {
-    background: linear-gradient(135deg, #4f9cf9, #2563eb);
-    color: white;
-    border: none;
-    padding: 12px 28px;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    box-shadow: 0 4px 15px rgba(37,99,235,0.3);
-    transition: transform 0.2s;
+  /* PDF subtle grid */
+  .pdf-view::before {
+    content: ''; position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+    background-size: 50px 50px;
   }
-  .btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(37,99,235,0.4); }
-  .btn:active { transform: translateY(0); }
-  .btn:disabled { background: #94a3b8; cursor: not-allowed; box-shadow: none; transform: none; }
+  .pdf-view > * { position: relative; z-index: 2; }
 
-  .btn.mobile-btn { background: linear-gradient(135deg, #10b981, #059669); }
-  .btn.mobile-btn:hover { box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4); }
-
-  /* Mobile Portrait / Tall Layout Logic */
-  .a4-landscape.mobile-print {
-    width: 1000px;
-    height: auto;
-    min-height: 2000px;
-    padding: 60px;
-  }
-  .a4-landscape.mobile-print .columns {
-    flex-direction: column;
-    gap: 60px;
-  }
-  .a4-landscape.mobile-print .header { margin-bottom: 60px; }
-
-  /* =========================================================
-     A4 LANDSCAPE EXACT DIMENSIONS 
-     Ratio 1.414 (297 / 210) 
-     Approx dimensions for high-res web rendering
-  ========================================================= */
-  .a4-landscape {
-    width: 1584px;
-    height: 1120px;
-    background: #0a0e1a;
-    color: #e0e6f0;
-    position: relative;
-    padding: 60px 80px;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
-    border: 1px solid #1e293b;
-    border-radius: 4px;
-    overflow: visible; /* Prevent any cutting off */
-    /* Zoom out slightly for smaller screens to be visible, but html2canvas captures full size */
-    transform-origin: top center;
-  }
-
-  @media (max-width: 1500px) {
-    .a4-landscape { transform: scale(0.85); margin-bottom: -150px; }
-  }
-  @media (max-width: 1200px) {
-    .a4-landscape { transform: scale(0.65); margin-bottom: -350px; }
-  }
-  @media (max-width: 768px) {
-    body { padding: 15px; }
-    .actions { padding: 15px; gap: 10px; width: 100%; }
-    .btn { width: 100%; padding: 14px; font-size: 14px; }
-    
-    .a4-landscape { 
-      width: 100%; 
-      height: auto; 
-      transform: none; 
-      margin-bottom: 0; 
-      padding: 40px 20px;
-      border-radius: 12px;
-    }
-    .a4-landscape::before { border-radius: 12px; }
-    
-    .header { flex-direction: column; align-items: center; text-align: center; gap: 20px; }
-    .meta { text-align: center; }
-    
-    .columns { flex-direction: column; gap: 40px; }
-    .col { width: 100%; }
-
-    .feat-grid { grid-template-columns: 1fr; }
-    
-    .footer { flex-direction: column; gap: 20px; text-align: center; }
-    .legend { flex-wrap: wrap; justify-content: center; gap: 15px; }
-    .techs { flex-wrap: wrap; justify-content: center; }
-    
-    /* Ensure arrows point down in vertical flow */
-    .arrow { margin: 10px 0; }
-  }
-
-  /* Deep Background Gradient */
-  .a4-landscape::before {
-    content: '';
-    position: absolute; top:0; left:0; width:100%; height:100%;
-    background: radial-gradient(circle at 15% 25%, rgba(79,156,249,0.08) 0%, transparent 40%),
-                radial-gradient(circle at 85% 75%, rgba(139,92,246,0.08) 0%, transparent 40%),
-                linear-gradient(180deg, rgba(10,14,26,1) 0%, rgba(13,19,36,1) 100%);
-    z-index: 0;
-    pointer-events: none;
-  }
-
-  /* Content wrapper above background */
-  .content { position: relative; z-index: 2; height: 100%; display: flex; flex-direction: column; }
-
-  .header {
-    display: flex; justify-content: space-between; align-items: flex-start;
-    border-bottom: 2px solid rgba(30,41,59,0.7);
-    padding-bottom: 25px; margin-bottom: 40px;
-  }
-  .logo-wrapper { display: flex; align-items: center; gap: 20px; }
-  .logo-icon {
-    width: 56px; height: 56px;
-    background: linear-gradient(135deg, #4f9cf9, #2563eb);
-    border-radius: 14px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 30px; font-weight: bold;
-    box-shadow: 0 8px 25px rgba(79,156,249,0.3);
-  }
-  .title-group h1 { font-size: 32px; font-weight: 800; color: #ffffff; letter-spacing: -0.5px; margin-bottom: 6px; }
-  .title-group h1 span { color: #6db3f9; font-weight: 400; opacity: 0.8; }
-  .title-group p { font-size: 14px; color: #8b9bc0; letter-spacing: 0.5px; text-transform: uppercase; font-weight: 600; }
-  .meta { text-align: right; }
-  .meta strong { font-size: 16px; color: #ffffff; }
-  .meta p { font-size: 13px; color: #8b9bc0; margin-top: 6px; }
-
-  /* Columns Grid Layout */
-  .columns { display: flex; gap: 40px; flex: 1; }
-  .col { flex: 1; display: flex; flex-direction: column; gap: 16px; position: relative; justify-content: flex-start; }
-  
-  .col-head {
-    display: flex; align-items: center; gap: 12px; margin-bottom: 15px;
-    font-size: 15px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px;
-  }
-  .dot { width: 10px; height: 10px; border-radius: 50%; }
-
-  .blue-text { color: #6db3f9; }  .dot-blue { background: #4f9cf9; box-shadow: 0 0 10px #4f9cf9; }
-  .purp-text { color: #b49cf6; }  .dot-purp { background: #8b5cf6; box-shadow: 0 0 10px #8b5cf6; }
-  .pink-text { color: #e879a0; }  .dot-pink { background: #e879a0; box-shadow: 0 0 10px #e879a0; }
-  .grn-text  { color: #3ecf8e; }  .dot-grn  { background: #3ecf8e; box-shadow: 0 0 10px #3ecf8e; }
-
-  /* Cards Styling */
-  .card {
-    background: rgba(15,22,41,0.85); backdrop-filter: blur(10px);
-    border: 1px solid #1e293b; border-radius: 16px;
-    padding: 20px 22px; text-align: center;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
-    position: relative;
-    flex-shrink: 0;
-  }
-  .card-icon { font-size: 28px; margin-bottom: 12px; }
-  .card-title { font-size: 17px; font-weight: 700; color: #ffffff; margin-bottom: 8px; }
-  .card-sub { font-size: 13px; color: #94a3b8; line-height: 1.5; }
-
-  .card.primary { background: linear-gradient(145deg, rgba(30,58,138,0.3) 0%, rgba(15,23,42,0.8) 100%); border-color: rgba(59,130,246,0.3); }
-  .card.server { background: linear-gradient(145deg, rgba(88,28,135,0.3) 0%, rgba(15,23,42,0.8) 100%); border-color: rgba(139,92,246,0.3); }
-  .card.ai { background: linear-gradient(145deg, rgba(157,23,77,0.3) 0%, rgba(15,23,42,0.8) 100%); border-color: rgba(236,72,153,0.3); }
-  .card.infra { background: linear-gradient(145deg, rgba(6,78,59,0.3) 0%, rgba(15,23,42,0.8) 100%); border-color: rgba(16,185,129,0.3); }
-
-  /* Feature Grid (for features) */
-  .feat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: -5px; }
-  .feat-card {
-    background: rgba(15,23,42,0.6); border: 1px solid #334155; border-radius: 10px;
-    padding: 15px; text-align: center;
-  }
-  .feat-icon { font-size: 20px; margin-bottom: 6px; }
-  .feat-title { font-size: 12px; font-weight: 700; color: #cbd5e1; margin-bottom: 4px; }
-  .feat-sub { font-size: 11px; color: #64748b; }
-
-  /* Arrows */
-  .arrow { text-align: center; color: #475569; font-size: 24px; margin: -5px 0; line-height: 1; position: relative; z-index: 10; font-weight: 300;}
-  .arrow-label {
-    display: inline-block; background: #0f172a; border: 1px solid #334155;
-    color: #94a3b8; font-size: 12px; font-weight: 500; padding: 4px 14px;
-    border-radius: 20px; text-transform: uppercase; letter-spacing: 0.5px;
-    margin: -10px auto; position: relative; z-index: 15;
-  }
-  .arrow-group { text-align: center; display: flex; flex-direction: column; align-items: center; margin: 5px 0; }
-
-  /* Footer */
-  .footer {
-    border-top: 2px solid rgba(30,41,59,0.7); padding-top: 25px; margin-top: auto;
+  /* PDF Header */
+  .pdf-hdr {
     display: flex; justify-content: space-between; align-items: center;
+    padding-bottom: 22px; margin-bottom: 30px;
+    border-bottom: 2px solid var(--border);
   }
-  .legend { display: flex; gap: 25px; }
-  .legend-item { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: #94a3b8; }
-  .l-dot { width: 16px; height: 8px; border-radius: 4px; }
+  .pdf-hdr-left { display: flex; align-items: center; gap: 18px; }
+  .pdf-logo {
+    width: 50px; height: 50px; border-radius: 12px;
+    background: linear-gradient(135deg, var(--blue), #7c3aed);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px; box-shadow: 0 0 20px rgba(96,165,250,0.3);
+  }
+  .pdf-title { font-size: 28px; font-weight: 900; color: #fff; }
+  .pdf-title span { color: var(--blue); }
+  .pdf-subtitle { font-family: var(--mono); font-size: 12px; color: var(--text2); margin-top: 3px; letter-spacing: 1px; }
+  .pdf-meta { text-align: right; font-size: 12px; color: var(--text2); line-height: 1.8; }
+  .pdf-meta strong { color: var(--text); }
 
-  .techs { display: flex; gap: 10px; }
-  .tech { background: #1e293b; color: #e2e8f0; font-size: 11px; font-family: monospace; padding: 6px 14px; border-radius: 6px; font-weight: 600;}
+  /* PDF Main Grid: 4-column flow */
+  .pdf-flow {
+    flex: 1; display: grid;
+    grid-template-columns: 1.1fr 40px 1fr 40px 1fr 40px 1.3fr;
+    grid-template-rows: 1fr;
+    gap: 0; align-items: stretch;
+  }
+
+  .pdf-col {
+    display: flex; flex-direction: column; gap: 14px;
+  }
+
+  .pdf-col-head {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 16px; border-radius: 10px;
+    background: var(--s1); border: 1px solid var(--border);
+    margin-bottom: 6px;
+  }
+  .pdf-col-dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+  .pdf-col-label { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; }
+
+  /* PDF Card */
+  .pdf-card {
+    background: var(--s1); border: 1px solid var(--border); border-radius: 14px;
+    padding: 18px 20px; flex: 1;
+  }
+  .pdf-card-icon { font-size: 24px; margin-bottom: 10px; }
+  .pdf-card-title { font-size: 15px; font-weight: 800; color: #fff; margin-bottom: 6px; }
+  .pdf-card-desc { font-size: 11.5px; color: var(--text2); line-height: 1.65; }
+  .pdf-card-desc strong { color: var(--text); }
+  .pdf-card-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; }
+  .pdf-card-tag {
+    padding: 3px 8px; border-radius: 5px; font-size: 10px; font-weight: 600;
+    font-family: var(--mono); background: var(--s2); border: 1px solid var(--border);
+    color: var(--text2);
+  }
+
+  /* PDF Arrow columns */
+  .pdf-arrow-col {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 6px; position: relative;
+  }
+  .pdf-arrow-line {
+    width: 4px; flex: 1; border-radius: 4px;
+  }
+  .pdf-arrow-label {
+    writing-mode: vertical-lr; text-orientation: mixed;
+    font-family: var(--mono); font-size: 10px; font-weight: 600;
+    padding: 8px 4px; border-radius: 6px;
+    background: var(--s2); border: 1px solid var(--border);
+    white-space: nowrap; letter-spacing: 0.5px;
+  }
+  .pdf-arrow-head { font-size: 16px; }
+
+  /* PDF Footer */
+  .pdf-footer {
+    display: flex; justify-content: space-between; align-items: center;
+    padding-top: 20px; margin-top: 24px;
+    border-top: 1px solid var(--border);
+  }
+  .pdf-techs { display: flex; gap: 8px; }
+  .pdf-tech {
+    padding: 5px 12px; border-radius: 6px; font-family: var(--mono);
+    font-size: 11px; font-weight: 500; background: var(--s2);
+    border: 1px solid var(--border); color: var(--text2);
+  }
+  .pdf-footer-note { font-size: 12px; color: var(--text2); }
+
+  /* PDF Features Strip */
+  .pdf-features {
+    display: flex; flex-wrap: wrap; gap: 8px; margin-top: 20px;
+    padding: 16px 20px; border-radius: 12px;
+    background: var(--s1); border: 1px solid var(--border);
+  }
+  .pdf-feat-title { width: 100%; font-size: 11px; font-weight: 700; color: var(--text2); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 4px; }
+  .pdf-feat {
+    padding: 5px 12px; border-radius: 6px; font-size: 11px; font-weight: 600;
+    background: var(--s2); border: 1px solid var(--border); color: var(--text);
+    display: flex; align-items: center; gap: 5px;
+  }
 
 </style>
 </head>
 <body>
 
-<div class="actions">
-  <button class="btn" onclick="generateHighResPDF('landscape')" id="generateBtn">
-    <span style="font-size:20px; vertical-align:middle; margin-right:6px">🖥️</span> PDF Desktop (A4)
+<!-- ═══════════════════════════════════════════
+     TOOLBAR (Fixed top-right)
+═══════════════════════════════════════════ -->
+<div class="toolbar">
+  <a href="index.html" class="tb tb-back">← Kembali</a>
+  <button class="tb tb-primary" onclick="exportPDF('landscape')" id="btnA4">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:15px;height:15px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    Export A4
   </button>
-  <button class="btn mobile-btn" onclick="generateHighResPDF('mobile')" id="generateMobileBtn">
-    <span style="font-size:20px; vertical-align:middle; margin-right:6px">📱</span> PDF Smartphone (Scroll)
+  <button class="tb tb-green" onclick="exportPDF('portrait')" id="btnPort">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:15px;height:15px"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/></svg>
+    Portrait
   </button>
 </div>
-<div id="statusTxt" style="text-align:center;color:#64748b;font-weight:500;margin-bottom:30px;font-size:14px;">Resolusi ultra-tinggi lossless · Mendukung Emoji Unicode & Gradien HTML</div>
 
-<div class="a4-landscape" id="flowchartCapture">
-  <div class="content">
+<!-- ═══════════════════════════════════════════
+     ★ INTERACTIVE VIEW (Browser Experience)
+═══════════════════════════════════════════ -->
+<div class="interactive-view">
 
-    <!-- Header Section -->
-    <div class="header">
-      <div class="logo-wrapper">
-        <div class="logo-icon">⚡</div>
-        <div class="title-group">
-          <h1>ElektroDict <span>— System Flow Diagram</span></h1>
-          <p>Progressive Web App · Kamus Teknik Elektro Interaktif</p>
+  <!-- Metro SVG Lines (background layer) -->
+  <svg class="metro-svg" viewBox="0 0 1400 900" preserveAspectRatio="xMidYMid meet">
+    <!-- Blue: Client col down -->
+    <path class="metro-line" d="M 230,0 L 230,850" stroke="var(--blue)" stroke-width="3" opacity="0.15"/>
+    <!-- Purple: Middle col -->
+    <path class="metro-line" d="M 700,60 L 700,850" stroke="var(--purple)" stroke-width="3" opacity="0.15"/>
+    <!-- Rose: Right col -->
+    <path class="metro-line" d="M 1170,40 L 1170,850" stroke="var(--rose)" stroke-width="3" opacity="0.15"/>
+    <!-- Cross connections (curved) -->
+    <path class="metro-line" d="M 230,200 Q 400,200 700,260" stroke="var(--blue)" stroke-width="2.5" opacity="0.12"/>
+    <path class="metro-line" d="M 700,420 Q 900,420 1170,340" stroke="var(--purple)" stroke-width="2.5" opacity="0.12"/>
+    <path class="metro-line" d="M 700,420 Q 900,500 1170,520" stroke="var(--rose)" stroke-width="2" opacity="0.1"/>
+    <path class="metro-line" d="M 700,420 Q 900,600 1170,700" stroke="var(--rose)" stroke-width="2" opacity="0.1"/>
+
+    <!-- Animated packets -->
+    <circle class="packet" r="4" fill="var(--blue)" opacity="0.6">
+      <animateMotion dur="4s" repeatCount="indefinite" path="M 230,0 L 230,850"/>
+    </circle>
+    <circle class="packet" r="4" fill="var(--purple)" opacity="0.6">
+      <animateMotion dur="5s" repeatCount="indefinite" path="M 700,60 L 700,850"/>
+    </circle>
+    <circle class="packet" r="3" fill="var(--rose)" opacity="0.6">
+      <animateMotion dur="3.5s" repeatCount="indefinite" path="M 700,420 Q 900,420 1170,340"/>
+    </circle>
+    <circle class="packet" r="3" fill="var(--rose)" opacity="0.6">
+      <animateMotion dur="4s" repeatCount="indefinite" begin="1s" path="M 700,420 Q 900,600 1170,700"/>
+    </circle>
+  </svg>
+
+  <!-- Header -->
+  <div class="iv-header">
+    <h1>Elektro<span>Dict</span></h1>
+    <p>INTERACTIVE SYSTEM ARCHITECTURE MAP</p>
+  </div>
+
+  <!-- Feature Strip -->
+  <div class="feat-strip">
+    <div class="fs-pill" style="animation-delay:0.1s"><span>📖</span> Kamus 130+</div>
+    <div class="fs-pill" style="animation-delay:0.15s"><span>⚡</span> Kalkulator RLC</div>
+    <div class="fs-pill" style="animation-delay:0.2s"><span>🎨</span> Kode Resistor</div>
+    <div class="fs-pill" style="animation-delay:0.25s"><span>🎸</span> Signal Synth</div>
+    <div class="fs-pill" style="animation-delay:0.3s"><span>🔀</span> Gerbang Logika</div>
+    <div class="fs-pill" style="animation-delay:0.35s"><span>📐</span> Konversi Satuan</div>
+    <div class="fs-pill" style="animation-delay:0.4s"><span>🛡️</span> K3 & Standar</div>
+    <div class="fs-pill" style="animation-delay:0.45s"><span>💾</span> Chip Library</div>
+    <div class="fs-pill" style="animation-delay:0.5s"><span>📅</span> Timeline Sejarah</div>
+  </div>
+
+  <!-- 3-Column Station Grid -->
+  <div class="stations-layer">
+
+    <!-- ─── COLUMN 1: Client Layer ─── -->
+    <div class="station-col">
+      <div class="st" style="--accent-color:var(--blue);--glow-color:rgba(96,165,250,0.15)" onclick="togSt(this)">
+        <div class="st-top">
+          <div class="st-dot2" style="background:var(--blue);color:var(--blue)"></div>
+          <div class="st-title">📱 Frontend PWA</div>
+          <div class="st-badge">CLIENT</div>
         </div>
-      </div>
-      <div class="meta">
-        <strong>Beryl Nathaniel Sinaga</strong>
-        <p>Deployed on Vercel · PWA Ready</p>
-      </div>
-    </div>
-
-    <!-- Main 3 Columns -->
-    <div class="columns">
-
-      <!-- COL 1: CLIENT SIDE -->
-      <div class="col" style="flex: 1.1">
-        <div class="col-head blue-text"><div class="dot dot-blue"></div> Client-Side (Browser / App)</div>
-
-        <div class="card primary" style="padding:15px; flex-shrink:1;">
-          <div class="card-icon" style="font-size:22px;margin-bottom:6px">👤</div>
-          <div class="card-title" style="font-size:15px;margin-bottom:4px">User (Mahasiswa / Pelajar)</div>
-          <div class="card-sub" style="font-size:12px">Mengakses sistem via Web Browser atau PWA Installed</div>
-        </div>
-
-        <div class="arrow">⬇</div>
-
-        <div class="card primary">
-          <div class="card-icon">🌐</div>
-          <div class="card-title">Frontend — index.html + app.js</div>
-          <div class="card-sub">UI SaaS Design & Slim Sidebar Layout<br>Feature Grid Hierarchy & Core Iconography<br>Markdown Parser (marked) + Math (KaTeX)</div>
-        </div>
-
-        <div class="arrow-group">
-          <div class="arrow">⬇</div>
-          <div class="arrow-label">UI Rendering Components</div>
-        </div>
-
-        <div class="feat-grid">
-          <div class="feat-card"><div class="feat-icon">📖</div><div class="feat-title">Kamus Elektro</div><div class="feat-sub">130+ Kata & Rumus</div></div>
-          <div class="feat-card"><div class="feat-icon">🔢</div><div class="feat-title">Kalkulator</div><div class="feat-sub">Multi RLC & Ohm</div></div>
-          <div class="feat-card"><div class="feat-icon">🎨</div><div class="feat-title">Kode Resistor</div><div class="feat-sub">Tabel & SVG Visual</div></div>
-          <div class="feat-card"><div class="feat-icon">🔄</div><div class="feat-title">Konversi Unit</div><div class="feat-sub">dB, Watt, V, I, dll.</div></div>
-          <div class="feat-card"><div class="feat-icon">🎸</div><div class="feat-title">Signal Synth</div><div class="feat-sub">Web Audio API</div></div>
-          <div class="feat-card"><div class="feat-icon">🕹️</div><div class="feat-title">Logic Gate Sim</div><div class="feat-sub">Interaktif 7 Gerbang</div></div>
-        </div>
-
-        <!-- Static Data -->
-        <div class="card infra" style="margin-top:auto; padding:15px">
-          <div class="card-title" style="font-size:14px; margin-bottom:4px">📦 data.js — Static Resource Layer</div>
-          <div class="card-sub" style="font-size:12px">Menyimpan Array Objek: KAMUS, KALKULATOR, QUIZ_CATS, PROJECTS</div>
-        </div>
-      </div>
-
-      <!-- COL 2: API FLOW -->
-      <div class="col" style="flex: 0.9">
-        <div class="col-head purp-text"><div class="dot dot-purp"></div> REST Data Flow</div>
-        
-        <div style="height:25px"></div>
-
-        <div class="card server">
-          <div class="card-icon">🔗</div>
-          <div class="card-title">api.js — Abstraksi Lokal</div>
-          <div class="card-sub">Satu jalur entry untuk call HTTP<br>fetchWithTimeout() · Exception Guard</div>
-        </div>
-
-        <div class="arrow-group" style="margin:20px 0;">
-          <div class="arrow">⬇</div>
-          <div class="arrow-label">POST /api/chat</div>
-        </div>
-
-        <div class="card server" style="border-width:2px; box-shadow: 0 0 40px rgba(139,92,246,0.2)">
-          <div class="card-icon">▲</div>
-          <div class="card-title">Vercel Serverless Functions</div>
-          <div class="card-sub">
-            <span style="color:#d8b4fe; font-weight:600">/api/chat.js</span> — Proxy General AI<br>
-            <span style="color:#94a3b8; font-size:11px">↳ Dynamic Model Router & Prompt Injection</span><br>
-            <span style="color:#d8b4fe; font-weight:600">/api/project-gen.js</span> — Strict JSON Coder<br>
-            Validasi Body · CORS Headers Handling
+        <div class="st-body">
+          <div class="st-desc">UI Premium Charcoal dengan <strong>sidebar desktop</strong> dan <strong>bottom-nav mobile</strong>. Mendukung dark/light mode switching, rendering matematika <strong>KaTeX</strong>, dan offline-ready via Service Worker + PWA Manifest.</div>
+          <div class="st-chips">
+            <span class="st-chip">HTML5</span><span class="st-chip">Vanilla CSS</span><span class="st-chip">ES6+</span><span class="st-chip">PWA</span>
           </div>
         </div>
-
-        <div class="arrow-group" style="margin:20px 0;">
-          <div class="arrow">⬇</div>
-          <div class="arrow-label">Secret: GROQ_API_KEY</div>
-        </div>
-
-        <div class="card ai">
-          <div class="card-icon">🧠</div>
-          <div class="card-title">Groq API & OpenRouter</div>
-          <div class="card-sub">Infrastruktur Eksekusi Super Cepat<br>Model: <strong style="color:#38bdf8">GPT-OSS 120B</strong> (Master Logic)<br>Model: <strong style="color:#fcd34d">LLaMA 3.3 70B</strong> (Flash & Vision)</div>
-        </div>
-
-        <div class="arrow-group" style="margin-bottom:0; margin-top:20px">
-          <div class="arrow-label" style="border-color:#10b981; color:#34d399">JSON Response Stream ⬆</div>
-        </div>
+        <div class="st-expand"><span class="arrow">▼</span></div>
       </div>
 
-      <!-- COL 3: FEATURES & INFRA -->
-      <div class="col" style="flex: 1">
-        <div class="col-head pink-text"><div class="dot dot-pink"></div> AI-Powered Services</div>
-
-        <div class="card ai" style="text-align:left; padding: 18px 25px;">
-          <div class="card-icon" style="float:left; margin-right:15px; font-size:36px; margin-bottom:0">💬</div>
-          <div>
-            <div class="card-title">ElektroBot AI (Standalone Interface)</div>
-            <div class="card-sub">Laman khusus chatbot.html dengan UI modern SaaS. Mendukung Developer Branding Guard, Persona Switcher, render tabel Markdown/LaTeX, dan sistem Auto-Recovery (429).</div>
+      <div class="st" style="--accent-color:var(--blue);--glow-color:rgba(96,165,250,0.1)" onclick="togSt(this)">
+        <div class="st-top">
+          <div class="st-dot2" style="background:var(--blue);color:var(--blue)"></div>
+          <div class="st-title">🔌 Connection Layer</div>
+          <div class="st-badge">api.js</div>
+        </div>
+        <div class="st-body">
+          <div class="st-desc">Abstraksi HTTP fetch dengan <strong>timeout handling</strong> 30 detik, retry logic otomatis, dan propagasi rate-limit error yang <em>graceful</em> ke UI tanpa crash.</div>
+          <div class="st-chips">
+            <span class="st-chip">Fetch API</span><span class="st-chip">Error Boundary</span><span class="st-chip">Retry</span>
           </div>
         </div>
-
-        <div class="card ai" style="text-align:left; padding: 18px 25px;">
-          <div class="card-icon" style="float:left; margin-right:15px; font-size:36px; margin-bottom:0">🧠</div>
-          <div>
-            <div class="card-title">AI Quiz Generator</div>
-            <div class="card-sub">Menghasilkan 5 soal unik pada tiap sesi dengan 9 Kategori Teknik & 3 Tingkat Kesulitan. Jawaban otomatis dinilai dan skor bisa dibagikan (WhatsApp).</div>
-          </div>
-        </div>
-
-        <div class="card ai" style="text-align:left; padding: 18px 25px;">
-          <div class="card-icon" style="float:left; margin-right:15px; font-size:36px; margin-bottom:0">🔬</div>
-          <div>
-            <div class="card-title">AI Vision Analyzer</div>
-            <div class="card-sub">Upload/foto secara langsung kertas atau buku elektronik. Scanner OCR otomatis mengenali soal/komponen rangkaian dan mendeskripsikan kerjanya via LLaMA Scout.</div>
-          </div>
-        </div>
-
-        <div class="card ai" style="text-align:left; padding: 18px 25px;">
-          <div class="card-icon" style="float:left; margin-right:15px; font-size:36px; margin-bottom:0">🛠️</div>
-          <div>
-            <div class="card-title">AI Lab Project Generator</div>
-            <div class="card-sub">Merancang arsitektur IoT/Arduino dari ide kasar. Menghasilkan bahan alat (BOM), skema pin, dan kode algoritma C++. Mendukung Export PDF Profesional dengan jspdf-autotable.</div>
-          </div>
-        </div>
-
-        <!-- INFRASTRUCTURE -->
-        <div style="height:5px"></div>
-        <div class="col-head grn-text"><div class="dot dot-grn"></div> Base Infrastructure</div>
-
-        <div style="display:flex; gap:15px">
-          <div class="card infra" style="flex:1; padding: 15px;">
-            <div class="card-title" style="font-size:14px; margin-bottom:4px">🔐 Keamanan Dasar</div>
-            <div class="card-sub" style="font-size:11px">Proteksi Private Key (.env)<br>CSP Headers, X-Frame DENY</div>
-          </div>
-          <div class="card infra" style="flex:1; padding: 15px;">
-            <div class="card-title" style="font-size:14px; margin-bottom:4px">📱 PWA Terintegrasi</div>
-            <div class="card-sub" style="font-size:11px">Dukungan Mode Offline (sw.js)<br>App Shell Caching Instan</div>
-          </div>
-        </div>
-
+        <div class="st-expand"><span class="arrow">▼</span></div>
       </div>
 
-    </div>
-
-    <!-- Footer -->
-    <div class="footer">
-      <div class="legend">
-        <div class="legend-item"><div class="l-dot dot-blue"></div> Client-Side</div>
-        <div class="legend-item"><div class="l-dot dot-purp"></div> Serverless API</div>
-        <div class="legend-item"><div class="l-dot dot-pink"></div> AI Services</div>
-        <div class="legend-item"><div class="l-dot dot-grn"></div> Infra / Base</div>
-      </div>
-      <div class="techs">
-        <span class="tech">HTML5+CSS+JS</span>
-        <span class="tech">Vercel (Node)</span>
-        <span class="tech">Groq (LLaMA)</span>
-        <span class="tech">jsPDF + AutoTable</span>
-        <span class="tech">PWA / SW.js</span>
+      <div class="st" style="--accent-color:var(--emerald);--glow-color:rgba(52,211,153,0.1)" onclick="togSt(this)">
+        <div class="st-top">
+          <div class="st-dot2" style="background:var(--emerald);color:var(--emerald)"></div>
+          <div class="st-title">💾 Static Data Layer</div>
+          <div class="st-badge">LOCAL</div>
+        </div>
+        <div class="st-body">
+          <div class="st-desc"><strong>data.js</strong> — 130+ objek kamus dengan rumus LaTeX, kategori, dan tag. Array project & quiz categories.<br><br><strong>PUIL 2011 & K3</strong> — Standar kabel SNI, tabel KHA, IP Rating IEC 60529, APD, dan 5 Aturan Emas EN 50110.<br><br><strong>Chip Library</strong> — Datasheet NE555, ESP32, LM358, L298N, 74HC595 dari TI, Espressif, STMicro, Nexperia.</div>
+          <div class="st-chips">
+            <span class="st-chip">data.js</span><span class="st-chip">index.html</span><span class="st-chip">Offline</span>
+          </div>
+        </div>
+        <div class="st-expand"><span class="arrow">▼</span></div>
       </div>
     </div>
 
-  </div> <!-- end content -->
-</div> <!-- end a4-landscape -->
+    <!-- ─── COLUMN 2: Server/Gateway ─── -->
+    <div class="station-col">
+      <div class="st" style="--accent-color:var(--purple);--glow-color:rgba(167,139,250,0.15)" onclick="togSt(this)">
+        <div class="st-top">
+          <div class="st-dot2" style="background:var(--purple);color:var(--purple)"></div>
+          <div class="st-title">▲ Vercel Edge</div>
+          <div class="st-badge">SERVERLESS</div>
+        </div>
+        <div class="st-body">
+          <div class="st-desc">Serverless gateway yang menyimpan <strong>API Key</strong> di environment variable. Dua endpoint utama:<br><br>• <strong>/api/chat.js</strong> — Routing untuk ElektroBot chatbot & AI Quiz Generator<br>• <strong>/api/project-gen.js</strong> — JSON-Strict mode untuk Lab Project IoT yang membutuhkan output terstruktur</div>
+          <div class="st-chips">
+            <span class="st-chip">Node.js</span><span class="st-chip">Edge Runtime</span><span class="st-chip">Env Secrets</span>
+          </div>
+        </div>
+        <div class="st-expand"><span class="arrow">▼</span></div>
+      </div>
+
+      <div class="st" style="--accent-color:var(--amber);--glow-color:rgba(251,191,36,0.12)" onclick="togSt(this)">
+        <div class="st-top">
+          <div class="st-dot2" style="background:var(--amber);color:var(--amber)"></div>
+          <div class="st-title">🧠 Groq LPU Engine</div>
+          <div class="st-badge">LLM</div>
+        </div>
+        <div class="st-body">
+          <div class="st-desc">Hardware akselerator AI dengan <strong>Language Processing Unit</strong> (LPU) — kecepatan inferensi tertinggi di dunia (~800 token/detik).<br><br>Primary model: <strong>LLaMA 3.3 70B Versatile</strong>. Fallback multi-provider via OpenRouter untuk redundancy.</div>
+          <div class="st-chips">
+            <span class="st-chip">Groq Cloud</span><span class="st-chip">LLaMA 3.3 70B</span><span class="st-chip">OpenRouter</span>
+          </div>
+        </div>
+        <div class="st-expand"><span class="arrow">▼</span></div>
+      </div>
+    </div>
+
+    <!-- ─── COLUMN 3: AI Services ─── -->
+    <div class="station-col">
+      <div class="st" style="--accent-color:var(--rose);--glow-color:rgba(251,113,133,0.12)" onclick="togSt(this)">
+        <div class="st-top">
+          <div class="st-dot2" style="background:var(--rose);color:var(--rose)"></div>
+          <div class="st-title">💬 ElektroBot AI</div>
+          <div class="st-badge">CHAT</div>
+        </div>
+        <div class="st-body">
+          <div class="st-desc">Asisten cerdas seperti ChatGPT yang terintegrasi di sidebar desktop dan drawer mobile. Menjawab konsep listrik, debugging sirkuit, dan perhitungan. Output: <strong>Markdown + KaTeX</strong> math rendering.</div>
+          <div class="st-chips">
+            <span class="st-chip">Streaming</span><span class="st-chip">Markdown</span><span class="st-chip">KaTeX</span>
+          </div>
+        </div>
+        <div class="st-expand"><span class="arrow">▼</span></div>
+      </div>
+
+      <div class="st" style="--accent-color:var(--rose);--glow-color:rgba(251,113,133,0.1)" onclick="togSt(this)">
+        <div class="st-top">
+          <div class="st-dot2" style="background:var(--rose);color:var(--rose)"></div>
+          <div class="st-title">🧪 AI Quiz Generator</div>
+          <div class="st-badge">QUIZ</div>
+        </div>
+        <div class="st-body">
+          <div class="st-desc">Membuat <strong>5 soal pilihan ganda</strong> baru di setiap sesi dari 9 kategori elektro. Output JSON tervalidasi dengan 3 tingkat kesulitan. Hasil skor bisa dibagikan via <strong>WhatsApp</strong> atau disalin.</div>
+          <div class="st-chips">
+            <span class="st-chip">JSON Mode</span><span class="st-chip">9 Kategori</span><span class="st-chip">Share Score</span>
+          </div>
+        </div>
+        <div class="st-expand"><span class="arrow">▼</span></div>
+      </div>
+
+      <div class="st" style="--accent-color:var(--rose);--glow-color:rgba(251,113,133,0.1)" onclick="togSt(this)">
+        <div class="st-top">
+          <div class="st-dot2" style="background:var(--rose);color:var(--rose)"></div>
+          <div class="st-title">🛠️ Lab Project IoT</div>
+          <div class="st-badge">PROJECT</div>
+        </div>
+        <div class="st-body">
+          <div class="st-desc">Dari deskripsi ide → AI generatekan <strong>BOM hardware</strong>, tabel wiring/pinout, dan <strong>kode C++ Arduino</strong> secara lengkap. Menggunakan endpoint khusus <strong>/api/project-gen.js</strong> dengan JSON-Strict mode.</div>
+          <div class="st-chips">
+            <span class="st-chip">JSON-Strict</span><span class="st-chip">BOM</span><span class="st-chip">Arduino C++</span>
+          </div>
+        </div>
+        <div class="st-expand"><span class="arrow">▼</span></div>
+      </div>
+
+      <div class="st" style="--accent-color:var(--rose);--glow-color:rgba(251,113,133,0.1)" onclick="togSt(this)">
+        <div class="st-top">
+          <div class="st-dot2" style="background:var(--rose);color:var(--rose)"></div>
+          <div class="st-title">🔬 AI Vision</div>
+          <div class="st-badge">VISION</div>
+        </div>
+        <div class="st-body">
+          <div class="st-desc">Upload foto sirkuit nyata → dikonversi ke <strong>Base64</strong> → LLaMA Vision Model mengenali komponen, mengidentifikasi fungsi, dan menjelaskan koneksi rangkaian secara detail.</div>
+          <div class="st-chips">
+            <span class="st-chip">Base64 Image</span><span class="st-chip">Vision Model</span><span class="st-chip">Analysis</span>
+          </div>
+        </div>
+        <div class="st-expand"><span class="arrow">▼</span></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Legend (floating bottom-left) -->
+<div class="legend-float">
+  <div style="font-size:11px;font-weight:700;color:var(--text2);letter-spacing:1px">LAYER</div>
+  <div class="lf-item"><div class="lf-dot" style="background:var(--blue)"></div> Client</div>
+  <div class="lf-item"><div class="lf-dot" style="background:var(--purple)"></div> Gateway</div>
+  <div class="lf-item"><div class="lf-dot" style="background:var(--amber)"></div> LLM Engine</div>
+  <div class="lf-item"><div class="lf-dot" style="background:var(--rose)"></div> AI Services</div>
+  <div class="lf-item"><div class="lf-dot" style="background:var(--emerald)"></div> Static Data</div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     ★ PDF VIEW (Hidden, rendered on export)
+     Completely separate professional layout
+═══════════════════════════════════════════ -->
+<div class="pdf-view" id="pdfCapture">
+
+  <!-- PDF Header -->
+  <div class="pdf-hdr">
+    <div class="pdf-hdr-left">
+      <div class="pdf-logo">⚡</div>
+      <div>
+        <div class="pdf-title">Elektro<span>Dict</span> — System Architecture</div>
+        <div class="pdf-subtitle">PROGRESSIVE WEB APP · AI-POWERED ELECTRICAL ENGINEERING PLATFORM</div>
+      </div>
+    </div>
+    <div class="pdf-meta">
+      <strong>Beryl Nathaniel Sinaga</strong><br>
+      ElektroDict v3.0 · April 2026
+    </div>
+  </div>
+
+  <!-- PDF 4-Column Flow -->
+  <div class="pdf-flow">
+
+    <!-- COL 1: Client -->
+    <div class="pdf-col">
+      <div class="pdf-col-head">
+        <div class="pdf-col-dot" style="background:var(--blue);box-shadow:0 0 8px var(--blue)"></div>
+        <div class="pdf-col-label" style="color:var(--blue)">Client Layer</div>
+      </div>
+
+      <div class="pdf-card" style="border-left: 3px solid var(--blue)">
+        <div class="pdf-card-icon">📱</div>
+        <div class="pdf-card-title">Frontend PWA</div>
+        <div class="pdf-card-desc">UI Charcoal Premium dengan <strong>sidebar desktop</strong> dan <strong>bottom-nav mobile</strong>. Mendukung dark/light mode, rendering matematika <strong>KaTeX</strong>, offline-ready via Service Worker, dan responsif mode.</div>
+        <div class="pdf-card-tags">
+          <span class="pdf-card-tag">HTML5</span>
+          <span class="pdf-card-tag">CSS Vanilla</span>
+          <span class="pdf-card-tag">ES6 JS</span>
+          <span class="pdf-card-tag">PWA</span>
+        </div>
+      </div>
+
+      <div class="pdf-card" style="border-left: 3px solid var(--blue)">
+        <div class="pdf-card-icon">🔌</div>
+        <div class="pdf-card-title">Connection Layer (api.js)</div>
+        <div class="pdf-card-desc">Abstraksi HTTP fetch. Menangani <strong>timeout 30s</strong>, retry logic otomatis, dan propagasi rate-limit error ke UI tanpa crash.</div>
+        <div class="pdf-card-tags">
+          <span class="pdf-card-tag">Fetch API</span>
+          <span class="pdf-card-tag">Error Boundary</span>
+        </div>
+      </div>
+
+      <div class="pdf-card" style="border-left: 3px solid var(--emerald)">
+        <div class="pdf-card-icon">💾</div>
+        <div class="pdf-card-title">Static Data Layer</div>
+        <div class="pdf-card-desc"><strong>data.js</strong> — 130+ kamus istilah dengan rumus LaTeX.<br><strong>PUIL 2011 & K3</strong> — Standar keselamatan bersumber BSN, IEC, NFPA.<br><strong>Chip Library</strong> — NE555, ESP32, LM358, L298N, 74HC595.</div>
+        <div class="pdf-card-tags">
+          <span class="pdf-card-tag">Offline-Ready</span>
+          <span class="pdf-card-tag">JSON Data</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Arrow 1→2 -->
+    <div class="pdf-arrow-col">
+      <div class="pdf-arrow-line" style="background: linear-gradient(180deg, var(--blue), var(--purple));"></div>
+      <div class="pdf-arrow-label" style="color:var(--blue)">REST<br>API</div>
+      <div class="pdf-arrow-head" style="color:var(--blue)">→</div>
+    </div>
+
+    <!-- COL 2: Gateway -->
+    <div class="pdf-col">
+      <div class="pdf-col-head">
+        <div class="pdf-col-dot" style="background:var(--purple);box-shadow:0 0 8px var(--purple)"></div>
+        <div class="pdf-col-label" style="color:var(--purple)">Edge Gateway</div>
+      </div>
+
+      <div class="pdf-card" style="border-left: 3px solid var(--purple)">
+        <div class="pdf-card-icon">▲</div>
+        <div class="pdf-card-title">Vercel Edge Functions</div>
+        <div class="pdf-card-desc">Serverless gateway yang menyimpan <strong>API Key</strong> di environment variable. Memproteksi secret key dari sisi klien.<br><br><strong>/api/chat.js</strong><br>Routing untuk ElektroBot chatbot dan AI Quiz Generator.<br><br><strong>/api/project-gen.js</strong><br>JSON-Strict mode untuk Lab Project IoT.</div>
+        <div class="pdf-card-tags">
+          <span class="pdf-card-tag">Node.js</span>
+          <span class="pdf-card-tag">Edge Runtime</span>
+          <span class="pdf-card-tag">Env Secrets</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Arrow 2→3 -->
+    <div class="pdf-arrow-col">
+      <div class="pdf-arrow-line" style="background: linear-gradient(180deg, var(--purple), var(--amber));"></div>
+      <div class="pdf-arrow-label" style="color:var(--purple)">Secure<br>cURL</div>
+      <div class="pdf-arrow-head" style="color:var(--purple)">→</div>
+    </div>
+
+    <!-- COL 3: LLM Engine -->
+    <div class="pdf-col">
+      <div class="pdf-col-head">
+        <div class="pdf-col-dot" style="background:var(--amber);box-shadow:0 0 8px var(--amber)"></div>
+        <div class="pdf-col-label" style="color:var(--amber)">LLM Engine</div>
+      </div>
+
+      <div class="pdf-card" style="border-left: 3px solid var(--amber)">
+        <div class="pdf-card-icon">🧠</div>
+        <div class="pdf-card-title">Groq Inference (LPU)</div>
+        <div class="pdf-card-desc">Hardware akselerator AI dengan <strong>Language Processing Unit</strong> — kecepatan inferensi tertinggi (~800 tok/s).<br><br>Primary: <strong>LLaMA 3.3 70B Versatile</strong><br>Fallback: Multi-provider via OpenRouter untuk redundancy.</div>
+        <div class="pdf-card-tags">
+          <span class="pdf-card-tag">Groq Cloud</span>
+          <span class="pdf-card-tag">LLaMA 3.3 70B</span>
+          <span class="pdf-card-tag">~800 tok/s</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Arrow 3→4 -->
+    <div class="pdf-arrow-col">
+      <div class="pdf-arrow-line" style="background: linear-gradient(180deg, var(--amber), var(--rose));"></div>
+      <div class="pdf-arrow-label" style="color:var(--rose)">JSON<br>Stream</div>
+      <div class="pdf-arrow-head" style="color:var(--rose)">→</div>
+    </div>
+
+    <!-- COL 4: AI Services -->
+    <div class="pdf-col">
+      <div class="pdf-col-head">
+        <div class="pdf-col-dot" style="background:var(--rose);box-shadow:0 0 8px var(--rose)"></div>
+        <div class="pdf-col-label" style="color:var(--rose)">AI Services</div>
+      </div>
+
+      <div class="pdf-card" style="border-left: 3px solid var(--rose)">
+        <div class="pdf-card-icon">💬</div>
+        <div class="pdf-card-title">ElektroBot AI</div>
+        <div class="pdf-card-desc">Chatbot asisten di sidebar/drawer. Menjawab konsep listrik, debugging sirkuit, dan perhitungan. Output <strong>Markdown + KaTeX</strong>.</div>
+        <div class="pdf-card-tags"><span class="pdf-card-tag">Streaming</span><span class="pdf-card-tag">Markdown</span></div>
+      </div>
+
+      <div class="pdf-card" style="border-left: 3px solid var(--rose)">
+        <div class="pdf-card-icon">🧪</div>
+        <div class="pdf-card-title">AI Quiz Generator</div>
+        <div class="pdf-card-desc">Membuat <strong>5 soal pilihan ganda</strong> tiap sesi dari 9 kategori. JSON tervalidasi, 3 difficulty level. Skor bisa di-share via WhatsApp.</div>
+        <div class="pdf-card-tags"><span class="pdf-card-tag">JSON</span><span class="pdf-card-tag">9 Kategori</span></div>
+      </div>
+
+      <div class="pdf-card" style="border-left: 3px solid var(--rose)">
+        <div class="pdf-card-icon">🛠️</div>
+        <div class="pdf-card-title">Lab Project IoT</div>
+        <div class="pdf-card-desc">Deskripsi ide → <strong>BOM hardware</strong>, tabel wiring, dan <strong>kode C++ Arduino</strong>. Endpoint khusus /api/project-gen.js.</div>
+        <div class="pdf-card-tags"><span class="pdf-card-tag">JSON-Strict</span><span class="pdf-card-tag">BOM</span></div>
+      </div>
+
+      <div class="pdf-card" style="border-left: 3px solid var(--rose)">
+        <div class="pdf-card-icon">🔬</div>
+        <div class="pdf-card-title">AI Vision Analyzer</div>
+        <div class="pdf-card-desc">Upload foto sirkuit → <strong>Base64</strong> → LLaMA Vision mengenali komponen dan menjelaskan rangkaian secara detail.</div>
+        <div class="pdf-card-tags"><span class="pdf-card-tag">Base64</span><span class="pdf-card-tag">Vision Model</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- PDF Features Row -->
+  <div class="pdf-features">
+    <div class="pdf-feat-title">Offline Feature Modules</div>
+    <div class="pdf-feat"><span>📖</span> Kamus 130+</div>
+    <div class="pdf-feat"><span>⚡</span> Kalkulator RLC</div>
+    <div class="pdf-feat"><span>🎨</span> Kode Resistor</div>
+    <div class="pdf-feat"><span>🎸</span> Signal Synth</div>
+    <div class="pdf-feat"><span>🔀</span> Gerbang Logika</div>
+    <div class="pdf-feat"><span>📐</span> Konversi Satuan</div>
+    <div class="pdf-feat"><span>🛡️</span> K3 & Standar</div>
+    <div class="pdf-feat"><span>💾</span> Chip Library</div>
+    <div class="pdf-feat"><span>📅</span> Timeline Sejarah</div>
+  </div>
+
+  <!-- PDF Footer -->
+  <div class="pdf-footer">
+    <div class="pdf-footer-note">✨ ElektroDict v3.0 — Modern AI-Powered Electrical Engineering PWA</div>
+    <div class="pdf-techs">
+      <span class="pdf-tech">Frontend: HTML/CSS/JS</span>
+      <span class="pdf-tech">Math: KaTeX</span>
+      <span class="pdf-tech">Backend: Vercel Edge</span>
+      <span class="pdf-tech">LLM: Groq API</span>
+    </div>
+  </div>
+
+</div>
+
 
 <script>
+/* ── Interactive Logic ── */
+function togSt(el) {
+  const wasOpen = el.classList.contains('open');
+  // Close all
+  document.querySelectorAll('.st.open').forEach(s => s.classList.remove('open'));
+  // Toggle the clicked one
+  if (!wasOpen) {
+    el.classList.add('open');
+    setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100);
+  }
+}
+
+/* ── PDF Export Logic ── */
 window.jsPDF = window.jspdf.jsPDF;
 
-async function generateHighResPDF(type = 'landscape') {
-  const btn = document.getElementById('generateBtn');
-  const btnM = document.getElementById('generateMobileBtn');
-  const status = document.getElementById('statusTxt');
-  
-  btn.disabled = true;
-  if(btnM) btnM.disabled = true;
-  status.style.color = '#3b82f6';
-  status.innerHTML = '<b>Memproses...</b> Membangun layout UI (butuh waktu bbrp detik ⏳)';
+async function exportPDF(orientation = 'landscape') {
+  const btnA4 = document.getElementById('btnA4');
+  const btnPort = document.getElementById('btnPort');
+  btnA4.disabled = btnPort.disabled = true;
+  btnA4.textContent = '⏳ Rendering...';
 
-  const el = document.getElementById('flowchartCapture');
+  const pdfView = document.getElementById('pdfCapture');
 
-  // Trigger relayout if mobile
-  if (type === 'mobile') {
-    el.classList.add('mobile-print');
-  }
-
-  // Jeda sangat singkat (50ms) agar DOM update sebelum dicapture
-  await new Promise(r => setTimeout(r, 50));
+  // Bring PDF view on-screen for html2canvas
+  pdfView.classList.add('rendering');
+  await new Promise(r => setTimeout(r, 300));
 
   try {
-    const canvas = await html2canvas(el, {
-      scale: 3, 
+    const canvas = await html2canvas(pdfView, {
+      scale: 2.5,
       useCORS: true,
-      backgroundColor: '#0a0e1a',
-      logging: false
+      backgroundColor: '#0a0a12',
+      logging: false,
+      width: 1800,
+      height: 1272
     });
 
-    status.innerHTML = '<b>Mengonversi...</b> Menyatukan hasil ke format PDF...';
+    const imgData = canvas.toDataURL('image/jpeg', 0.95);
 
-    const imgData = canvas.toDataURL('image/jpeg', 0.98);
-
-    if (type === 'mobile') {
-      // PDF mode ukuran statis pixel = memanjang 1 halaman full tanpa margin/kepotong (cocok utk HP)
-      const wPx = canvas.width / 3;
-      const hPx = canvas.height / 3;
-      const pdf = new jsPDF({
-        orientation: 'portrait',
-        unit: 'px',
-        format: [wPx, hPx]
-      });
-      pdf.addImage(imgData, 'JPEG', 0, 0, wPx, hPx);
-      pdf.save('ElektroDict_Flow_Mobile.pdf');
+    if (orientation === 'portrait') {
+      const pw = canvas.width / 3.5, ph = canvas.height / 3.5;
+      const pdf = new jsPDF({ orientation: 'portrait', unit: 'px', format: [ph, pw] });
+      // Rotate the landscape image onto portrait page
+      pdf.addImage(imgData, 'JPEG', 0, 0, ph, (canvas.height * ph) / canvas.width);
+      pdf.save('ElektroDict_Architecture_Portrait.pdf');
     } else {
-      // PDF mode A4 Landscape presisi untuk Desktop/Cetak
-      const pdf = new jsPDF({
-        orientation: 'landscape',
-        unit: 'mm',
-        format: 'a4'
-      });
-      const pdfWidth = pdf.internal.pageSize.getWidth();
-      const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-      pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
-      pdf.save('ElektroDict_Flow_Desktop.pdf');
+      const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
+      const pw = pdf.internal.pageSize.getWidth();
+      const ph = (canvas.height * pw) / canvas.width;
+      pdf.addImage(imgData, 'JPEG', 0, 0, pw, ph);
+      pdf.save('ElektroDict_Architecture_A4.pdf');
     }
-    
-    status.style.color = '#10b981';
-    status.innerHTML = '✅ <b>PDF beres!</b> Cek folder Downloads kamu.';
-    
-  } catch (error) {
-    status.style.color = '#ef4444';
-    status.innerHTML = '❌ <b>Terjadi kesalahan:</b> ' + error.message;
-    console.error("PDF Generate Error:", error);
+  } catch (err) {
+    console.error('PDF Error:', err);
+    alert('Gagal membuat PDF: ' + err.message);
   } finally {
-    el.classList.remove('mobile-print');
-    btn.disabled = false;
-    if(btnM) btnM.disabled = false;
-    setTimeout(() => {
-        status.style.color = '#64748b';
-        status.innerHTML = 'Resolusi ultra-tinggi lossless · Mendukung Emoji Unicode & Gradien HTML';
-    }, 5000);
+    pdfView.classList.remove('rendering');
+    btnA4.disabled = btnPort.disabled = false;
+    btnA4.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:15px;height:15px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Export A4`;
   }
 }
 </script>
-
 </body>
 </html>

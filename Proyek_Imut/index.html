@@ -705,8 +705,9 @@
         <p style="color:var(--text2); font-size:14px; line-height:1.6;">Standar wajib untuk perancangan, pemasangan, dan pemeriksaan instalasi listrik di Indonesia.</p>
         <div style="margin-top:15px; display:flex; flex-direction:column; gap:8px;">
           <div style="padding:10px; background:var(--bg3); border-radius:8px; font-size:12px;"><b>Proteksi:</b> Terhadap kejut listrik, efek termal, dan arus lebih.</div>
-          <div style="padding:10px; background:var(--bg3); border-radius:8px; font-size:12px;"><b>Isolasi:</b> Pengaturan jarak aman dan bahan isolasi standar.</div>
+          <div style="padding:10px; background:var(--bg3); border-radius:8px; font-size:12px;"><b>Isolasi:</b> Pengaturan jarak aman dan bahan isolasi standar (Resistansi isolasi minimal 1000 Ω/Volt).</div>
         </div>
+        <div style="margin-top:15px; font-size:12px; color:var(--text3);"><i>Sumber: BSN (Badan Standardisasi Nasional) - Persyaratan Umum Instalasi Listrik 2011.</i></div>
       </div>
 
       <!-- Wiring Color -->
@@ -719,35 +720,170 @@
           <div style="display:flex; align-items:center; gap:10px; background:#2196f3; padding:8px; border-radius:6px; color:#fff; font-size:12px;"><div style="width:12px; height:12px; background:#2196f3; border:1px solid #333;"></div> Netral (N) - Biru</div>
           <div style="display:flex; align-items:center; gap:10px; background:linear-gradient(90deg, #ffeb3b 50%, #4caf50 50%); padding:8px; border-radius:6px; color:#333; font-size:12px; font-weight:bold;">Ground (PE) - Kuning/Hijau</div>
         </div>
+        <div style="margin-top:15px; font-size:12px; color:var(--text3);"><i>Sumber: PUIL 2011, Tabel 51A - Kode Warna Inti Kabel.</i></div>
+      </div>
+
+      <!-- KHA (Kuat Hantar Arus) -->
+      <div class="std-card" style="background:var(--bg2); border:1px solid var(--line); border-radius:16px; padding:24px;">
+        <h3 style="font-size:18px; margin-bottom:12px;">KHA (Kuat Hantar Arus)</h3>
+        <p style="color:var(--text2); font-size:13px; margin-bottom:10px;">Standar KHA untuk kabel instalasi rumah (NYA/NYM) dalam pipa conduit pada suhu 30°C.</p>
+        <table style="width:100%; border-collapse:collapse; font-size:13px;">
+          <tr style="border-bottom:1px solid var(--line);">
+            <th style="text-align:left; padding:6px 0;">Luas (mm²)</th>
+            <th style="text-align:center; padding:6px 0;">KHA (Ampere)</th>
+            <th style="text-align:right; padding:6px 0;">Beban Maks (220V)</th>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border);"><td style="padding:6px 0;">1.5</td><td style="text-align:center">15 A</td><td style="text-align:right; color:var(--text2)">3.300 W</td></tr>
+          <tr style="border-bottom:1px solid var(--border);"><td style="padding:6px 0;">2.5</td><td style="text-align:center">20 A</td><td style="text-align:right; color:var(--text2)">4.400 W</td></tr>
+          <tr style="border-bottom:1px solid var(--border);"><td style="padding:6px 0;">4.0</td><td style="text-align:center">27 A</td><td style="text-align:right; color:var(--text2)">5.900 W</td></tr>
+          <tr><td style="padding:6px 0;">6.0</td><td style="text-align:center">34 A</td><td style="text-align:right; color:var(--text2)">7.400 W</td></tr>
+        </table>
+        <div style="margin-top:10px; font-size:12px; color:var(--text3);"><i>Sumber: PUIL 2011 - Tabel KHA Kabel Berisolasi PVC.</i></div>
+      </div>
+
+      <!-- IP Ratings -->
+      <div class="std-card" style="background:var(--bg2); border:1px solid var(--line); border-radius:16px; padding:24px;">
+        <div style="font-size:12px; color:var(--accent); font-family:var(--mono); margin-bottom:8px;">IEC 60529</div>
+        <h3 style="font-size:18px; margin-bottom:12px;">INGRESS PROTECTION (IP)</h3>
+        <p style="color:var(--text2); font-size:13px; margin-bottom:10px;">Kode perlindungan peralatan dari benda padat (angka 1) dan benda cair (angka 2).</p>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <div style="padding:8px 12px; background:var(--bg3); border-radius:8px; font-size:12px;"><strong style="color:var(--primary)">IP20:</strong> Aman dari sentuhan jari (Alat indoor).</div>
+          <div style="padding:8px 12px; background:var(--bg3); border-radius:8px; font-size:12px;"><strong style="color:var(--primary)">IP44:</strong> Tahan benda >1mm & percikan air (Kamar mandi).</div>
+          <div style="padding:8px 12px; background:var(--bg3); border-radius:8px; font-size:12px;"><strong style="color:var(--primary)">IP65:</strong> Kedap debu total & semprotan air (Outdoor).</div>
+          <div style="padding:8px 12px; background:var(--bg3); border-radius:8px; font-size:12px;"><strong style="color:var(--primary)">IP68:</strong> Kedap debu & tahan terendam terus-menerus.</div>
+        </div>
+        <div style="margin-top:15px; font-size:12px; color:var(--text3);"><i>Sumber: International Electrotechnical Commission (IEC 60529).</i></div>
       </div>
 
       <!-- PPE PPE -->
       <div class="std-card" style="background:var(--bg2); border:1px solid var(--line); border-radius:16px; padding:24px;">
-        <h3 style="font-size:18px; margin-bottom:12px;">APD (ALAT PELINDUNG DIRI)</h3>
+        <h3 style="font-size:18px; margin-bottom:12px;">APD / K3 LISTRIK</h3>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
           <div style="text-align:center; padding:10px; background:var(--bg3); border-radius:10px;">
             <div style="font-size:20px;">⛑️</div>
-            <div style="font-size:10px; margin-top:5px; font-weight:bold;">Helm Safety</div>
+            <div style="font-size:10px; margin-top:5px; font-weight:bold;">Helm Class E (Tahan 20kV)</div>
           </div>
           <div style="text-align:center; padding:10px; background:var(--bg3); border-radius:10px;">
             <div style="font-size:20px;">🧤</div>
-            <div style="font-size:10px; margin-top:5px; font-weight:bold;">Sarung Tangan</div>
+            <div style="font-size:10px; margin-top:5px; font-weight:bold;">Sarung Isolasi (VDE)</div>
           </div>
           <div style="text-align:center; padding:10px; background:var(--bg3); border-radius:10px;">
             <div style="font-size:20px;">🥾</div>
-            <div style="font-size:10px; margin-top:5px; font-weight:bold;">Sepatu Isolasi</div>
+            <div style="font-size:10px; margin-top:5px; font-weight:bold;">Sepatu Dielektrik</div>
           </div>
           <div style="text-align:center; padding:10px; background:var(--bg3); border-radius:10px;">
             <div style="font-size:20px;">🛡️</div>
-            <div style="font-size:10px; margin-top:5px; font-weight:bold;">Webbing Belt</div>
+            <div style="font-size:10px; margin-top:5px; font-weight:bold;">Arc Flash Suit</div>
           </div>
         </div>
+        <div style="margin-top:15px; font-size:12px; color:var(--text3);"><i>Sumber: NFPA 70E - Standard for Electrical Safety in the Workplace.</i></div>
+      </div>
+
+      <!-- NEMA vs IP -->
+      <div class="std-card" style="background:var(--bg2); border:1px solid var(--line); border-radius:16px; padding:24px;">
+        <div style="font-size:12px; color:var(--accent); font-family:var(--mono); margin-bottom:8px;">NEMA vs IEC</div>
+        <h3 style="font-size:18px; margin-bottom:12px;">NEMA ENCLOSURE RATINGS</h3>
+        <p style="color:var(--text2); font-size:13px; margin-bottom:10px;">Standar Amerika (NEMA) yang sering setara dengan IP rating Eropa.</p>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <div style="padding:8px 12px; background:var(--bg3); border-radius:8px; font-size:12px;"><strong style="color:var(--primary)">NEMA 1:</strong> Indoor umum (Setara IP20).</div>
+          <div style="padding:8px 12px; background:var(--bg3); border-radius:8px; font-size:12px;"><strong style="color:var(--primary)">NEMA 3R:</strong> Outdoor, tahan hujan/es (Setara IP24).</div>
+          <div style="padding:8px 12px; background:var(--bg3); border-radius:8px; font-size:12px;"><strong style="color:var(--primary)">NEMA 4X:</strong> Kedap air & anti korosi (Setara IP66).</div>
+          <div style="padding:8px 12px; background:var(--bg3); border-radius:8px; font-size:12px;"><strong style="color:var(--primary)">NEMA 12:</strong> Industrial indoor, tahan debu/oli (Setara IP54).</div>
+        </div>
+        <div style="margin-top:15px; font-size:12px; color:var(--text3);"><i>Sumber: National Electrical Manufacturers Association (NEMA 250).</i></div>
+      </div>
+
+      <!-- Insulation Class -->
+      <div class="std-card" style="background:var(--bg2); border:1px solid var(--line); border-radius:16px; padding:24px;">
+        <h3 style="font-size:18px; margin-bottom:12px;">KELAS ISOLASI MOTOR (NEMA/IEC)</h3>
+        <p style="color:var(--text2); font-size:13px; margin-bottom:10px;">Batas suhu operasional maksimal untuk kumparan motor listrik.</p>
+        <table style="width:100%; border-collapse:collapse; font-size:13px;">
+          <tr style="border-bottom:1px solid var(--line);">
+            <th style="text-align:left; padding:6px 0;">Kelas</th>
+            <th style="text-align:center; padding:6px 0;">Suhu Maks (°C)</th>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border);"><td style="padding:6px 0;">Kelas A</td><td style="text-align:center; color:var(--text2)">105°C</td></tr>
+          <tr style="border-bottom:1px solid var(--border);"><td style="padding:6px 0;">Kelas B</td><td style="text-align:center; color:var(--text2)">130°C</td></tr>
+          <tr style="border-bottom:1px solid var(--border);"><td style="padding:6px 0;">Kelas F</td><td style="text-align:center; color:var(--text2)">155°C (Umum di industri)</td></tr>
+          <tr><td style="padding:6px 0;">Kelas H</td><td style="text-align:center; color:var(--text2)">180°C (Heavy Duty)</td></tr>
+        </table>
+        <div style="margin-top:10px; font-size:12px; color:var(--text3);"><i>Penting: Operasional di atas batas suhu akan memotong umur motor ±50% setiap kenaikan 10°C.</i></div>
+      </div>
+      <!-- Perundang-undangan K3 -->
+      <style>
+        .k3-acc { margin-bottom: 8px; border-radius: 8px; background: var(--bg3); transition: all 0.2s ease; overflow: hidden; }
+        .k3-acc summary {
+          padding: 10px 12px; font-size: 13px; font-weight: 600; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; color: var(--primary);
+        }
+        .k3-acc summary::-webkit-details-marker { display: none; }
+        .k3-acc summary::after { content: "▼"; font-size: 10px; color: var(--text3); transition: transform 0.2s; }
+        .k3-acc[open] summary::after { transform: rotate(180deg); color: var(--accent); }
+        .k3-acc[open] { border-left: 3px solid var(--accent); }
+        .k3-acc .k3-content {
+          padding: 0 12px 12px 12px; font-size: 12px; color: var(--text2); line-height: 1.6; border-top: 1px dashed var(--line); margin-top: 5px; padding-top: 10px;
+        }
+        .k3-link-btn {
+          display: inline-flex; align-items: center; gap: 4px; margin-top: 8px; padding: 4px 8px; background: var(--bg4); border: 1px solid var(--line2); border-radius: 6px; color: var(--accent); text-decoration: none; font-weight: 500; font-size: 11px; transition: background 0.2s;
+        }
+        .k3-link-btn:hover { background: var(--line); }
+      </style>
+      <div class="std-card" style="background:var(--bg2); border:1px solid var(--line); border-radius:16px; padding:24px;">
+        <div style="font-size:12px; color:var(--accent); font-family:var(--mono); margin-bottom:8px;">Hukum Positif Indonesia</div>
+        <h3 style="font-size:18px; margin-bottom:12px;">PERUNDANG-UNDANGAN K3</h3>
+        <p style="color:var(--text2); font-size:13px; margin-bottom:14px;">Buka setiap panel untuk membaca penjelasan dan tautan sumber resmi.</p>
+        <div style="display:flex; flex-direction:column;">
+          
+          <details class="k3-acc">
+            <summary>UU No. 1 Tahun 1970</summary>
+            <div class="k3-content">
+              <strong>Undang-Undang Pokok Keselamatan Kerja</strong> merupakan landasan utama (payung hukum) penerapan Keselamatan dan Kesehatan Kerja (K3) di Indonesia. Undang-undang ini memuat syarat-syarat keselamatan kerja secara umum guna mencegah kecelakaan dan penyakit akibat kerja di segala tempat kerja.
+              <br>
+              <a href="https://jdih.kemnaker.go.id/katalog-120-Undang-Undang.html" target="_blank" class="k3-link-btn">🔗 Baca Dokumen di JDIH Kemnaker</a>
+            </div>
+          </details>
+
+          <details class="k3-acc">
+            <summary>UU No. 13 Tahun 2003</summary>
+            <div class="k3-content">
+              <strong>Undang-Undang Ketenagakerjaan</strong> khususnya pada Pasal 86 mengatur hak pekerja/buruh atas perlindungan keselamatan dan kesehatan kerja, serta Pasal 87 yang mewajibkan perusahaan/pemberi kerja untuk menerapkan Sistem Manajemen K3.
+              <br>
+              <a href="https://peraturan.bpk.go.id/Details/43013/uu-no-13-tahun-2003" target="_blank" class="k3-link-btn">🔗 Baca Detail Regulasi (BPK)</a>
+            </div>
+          </details>
+
+          <details class="k3-acc">
+            <summary>PP No. 50 Tahun 2012</summary>
+            <div class="k3-content">
+              <strong>Penerapan Sistem Manajemen Keselamatan dan Kesehatan Kerja (SMK3)</strong>. Peraturan Pemerintah ini menjabarkan lebih rinci amanat UU No. 13/2003 pasal 87, menggarisbawahi bahwa setiap perusahaan yang mempekerjakan &gt;100 orang atau memiliki potensi bahaya tinggi wajib menerapkan SMK3 yang terintegrasi.
+              <br>
+              <a href="https://jdih.kemnaker.go.id/katalog-16-Peraturan%20Pemerintah.html" target="_blank" class="k3-link-btn">🔗 Sumber Hukum JDIH</a>
+            </div>
+          </details>
+
+          <details class="k3-acc">
+            <summary>Permenaker No. 12 Tahun 2015</summary>
+            <div class="k3-content">
+              <strong>Keselamatan dan Kesehatan Kerja Listrik di Tempat Kerja</strong>. Peraturan level kementerian inilah yang paling relevan bagi praktisi elektro. Permenaker ini menetapkan standar teknis kelistrikan demi meminimalisasi bahaya sentuh langsung/tak langsung, serta mewajibkan adanya personil bersertifikat Ahli K3 Listrik.
+              <br>
+              <a href="https://jdih.kemnaker.go.id/katalog-90-Peraturan%20Menteri.html" target="_blank" class="k3-link-btn">🔗 Cek Legalitas Permenaker</a>
+            </div>
+          </details>
+
+        </div>
+        <div style="margin-top:15px; font-size:12px; color:var(--text3);"><i>Klik judul untuk melihat ringkasan singkat.</i></div>
       </div>
     </div>
     
     <div style="margin-top:30px; padding:20px; background:rgba(255,158,11,0.05); border:1px solid var(--amber); border-radius:12px;">
-      <h4 style="color:var(--amber); margin-bottom:8px;">⚠️ Prinsip Keselamatan</h4>
-      <p style="font-size:13px; color:var(--text2); line-height:1.6;">Wajib melakukan <b>LOTO (Lock Out Tag Out)</b> sebelum pengerjaan. Pastikan tegangan nol dengan <i>multimeter</i> bersertifikat sebelum menyentuh konduktor.</p>
+      <h4 style="color:var(--amber); margin-bottom:8px;">⚠️ 5 Aturan Emas Keselamatan Listrik (EN 50110)</h4>
+      <ol style="font-size:13px; color:var(--text2); line-height:1.6; margin-left:20px;">
+        <li>Putuskan koneksi sepenuhnya (Disconnect completely).</li>
+        <li>Amankan dari re-koneksi tak sengaja (LOTO - Lock Out Tag Out).</li>
+        <li>Verifikasi bahwa instalasi sudah tanpa tegangan (Gunakan voltage tester).</li>
+        <li>Laksanakan pembumian (Grounding) dan hubung singkat (Short-circuiting).</li>
+        <li>Berikan proteksi/perlindungan pada komponen di sekitarnya yang masih bertegangan.</li>
+      </ol>
+      <div style="margin-top:8px; font-size:12px; color:var(--text3);"><i>Sumber: CENELEC EN 50110 - Operation of electrical installations.</i></div>
     </div>
   </div>
 </div>
@@ -794,7 +930,7 @@
         </div>
         <a href="https://www.ti.com/lit/ds/symlink/ne555.pdf" target="_blank" class="chip-source">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3"/></svg>
-          Source: Texas Instruments
+          Datasheet: Texas Instruments
         </a>
       </div>
 
@@ -811,18 +947,19 @@
         </div>
         <div class="chip-info">
           <h3 style="font-size:16px; margin-bottom:8px;">ESP32-WROOM-32</h3>
-          <p style="font-size:12px; color:var(--text2); line-height:1.5;">Powerful Wi-Fi + BT + BLE MCU untuk aplikasi IoT modern.</p>
+          <p style="font-size:12px; color:var(--text2); line-height:1.5;">Powerful Wi-Fi + BT MCU untuk aplikasi IoT modern berspesifikasi tinggi.</p>
           <div style="margin-top:12px; font-size:11px; font-family:var(--mono);">
             <div style="color:var(--text3); margin-bottom:4px;">Specs:</div>
             <div style="display:flex; flex-wrap:wrap; gap:5px;">
               <span style="padding:2px 6px; background:var(--bg3); border-radius:4px;">Dual Core</span>
-              <span style="padding:2px 6px; background:var(--bg3); border-radius:4px;">2.4GHz WiFi</span>
+              <span style="padding:2px 6px; background:var(--bg3); border-radius:4px;">WiFi 2.4GHz</span>
+              <span style="padding:2px 6px; background:var(--bg3); border-radius:4px;">BLE</span>
             </div>
           </div>
         </div>
         <a href="https://www.espressif.com/sites/default/files/documentation/esp32-wroom-32_datasheet_en.pdf" target="_blank" class="chip-source">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3"/></svg>
-          Source: Espressif Systems
+          Datasheet: Espressif Systems
         </a>
       </div>
 
@@ -831,29 +968,286 @@
         <div class="chip-visual-wrap">
           <div class="chip-ic-body" style="width:110px; height:60px;">
             <div class="chip-ic-label" style="font-size:10px;">74HC00</div>
-            <!-- More pins for Logic IC -->
             <div class="chip-ic-pin p-l" style="top:5px;"></div><div class="chip-ic-pin p-l" style="top:15px;"></div><div class="chip-ic-pin p-l" style="top:25px;"></div><div class="chip-ic-pin p-l" style="top:35px;"></div><div class="chip-ic-pin p-l" style="top:45px;"></div>
             <div class="chip-ic-pin p-r" style="top:5px;"></div><div class="chip-ic-pin p-r" style="top:15px;"></div><div class="chip-ic-pin p-r" style="top:25px;"></div><div class="chip-ic-pin p-r" style="top:35px;"></div><div class="chip-ic-pin p-r" style="top:45px;"></div>
           </div>
         </div>
         <div class="chip-info">
           <h3 style="font-size:16px; margin-bottom:8px;">74HC00 Quad NAND</h3>
-          <p style="font-size:12px; color:var(--text2); line-height:1.5;">IC Logika dasar yang berisi 4 gerbang NAND 2-input.</p>
+          <p style="font-size:12px; color:var(--text2); line-height:1.5;">IC Logika CMOS dasar yang berisi 4 gerbang NAND 2-input.</p>
           <div style="margin-top:12px; font-size:11px; font-family:var(--mono);">
             <div style="color:var(--text3); margin-bottom:4px;">Data:</div>
             <div style="display:flex; flex-wrap:wrap; gap:5px;">
-              <span style="padding:2px 6px; background:var(--bg3); border-radius:4px;">CMOS</span>
-              <span style="padding:2px 6px; background:var(--bg3); border-radius:4px;">2V - 6V</span>
+              <span style="padding:2px 6px; background:var(--bg3); border-radius:4px;">14-Pin</span>
+              <span style="padding:2px 6px; background:var(--bg3); border-radius:4px;">2V - 6V DC</span>
             </div>
           </div>
         </div>
         <a href="https://www.st.com/resource/en/datasheet/74hc00.pdf" target="_blank" class="chip-source">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3"/></svg>
-          Source: STMicroelectronics
+          Datasheet: STMicroelectronics
         </a>
       </div>
 
+      <!-- LM358 -->
+      <div class="chip-card">
+        <div class="chip-visual-wrap">
+          <div class="chip-ic-body">
+            <div class="chip-ic-pin p-l" style="top:15px;"></div><div class="chip-ic-pin p-l" style="top:40px;"></div><div class="chip-ic-pin p-l" style="top:65px;"></div><div class="chip-ic-pin p-l" style="top:90px;"></div>
+            <div class="chip-ic-pin p-r" style="top:15px;"></div><div class="chip-ic-pin p-r" style="top:40px;"></div><div class="chip-ic-pin p-r" style="top:65px;"></div><div class="chip-ic-pin p-r" style="top:90px;"></div>
+            <div class="chip-ic-label" style="font-size:12px;">LM358</div>
+          </div>
+        </div>
+        <div class="chip-info">
+          <h3 style="font-size:16px; margin-bottom:8px;">LM358 Dual Op-Amp</h3>
+          <p style="font-size:12px; color:var(--text2); line-height:1.5;">Penguat operasional ganda populer yang dapat beroperasi dengan single supply.</p>
+          <div style="margin-top:12px; font-size:11px; font-family:var(--mono);">
+            <div style="color:var(--text3); margin-bottom:4px;">Aplikasi:</div>
+            <div style="display:flex; flex-wrap:wrap; gap:5px;">
+              <span style="padding:2px 6px; background:var(--bg3); border-radius:4px;">Komparator</span>
+              <span style="padding:2px 6px; background:var(--bg3); border-radius:4px;">Buffer</span>
+              <span style="padding:2px 6px; background:var(--bg3); border-radius:4px;">Filter AC</span>
+            </div>
+          </div>
+        </div>
+        <a href="https://www.ti.com/lit/ds/symlink/lm358.pdf" target="_blank" class="chip-source">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3"/></svg>
+          Datasheet: Texas Instruments
+        </a>
+      </div>
+
+      <!-- L298N -->
+      <div class="chip-card">
+        <div class="chip-visual-wrap">
+          <div class="chip-ic-body" style="width:70px; height:80px; border-radius:4px; border-top:10px solid #555;">
+            <!-- It's a Multiwatt15 package -->
+            <div style="display:flex; justify-content:space-between; position:absolute; bottom:-12px; width:100%;">
+               <div style="width:2px; height:12px; background:#aaa; margin-left:2px;"></div>
+               <div style="width:2px; height:12px; background:#aaa;"></div>
+               <div style="width:2px; height:12px; background:#aaa;"></div>
+               <div style="width:2px; height:12px; background:#aaa;"></div>
+               <div style="width:2px; height:12px; background:#aaa;"></div>
+               <div style="width:2px; height:12px; background:#aaa;"></div>
+               <div style="width:2px; height:12px; background:#aaa; margin-right:2px;"></div>
+            </div>
+            <div class="chip-ic-label" style="font-size:10px; margin-top:20px;">L298N</div>
+          </div>
+        </div>
+        <div class="chip-info">
+          <h3 style="font-size:16px; margin-bottom:8px;">L298N Motor Driver</h3>
+          <p style="font-size:12px; color:var(--text2); line-height:1.5;">Dual H-Bridge motor driver untuk mengendalikan DC motor dan Stepper motor.</p>
+          <div style="margin-top:12px; font-size:11px; font-family:var(--mono);">
+            <div style="color:var(--text3); margin-bottom:4px;">Specs:</div>
+            <div style="display:flex; flex-wrap:wrap; gap:5px;">
+              <span style="padding:2px 6px; background:var(--bg3); border-radius:4px;">15-Pin (Multiwatt)</span>
+              <span style="padding:2px 6px; background:var(--bg3); border-radius:4px;">Max 2A/Bridge</span>
+            </div>
+          </div>
+        </div>
+        <a href="https://www.st.com/resource/en/datasheet/l298.pdf" target="_blank" class="chip-source">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3"/></svg>
+          Datasheet: STMicroelectronics
+        </a>
+      </div>
+
+      <!-- 74HC595 -->
+      <div class="chip-card">
+        <div class="chip-visual-wrap">
+          <div class="chip-ic-body" style="width:110px; height:60px;">
+            <div class="chip-ic-label" style="font-size:10px; text-transform:none;">74HC595</div>
+            <!-- 16 pin -->
+            <div class="chip-ic-pin p-l" style="top:4px;"></div><div class="chip-ic-pin p-l" style="top:11px;"></div><div class="chip-ic-pin p-l" style="top:18px;"></div><div class="chip-ic-pin p-l" style="top:25px;"></div><div class="chip-ic-pin p-l" style="top:32px;"></div><div class="chip-ic-pin p-l" style="top:39px;"></div><div class="chip-ic-pin p-l" style="top:46px;"></div><div class="chip-ic-pin p-l" style="top:53px;"></div>
+            <div class="chip-ic-pin p-r" style="top:4px;"></div><div class="chip-ic-pin p-r" style="top:11px;"></div><div class="chip-ic-pin p-r" style="top:18px;"></div><div class="chip-ic-pin p-r" style="top:25px;"></div><div class="chip-ic-pin p-r" style="top:32px;"></div><div class="chip-ic-pin p-r" style="top:39px;"></div><div class="chip-ic-pin p-r" style="top:46px;"></div><div class="chip-ic-pin p-r" style="top:53px;"></div>
+          </div>
+        </div>
+        <div class="chip-info">
+          <h3 style="font-size:16px; margin-bottom:8px;">74HC595 Shift Reg</h3>
+          <p style="font-size:12px; color:var(--text2); line-height:1.5;">8-bit serial-in, serial/parallel-out shift register. Biasanya untuk memperbanyak output pin Mikrokontroler.</p>
+          <div style="margin-top:12px; font-size:11px; font-family:var(--mono);">
+            <div style="color:var(--text3); margin-bottom:4px;">Pin Utama:</div>
+            <div style="display:flex; flex-wrap:wrap; gap:5px;">
+              <span style="padding:2px 6px; background:var(--bg3); border-radius:4px;">11: SHCP</span>
+              <span style="padding:2px 6px; background:var(--bg3); border-radius:4px;">12: STCP</span>
+              <span style="padding:2px 6px; background:var(--bg3); border-radius:4px;">14: DS</span>
+            </div>
+          </div>
+        </div>
+        <a href="https://assets.nexperia.com/documents/data-sheet/74HC_HCT595.pdf" target="_blank" class="chip-source">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3"/></svg>
+          Datasheet: Nexperia
+        </a>
+      </div>
+
+      <!-- LM7805 -->
+      <div class="chip-card">
+        <div class="chip-visual-wrap">
+          <div class="chip-ic-body" style="width:50px; height:60px; border-radius:0; border-top:15px solid #ccc; position:relative;">
+            <div style="width:12px; height:12px; border-radius:50%; background:#444; position:absolute; top:-12px; left:19px;"></div>
+            <div class="chip-ic-pin" style="bottom:-15px; left:5px; height:15px; width:4px; position:absolute; background:#888;"></div>
+            <div class="chip-ic-pin" style="bottom:-15px; left:23px; height:15px; width:4px; position:absolute; background:#888;"></div>
+            <div class="chip-ic-pin" style="bottom:-15px; left:41px; height:15px; width:4px; position:absolute; background:#888;"></div>
+            <div class="chip-ic-label" style="font-size:10px; margin-top:20px;">L7805CV</div>
+          </div>
+        </div>
+        <div class="chip-info">
+          <h3 style="font-size:16px; margin-bottom:8px;">L7805 Voltage Regulator</h3>
+          <p style="font-size:12px; color:var(--text2); line-height:1.5;">IC Regulator linier positif klasik. Mengubah tegangan input (7-35V) menjadi output konstan 5V.</p>
+          <div style="margin-top:12px; font-size:11px; font-family:var(--mono);">
+            <div style="color:var(--text3); margin-bottom:4px;">Pinout (Kiri-Kanan):</div>
+            <div style="display:flex; flex-wrap:wrap; gap:5px;">
+              <span style="padding:2px 6px; background:var(--bg3); border-radius:4px;">1: IN</span>
+              <span style="padding:2px 6px; background:var(--bg3); border-radius:4px;">2: GND</span>
+              <span style="padding:2px 6px; background:var(--bg3); border-radius:4px;">3: OUT</span>
+            </div>
+          </div>
+        </div>
+        <a href="https://www.st.com/resource/en/datasheet/l78.pdf" target="_blank" class="chip-source">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3"/></svg>
+          Datasheet: STMicroelectronics
+        </a>
+      </div>
+
+      <!-- ATmega328P -->
+      <div class="chip-card">
+        <div class="chip-visual-wrap">
+          <div class="chip-ic-body" style="width:130px; height:45px;">
+            <div class="chip-ic-label" style="font-size:9px;">ATmega328P-PU</div>
+            <!-- 28 pin DIP (14 per side) -->
+            <div class="chip-ic-pin p-l" style="top:2px;"></div><div class="chip-ic-pin p-l" style="top:5px;"></div><div class="chip-ic-pin p-l" style="top:8px;"></div><div class="chip-ic-pin p-l" style="top:11px;"></div><div class="chip-ic-pin p-l" style="top:14px;"></div><div class="chip-ic-pin p-l" style="top:17px;"></div><div class="chip-ic-pin p-l" style="top:20px;"></div><div class="chip-ic-pin p-l" style="top:23px;"></div><div class="chip-ic-pin p-l" style="top:26px;"></div><div class="chip-ic-pin p-l" style="top:29px;"></div><div class="chip-ic-pin p-l" style="top:32px;"></div><div class="chip-ic-pin p-l" style="top:35px;"></div><div class="chip-ic-pin p-l" style="top:38px;"></div><div class="chip-ic-pin p-l" style="top:41px;"></div>
+            <div class="chip-ic-pin p-r" style="top:2px;"></div><div class="chip-ic-pin p-r" style="top:5px;"></div><div class="chip-ic-pin p-r" style="top:8px;"></div><div class="chip-ic-pin p-r" style="top:11px;"></div><div class="chip-ic-pin p-r" style="top:14px;"></div><div class="chip-ic-pin p-r" style="top:17px;"></div><div class="chip-ic-pin p-r" style="top:20px;"></div><div class="chip-ic-pin p-r" style="top:23px;"></div><div class="chip-ic-pin p-r" style="top:26px;"></div><div class="chip-ic-pin p-r" style="top:29px;"></div><div class="chip-ic-pin p-r" style="top:32px;"></div><div class="chip-ic-pin p-r" style="top:35px;"></div><div class="chip-ic-pin p-r" style="top:38px;"></div><div class="chip-ic-pin p-r" style="top:41px;"></div>
+          </div>
+        </div>
+        <div class="chip-info">
+          <h3 style="font-size:16px; margin-bottom:8px;">ATmega328P</h3>
+          <p style="font-size:12px; color:var(--text2); line-height:1.5;">Mikrokontroler 8-bit AVR berperforma tinggi. Otak utama di balik board Arduino Uno.</p>
+          <div style="margin-top:12px; font-size:11px; font-family:var(--mono);">
+            <div style="color:var(--text3); margin-bottom:4px;">Specs:</div>
+            <div style="display:flex; flex-wrap:wrap; gap:5px;">
+              <span style="padding:2px 6px; background:var(--bg3); border-radius:4px;">32KB Flash</span>
+              <span style="padding:2px 6px; background:var(--bg3); border-radius:4px;">2KB SRAM</span>
+              <span style="padding:2px 6px; background:var(--bg3); border-radius:4px;">1KB EEPROM</span>
+            </div>
+          </div>
+        </div>
+        <a href="https://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-7810-Automotive-Microcontrollers-ATmega328P_Datasheet.pdf" target="_blank" class="chip-source">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3"/></svg>
+          Datasheet: Microchip
+        </a>
+      </div>
+
+      <!-- ULN2003 -->
+      <div class="chip-card">
+        <div class="chip-visual-wrap">
+          <div class="chip-ic-body" style="width:110px; height:60px;">
+            <div class="chip-ic-label" style="font-size:10px;">ULN2003A</div>
+            <!-- 16 pin -->
+            <div class="chip-ic-pin p-l" style="top:4px;"></div><div class="chip-ic-pin p-l" style="top:11px;"></div><div class="chip-ic-pin p-l" style="top:18px;"></div><div class="chip-ic-pin p-l" style="top:25px;"></div><div class="chip-ic-pin p-l" style="top:32px;"></div><div class="chip-ic-pin p-l" style="top:39px;"></div><div class="chip-ic-pin p-l" style="top:46px;"></div><div class="chip-ic-pin p-l" style="top:53px;"></div>
+            <div class="chip-ic-pin p-r" style="top:4px;"></div><div class="chip-ic-pin p-r" style="top:11px;"></div><div class="chip-ic-pin p-r" style="top:18px;"></div><div class="chip-ic-pin p-r" style="top:25px;"></div><div class="chip-ic-pin p-r" style="top:32px;"></div><div class="chip-ic-pin p-r" style="top:39px;"></div><div class="chip-ic-pin p-r" style="top:46px;"></div><div class="chip-ic-pin p-r" style="top:53px;"></div>
+          </div>
+        </div>
+        <div class="chip-info">
+          <h3 style="font-size:16px; margin-bottom:8px;">ULN2003A Darlington</h3>
+          <p style="font-size:12px; color:var(--text2); line-height:1.5;">Array dari 7 pasang NPN Darlington. Sangat sering dipakai untuk men-drive stepper motor, relay, atau LED beban berat.</p>
+          <div style="margin-top:12px; font-size:11px; font-family:var(--mono);">
+            <div style="color:var(--text3); margin-bottom:4px;">Specs:</div>
+            <div style="display:flex; flex-wrap:wrap; gap:5px;">
+              <span style="padding:2px 6px; background:var(--bg3); border-radius:4px;">500mA per pin</span>
+              <span style="padding:2px 6px; background:var(--bg3); border-radius:4px;">50V Max</span>
+            </div>
+          </div>
+        </div>
+        <a href="https://www.ti.com/lit/ds/symlink/uln2003a.pdf" target="_blank" class="chip-source">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3"/></svg>
+          Datasheet: Texas Instruments
+        </a>
+      </div>
     </div>
+
+    <!-- INTERACTIVE ARDUINO ANATOMY -->
+    <div class="projects-header" style="margin-top:50px;">
+      <h2>🗺️ Anatomi Board (Interaktif)</h2>
+      <p>Klik pin pada replika board Arduino Uno di bawah untuk melihat fungsi spesifiknya!</p>
+    </div>
+
+    <div class="board-interactive-card" style="background:var(--bg2); border:1px solid var(--line); border-radius:16px; padding:24px; margin-top:20px; display:flex; flex-wrap:wrap; gap:20px;">
+      <!-- ARDUINO VISUAL -->
+      <div class="board-visual" style="flex:1; min-width:300px; display:flex; justify-content:center; align-items:center; background:var(--bg3); border-radius:12px; padding:40px 20px; position:relative; overflow:hidden;">
+        <div class="arduino-board" style="width:260px; height:180px; background:#0f475a; border-radius:10px 10px 30px 10px; position:relative; box-shadow:inset 0 0 10px rgba(0,0,0,0.5), 0 10px 20px rgba(0,0,0,0.3); border:2px solid #1a6f8c;">
+            
+            <!-- USB Port -->
+            <div style="position:absolute; top:20px; left:-5px; width:15px; height:40px; background:#e2e8f0; border-radius:2px; border:2px solid #94a3b8; z-index:2; box-shadow:2px 0 5px rgba(0,0,0,0.4);"></div>
+            <!-- Power Jack -->
+            <div style="position:absolute; bottom:15px; left:-5px; width:20px; height:35px; background:#0f172a; border-radius:2px; border:2px solid #334155; z-index:2; box-shadow:2px 0 5px rgba(0,0,0,0.4);"></div>
+            
+            <!-- Main IC DIP28 -->
+            <div style="position:absolute; bottom:55px; right:40px; width:80px; height:25px; background:#1e293b; border-radius:3px; border:1px solid #000; box-shadow:inset 0 0 5px #000, 2px 2px 5px rgba(0,0,0,0.4); display:flex; flex-direction:column; justify-content:space-between; padding:2px;">
+              <div style="display:flex; justify-content:space-between;"><div style="width:3px;height:3px;background:#64748b;border-radius:50%;"></div><div style="width:3px;height:3px;background:#64748b;border-radius:50%;"></div><div style="width:3px;height:3px;background:#64748b;border-radius:50%;"></div><div style="width:3px;height:3px;background:#64748b;border-radius:50%;"></div><div style="width:3px;height:3px;background:#64748b;border-radius:50%;"></div></div>
+              <div style="color:#475569; font-size:6px; font-family:monospace; text-align:center;">ATMEGA328P</div>
+              <div style="display:flex; justify-content:space-between;"><div style="width:3px;height:3px;background:#64748b;border-radius:50%;"></div><div style="width:3px;height:3px;background:#64748b;border-radius:50%;"></div><div style="width:3px;height:3px;background:#64748b;border-radius:50%;"></div><div style="width:3px;height:3px;background:#64748b;border-radius:50%;"></div><div style="width:3px;height:3px;background:#64748b;border-radius:50%;"></div></div>
+            </div>
+            
+            <div style="color:#38bdf8; position:absolute; top:70px; left:50px; font-weight:bold; font-size:16px; transform:rotate(-90deg); letter-spacing:2px; opacity:0.8; text-shadow:0 0 4px rgba(56,189,248,0.5);">ARDUINO UNO</div>
+            <div style="color:#fff; position:absolute; top:130px; left:25px; font-size:12px; transform:rotate(-90deg); opacity:0.3; border:1px solid #fff; border-radius:50%; width:20px; height:20px; display:flex; align-items:center; justify-content:center;">&infin;</div>
+            
+            <!-- Clickable Pins Container Top -->
+            <div style="position:absolute; top:2px; right:8px; display:flex; gap:2px; background:#1e293b; padding:2px; border-radius:2px; border:1px solid #334155;">
+              <button class="ardi-pin" onclick="showArdiPin('D13', 'Digital I/O & Built-in LED', 'Pin yang terhubung langsung dengan LED bawaan board. Sering dipakai untuk testing/blinking tanpa perlu pasang LED eksternal tambahan.')">13</button>
+              <button class="ardi-pin" onclick="showArdiPin('D11', 'PWM (Pulse Width Modulation)', 'Pin digital yang mendukung fungsi PWM (ditandai dengan ~). Bisa dipakai untuk mengendalikan kecerahan LED bertahap atau mengatur kecepatan motor DC.')">11~</button>
+              <button class="ardi-pin" onclick="showArdiPin('D9', 'PWM (Pulse Width Modulation)', 'Sama seperti pin 11, ini adalah pin PWM. Sangat sering digunakan oleh para pe-hobi untuk mengirim sinyal kendali sudut ke Motor Servo.')">9~</button>
+              <button class="ardi-pin" onclick="showArdiPin('D2', 'Digital I/O & External Interrupt', 'Selain I/O biasa, pin 2 dan 3 adalah pin spesial yang dipasangi fitur *Hardware Interrupt*. Sangat berguna untuk membaca sensor rotary encoder tanpa jeda.')">2</button>
+              <button class="ardi-pin" onclick="showArdiPin('TX', 'Serial Transmit', 'Pin D1 (TX). Berfungsi untuk mengirim data serial (UART) ke komputer atau modul luar (seperti Bluetooth HC-05). Jangan dipakai menjadi input/output biasa saat sedang meng-upload program!')">TX</button>
+              <button class="ardi-pin" onclick="showArdiPin('RX', 'Serial Receive', 'Pin D0 (RX). Menerima data serial. Sama seperti TX, hindari menghubungkan sensor ke pin ini jika ingin komunikasi terminal USB ke laptop berjalan lancar.')">RX</button>
+            </div>
+
+            <!-- Clickable Pins Container Bottom Power -->
+            <div style="position:absolute; bottom:2px; left:60px; display:flex; gap:2px; background:#1e293b; padding:2px; border-radius:2px; border:1px solid #334155;">
+              <button class="ardi-pin pwr" onclick="showArdiPin('5V', 'Power Output 5 Volt', 'Menyediakan listrik 5 Volt DC yang sudah lolos regulator internal board untuk langsung menyalakan berbagai modul / sensor 5V logik.')">5V</button>
+              <button class="ardi-pin pwr" onclick="showArdiPin('3.3V', 'Power Output 3.3 Volt', 'Output tegangan ekstra! Memberikan 3.3V untuk modul-modul yang membutuhkan tegangan rendah seperti modul memori SD Card, modul nirkabel (NRF24), atau ESP8266 ESP-01.')">3V3</button>
+              <button class="ardi-pin pwr" onclick="showArdiPin('GND', 'Ground (Negatif)', 'Titik nol / kutub negatif kelistrikan (-). Semua rangkaian elektronik dari modul/sensor apa pun WAJIB menyambung kembali jalurnya ke Ground ini agar *loop* arus bisa mengalir sempurna.')">GND</button>
+              <button class="ardi-pin pwr" onclick="showArdiPin('VIN', 'Voltage In', 'Bisa dipakai *mengeluarkan* arus paralel langsung dari *Power Jack* hitam, ATAU justru di-_supply_ arus listrik dari luar (baterai Lipo/kotak) sebesar 7V hingga 12V untuk menghidupkan Arduino.')">VIN</button>
+            </div>
+
+            <!-- Clickable Pins Container Bottom Analog -->
+            <div style="position:absolute; bottom:2px; right:30px; display:flex; gap:2px; background:#1e293b; padding:2px; border-radius:2px; border:1px solid #334155;">
+              <button class="ardi-pin ana" onclick="showArdiPin('A0-A5', 'Analog In (10-bit ADC)', 'Pin pintar yang bisa membaca variasi tegangan (0 sampai 5V) dan mengubahnya secara instan menjadi angka desimal (0-1023). Wajib dipakai untuk baca sensor analog layaknya potensio, Joystick, Modul Suhu LM35, atau sensor Cahaya (LDR).')">A0..A5</button>
+            </div>
+            
+        </div>
+      </div>
+      
+      <!-- INFORMATION PANEL -->
+      <div class="board-info" style="flex:1; min-width:260px; background:var(--bg4); border:1px solid var(--line2); border-radius:12px; padding:24px;">
+        <div style="color:var(--accent); font-weight:700; font-size:12px; margin-bottom:8px; text-transform:uppercase; letter-spacing:0.5px;">Informasi Detail Pin</div>
+        <h3 id="ardi-pin-title" style="font-size:20px; line-height:1.4; margin-bottom:12px; color:var(--text); text-shadow:0 0 10px rgba(79,156,249,0.1);">Pilih Pin Berwarna pada Board! 👈</h3>
+        <p id="ardi-pin-desc" style="font-size:14px; color:var(--text2); line-height:1.6; margin-bottom:20px;">
+          Anda bisa berinteraksi langsung dengan memencet ilustrasi pin-pin Arduino Uno berwarna di sebelah kiri, untuk melihat deskripsi, spesifikasi, serta anjuran pemakaian pada setiap kakinya.
+        </p>
+        <div class="ardi-tags" style="display:flex; flex-wrap:wrap; gap:8px;">
+          <span style="padding:4px 8px; background:rgba(79,156,249,0.1); border:1px solid rgba(79,156,249,0.3); border-radius:6px; font-size:11px; color:var(--accent); font-weight:500;">Arduino Uno Rev3</span>
+          <span style="padding:4px 8px; background:rgba(34,197,94,0.1); border:1px solid rgba(34,197,94,0.3); border-radius:6px; font-size:11px; color:var(--green); font-weight:500;">Interactive Visualizer</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Inline Styles and Script for interactive board -->
+    <style>
+      .ardi-pin {
+        width: 24px; height: 16px; background: #94a3b8; color: #fff; font-size: 8px; font-weight: 700; font-family: monospace; border: none; cursor: pointer; border-radius: 1px; display: flex; align-items: center; justify-content: center; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); padding:0; box-shadow: inset 0 2px 4px rgba(255,255,255,0.2), 0 2px 4px rgba(0,0,0,0.3); text-shadow: 0 1px 1px #000;
+      }
+      .ardi-pin:hover { background: #38bdf8; transform: translateY(-3px); box-shadow: inset 0 2px 4px rgba(255,255,255,0.4), 0 4px 8px rgba(0,0,0,0.5); z-index:10; position:relative; }
+      .ardi-pin:active { transform: translateY(0); box-shadow: inset 0 1px 2px rgba(0,0,0,0.5); }
+      .ardi-pin.pwr { background: #ef4444; }
+      .ardi-pin.pwr:hover { background: #f87171; }
+      .ardi-pin.ana { width: 44px; background: #8b5cf6; }
+      .ardi-pin.ana:hover { background: #a78bfa; }
+    </style>
+    <script>
+      function showArdiPin(pinName, type, description) {
+        document.getElementById('ardi-pin-title').innerHTML = `<span style="color:var(--accent); font-size:24px; font-weight:600;">Pin ${pinName}</span> <br><span style="display:inline-block; font-size:12px; font-weight:500; font-family:var(--mono); color:var(--text); background:var(--bg2); border:1px solid var(--line); border-radius:6px; padding:4px 8px; margin-top:8px;">${type}</span>`;
+        document.getElementById('ardi-pin-desc').innerHTML = `<strong>Kegunaan Praktis:</strong><br><span style="margin-top:4px; display:inline-block;">${description}</span>`;
+      }
+    </script>
+
   </div>
 </div>
 
