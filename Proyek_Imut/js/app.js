@@ -3382,6 +3382,16 @@ function setSkemaPrompt(txt){
   }
 }
 
+// ── MERMAID CONFIGURATION ──
+if (window.mermaid) {
+  mermaid.initialize({
+    startOnLoad: false,
+    theme: 'dark',
+    securityLevel: 'loose',
+    flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'basis' }
+  });
+}
+
 async function generateDiagram(userPrompt) {
   const pStr = userPrompt || document.getElementById('skema-prompt')?.value;
   if(!pStr || pStr.trim().length < 3) return;
@@ -3403,9 +3413,11 @@ async function generateDiagram(userPrompt) {
     const messages = [
       { 
         role: 'system', 
-        content: `You are an expert electrical engineering diagram generator. Your ONLY task is to output valid Mermaid.js code for the requested circuit/flowchart. 
-        You MUST wrap the code in standard Markdown format: \`\`\`mermaid\n[code here]\n\`\`\`. 
-        Do NOT output any explanations, conversational text, or greetings. Just the code block.` 
+        content: `You are an expert electrical diagram generator. Output ONLY valid, basic Mermaid.js code wrapped in \`\`\`mermaid blocks. 
+        RULE 1: Use ONLY standard flowcharts (\`flowchart TD\` or \`flowchart LR\`). 
+        RULE 2: Use ONLY standard connections (\`-->\`, \`---\`, \`-.->\`). DO NOT invent custom link symbols like \`-->|+\`. 
+        RULE 3: Keep node names simple and use standard brackets like \`A[Resistor]\`. 
+        DO NOT output any explanations, conversational text, or greetings. Just the code block.` 
       },
       { role: 'user', content: pStr }
     ];
