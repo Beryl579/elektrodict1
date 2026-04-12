@@ -325,7 +325,23 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
 .sico{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:13px;pointer-events:none}
 .sx{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text3);cursor:pointer;font-size:16px;display:none;padding:2px 4px}
 
-.fbar{padding:10px 0;display:flex;gap:5px;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid var(--line)}
+.fbar-wrap { position: relative; display: flex; align-items: center; border-bottom: 1px solid var(--line); margin-bottom: 0px; }
+.fbar{flex: 1; padding:10px 0; display:flex; gap:5px; overflow-x:auto; scrollbar-width:none; border-bottom:none; scroll-behavior: smooth;}
+
+.fbar-btn {
+  width: 24px; height: 24px; background: var(--bg3); border: 1px solid var(--line); border-radius: 50%;
+  color: var(--text2); display: none; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s;
+  position: absolute; z-index: 10; box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+}
+.fbar-btn:hover { background: var(--accent-d); border-color: var(--accent); color: var(--text); transform: scale(1.1); }
+.fbar-btn svg { width: 14px; height: 14px; }
+.fbar-left { left: 0; transform: translateX(-50%); }
+.fbar-right { right: 0; transform: translateX(50%); }
+
+@media(min-width: 860px) {
+  .fbar-btn { display: flex; }
+  .fbar { padding-left: 10px; padding-right: 10px; mask-image: linear-gradient(90deg, transparent, #000 12px, #000 calc(100% - 12px), transparent); -webkit-mask-image: linear-gradient(90deg, transparent, #000 12px, #000 calc(100% - 12px), transparent); }
+}
 .fbar::-webkit-scrollbar{display:none}
 .chip{flex-shrink:0;font-size:11px;font-family:var(--mono);padding:5px 13px;border-radius:99px;cursor:pointer;border:1px solid var(--line);background:transparent;color:var(--text2);transition:all .15s;white-space:nowrap}
 .chip:hover{border-color:var(--line2);color:var(--text)}
@@ -2753,3 +2769,19 @@ body.fade-out {
     display: none !important;
   }
 }
+
+
+/* -- LAB SKEMA AI -- */
+.skema-input-group { margin-top: 24px; position: relative; }
+.skema-input { width: 100%; min-height: 120px; background: var(--bg3); border: 1px solid var(--line); border-radius: 12px; padding: 16px; color: var(--text); font-family: var(--font); font-size: 14px; outline: none; transition: border-color 0.2s; resize: vertical; }
+.skema-input:focus { border-color: var(--accent); }
+.skema-gen-btn { margin-top: 12px; width: 100%; padding: 12px; background: var(--accent); color: var(--bg); border: none; border-radius: 10px; font-weight: 700; cursor: pointer; transition: transform 0.2s; }
+.skema-gen-btn:active { transform: scale(0.98); }
+
+.prompt-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.prompt-chip { padding: 6px 14px; background: var(--bg2); border: 1px solid var(--line); border-radius: 99px; font-size: 12px; color: var(--text2); cursor: pointer; transition: all 0.2s; }
+.prompt-chip:hover { border-color: var(--accent); color: var(--text); background: var(--bg3); }
+
+.mermaid-canvas { min-height: 300px; width: 100%; background: var(--bg2); border: 1px dashed var(--bg5); border-radius: 12px; margin-top: 24px; display: flex; align-items: center; justify-content: center; padding: 16px; overflow-x: auto; }
+.mermaid-canvas span { color: var(--text3); font-size: 13px; }
+

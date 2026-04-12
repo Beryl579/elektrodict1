@@ -130,7 +130,7 @@
   </button>
 
   <button class="bnav-item desktop-only" id="bnav-chips" onclick="switchTab('chips')">
-    <span class="bnav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 2v2M12 2v2M17 2v2M7 20v2M12 20v2M17 20v2M2 7h2M2 12h2M2 17h2M20 7h2M20 12h2M20 17h2M9 9h6v6H9z"/></svg></span>
+    <span class="bnav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 2v2M12 2v2M17 2v2M7 20v2M12 20v2M17 20v2M2 7h2M2 12h2M2 17h2M20 7h2M20 12h20 17h2M9 9h6v6H9z"/></svg></span>
     <span class="bnav-label">Chip Lib</span>
   </button>
 
@@ -147,7 +147,11 @@
     <input type="text" id="searchInput" placeholder="Cari istilah, rumus, kata kunci..." oninput="onSearch(this.value)">
     <button class="sx" id="sx" onclick="clearSearch()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button>
   </div></div>
-  <div class="fbar" id="fbar"></div>
+  <div class="fbar-wrap" id="fbarWrap">
+    <button class="fbar-btn fbar-left" onclick="document.getElementById('fbar').scrollBy({left: -200, behavior: 'smooth'})" title="Geser Kiri"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></button>
+    <div class="fbar" id="fbar"></div>
+    <button class="fbar-btn fbar-right" onclick="document.getElementById('fbar').scrollBy({left: 200, behavior: 'smooth'})" title="Geser Kanan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button>
+  </div>
   <div class="kbody">
     <div class="ksec">
       <div class="smeta">
@@ -440,12 +444,26 @@
 
 <!-- ═══════ SKEMA PAGE ═══════ -->
 <div class="page" id="page-skema">
-  <div class="skema-wrap">
+  <div class="projects-wrap">
     <div class="skema-header">
-      <h2>⚡ Skema Rangkaian Dasar</h2>
-      <p>Diagram interaktif — tap toggle untuk lihat kondisi rangkaian</p>
+      <h2>Lab Skema AI 🛠️</h2>
+      <p style="color: var(--text2);">Ketik nama rangkaian atau sistem, AI akan menggambar diagram alirnya secara instan.</p>
     </div>
-    <div class="skema-list" id="skema-list"></div>
+
+    <div class="skema-input-group">
+      <textarea id="skema-prompt" class="skema-input" placeholder="Contoh: Rangkaian Seri RLC..."></textarea>
+      <button class="skema-gen-btn" id="btn-gen-skema">Generate Diagram ⚡</button>
+    </div>
+
+    <div class="prompt-chips">
+      <div class="prompt-chip" onclick="setSkemaPrompt('Rangkaian Seri RLC')">Rangkaian Seri RLC</div>
+      <div class="prompt-chip" onclick="setSkemaPrompt('Cara Kerja Relay')">Cara Kerja Relay</div>
+      <div class="prompt-chip" onclick="setSkemaPrompt('Skema Motor Star-Delta')">Skema Motor Star-Delta</div>
+    </div>
+
+    <div id="mermaid-diagram-output" class="mermaid-canvas">
+      <span>Diagram akan muncul di sini...</span>
+    </div>
   </div>
 </div>
 
@@ -698,6 +716,7 @@
     </div>
 
     <div class="std-grid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:20px; margin-top:30px;">
+      
       <!-- PUIL Summary -->
       <div class="std-card" style="background:var(--bg2); border:1px solid var(--line); border-radius:16px; padding:24px;">
         <div style="font-size:12px; color:var(--accent); font-family:var(--mono); margin-bottom:8px;">SNI 0225:2011</div>
@@ -1257,6 +1276,11 @@
 
 <!-- Marked.js CDN for Markdown tables -->
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+<!-- Mermaid.js for Diagrams -->
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'dark' });</script>
+
 
 <script src="js/data.js"></script>
 <script src="js/api.js"></script>

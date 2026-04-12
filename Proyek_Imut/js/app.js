@@ -1212,6 +1212,7 @@ function renderAIVMath(el){
   }
 }
 
+
 async function analyzeImage(){
   if(!aivImageB64) return;
   const btn = document.getElementById('aiv-analyze-btn');
@@ -1700,6 +1701,7 @@ function botMsg(v,txt,err=false){
   el.appendChild(d);
   el.scrollTop=el.scrollHeight;
 }
+
 
 
 // userMsg untuk input baru (tidak di-escape, sudah plain text dari input field)
@@ -3370,3 +3372,78 @@ function exportProjectToPdf() {
     const filename = `${(prj.title || 'Project').replace(/\s+/g, '_')}_Report.pdf`;
     doc.save(filename);
 }
+function setSkemaPrompt(txt){
+  const inp = document.getElementById('skema-prompt');
+  if(inp){
+    inp.value = txt;
+    inp.focus();
+    // Auto trigger generate
+    generateDiagram(txt);
+  }
+}
+
+async function generateDiagram(userPrompt) {
+  const pStr = userPrompt || document.getElementById('skema-prompt')?.value;
+  if(!pStr || pStr.trim().length < 3) return;
+
+  const btn = document.getElementById('btn-gen-skema');
+  const inp = document.getElementById('skema-prompt');
+  const out = document.getElementById('mermaid-diagram-output');
+
+  if(!btn || !inp || !out) return;
+
+  // 1. Loading State
+  btn.disabled = true;
+  inp.disabled = true;
+  btn.textContent = "AI Lagi Gambar... 🎨";
+  out.innerHTML = `<span style="color: var(--accent); font-size:13px;">Sedang memproses skema menggunakan AI... ⚡</span>`;
+
+  try {
+    // 2. API Call (Groq) via ElektroAPI
+    const messages = [
+      { 
+        role: 'system', 
+        content: `You are an expert electrical engineering diagram generator. Your ONLY task is to output valid Mermaid.js code for the requested circuit/flowchart. 
+        You MUST wrap the code in standard Markdown format: \`\`\`mermaid\n[code here]\n\`\`\`. 
+        Do NOT output any explanations, conversational text, or greetings. Just the code block.` 
+      },
+      { role: 'user', content: pStr }
+    ];
+
+    const data = await window.ElektroAPI.chat(messages, { temperature: 0.2 });
+    const responseText = data.choices[0].message.content;
+
+    // 3. Regex Extraction
+    const match = responseText.match(/```mermaid\n([\s\S]*?)```/);
+    if (match && match[1]) {
+      const code = match[1].trim();
+      
+      // 4. Render
+      out.innerHTML = `<div class="mermaid">${code}</div>`;
+      
+      if (window.mermaid) {
+        await mermaid.run({
+          nodes: out.querySelectorAll('.mermaid')
+        });
+      }
+    } else {
+      throw new Error("Format diagram tidak ditemukan");
+    }
+
+  } catch (err) {
+    console.error("[Lab Skema] Error:", err);
+    out.innerHTML = `<span style="color: var(--rose); font-size:13px;">⚠️ Gagal memproses skema. Coba prompt yang lebih spesifik, Sob!</span>`;
+  } finally {
+    // 5. Cleanup UI
+    btn.disabled = false;
+    inp.disabled = false;
+    btn.textContent = "Generate Diagram ⚡";
+  }
+}
+
+// Attach Event Listener
+window.addEventListener('load', () => {
+  const genBtn = document.getElementById('btn-gen-skema');
+  if(genBtn) genBtn.addEventListener('click', () => generateDiagram());
+});
+
