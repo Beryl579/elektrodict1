@@ -2785,3 +2785,18 @@ body.fade-out {
 .mermaid-canvas { min-height: 300px; width: 100%; background: var(--bg2); border: 1px dashed var(--bg5); border-radius: 12px; margin-top: 24px; display: flex; align-items: center; justify-content: center; padding: 16px; overflow-x: auto; }
 .mermaid-canvas span { color: var(--text3); font-size: 13px; }
 
+
+/* -- SKEMA ACTIONS & MODAL -- */
+.skema-actions { position: absolute; top: 12px; right: 12px; display: flex; gap: 8px; z-index: 10; }
+.skema-act-btn { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); color: var(--text); padding: 8px 14px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 6px; }
+.skema-act-btn:hover { background: rgba(255, 255, 255, 0.2); border-color: var(--accent); }
+
+.skema-modal { position: fixed; inset: 0; z-index: 9999; display: none; align-items: center; justify-content: center; padding: 20px; }
+.skema-modal.show { display: flex; }
+.sm-overlay { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(8px); }
+.sm-content { position: relative; background: var(--bg2); border: 1px solid var(--line); width: 100%; max-width: 1000px; max-height: 90vh; border-radius: 20px; padding: 40px 20px 20px; box-shadow: var(--shadow); overflow: auto; display: flex; align-items: center; justify-content: center; }
+.sm-close { position: absolute; top: 12px; right: 16px; width: 32px; height: 32px; border-radius: 50%; background: var(--bg3); border: 1px solid var(--line); color: var(--text); font-size: 20px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; }
+.sm-close:hover { background: var(--rose); color: #fff; }
+#skema-modal-body { width: 100%; }
+#skema-modal-body svg { width: 100% !important; height: auto !important; }
+

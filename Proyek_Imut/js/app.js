@@ -3440,6 +3440,10 @@ async function generateDiagram(userPrompt) {
         await mermaid.run({
           nodes: out.querySelectorAll('.mermaid')
         });
+
+        // Show Actions after render
+        const act = document.getElementById('skema-actions');
+        if(act) act.style.display = 'flex';
       }
     } else {
       throw new Error("Format diagram tidak ditemukan");
@@ -3448,6 +3452,8 @@ async function generateDiagram(userPrompt) {
   } catch (err) {
     console.error("[Lab Skema] Error:", err);
     out.innerHTML = `<span style="color: var(--rose); font-size:13px;">⚠️ Gagal memproses skema. Coba prompt yang lebih spesifik, Sob!</span>`;
+    const act = document.getElementById('skema-actions');
+    if(act) act.style.display = 'none';
   } finally {
     // 5. Cleanup UI
     btn.disabled = false;
@@ -3456,9 +3462,48 @@ async function generateDiagram(userPrompt) {
   }
 }
 
-// Attach Event Listener
-window.addEventListener('load', () => {
-  const genBtn = document.getElementById('btn-gen-skema');
-  if(genBtn) genBtn.addEventListener('click', () => generateDiagram());
-});
+function toggleSkemaZoom() {
+  const modal = document.getElementById('skema-modal');
+  const modalBody = document.getElementById('skema-modal-body');
+  const source = document.getElementById('mermaid-diagram-output');
+  
+  if (!modal || !modalBody || !source) return;
+
+  if (modal.classList.contains('show')) {
+    modal.classList.remove('show');
+    modalBody.innerHTML = ''; // Clean up
+  } else {
+    // Clone the generated SVG into modal
+    const svg = source.querySelector('svg');
+    if (svg) {
+      modalBody.innerHTML = svg.outerHTML;
+      modal.classList.add('show');
+    }
+  }
+}
+
+function downloadSkemaSVG() {
+  const source = document.getElementById('mermaid-diagram-output');
+  const svg = source?.querySelector('svg');
+  
+  if (!svg) return;
+
+  // Create SVG Blob
+  const svgData = svg.outerHTML;
+  const svgBlob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+  const svgUrl = URL.createObjectURL(svgBlob);
+  
+  // Trigger Download
+  const downloadLink = document.createElement('a');
+  downloadLink.href = svgUrl;
+  downloadLink.download = `elektrodict-skema-${Date.now()}.svg`;
+  document.body.appendChild(downloadLink);
+  downloadLink.click();
+  document.body.removeChild(downloadLink);
+  
+  // Clean up
+  URL.revokeObjectURL(svgUrl);
+}
+
+
 

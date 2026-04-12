@@ -452,7 +452,7 @@
 
     <div class="skema-input-group">
       <textarea id="skema-prompt" class="skema-input" placeholder="Contoh: Rangkaian Seri RLC..."></textarea>
-      <button class="skema-gen-btn" id="btn-gen-skema">Generate Diagram ⚡</button>
+      <button class="skema-gen-btn" id="btn-gen-skema" onclick="generateDiagram()">Generate Diagram ⚡</button>
     </div>
 
     <div class="prompt-chips">
@@ -461,9 +461,24 @@
       <div class="prompt-chip" onclick="setSkemaPrompt('Skema Motor Star-Delta')">Skema Motor Star-Delta</div>
     </div>
 
-    <div id="mermaid-diagram-output" class="mermaid-canvas">
-      <span>Diagram akan muncul di sini...</span>
+    <div class="skema-output-wrap" style="position: relative; margin-top: 24px;">
+      <div id="skema-actions" class="skema-actions" style="display: none;">
+        <button class="skema-act-btn" onclick="toggleSkemaZoom()" title="Zoom In">🔍 Fullscreen</button>
+        <button class="skema-act-btn" onclick="downloadSkemaSVG()" title="Download SVG">📥 Download</button>
+      </div>
+      <div id="mermaid-diagram-output" class="mermaid-canvas" style="margin-top: 0;">
+        <span>Diagram akan muncul di sini...</span>
+      </div>
     </div>
+  </div>
+</div>
+
+<!-- ═══════ SKEMA FULLSCREEN MODAL ═══════ -->
+<div id="skema-modal" class="skema-modal">
+  <div class="sm-overlay" onclick="toggleSkemaZoom()"></div>
+  <div class="sm-content">
+    <button class="sm-close" onclick="toggleSkemaZoom()">×</button>
+    <div id="skema-modal-body"></div>
   </div>
 </div>
 
