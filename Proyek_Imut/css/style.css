@@ -2800,3 +2800,254 @@ body.fade-out {
 #skema-modal-body { width: 100%; }
 #skema-modal-body svg { width: 100% !important; height: auto !important; }
 
+/* -- WIKIPEDIA INTEGRATION -- */
+.card-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  margin-bottom: 8px;
+}
+.card-actions .eask, .card-actions .ewiki {
+  flex: 1;
+  text-align: center;
+  justify-content: center;
+}
+
+.ewiki {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--line);
+  color: var(--text2);
+  font-family: var(--font);
+  font-size: 12px;
+  font-weight: 500;
+  padding: 8px 12px;
+  border-radius: var(--r2);
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.ewiki:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-d);
+}
+.ewiki.active {
+  background: var(--accent-d);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.wiki-res {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s;
+  opacity: 0;
+  background: var(--bg4);
+  border-radius: 12px;
+}
+.wiki-res.show {
+  max-height: 600px;
+  opacity: 1;
+  margin-top: 10px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  animation: wikiFadeIn 0.4s ease;
+}
+@keyframes wikiFadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.wiki-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+@media(min-width: 480px) {
+  .wiki-content { flex-direction: row; align-items: flex-start; }
+}
+.wiki-img {
+  width: 100px;
+  height: auto;
+  min-height: 100px;
+  border-radius: 8px;
+  object-fit: cover;
+  background: #000;
+  border: 1px solid var(--line);
+  flex-shrink: 0;
+}
+.wiki-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.wiki-title-ref {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: -4px;
+}
+.wiki-text p {
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--text2);
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.wiki-link {
+  font-size: 11px;
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 600;
+  font-family: var(--mono);
+}
+.wiki-link:hover { text-decoration: underline; }
+
+/* -- TECH NEWS PAGE -- */
+#page-news { padding-top: 10px; }
+
+.news-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+  margin-top: 24px;
+}
+
+@media(max-width: 640px) {
+  .news-grid { grid-template-columns: 1fr; gap: 16px; }
+}
+
+.news-card {
+  background: var(--bg2);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  animation: cardEntrance 0.6s cubic-bezier(0.4, 0, 0.2, 1) both;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+.news-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  border-color: var(--accent);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4), var(--glow);
+}
+
+.news-img-wrap {
+  position: relative;
+  width: 100%;
+  height: 180px;
+  overflow: hidden;
+  background: var(--bg3);
+}
+
+.news-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.news-card:hover .news-img { transform: scale(1.1); }
+
+.news-date {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(8px);
+  color: #fff;
+  font-family: var(--mono);
+  font-size: 10px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.1);
+  z-index: 2;
+}
+
+.news-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.news-source {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+
+.news-title {
+  font-family: var(--font-h);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.3;
+  margin-bottom: 12px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.news-desc {
+  font-size: 13px;
+  color: var(--text2);
+  line-height: 1.6;
+  margin-bottom: 20px;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  flex: 1;
+}
+
+.news-btn {
+  display: inline-block;
+  width: fit-content;
+  background: var(--bg3);
+  border: 1px solid var(--line);
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: all 0.2s;
+  align-self: flex-start;
+}
+
+.news-btn:hover {
+  background: var(--accent);
+  color: var(--bg);
+  border-color: var(--accent);
+  transform: translateX(4px);
+}
+
+.news-refresh:hover {
+  background: var(--accent-d) !important;
+  color: var(--accent) !important;
+  border-color: var(--accent) !important;
+  transform: rotate(30deg);
+}
+
+.news-loading {
+  animation: fadeIn 0.3s ease;
+}
+
+

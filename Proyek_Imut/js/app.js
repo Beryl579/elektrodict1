@@ -328,6 +328,8 @@ function switchTab(t){
     toggleSynth();
   }
 
+  if(t === 'news') loadNews();
+
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
@@ -465,7 +467,11 @@ function renderCard(d, i, isFeature) {
           <div class="etext">${d.detail}</div>
           ${d.formula?`<div class="elabel">RUMUS</div><div class="eformula" id="ef${i}" data-latex="${d.formula.replace(/"/g,'&quot;')}"></div>`:''}
           <div class="etags">${(d.tags||[]).map(t=>`<span class="etag">#${t}</span>`).join('')}</div>
-          <button class="eask" onclick="askCard(event,'${d.en.replace(/'/g,'\\\'').replace(/"/g,'')}','${d.id.replace(/'/g,'\\\'').replace(/"/g,'')}')"><span>💬</span> Tanya ElektroBot</button>
+          <div class="card-actions">
+            <button class="eask" onclick="askCard(event,'${d.en.replace(/'/g,'\\\'').replace(/"/g,'')}','${d.id.replace(/'/g,'\\\'').replace(/"/g,'')}')"><span>💬</span> Tanya AI</button>
+            <button class="ewiki" id="wb${i}" onclick="getWikiInfo(event, ${i}, '${d.id.replace(/'/g,'\\\'').replace(/"/g,'')}')"><span>📖</span> Wikipedia</button>
+          </div>
+          <div class="wiki-res" id="wr${i}"></div>
         </div>
       </div>
     </div>`;
@@ -484,7 +490,11 @@ function renderCard(d, i, isFeature) {
           <div class="etext">${d.detail}</div>
           ${d.formula?`<div class="elabel">RUMUS</div><div class="eformula" id="ef${i}" data-latex="${d.formula.replace(/"/g,'&quot;')}"></div>`:''}
           <div class="etags">${(d.tags||[]).map(t=>`<span class="etag">#${t}</span>`).join('')}</div>
-          <button class="eask" onclick="askCard(event,'${d.en.replace(/'/g,'\\\'').replace(/"/g,'')}','${d.id.replace(/'/g,'\\\'').replace(/"/g,'')}')"><span>💬</span> Tanya ElektroBot</button>
+          <div class="card-actions">
+            <button class="eask" onclick="askCard(event,'${d.en.replace(/'/g,'\\\'').replace(/"/g,'')}','${d.id.replace(/'/g,'\\\'').replace(/"/g,'')}')"><span>💬</span> Tanya AI</button>
+            <button class="ewiki" id="wb${i}" onclick="getWikiInfo(event, ${i}, '${d.id.replace(/'/g,'\\\'').replace(/"/g,'')}')"><span>📖</span> Wikipedia</button>
+          </div>
+          <div class="wiki-res" id="wr${i}"></div>
         </div>
       </div>
       <div class="cchev">▼</div>
@@ -503,6 +513,44 @@ function askCard(e,en,id){
   const mob=window.innerWidth<860;
   if(mob){if(!mOpen)openM();setTimeout(()=>{document.getElementById('inpM').value=q;send('M');},300);}
   else{document.getElementById('inpD').value=q;send('D');}
+}
+
+async function getWikiInfo(e, i, query) {
+  e.stopPropagation();
+  const btn = document.getElementById(`wb${i}`);
+  const resEl = document.getElementById(`wr${i}`);
+  
+  if (resEl.classList.contains('show')) {
+    resEl.classList.remove('show');
+    btn.classList.remove('active');
+    return;
+  }
+
+  // Loading state
+  btn.disabled = true;
+  btn.innerHTML = `<span>⏳</span> Memuat...`;
+  
+  try {
+    const data = await window.ElektroAPI.fetchWikiSummary(query);
+    
+    resEl.innerHTML = `
+      <div class="wiki-content">
+        ${data.thumbnail ? `<img src="${data.thumbnail.source}" class="wiki-img" alt="Wiki Image">` : ''}
+        <div class="wiki-text">
+          <div class="wiki-title-ref">${data.displaytitle || data.title}</div>
+          <p>${data.extract}</p>
+          <a href="${data.content_urls.desktop.page}" target="_blank" class="wiki-link">Baca selengkapnya di Wikipedia →</a>
+        </div>
+      </div>
+    `;
+    resEl.classList.add('show');
+    btn.classList.add('active');
+  } catch (err) {
+    alert(err.message || "Gagal mengambil data Wikipedia.");
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = `<span>📖</span> Wikipedia`;
+  }
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -3515,6 +3563,58 @@ function downloadSkemaSVG() {
   
   // Clean up
   URL.revokeObjectURL(svgUrl);
+}
+
+// ═══════════════════════════════════════════════════════════
+// NEWS LOGIC
+// ═══════════════════════════════════════════════════════════
+let newsLoaded = false;
+async function loadNews(force = false) {
+  if (newsLoaded && !force) return;
+  const grid = document.getElementById('news-grid');
+  const loader = document.getElementById('news-loading');
+  
+  grid.style.display = 'none';
+  loader.style.display = 'block';
+  
+  try {
+    const articles = await window.ElektroAPI.fetchTechNews();
+    renderNews(articles);
+    newsLoaded = true;
+  } catch (err) {
+    grid.innerHTML = `<div class="empty" style="display:block">⚠️ Gagal memuat berita. Coba lagi nanti.</div>`;
+    grid.style.display = 'block';
+  } finally {
+    loader.style.display = 'none';
+  }
+}
+
+function renderNews(articles) {
+  const grid = document.getElementById('news-grid');
+  if (!articles || articles.length === 0) {
+    grid.innerHTML = `<div class="empty" style="display:block">Tidak ada berita terbaru saat ini.</div>`;
+    grid.style.display = 'block';
+    return;
+  }
+
+  grid.innerHTML = articles.map(a => {
+    const date = new Date(a.publishedAt).toLocaleDateString('id-ID', { day:'numeric', month:'short', year:'numeric' });
+    return `
+      <div class="news-card" style="animation-delay: \${Math.random() * 0.5}s">
+        <div class="news-img-wrap">
+          <img src="\${a.urlToImage || 'https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?auto=format&fit=crop&w=600&q=80'}" class="news-img" alt="news" loading="lazy">
+          <div class="news-date">\${date}</div>
+        </div>
+        <div class="news-body">
+          <div class="news-source">\${a.source.name}</div>
+          <h3 class="news-title">\${a.title}</h3>
+          <p class="news-desc">\${a.description || 'Klik untuk membaca detail berita selengkapnya di sumber asli.'}</p>
+          <a href="\${a.url}" target="_blank" class="news-btn">Baca Selengkapnya →</a>
+        </div>
+      </div>
+    `;
+  }).join('');
+  grid.style.display = 'grid';
 }
 
 

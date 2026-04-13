@@ -155,6 +155,77 @@
         console.error('[ElektroAPI] Project Generation Error:', error);
         throw error;
       }
+    },
+
+    async fetchWikiSummary(title) {
+      // Helper function for direct summary fetch
+      const getSummary = async (lang, t) => {
+        const url = `https://${lang}.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(t)}`;
+        const resp = await fetchWithTimeout(url, {}, 8000);
+        return resp.ok ? await resp.json() : null;
+      };
+
+      // Helper for fuzzy search to find a title
+      const findTitle = async (lang, query) => {
+        const url = `https://${lang}.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(query)}&format=json&origin=*&srlimit=1`;
+        const resp = await fetchWithTimeout(url, {}, 8000);
+        if (!resp.ok) return null;
+        const data = await resp.json();
+        return data.query?.search?.[0]?.title || null;
+      };
+
+      try {
+        // 0. Clean the query (remove text in brackets like (AC), (DC))
+        const cleanTitle = title.replace(/\s*\(.*?\)\s*/g, '').trim();
+        
+        // 1. Try ID Exact
+        let data = await getSummary('id', cleanTitle);
+        if (data && data.type !== 'no-extract') return data;
+
+        // 2. Try ID Search (Fuzzy)
+        const fuzzyId = await findTitle('id', cleanTitle);
+        if (fuzzyId && fuzzyId !== cleanTitle) {
+          data = await getSummary('id', fuzzyId);
+          if (data && data.type !== 'no-extract') return data;
+        }
+
+        // 3. Try EN Exact (Fallback for Technical Terms)
+        data = await getSummary('en', cleanTitle);
+        if (data && data.type !== 'no-extract') return data;
+
+        // 4. Try EN Search (Last Resort)
+        const fuzzyEn = await findTitle('en', cleanTitle);
+        if (fuzzyEn) {
+          data = await getSummary('en', fuzzyEn);
+          if (data && data.type !== 'no-extract') return data;
+        }
+
+        throw new Error("Referensi tidak ditemukan di Wikipedia Indonesia maupun Inggris.");
+      } catch (error) {
+        console.error('[ElektroAPI] Wiki Fetch Error:', error);
+        throw error;
+      }
+    },
+
+    async fetchTechNews() {
+      try {
+        const apiKey = '706c0eb85ea248f1ad8d18261b9ac159';
+        // NewsAPI Everything endpoint proxied via Vercel
+        const query = encodeURIComponent('electronics OR semiconductor OR "electrical engineering" OR "microchip" OR robotics');
+        const url = `/api/news-proxy/everything?q=${query}&sortBy=publishedAt&language=en&pageSize=24&apiKey=${apiKey}`;
+
+        const response = await fetchWithTimeout(url, {}, 15000);
+        
+        if (!response.ok) {
+          throw new Error("Gagal mengambil berita terbaru.");
+        }
+
+        const data = await response.json();
+        return data.articles || [];
+      } catch (error) {
+        console.error('[ElektroAPI] News Fetch Error:', error);
+        throw error;
+      }
     }
   };
 })();
