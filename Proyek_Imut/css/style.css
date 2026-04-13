@@ -3053,52 +3053,46 @@ body.fade-out {
 /* -- NEWS TRANSLATION -- */
 .news-actions {
   display: flex;
-  gap: 10px;
+  gap: 12px;
   margin-top: auto;
   align-items: center;
+  flex-wrap: wrap;
 }
 
-.news-translate-btn {
-  background: rgba(79, 156, 249, 0.1);
-  border: 1px solid rgba(79, 156, 249, 0.2);
-  color: var(--accent);
-  padding: 8px 12px;
-  border-radius: 10px;
-  font-size: 11px;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
+.news-btn {
+  display: inline-flex;
   align-items: center;
   gap: 6px;
-  transition: all 0.2s;
-  white-space: nowrap;
+  padding: 8px 16px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid var(--line);
 }
 
-.news-translate-btn:hover {
-  background: rgba(79, 156, 249, 0.2);
-  border-color: var(--accent);
+.news-btn.primary {
+  background: var(--bg3);
+  color: var(--text);
+}
+
+.news-btn.primary:hover {
+  background: var(--line);
   transform: translateY(-2px);
 }
 
-.news-translate-btn.loading {
-  opacity: 0.7;
-  pointer-events: none;
-  background: var(--bg3);
-  position: relative;
-  overflow: hidden;
+.news-btn.g-trans {
+  background: rgba(79, 156, 249, 0.1);
+  color: var(--accent);
+  border-color: rgba(79, 156, 249, 0.2);
 }
 
-.news-translate-btn.loading::after {
-  content: "";
-  position: absolute;
-  top: 0; left: -100%;
-  width: 100%; height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-  animation: shimmer 1.5s infinite;
-}
-
-@keyframes shimmer {
-  100% { left: 100%; }
+.news-btn.g-trans:hover {
+  background: rgba(79, 156, 249, 0.2);
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(79, 156, 249, 0.2);
 }
 
 

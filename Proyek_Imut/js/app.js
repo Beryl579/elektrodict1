@@ -3599,8 +3599,7 @@ function renderNews(articles) {
 
   grid.innerHTML = articles.map(a => {
     const date = new Date(a.publishedAt).toLocaleDateString('id-ID', { day:'numeric', month:'short', year:'numeric' });
-    const cleanTitle = a.title.replace(/"/g, '&quot;');
-    const cleanDesc = (a.description || '').replace(/"/g, '&quot;');
+    const gtranslateUrl = `https://translate.google.com/translate?sl=en&tl=id&u=${encodeURIComponent(a.url)}`;
 
     return `
       <div class="news-card" style="animation-delay: ${Math.random() * 0.5}s">
@@ -3612,76 +3611,19 @@ function renderNews(articles) {
         </div>
         <div class="news-body">
           <div class="news-source">${a.source.name}</div>
-          <h3 class="news-title" data-en="${cleanTitle}">${a.title}</h3>
-          <p class="news-desc" data-en="${cleanDesc}">${a.description || 'Klik untuk membaca detail berita selengkapnya di sumber asli.'}</p>
+          <h3 class="news-title">${a.title}</h3>
+          <p class="news-desc">${a.description || 'Klik untuk membaca detail berita selengkapnya di sumber asli.'}</p>
           <div class="news-actions">
-            <a href="${a.url}" target="_blank" class="news-btn">Baca Asli →</a>
-            <button class="news-translate-btn" onclick="translateNewsCard(this)">
-              <span>🤖 Terjemahkan</span>
-            </button>
+            <a href="${a.url}" target="_blank" class="news-btn primary">Baca Asli →</a>
+            <a href="${gtranslateUrl}" target="_blank" class="news-btn g-trans">
+              <span>🇮🇩 Terjemahkan</span>
+            </a>
           </div>
         </div>
       </div>
     `;
   }).join('');
   grid.style.display = 'grid';
-}
-
-async function translateNewsCard(btn) {
-  const card = btn.closest('.news-card');
-  const titleEl = card.querySelector('.news-title');
-  const descEl = card.querySelector('.news-desc');
-  const btnText = btn.querySelector('span');
-  
-  // Toggle Load
-  if (btn.classList.contains('translated')) {
-    titleEl.textContent = titleEl.dataset.en;
-    descEl.textContent = descEl.dataset.en;
-    btnText.textContent = "🤖 Terjemahkan";
-    btn.classList.remove('translated');
-    return;
-  }
-
-  const enTitle = titleEl.dataset.en;
-  const enDesc = descEl.dataset.en;
-
-  btn.classList.add('loading');
-  btnText.textContent = "Menerjemahkan...";
-
-  try {
-    const prompt = `Translate this technical news to natural Indonesian. Keep technical terms (like IC, MOSFET, CMOS, etc) if they are standard in IT/Electronics. Response MUST BE JSON: {"title": "...", "desc": "..."}.
-    
-    TITLE: ${enTitle}
-    DESC: ${enDesc}`;
-
-    const res = await callAI({
-      messages: [{ role: "user", content: prompt }],
-      model: "llama-3.3-70b-versatile",
-      temperature: 0.3
-    });
-
-    let translated;
-    try {
-      // Clean potential markdown prefix
-      const jsonStr = res.choices[0].message.content.replace(/```json|```/g, '').trim();
-      translated = JSON.parse(jsonStr);
-    } catch(e) {
-      // Fallback if AI doesn't return pure JSON
-      translated = { title: enTitle.substring(0, 30) + "... (Gagal Terjemah)", desc: res.choices[0].message.content };
-    }
-
-    if (translated.title) titleEl.textContent = translated.title;
-    if (translated.desc) descEl.textContent = translated.desc;
-
-    btnText.textContent = "🇺🇩 Lihat Asli";
-    btn.classList.add('translated');
-  } catch (err) {
-    console.error("Translation Error:", err);
-    btnText.textContent = "⚠️ Gagal";
-    setTimeout(() => { btnText.textContent = "🤖 Terjemahkan"; }, 2000);
-  } finally {
-    btn.classList.remove('loading');
-  }
 }
 
 
