@@ -158,16 +158,16 @@
     },
 
     async fetchWikiSummary(title) {
-      // Helper function for direct summary fetch
+      // Helper function for direct summary fetch via proxy
       const getSummary = async (lang, t) => {
-        const url = `https://${lang}.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(t)}`;
+        const url = `/api/wiki-${lang}-proxy/api/rest_v1/page/summary/${encodeURIComponent(t)}`;
         const resp = await fetchWithTimeout(url, {}, 8000);
         return resp.ok ? await resp.json() : null;
       };
 
-      // Helper for fuzzy search to find a title
+      // Helper for fuzzy search to find a title via proxy
       const findTitle = async (lang, query) => {
-        const url = `https://${lang}.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(query)}&format=json&origin=*&srlimit=1`;
+        const url = `/api/wiki-${lang}-proxy/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(query)}&format=json&srlimit=1`;
         const resp = await fetchWithTimeout(url, {}, 8000);
         if (!resp.ok) return null;
         const data = await resp.json();
