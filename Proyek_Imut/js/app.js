@@ -3600,16 +3600,18 @@ function renderNews(articles) {
   grid.innerHTML = articles.map(a => {
     const date = new Date(a.publishedAt).toLocaleDateString('id-ID', { day:'numeric', month:'short', year:'numeric' });
     return `
-      <div class="news-card" style="animation-delay: \${Math.random() * 0.5}s">
+      <div class="news-card" style="animation-delay: ${Math.random() * 0.5}s">
         <div class="news-img-wrap">
-          <img src="\${a.urlToImage || 'https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?auto=format&fit=crop&w=600&q=80'}" class="news-img" alt="news" loading="lazy">
-          <div class="news-date">\${date}</div>
+          <img src="${a.urlToImage || 'https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?auto=format&fit=crop&w=600&q=80'}" 
+               class="news-img" alt="news" loading="lazy"
+               onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?auto=format&fit=crop&w=600&q=80';">
+          <div class="news-date">${date}</div>
         </div>
         <div class="news-body">
-          <div class="news-source">\${a.source.name}</div>
-          <h3 class="news-title">\${a.title}</h3>
-          <p class="news-desc">\${a.description || 'Klik untuk membaca detail berita selengkapnya di sumber asli.'}</p>
-          <a href="\${a.url}" target="_blank" class="news-btn">Baca Selengkapnya →</a>
+          <div class="news-source">${a.source.name}</div>
+          <h3 class="news-title">${a.title}</h3>
+          <p class="news-desc">${a.description || 'Klik untuk membaca detail berita selengkapnya di sumber asli.'}</p>
+          <a href="${a.url}" target="_blank" class="news-btn">Baca Selengkapnya →</a>
         </div>
       </div>
     `;
