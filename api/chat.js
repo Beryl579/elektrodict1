@@ -105,6 +105,10 @@ module.exports = async function handler(req, res) {
 
     // 2. Groq fallback — model harus model Groq yang valid (bukan model OpenRouter)
     if ((!response || !response.ok) && groqKeys.length > 0) {
+      // Hormati pilihan model user jika model Groq yang valid, default gpt-oss-20b
+      const GROQ_MODELS = ['openai/gpt-oss-20b', 'openai/gpt-oss-120b', 'qwen/qwen3.6-27b'];
+      const groqModel = GROQ_MODELS.includes(targetModel) ? targetModel : 'openai/gpt-oss-20b';
+
       const callGroq = async (model) => {
         const currentKey = groqKeys[Math.floor(Math.random() * groqKeys.length)];
         return await fetch("https://api.groq.com/openai/v1/chat/completions", {
@@ -118,9 +122,9 @@ module.exports = async function handler(req, res) {
       };
 
       // gpt-oss-20b: konten bersih tanpa <think>, reasoning_effort low = hemat token
-      response = await callGroq("openai/gpt-oss-20b");
+      response = await callGroq(groqModel);
       if (response.status === 429 || response.status === 500) {
-        response = await callGroq("openai/gpt-oss-120b");
+        response = await callGroq(groqModel === 'openai/gpt-oss-20b' ? 'openai/gpt-oss-120b' : 'openai/gpt-oss-20b');
       }
     }
 
