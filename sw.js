@@ -1,6 +1,5 @@
-// v20: performa HP — preconnect CDN/YouTube, trim font weight tak terpakai,
-// jsPDF & Mermaid on-demand, thumbnail mqdefault.
-const CACHE_NAME = 'elektrodict-v20';
+// v21: chat AI tanpa <think> (gpt-oss-20b + reasoning low) + stripThink di frontend.
+const CACHE_NAME = 'elektrodict-v21';
 const ASSETS = [
   '/',
   '/index.html',
