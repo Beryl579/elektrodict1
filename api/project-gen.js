@@ -112,7 +112,7 @@ RULES:
             "Authorization": `Bearer ${currentKey}`,
             "Content-Type": "application/json"
           },
-          body: JSON.stringify(getPayload(model))
+          body: JSON.stringify({ ...getPayload(model), reasoning_effort: 'low' })
         });
         
         if (resp.status === 429) {
