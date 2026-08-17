@@ -2,7 +2,7 @@
  * Backend route for Vision (image analysis) — Groq proxy
  * Runtime: Node.js (Vercel default untuk /api/*.js)
  * Env: GROQ_API_KEY
- * Model: llama-4-scout-17b-16e-instruct (supports vision/multimodal)
+ * Model: openai/gpt-oss-120b (supports vision/multimodal)
  */
 
 const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
