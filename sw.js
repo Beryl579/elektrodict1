@@ -1,5 +1,5 @@
-// v22: persona chatbot sopan "Kak", batas input 200 karakter, model gpt-oss.
-const CACHE_NAME = 'elektrodict-v22';
+// v23: fitur Tabel PUIL (KHA lengkap, MCB standar, kalkulator kabel & MCB).
+const CACHE_NAME = 'elektrodict-v23';
 const ASSETS = [
   '/',
   '/index.html',
