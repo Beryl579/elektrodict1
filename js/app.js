@@ -6,6 +6,31 @@
 const API_MODEL = (window.ElektroAPI && window.ElektroAPI.MODEL_TEXT) || "z-ai/glm-5.2:free";
 const VERCEL_URL = (window.ElektroAPI && window.ElektroAPI.VERCEL_URL) || "/api/chat";
 
+/**
+ * Muat library eksternal on-demand (jsPDF, Mermaid) — hemat beban awal di HP.
+ */
+function loadScript(src) {
+  return new Promise((resolve, reject) => {
+    if (document.querySelector(`script[src="${src}"]`)) return resolve();
+    const s = document.createElement('script');
+    s.src = src;
+    s.onload = resolve;
+    s.onerror = () => reject(new Error(`Gagal memuat ${src}`));
+    document.head.appendChild(s);
+  });
+}
+
+async function ensureMermaid() {
+  if (window.mermaid) return;
+  await loadScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js');
+  mermaid.initialize({
+    startOnLoad: false,
+    theme: 'dark',
+    securityLevel: 'loose',
+    flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'basis' }
+  });
+}
+
 /** 
  * ElektroDict Unified API Wrapper 
  * Menggunakan window.ElektroAPI dari /js/api.js 
@@ -3166,9 +3191,13 @@ function drawScope() {
 /**
  * Professional AI Project Report Generator (PDF)
  */
-function exportProjectToPdf() {
+async function exportProjectToPdf() {
     const prj = window.currentPrjForExport;
     if (!prj) return;
+
+    // Muat jsPDF on-demand (tidak lagi dimuat di awal halaman)
+    await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js');
+    await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js');
 
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
@@ -3416,6 +3445,8 @@ async function generateDiagram(userPrompt) {
       // 4. Render
       out.innerHTML = `<div class="mermaid">${code}</div>`;
       
+      await ensureMermaid(); // muat Mermaid on-demand (pertama kali saja)
+      
       if (window.mermaid) {
         await mermaid.run({
           nodes: out.querySelectorAll('.mermaid')
@@ -3524,7 +3555,7 @@ function renderVideos(shuffle = false) {
   }
 
   grid.innerHTML = list.map(v => {
-    const thumb = `https://i.ytimg.com/vi/${v.id}/hqdefault.jpg`;
+    const thumb = `https://i.ytimg.com/vi/${v.id}/mqdefault.jpg`;
     const fallback = `data:image/svg+xml;utf8,${encodeURIComponent(
       `<svg xmlns="http://www.w3.org/2000/svg" width="480" height="360"><rect width="100%" height="100%" fill="%2312141a"/><g fill="%234f9cf9" text-anchor="middle" font-family="Arial" font-size="26" font-weight="bold"><text x="240" y="165">⚡ Video</text><text x="240" y="205" font-size="18" fill="%23888">${v.channel}</text></g></svg>`
     )}`;
@@ -3533,7 +3564,7 @@ function renderVideos(shuffle = false) {
         <div class="vid-thumb-wrap" onclick="openVideoById('${v.id}')" role="button" tabindex="0"
              onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openVideoById('${v.id}');}"
              aria-label="Putar video: ${v.title}">
-          <img src="${thumb}" class="news-img" alt="${v.title}" loading="lazy"
+          <img src="${thumb}" class="news-img" alt="${v.title}" loading="lazy" decoding="async" fetchpriority="low"
                onerror="this.onerror=null;this.src='${fallback}';">
           <span class="vid-play">
             <svg viewBox="0 0 24 24" fill="currentColor" style="width:22px;height:22px;"><path d="M8 5v14l11-7z"/></svg>
