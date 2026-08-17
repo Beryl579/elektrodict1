@@ -1339,15 +1339,11 @@
   </div>
 </div>
 
-<!-- jsPDF CDN for PDF export -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+<!-- Marked.js CDN for Markdown (defer: tidak memblokir render halaman) -->
+<script defer src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
-<!-- Marked.js CDN for Markdown tables -->
-<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-
-<!-- Mermaid.js for Diagrams -->
-<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<!-- jsPDF & Mermaid tidak dimuat di sini — dimuat on-demand saat fitur dipakai
+     (hemat ~2.4 MB unduhan & parsing di HP, app jadi jauh lebih ringan). -->
 
 
 

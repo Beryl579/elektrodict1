@@ -307,7 +307,17 @@ function copyCode(btn) {
     });
 }
 
-function exportToPDF() {
+async function exportToPDF() {
+    // Muat html2pdf on-demand (tidak dimuat di awal halaman)
+    if (typeof html2pdf === 'undefined') {
+        await new Promise((resolve, reject) => {
+            const s = document.createElement('script');
+            s.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
+            s.onload = resolve;
+            s.onerror = () => reject(new Error('Gagal memuat html2pdf'));
+            document.head.appendChild(s);
+        });
+    }
     const element = document.getElementById('chatHistory');
     const opt = {
         margin:       [15, 15],

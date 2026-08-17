@@ -1,6 +1,6 @@
-// v18: tombol chat (FAB & bubble HP) diseragamkan ke biru brand #4f9cf9
-// (sebelumnya putih metalik karena var(--accent) = #f1f1f1 di dark mode).
-const CACHE_NAME = 'elektrodict-v18';
+// v19: performa HP — jsPDF & Mermaid tidak lagi di-cache/dimuat di awal
+// (on-demand saat fitur dipakai). Thumbnail video pakai mqdefault (lebih ringan).
+const CACHE_NAME = 'elektrodict-v19';
 const ASSETS = [
   '/',
   '/index.html',
@@ -12,8 +12,7 @@ const ASSETS = [
   '/manifest.json',
   'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css',
   'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js',
-  'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js',
-  'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js'
+  'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js'
 ];
 
 self.addEventListener('install', (e) => {
