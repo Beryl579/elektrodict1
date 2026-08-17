@@ -3,7 +3,7 @@
 // ═══════════════════════════════════════════════════════════
 
 // Konstanta diambil dari ElektroAPI di js/api.js jika tersedia
-const API_MODEL = (window.ElektroAPI && window.ElektroAPI.MODEL_TEXT) || "llama-3.3-70b-versatile";
+const API_MODEL = (window.ElektroAPI && window.ElektroAPI.MODEL_TEXT) || "z-ai/glm-5.2:free";
 const VERCEL_URL = (window.ElektroAPI && window.ElektroAPI.VERCEL_URL) || "/api/chat";
 
 /** 
@@ -1779,7 +1779,7 @@ async function send(v){
   showDots('D'); showDots('M');
 
   try{
-    const mc = document.getElementById('modelChoiceD') ? document.getElementById('modelChoiceD').value : 'llama-3.3-70b-versatile';
+    const mc = document.getElementById('modelChoiceD') ? document.getElementById('modelChoiceD').value : 'z-ai/glm-5.2:free';
     // Sanitize history: remove 'file', 'image', or any extra properties before API call
     const cleanHistory = chatHistory.slice(-10).map(m => ({ role: m.role, content: m.content }));
     const data = await callAI({model: mc, messages:[{role:'system',content:SYS},...cleanHistory]});

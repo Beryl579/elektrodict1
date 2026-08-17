@@ -95,7 +95,7 @@ RULES:
             "HTTP-Referer": "https://elektrodict.vercel.app",
             "X-Title": "ElektroBot AI"
           },
-          body: JSON.stringify(getPayload("qwen/qwen-2.5-72b-instruct:free"))
+          body: JSON.stringify(getPayload("z-ai/glm-5.2:free"))
         });
       } catch (err) {
         console.warn("[Backend] OpenRouter project-gen failed, falling back to Groq...", err);
