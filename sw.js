@@ -1,5 +1,5 @@
-// v21: chat AI tanpa <think> (gpt-oss-20b + reasoning low) + stripThink di frontend.
-const CACHE_NAME = 'elektrodict-v21';
+// v22: persona chatbot sopan "Kak", batas input 200 karakter, model gpt-oss.
+const CACHE_NAME = 'elektrodict-v22';
 const ASSETS = [
   '/',
   '/index.html',
