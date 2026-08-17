@@ -40,7 +40,8 @@ module.exports = async function handler(req, res) {
     return res.end(JSON.stringify({ error: { message: 'Method Not Allowed' } }));
   }
 
-  const GROQ_API_KEY = process.env.GROQ_API_KEY;
+  const GROQ_API_KEY = (process.env.GROQ_API_KEYS && process.env.GROQ_API_KEYS.split(',')[0].trim())
+    || process.env.GROQ_API_KEY;
 
   if (!GROQ_API_KEY) {
     console.error('[API] GROQ_API_KEY kosong');
