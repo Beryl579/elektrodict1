@@ -44,7 +44,7 @@ module.exports = async function handler(req, res) {
 
     // --- MODEL SWITCHER LOGIC ---
     let requestedModel = payload.model;
-    let targetModel = requestedModel || "qwen/qwen-2.5-72b-instruct:free"; 
+    let targetModel = requestedModel || "z-ai/glm-5.2:free"; 
     let messages = Array.isArray(payload.messages) ? [...payload.messages] : [];
     
     const latexRules = "Strict Requirement: You MUST use LaTeX formatting for any mathematical formulas or equations. Inline Math: MUST be wrapped in single dollar signs ($). Example: $V = IR$. Block/Display Math: MUST be wrapped in double dollar signs ($$) on their own lines. Example: $$P = VI$$. STRICTLY FORBID using plain parentheses (...) or square brackets [...] to enclose LaTeX code.";
