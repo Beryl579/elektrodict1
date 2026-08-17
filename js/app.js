@@ -3,7 +3,7 @@
 // ═══════════════════════════════════════════════════════════
 
 // Konstanta diambil dari ElektroAPI di js/api.js jika tersedia
-const API_MODEL = (window.ElektroAPI && window.ElektroAPI.MODEL_TEXT) || "z-ai/glm-5.2:free";
+const API_MODEL = (window.ElektroAPI && window.ElektroAPI.MODEL_TEXT) || "openai/gpt-oss-20b";
 const VERCEL_URL = (window.ElektroAPI && window.ElektroAPI.VERCEL_URL) || "/api/chat";
 
 /**
@@ -71,16 +71,15 @@ async function callAI(payload) {
     return { error: { message: e.message || "Gagal terhubung ke AI." } };
   }
 }
-const SYS = `ROLE: 
-You are ElektroBot Mini, a friendly and helpful guide for the ElektroDict application. Your purpose is to provide quick help, welcome new users, and help them navigate features like the Dictionary, Quiz, AI Vision, and Calculators.
+const SYS = `Kamu ElektroBot, asisten ilmiah teknik elektro & elektronika. Formal, sopan, profesional. Panggil pengguna "Kak".
 
-PERSONALITY & TONE:
-- Tone: Extremely friendly, casual, and encouraging (use 'Sob', 'Bro', 'Suhu').
-- Style: Rapid, brief, and helpful. Keep responses concise.
-
-KNOWLEDGE BASE:
-- Features: Dictionary, AI Quiz, AI Vision, Resistance Color Code, Unit Conversion, and Circuits.
-- Navigation: Guide users to tabs like 📖 Kamus, 🧠 Latihan, 🔬 AI Vision, 🔢 Kalkulator.`;
+ATURAN:
+1. HANYA bahas elektronika: rangkaian, komponen, listrik/instalasi (PUIL), Arduino/ESP32, PLC, energi, rumus, SMK elektro.
+2. Di luar itu tolak dengan sopan, contoh: "Maaf Kak, saya khusus mendalami teknik elektro."
+3. Bahasa Indonesia formal ala ilmuwan, ringkas.
+4. Rumus wajib LaTeX: inline $...$, blok $$...$$.
+5. Tegangan tinggi/PLN: mulai dari peringatan bahaya listrik.
+6. Rangkaian rusak: pandu pengecekan bertahap, jangan langsung jawab.`;
 
 window.addEventListener('load',()=>{
   setTimeout(()=>{
@@ -1795,6 +1794,7 @@ function ck(e,v){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send(v);}}
 async function send(v){
   const inp=document.getElementById('inp'+v),txt=inp.value.trim();
   if(!txt||busy)return;
+  if(txt.length>200){botMsg(v,'Maaf Kak, pesan maksimal 200 karakter.');return;}
   if(!isBotOnline) {
     botMsg(v, 'Bot masih istirahat, tunggu sebentar ya... ⏳');
     return;
@@ -1811,7 +1811,7 @@ async function send(v){
   showDots('D'); showDots('M');
 
   try{
-    const mc = document.getElementById('modelChoiceD') ? document.getElementById('modelChoiceD').value : 'z-ai/glm-5.2:free';
+    const mc = document.getElementById('modelChoiceD') ? document.getElementById('modelChoiceD').value : 'openai/gpt-oss-20b';
     // Sanitize history: remove 'file', 'image', or any extra properties before API call
     const cleanHistory = chatHistory.slice(-10).map(m => ({ role: m.role, content: m.content }));
     const data = await callAI({model: mc, messages:[{role:'system',content:SYS},...cleanHistory]});
@@ -2551,7 +2551,7 @@ async function generateAIProject() {
     const status = err?.status || (err?.message || '').includes('429') ? 'limit_reached' : '';
 
     if (status === 'limit_reached' || err?.httpStatus === 429) {
-      showPrjToast("Waduh, trafik lagi padat banget! 🚦 Kuota AI kita lagi istirahat bentar. Coba lagi dalam 1-2 menit ya!", 'warn');
+      showPrjToast("Maaf Kak, layanan AI sedang padat. Silakan coba lagi dalam 1-2 menit.", 'warn');
     } else if (err?.name === 'TypeError' || err?.message?.includes('fetch') || err?.message?.includes('network')) {
       showPrjToast("Koneksi lagi bapuk nih... 🌐 Coba cek internet kamu atau klik 'Generate' sekali lagi!", 'warn');
     } else {
@@ -3469,7 +3469,7 @@ async function generateDiagram(userPrompt) {
 
   } catch (err) {
     console.error("[Lab Skema] Error:", err);
-    out.innerHTML = `<span style="color: var(--rose); font-size:13px;">⚠️ Gagal memproses skema. Coba prompt yang lebih spesifik, Sob!</span>`;
+    out.innerHTML = `<span style="color: var(--rose); font-size:13px;">⚠️ Gagal memproses skema. Coba prompt yang lebih spesifik, Kak.</span>`;
     const act = document.getElementById('skema-actions');
     if(act) act.style.display = 'none';
   } finally {

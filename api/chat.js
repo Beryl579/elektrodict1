@@ -44,29 +44,19 @@ module.exports = async function handler(req, res) {
 
     // --- MODEL SWITCHER LOGIC ---
     let requestedModel = payload.model;
-    let targetModel = requestedModel || "z-ai/glm-5.2:free"; 
+    let targetModel = requestedModel || "openai/gpt-oss-20b"; 
     let messages = Array.isArray(payload.messages) ? [...payload.messages] : [];
     
-    const latexRules = "Strict Requirement: You MUST use LaTeX formatting for any mathematical formulas or equations. Inline Math: MUST be wrapped in single dollar signs ($). Example: $V = IR$. Block/Display Math: MUST be wrapped in double dollar signs ($$) on their own lines. Example: $$P = VI$$. STRICTLY FORBID using plain parentheses (...) or square brackets [...] to enclose LaTeX code.";
-    const elektroBotPersona = `ROLE: 
-    You are ElektroBot, a Senior Electronics Engineer and Assistant. Your specialty is Circuit Design, Power Systems, Microcontrollers (Arduino/ESP32), Industrial Control (EKTS/PLC), and Vocational Electronics (SMK Teknik Elektro).
+    const latexRules = "Rumus wajib LaTeX: inline $...$, blok $$...$$. Contoh: $V = IR$. Dilarang memakai kurung biasa (...) untuk rumus.";
+    const elektroBotPersona = `Kamu ElektroBot, asisten ilmiah teknik elektro & elektronika. Formal, sopan, profesional. Panggil pengguna "Kak".
 
-    KNOWLEDGE BASE & RULES:
-    - Standards: Always refer to PUIL (Persyaratan Umum Instalasi Listrik) and international standards like IEEE or IEC.
-    - Precision: Always double-check unit conversions (e.g., mA to A, nF to uF) before giving an answer.
-    - Safety First: If a user asks about high voltage (PLN/AC), always start with a safety warning about electrical shock risks.
-    - Formula Expert: Always explain formulas using LaTeX. Break down the variables (V = Voltage, etc.).
-    - Troubleshooting Mode: If a user reports a broken circuit, DO NOT give a direct answer. Instead, guide them step-by-step: 'Cek tegangan input dulu Sob', 'Cek kontinuitas jalur', etc.
-
-    PERSONALITY & TONE:
-    - Tone: Technical yet casual Indonesian (use 'Sob', 'Bro', 'Suhu', 'Sirkuit', 'Arus', 'Tegangan').
-    - Style: Smart, helpful, and encouraging. Never be a 'rigid robot'.
-
-    FORMATTING:
-    - Use Marked.js for bold text, lists, and code blocks.
-    - Use KaTeX for beautiful math equations ($...$ or $$...$$).
-    
-    ${latexRules}`;
+ATURAN:
+1. HANYA bahas elektronika: rangkaian, komponen, listrik/instalasi (PUIL), Arduino/ESP32, PLC, energi, rumus, SMK elektro.
+2. Di luar itu tolak dengan sopan, contoh: "Maaf Kak, saya khusus mendalami teknik elektro. Ada hal lain seputar elektronika yang bisa saya bantu?"
+3. Bahasa Indonesia formal ala ilmuwan, ringkas, tepat.
+4. ${latexRules}
+5. Tegangan tinggi/PLN: mulai dari peringatan bahaya listrik.
+6. Rangkaian rusak: pandu pengecekan bertahap (tegangan, kontinuitas), jangan langsung jawab.`;
 
     // --- PERSONA LOGIC ---
     // Only apply the default persona if no system prompt is provided by the frontend.
@@ -74,6 +64,11 @@ module.exports = async function handler(req, res) {
     const hasSystemPrompt = messages.some(m => m.role === 'system');
     if (!hasSystemPrompt) {
       messages.unshift({ role: 'system', content: elektroBotPersona });
+      // Batas 200 karakter hanya untuk percakapan chat bebas (tanpa system prompt dari frontend)
+      const lastUserMsg = [...messages].reverse().find(m => m.role === 'user');
+      if (lastUserMsg && typeof lastUserMsg.content === 'string' && lastUserMsg.content.length > 200) {
+        return res.status(400).json({ error: { message: "Pesan terlalu panjang, Kak. Maksimal 200 karakter per pesan." } });
+      }
     }
 
     const aiPayload = {

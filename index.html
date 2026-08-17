@@ -198,13 +198,13 @@
         </div>
         <div style="padding:6px 12px 2px; display:flex; justify-content:center; align-items:center;">
           <select id="modelChoiceD" onchange="document.getElementById('modelChoiceM').value=this.value" style="font-family:var(--font);font-size:10.5px;font-weight:600;padding:5px 14px;border-radius:99px;background:var(--bg4);color:var(--text2);border:1px solid var(--line);outline:none;cursor:pointer;letter-spacing:0.02em;box-shadow:0 2px 4px rgba(0,0,0,0.2);">
-            <option value="z-ai/glm-5.2:free" selected>GLM 5.2 (Cepat)</option>
-            <option value="google/gemma-4-31b-it:free">Gemma 4 31B</option>
+            <option value="openai/gpt-oss-20b" selected>GPT-OSS 20B (Cepat)</option>
+            <option value="openai/gpt-oss-120b">GPT-OSS 120B (Pintar)</option>
           </select>
         </div>
         <div class="cinp">
           <button class="cmic" id="mic-btn-D" onclick="toggleMic('D')" title="Bicara dengan AI (Voice)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" x2="12" y1="19" y2="22"></line></svg></button>
-          <textarea id="inpD" placeholder="Tanya soal elektro..." rows="1" oninput="rz(this)" onkeydown="ck(event,'D')"></textarea>
+          <textarea id="inpD" placeholder="Tanya soal elektro..." rows="1" maxlength="200" oninput="rz(this)" onkeydown="ck(event,'D')"></textarea>
           <button class="csend" id="sendD" onclick="send('D')">
             <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg>
           </button>
@@ -317,13 +317,13 @@
   </div>
   <div style="padding:6px 12px 2px; display:flex; justify-content:center; align-items:center;">
     <select id="modelChoiceM" onchange="document.getElementById('modelChoiceD').value=this.value" style="font-family:var(--font);font-size:10.5px;font-weight:600;padding:5px 14px;border-radius:99px;background:var(--bg4);color:var(--text2);border:1px solid var(--line);outline:none;cursor:pointer;letter-spacing:0.02em;box-shadow:0 2px 4px rgba(0,0,0,0.2);">
-      <option value="z-ai/glm-5.2:free" selected>GLM 5.2 (Cepat)</option>
-      <option value="google/gemma-4-31b-it:free">Gemma 4 31B</option>
+      <option value="openai/gpt-oss-20b" selected>GPT-OSS 20B (Cepat)</option>
+      <option value="openai/gpt-oss-120b">GPT-OSS 120B (Pintar)</option>
     </select>
   </div>
   <div class="cinp">
     <button class="cmic" id="mic-btn-M" onclick="toggleMic('M')" title="Bicara dengan AI (Voice)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" x2="12" y1="19" y2="22"></line></svg></button>
-    <textarea id="inpM" placeholder="Tanya soal elektro..." rows="1" oninput="rz(this)" onkeydown="ck(event,'M')"></textarea>
+    <textarea id="inpM" placeholder="Tanya soal elektro..." rows="1" maxlength="200" oninput="rz(this)" onkeydown="ck(event,'M')"></textarea>
     <button class="csend" id="sendM" onclick="send('M')">
       <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg>
     </button>
