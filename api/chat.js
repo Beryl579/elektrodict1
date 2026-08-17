@@ -113,13 +113,14 @@ module.exports = async function handler(req, res) {
             "Authorization": `Bearer ${currentKey}`,
             "Content-Type": "application/json"
           },
-          body: JSON.stringify({ ...aiPayload, model })
+          body: JSON.stringify({ ...aiPayload, model, reasoning_effort: 'low' })
         });
       };
 
-      response = await callGroq("qwen/qwen3.6-27b");
+      // gpt-oss-20b: konten bersih tanpa <think>, reasoning_effort low = hemat token
+      response = await callGroq("openai/gpt-oss-20b");
       if (response.status === 429 || response.status === 500) {
-        response = await callGroq("openai/gpt-oss-20b");
+        response = await callGroq("openai/gpt-oss-120b");
       }
     }
 

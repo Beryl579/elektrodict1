@@ -15,6 +15,11 @@ const fileNameDisplay = document.getElementById('fileName');
 const imageInput = document.getElementById('imageInput');
 const modelSelector = document.getElementById('modelSelector');
 
+// Buang blok proses berpikir model (<think>...</think>) dari jawaban AI
+function stripThink(text) {
+  return String(text || '').replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
+}
+
 // Branding Keywords & Custom Response
 const BRANDING_KEYWORDS = [
     'beryl', 'sinaga', 'owner', 'founder', 'developer', 
@@ -147,7 +152,7 @@ async function sendMessage() {
                 ], { model: selectedModel });
             }
 
-            const aiMsg = response.choices?.[0]?.message?.content || 'Aduh Sob, sirkuit logika gue lagi overload nih! ⚡ Coba tanya lagi pake bahasa yang lebih teknis.';
+            const aiMsg = stripThink(response.choices?.[0]?.message?.content) || 'Aduh Sob, sirkuit logika gue lagi overload nih! ⚡ Coba tanya lagi pake bahasa yang lebih teknis.';
             renderBubble(aiMsg, 'ai');
             saveToHistory('ai', aiMsg);
         }

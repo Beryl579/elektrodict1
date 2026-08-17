@@ -31,6 +31,13 @@ async function ensureMermaid() {
   });
 }
 
+/**
+ * Buang blok proses berpikir model (<think>...</think>) dari jawaban AI
+ */
+function stripThink(text) {
+  return String(text || '').replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
+}
+
 /** 
  * ElektroDict Unified API Wrapper 
  * Menggunakan window.ElektroAPI dari /js/api.js 
@@ -657,7 +664,7 @@ Aturan:
     });
     if(data.error) throw new Error(data.error.message);
 
-    let raw = data.choices?.[0]?.message?.content || '';
+    let raw = stripThink(data.choices?.[0]?.message?.content) || '';
     // bersihkan kalau ada markdown
     raw = raw.replace(/```json|```/g,'').trim();
     // ambil bagian JSON-nya saja
@@ -871,7 +878,7 @@ async function fetchQuoteBackground(){
   const p = prompts[Math.floor(Math.random()*prompts.length)];
   try {
     const data = await callAI({model:API_MODEL, messages:[{role:'user',content:p}], max_tokens:120, temperature:0.9});
-    const raw = data.choices?.[0]?.message?.content?.trim() || '';
+    const raw = stripThink(data.choices?.[0]?.message?.content) || '';
     const lines = raw.split('\n').filter(l=>l.trim());
     const quote = lines[0]?.replace(/^[""]|[""]$/g,'').trim() || raw;
     const src   = lines[1]?.trim() || '— ElektroBot ⚡';
@@ -1290,7 +1297,7 @@ async function analyzeImage(){
     });
     document.getElementById('aiv-loading').classList.remove('show');
     if(data.error) throw new Error(data.error.message);
-    const reply = data.choices?.[0]?.message?.content || '(tidak ada respons)';
+    const reply = stripThink(data.choices?.[0]?.message?.content) || '(tidak ada respons)';
     const bubble = document.getElementById('aiv-result-bubble');
     bubble.innerHTML = parseAIText(reply);
     setTimeout(()=>renderAIVMath(bubble), 100);
@@ -1810,7 +1817,7 @@ async function send(v){
     const data = await callAI({model: mc, messages:[{role:'system',content:SYS},...cleanHistory]});
     hideDots('D'); hideDots('M');
     if(data.error) throw new Error(data.error.message);
-    const rep=data.choices?.[0]?.message?.content||'(tidak ada respons)';
+    const rep=stripThink(data.choices?.[0]?.message?.content)||'(tidak ada respons)';
     botMsg('D',rep);
     botMsg('M',rep);
     pushHist({role:'assistant',content:rep});
