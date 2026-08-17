@@ -132,7 +132,7 @@ RULES:
         return resp;
       };
 
-      response = await callGroq("qwen/qwen3.6-27b");
+      response = await callGroq("openai/gpt-oss-120b");
       if (response.status === 429 || response.status === 500) {
         response = await callGroq("openai/gpt-oss-20b");
       }
