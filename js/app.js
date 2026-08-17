@@ -1551,6 +1551,64 @@ function doCalc(id){
 }
 
 // ═══════════════════════════════════════════════════════════
+// PUIL CALCULATOR (Tabel PUIL)
+// ═══════════════════════════════════════════════════════════
+const PUIL_KHA = [
+  {mm:1.5, kha:15}, {mm:2.5, kha:20}, {mm:4, kha:27}, {mm:6, kha:34},
+  {mm:10, kha:46}, {mm:16, kha:61}, {mm:25, kha:80}, {mm:35, kha:99},
+  {mm:50, kha:125}, {mm:70, kha:160}, {mm:95, kha:195}, {mm:120, kha:225}
+];
+const PUIL_MCB = [2,4,6,10,16,20,25,32,40,50,63,80,100,125];
+
+function toggleCosPhi(){
+  const wrap = document.getElementById('puil-coswrap');
+  const sel  = document.getElementById('puil-sistem');
+  if(wrap) wrap.style.display = (sel && sel.value === '3f') ? '' : 'none';
+}
+
+function hitungPUIL(){
+  const res = document.getElementById('puil-result');
+  if(!res) return;
+  const P   = parseFloat(document.getElementById('puil-daya').value);
+  const sys = document.getElementById('puil-sistem').value;
+  const cos = parseFloat(document.getElementById('puil-cosphi').value);
+  if(!P || P <= 0){
+    res.innerHTML = '<div class="puil-err">⚠ Masukkan daya beban dalam Watt terlebih dahulu, Kak.</div>';
+    return;
+  }
+  if(sys === '3f' && (!cos || cos <= 0 || cos > 1)){
+    res.innerHTML = '<div class="puil-err">⚠ Faktor daya (cos φ) harus antara 0,1 dan 1.</div>';
+    return;
+  }
+  const I     = sys === '3f' ? P / (Math.sqrt(3) * 380 * cos) : P / 220;
+  const khaMin = I * 1.25;
+  if(I > 225){
+    res.innerHTML = `<div class="puil-err">⚠ Arus beban ${I.toFixed(0)} A melebihi tabel (maks 225 A). Gunakan kabel khusus / perhitungan teknis tersendiri, Kak.</div>`;
+    return;
+  }
+  // PUIL: kabel minimum untuk sirkuit daya = 2,5 mm² (1,5 mm² hanya untuk penerangan)
+  let cable = null;
+  for(const c of PUIL_KHA){ if(c.mm >= 2.5 && c.kha >= khaMin){ cable = c; break; } }
+  let mcb = null;
+  for(const r of PUIL_MCB){ if(r >= I){ mcb = r; break; } }
+  // Pastikan rating MCB tidak melebihi KHA kabel (PUIL: In ≤ KHA)
+  while(cable && mcb && mcb > cable.kha){
+    const i = PUIL_KHA.indexOf(cable);
+    cable = PUIL_KHA[i+1] || null;
+  }
+  const fmt  = (n,d=1) => n.toLocaleString('id-ID',{minimumFractionDigits:d, maximumFractionDigits:d});
+  const pmax = mcb ? (sys === '3f' ? Math.sqrt(3)*380*mcb*(cos||1) : 220*mcb) : 0;
+  res.innerHTML = `
+    <div class="pr-row"><span class="pr-lbl">Arus Beban (I)</span><span class="pr-val">${fmt(I)} A</span></div>
+    <div class="pr-row"><span class="pr-lbl">KHA Minimum (I × 1,25)</span><span class="pr-val">${fmt(khaMin)} A</span></div>
+    ${cable
+      ? `<div class="pr-row pr-hi"><span class="pr-lbl">Ukuran Kabel (NYA/NYM)</span><span class="pr-val pr-big">${cable.mm} mm² · KHA ${cable.kha} A</span></div>`
+      : '<div class="pr-row pr-hi"><span class="pr-lbl">Ukuran Kabel</span><span class="pr-val pr-big">Di luar tabel</span></div>'}
+    <div class="pr-row pr-hi"><span class="pr-lbl">MCB Rekomendasi</span><span class="pr-val pr-big">${mcb} A</span></div>
+    <div class="pr-row"><span class="pr-lbl">Daya Maks yang Dilayani</span><span class="pr-val">${fmt(pmax,0)} W</span></div>`;
+}
+
+// ═══════════════════════════════════════════════════════════
 // CHAT LOGIC
 // ═══════════════════════════════════════════════════════════
 // Persistent history via localStorage — shared D & M panel (selalu sinkron)
