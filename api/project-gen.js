@@ -1,7 +1,7 @@
 // api/project-gen.js - Serverless Function (Vercel)
 // Mengambil inspirasi dari api/chat.js untuk keamanan dan CORS
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   // CORS Headers
   const origin = req.headers.origin;
   const isAllowed = !origin || 

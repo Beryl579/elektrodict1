@@ -1,7 +1,7 @@
 // api/chat.js - Standard Node.js Serverless Function (Vercel)
 // Menggunakan Standard Runtime (bukan Edge) untuk stabilitas lebih baik
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
   // CORS Headers
   const origin = req.headers.origin;
   const isAllowed = !origin || 
