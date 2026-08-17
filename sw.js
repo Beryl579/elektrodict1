@@ -1,6 +1,6 @@
-// v19: performa HP — jsPDF & Mermaid tidak lagi di-cache/dimuat di awal
-// (on-demand saat fitur dipakai). Thumbnail video pakai mqdefault (lebih ringan).
-const CACHE_NAME = 'elektrodict-v19';
+// v20: performa HP — preconnect CDN/YouTube, trim font weight tak terpakai,
+// jsPDF & Mermaid on-demand, thumbnail mqdefault.
+const CACHE_NAME = 'elektrodict-v20';
 const ASSETS = [
   '/',
   '/index.html',
