@@ -28,7 +28,7 @@ const BRANDING_KEYWORDS = [
     'siapa dev nya', 'siapa yang koding'
 ];
 
-const BRANDING_RESPONSE = `Halo Sob! ElektroDict ini dirancang dan dikoding langsung sama **Beryl Sinaga**, seorang Fresh Graduate yang fokus di dunia teknik elektro dan web dev. <br><br> <a href="https://berylnathaniel.my.id/" target="_blank" class="chat-branding-link">Cek portofolio Beryl di sini!</a>`;
+const BRANDING_RESPONSE = `Halo Kak! ElektroDict ini dirancang dan dikembangkan oleh **Beryl Sinaga**, seorang Fresh Graduate yang fokus di dunia teknik elektro dan web development. <br><br> <a href="https://berylnathaniel.my.id/" target="_blank" class="chat-branding-link">Kunjungi portofolio Beryl di sini!</a>`;
 
 // State
 let isTyping = false;
@@ -136,11 +136,11 @@ async function sendMessage() {
         } else {
             let response;
             if (currentBase64) {
-                response = await window.ElektroAPI.analyzeImage(currentBase64, currentType, userText || "Apa yang ada di gambar ini Sob?");
+                response = await window.ElektroAPI.analyzeImage(currentBase64, currentType, userText || "Apa yang ada di gambar ini, Kak?");
             } else {
                 let fullPrompt = userText;
                 if (currentFileName && !currentBase64) {
-                    fullPrompt = `[Lampiran File: ${currentFileName}]\n\n${userText || "Saya menglampirkan file ini Sob, ada yang bisa dibantu?"}`;
+                    fullPrompt = `[Lampiran File: ${currentFileName}]\n\n${userText || "Saya menglampirkan file ini, Kak. Ada yang bisa dibantu?"}`;
                 }
 
                 // We pass the history for context if available
@@ -152,13 +152,13 @@ async function sendMessage() {
                 ], { model: selectedModel });
             }
 
-            const aiMsg = stripThink(response.choices?.[0]?.message?.content) || 'Aduh Sob, sirkuit logika gue lagi overload nih! ⚡ Coba tanya lagi pake bahasa yang lebih teknis.';
+            const aiMsg = stripThink(response.choices?.[0]?.message?.content) || 'Maaf Kak, saya belum bisa memproses permintaan ini. Silakan coba lagi dengan pertanyaan yang lebih spesifik.';
             renderBubble(aiMsg, 'ai');
             saveToHistory('ai', aiMsg);
         }
     } catch (err) {
         console.error('Chat Error:', err);
-        renderBubble('Waduh Sob, sirkuit logika gue lagi overload/short-circuit nih! ⚡ Coba tanya lagi pake bahasa yang lebih teknis atau cek koneksi lu dulu biar arusnya stabil.', 'ai');
+        renderBubble('Maaf Kak, terjadi kendala pada layanan. Silakan coba lagi.', 'ai');
     } finally {
         setLoading(false);
         scrollToBottom();
@@ -288,10 +288,10 @@ function loadHistory() {
 }
 
 function confirmClearHistory() {
-    if (confirm("Hapus seluruh riwayat chat Sob? Tindakan ini gak bisa dibatalin.")) {
+    if (confirm("Hapus seluruh riwayat chat, Kak? Tindakan ini tidak dapat dibatalkan.")) {
         chatHistoryState = [];
         localStorage.removeItem('main_chatbot_history');
-        chatHistory.innerHTML = '<div class="chat-bubble chat-bubble-ai">Riwayat dihapus. Ada yang baru yang bisa saya bantu, Sob? ⚡</div>';
+        chatHistory.innerHTML = '<div class="chat-bubble chat-bubble-ai">Riwayat dihapus. Ada yang lain yang bisa saya bantu, Kak?</div>';
     }
 }
 
