@@ -1082,7 +1082,7 @@ function initResistor(){
 // ═══════════════════════════════════════════════════════════
 // AI VISION — SOAL FOTO + RANGKAIAN ANALYZER
 // ═══════════════════════════════════════════════════════════
-const AIV_MODEL = 'meta-llama/llama-4-scout-17b-16e-instruct';
+const AIV_MODEL = 'openai/gpt-oss-120b';
 let aivMode = 'soal';
 let aivImageB64 = null;
 let aivImageType = 'image/jpeg';

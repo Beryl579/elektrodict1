@@ -132,9 +132,9 @@ RULES:
         return resp;
       };
 
-      response = await callGroq("llama-3.3-70b-versatile");
+      response = await callGroq("qwen/qwen3.6-27b");
       if (response.status === 429 || response.status === 500) {
-        response = await callGroq("llama-3.1-8b-instant");
+        response = await callGroq("openai/gpt-oss-20b");
       }
     }
 
