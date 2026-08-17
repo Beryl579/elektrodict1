@@ -1,0 +1,231 @@
+/**
+ * ElektroDict API Layer
+ * Semua panggilan Groq lewat /api/chat — API key hanya di Vercel (GROQ_API_KEY).
+ */
+
+(function() {
+  const VERCEL_URL = '/api/chat';
+  const MODEL_TEXT = 'openai/gpt-oss-120b';
+  const MODEL_VISION = 'llama-3.2-11b-vision-preview';
+  const TIMEOUT_TEXT_MS = 60000;
+  const TIMEOUT_VISION_MS = 120000;
+
+  /**
+   * fetch dengan batas waktu — cegah hang yang mengunci UI.
+   */
+  function fetchWithTimeout(url, options, timeoutMs) {
+    const ctrl = new AbortController();
+    const id = setTimeout(() => ctrl.abort(), timeoutMs);
+    return fetch(url, { ...options, signal: ctrl.signal }).finally(() => clearTimeout(id));
+  }
+
+  /**
+   * Fungsi internal: POST payload ke proxy Vercel → Groq
+   */
+  async function callAIBase(payload, timeoutMs = TIMEOUT_TEXT_MS) {
+    try {
+      const response = await fetchWithTimeout(
+        VERCEL_URL,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        },
+        timeoutMs
+      );
+
+      const rawText = await response.text();
+      let data;
+      try {
+        data = rawText ? JSON.parse(rawText) : {};
+      } catch (e) {
+        throw new Error(rawText.slice(0, 200) || `HTTP ${response.status}`);
+      }
+
+      if (!response.ok) {
+        const msg = data.error?.message || data.message || (typeof data === 'string' ? data : JSON.stringify(data).slice(0, 300));
+        let line = msg || response.statusText;
+
+        // ── 429 Rate Limit — throw special error ──
+        if (response.status === 429 || /rate.?limit/i.test(line)) {
+          const waitMatch = line.match(/try again in ([\d.]+)s/i);
+          const waitSec = waitMatch ? Math.ceil(parseFloat(waitMatch[1])) : 20;
+          const err = new Error('RATE_LIMIT');
+          err.isRateLimit = true;
+          err.waitSeconds = waitSec;
+          throw err;
+        }
+
+        if (response.status === 404) {
+          line = (line ? line + ' ' : '') + '— Backend API tidak ditemukan.';
+        }
+        throw new Error(`HTTP ${response.status}: ${line}`);
+      }
+
+      if (data.error && !data.choices) {
+        throw new Error(data.error.message || JSON.stringify(data.error));
+      }
+
+      return data;
+    } catch (error) {
+      console.error('[ElektroDict API] Error:', error);
+      if (error.name === 'AbortError') {
+        throw new Error('Permintaan ke server habis waktu. Coba lagi.');
+      }
+      throw error;
+    }
+  }
+
+  window.ElektroAPI = {
+    VERCEL_URL,
+    MODEL_TEXT,
+    MODEL_VISION,
+    
+    async chat(messages, options = {}) {
+      return await callAIBase({
+        model: options.model || MODEL_TEXT,
+        messages,
+        temperature: options.temperature ?? 0.7,
+        max_tokens: options.max_tokens ?? 1000,
+        stream: false
+      }, TIMEOUT_TEXT_MS);
+    },
+
+    async generateQuiz(userPrompt) {
+      return await callAIBase({
+        model: MODEL_TEXT,
+        messages: [
+          { role: 'system', content: 'Kamu adalah generator soal teknik elektro. Selalu kembalikan HANYA JSON valid.' },
+          { role: 'user', content: userPrompt }
+        ],
+        temperature: 0.8,
+        max_tokens: 2000,
+        stream: false
+      }, TIMEOUT_TEXT_MS);
+    },
+
+    async analyzeImage(imageB64, imageType, prompt) {
+      return await callAIBase({
+        model: MODEL_VISION,
+        messages: [
+          {
+            role: 'user',
+            content: [
+              { type: 'image_url', image_url: { url: `data:${imageType};base64,${imageB64}` } },
+              { type: 'text', text: prompt }
+            ]
+          }
+        ],
+        max_tokens: 4096,
+        temperature: 0.3,
+        stream: false
+      }, TIMEOUT_VISION_MS);
+    },
+
+    async fetchQuote(prompt) {
+      return await callAIBase({
+        model: MODEL_TEXT,
+        messages: [{ role: 'user', content: prompt }],
+        max_tokens: 200,
+        temperature: 0.9,
+        stream: false
+      }, TIMEOUT_TEXT_MS);
+    },
+
+    async generateProject(idea) {
+      try {
+        const response = await fetchWithTimeout(
+          '/api/project-gen',
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ idea })
+          },
+          TIMEOUT_TEXT_MS
+        );
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error?.message || "Gagal membuat proyek.");
+        }
+
+        return await response.json();
+
+      } catch (error) {
+        console.error('[ElektroAPI] Project Generation Error:', error);
+        throw error;
+      }
+    },
+
+    async fetchWikiSummary(title) {
+      // Helper function for direct summary fetch via proxy
+      const getSummary = async (lang, t) => {
+        const url = `/api/wiki-${lang}-proxy/api/rest_v1/page/summary/${encodeURIComponent(t)}`;
+        const resp = await fetchWithTimeout(url, {}, 8000);
+        return resp.ok ? await resp.json() : null;
+      };
+
+      // Helper for fuzzy search to find a title via proxy
+      const findTitle = async (lang, query) => {
+        const url = `/api/wiki-${lang}-proxy/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(query)}&format=json&srlimit=1`;
+        const resp = await fetchWithTimeout(url, {}, 8000);
+        if (!resp.ok) return null;
+        const data = await resp.json();
+        return data.query?.search?.[0]?.title || null;
+      };
+
+      try {
+        // 0. Clean the query (remove text in brackets like (AC), (DC))
+        const cleanTitle = title.replace(/\s*\(.*?\)\s*/g, '').trim();
+        
+        // 1. Try ID Exact
+        let data = await getSummary('id', cleanTitle);
+        if (data && data.type !== 'no-extract') return data;
+
+        // 2. Try ID Search (Fuzzy)
+        const fuzzyId = await findTitle('id', cleanTitle);
+        if (fuzzyId && fuzzyId !== cleanTitle) {
+          data = await getSummary('id', fuzzyId);
+          if (data && data.type !== 'no-extract') return data;
+        }
+
+        // 3. Try EN Exact (Fallback for Technical Terms)
+        data = await getSummary('en', cleanTitle);
+        if (data && data.type !== 'no-extract') return data;
+
+        // 4. Try EN Search (Last Resort)
+        const fuzzyEn = await findTitle('en', cleanTitle);
+        if (fuzzyEn) {
+          data = await getSummary('en', fuzzyEn);
+          if (data && data.type !== 'no-extract') return data;
+        }
+
+        throw new Error("Referensi tidak ditemukan di Wikipedia Indonesia maupun Inggris.");
+      } catch (error) {
+        console.error('[ElektroAPI] Wiki Fetch Error:', error);
+        throw error;
+      }
+    },
+
+    async fetchTechNews() {
+      try {
+        const apiKey = '706c0eb85ea248f1ad8d18261b9ac159';
+        // NewsAPI Everything endpoint proxied via Vercel
+        const query = encodeURIComponent('electronics OR semiconductor OR "electrical engineering" OR "microchip" OR robotics');
+        const url = `/api/news-proxy/everything?q=${query}&sortBy=publishedAt&language=en&pageSize=24&apiKey=${apiKey}`;
+
+        const response = await fetchWithTimeout(url, {}, 15000);
+        
+        if (!response.ok) {
+          throw new Error("Gagal mengambil berita terbaru.");
+        }
+
+        const data = await response.json();
+        return data.articles || [];
+      } catch (error) {
+        console.error('[ElektroAPI] News Fetch Error:', error);
+        throw error;
+      }
+    }
+  };
+})();

@@ -1,0 +1,11 @@
+{
+  "name": "elektrodict",
+  "version": "1.0.0",
+  "description": "Kamus Teknik Elektro",
+  "scripts": {
+    "vercel-build": "echo 'Building...'"
+  },
+  "engines": {
+    "node": "20.x"
+  }
+}
