@@ -85,8 +85,8 @@ module.exports = async function handler(req, res) {
 
     let response;
     
-    // 1. Try OpenRouter First if key exists
-    if (openRouterKey && (targetModel.includes('qwen') || !groqKeys.length)) {
+    // 1. Try OpenRouter first (jika key tersedia) — model OpenRouter seperti glm/gemma
+    if (openRouterKey) {
       try {
         response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
           method: "POST",
@@ -103,31 +103,23 @@ module.exports = async function handler(req, res) {
       }
     }
 
-    // 2. Try Groq as Fallback (or if primary)
+    // 2. Groq fallback — model harus model Groq yang valid (bukan model OpenRouter)
     if ((!response || !response.ok) && groqKeys.length > 0) {
-      let currentKey = groqKeys[Math.floor(Math.random() * groqKeys.length)];
-      response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${currentKey}`,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(aiPayload)
-      });
+      const callGroq = async (model) => {
+        const currentKey = groqKeys[Math.floor(Math.random() * groqKeys.length)];
+        return await fetch("https://api.groq.com/openai/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${currentKey}`,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ ...aiPayload, model })
+        });
+      };
 
-      if (response.status === 429) {
-        groqKeys = groqKeys.filter(k => k !== currentKey);
-        if (groqKeys.length > 0) {
-          currentKey = groqKeys[Math.floor(Math.random() * groqKeys.length)];
-          response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-            method: "POST",
-            headers: {
-              "Authorization": `Bearer ${currentKey}`,
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify(aiPayload)
-          });
-        }
+      response = await callGroq("llama-3.3-70b-versatile");
+      if (response.status === 429 || response.status === 500) {
+        response = await callGroq("llama-3.1-8b-instant");
       }
     }
 
