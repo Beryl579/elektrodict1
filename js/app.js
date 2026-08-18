@@ -362,7 +362,7 @@ function switchTab(t){
   if(t === 'news') { videoChips(); renderVideos(); }
   if(t === 'about') loadAbout();
   if(t === 'materi') renderMateri();
-  else stopOhmAnim();
+  else stopMateriAnims();
   if(t === 'dashboard' && window.ElektroFBDash) window.ElektroFBDash.open();
 
   window.scrollTo({top:0,behavior:'smooth'});
@@ -3868,6 +3868,7 @@ function openMateriModule(id) {
     detail.querySelectorAll('.mt-sec-body, .mt-contoh').forEach(el => renderMath(el));
     renderMateriQuiz();
     mountOhmAnim();
+    mountPwmAnim();
     updateMateriDoneBtn();
   }, 60);
   window.scrollTo({top:0, behavior:'smooth'});
@@ -4097,6 +4098,101 @@ function ohmLoop() {
   });
 
   ohmAnim.raf = requestAnimationFrame(ohmLoop);
+}
+function stopMateriAnims() { stopOhmAnim(); stopPwmAnim(); }
+
+// ── Animasi interaktif PWM (duty cycle → gelombang + LED) ──
+let pwmAnim = { duty: 50 };
+function mountPwmAnim() {
+  const wrap = document.getElementById('pwm-anim');
+  if (!wrap) return;
+  wrap.innerHTML = `
+    <div class="ohm-layout">
+      <canvas id="pwm-canvas" width="640" height="190"></canvas>
+      <div class="ohm-caption">Duty cycle = persentase waktu nyala dalam satu periode · LED menganggap 5 V × duty</div>
+      <div class="ohm-controls">
+        <label>Duty cycle <b id="pwm-duty-val">50</b>%</label>
+        <input type="range" id="pwm-duty" min="0" max="100" step="1" value="50">
+      </div>
+      <div class="ohm-readout">
+        <div class="ohm-cell"><div class="ohm-cell-lbl">Duty cycle</div><div class="ohm-cell-val" id="pwm-D">50 %</div></div>
+        <div class="ohm-cell"><div class="ohm-cell-lbl">Tegangan rata-rata (5V × D)</div><div class="ohm-cell-val" id="pwm-Vavg">2,50 V</div></div>
+      </div>
+    </div>`;
+  const dIn = document.getElementById('pwm-duty');
+  dIn.oninput = () => { pwmAnim.duty = parseFloat(dIn.value); pwmUpdate(); pwmDraw(); };
+  pwmUpdate();
+  pwmDraw();
+}
+function pwmUpdate() {
+  const d = pwmAnim.duty;
+  document.getElementById('pwm-duty-val').textContent = d;
+  document.getElementById('pwm-D').textContent = d + ' %';
+  document.getElementById('pwm-Vavg').textContent = (5*d/100).toFixed(2).replace('.',',') + ' V';
+}
+function stopPwmAnim() { /* tidak ada loop — redraw pasif */ }
+function pwmDraw() {
+  const canvas = document.getElementById('pwm-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const d = pwmAnim.duty;
+  ctx.clearRect(0, 0, W, H);
+  const wx = 46, ww = W*0.5, mid = H/2, amp = H/2 - 26;
+  const cycW = 84, cycles = Math.ceil(ww/cycW) + 1;
+  // garis ground
+  ctx.strokeStyle = 'rgba(255,255,255,0.25)'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(wx, mid); ctx.lineTo(wx + ww, mid); ctx.stroke();
+  ctx.fillStyle = 'rgba(255,255,255,0.6)'; ctx.font = '11px monospace'; ctx.textAlign = 'left';
+  ctx.fillText('0 V', wx - 34, mid + 4);
+  ctx.fillText('5 V', wx - 34, mid - amp - 4);
+  // gelombang persegi
+  const on = cycW * d/100;
+  ctx.strokeStyle = '#ffd54f'; ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  ctx.moveTo(wx, mid - amp);
+  for (let i = 0; i < cycles; i++) {
+    const cx = wx + i*cycW;
+    ctx.lineTo(cx + on, mid - amp);
+    ctx.lineTo(cx + on, mid);
+    ctx.lineTo(cx + cycW, mid);
+    ctx.lineTo(cx + cycW, mid - amp);
+  }
+  ctx.stroke();
+  // LED
+  const lx = W*0.78, ly = mid;
+  const glow = 4 + 30 * d/100;
+  const g = ctx.createRadialGradient(lx, ly, 2, lx, ly, glow);
+  if (d > 0) { g.addColorStop(0, 'rgba(255,235,59,0.95)'); g.addColorStop(1, 'rgba(255,235,59,0)'); }
+  else { g.addColorStop(0, 'rgba(120,120,120,0.5)'); g.addColorStop(1, 'rgba(120,120,120,0)'); }
+  ctx.fillStyle = g;
+  ctx.beginPath(); ctx.arc(lx, ly, glow, 0, Math.PI*2); ctx.fill();
+  ctx.strokeStyle = d > 0 ? '#ffe082' : 'rgba(255,255,255,0.5)'; ctx.lineWidth = 2.5;
+  ctx.beginPath(); ctx.arc(lx, ly, 22, 0, Math.PI*2); ctx.stroke();
+  ctx.fillStyle = d > 0 ? '#ffe082' : 'rgba(255,255,255,0.5)'; ctx.font = '12px monospace'; ctx.textAlign = 'center';
+  ctx.fillText('LED', lx, ly + 42);
+  ctx.fillText(d + '%', lx, ly + 58);
+}
+
+// ── Lightbox perbesar gambar pinout ──
+function openMateriImg(img) {
+  let lb = document.getElementById('mt-lightbox');
+  if (!lb) {
+    lb = document.createElement('div');
+    lb.id = 'mt-lightbox';
+    lb.className = 'mt-lightbox';
+    lb.innerHTML = '<button class="mt-lightbox-close" onclick="closeMateriImg()">✕</button><img class="mt-lightbox-img" alt="perbesar">';
+    lb.addEventListener('click', (e) => { if (e.target === lb) closeMateriImg(); });
+    document.body.appendChild(lb);
+  }
+  lb.querySelector('img').src = img.src;
+  lb.classList.add('on');
+  document.body.style.overflow = 'hidden';
+}
+function closeMateriImg() {
+  const lb = document.getElementById('mt-lightbox');
+  if (lb) lb.classList.remove('on');
+  document.body.style.overflow = '';
 }
 
 // ═══════════════════════════════════════════════════════════
