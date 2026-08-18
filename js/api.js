@@ -6,7 +6,8 @@
 (function() {
   const VERCEL_URL = '/api/chat';
   const MODEL_TEXT = 'openai/gpt-oss-20b';
-  const MODEL_VISION = 'openai/gpt-oss-120b';
+  // Groq vision: qwen/qwen3.6-27b (multimodal). gpt-oss-120b di Groq teks-only → ditolak bila ada gambar.
+  const MODEL_VISION = 'qwen/qwen3.6-27b';
   const TIMEOUT_TEXT_MS = 60000;
   const TIMEOUT_VISION_MS = 120000;
 
