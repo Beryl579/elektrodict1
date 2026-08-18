@@ -3688,6 +3688,20 @@ function filterVideos(t) {
   renderVideos();
 }
 
+function loadVideoThumb(img) {
+  const sizes = ['mqdefault', 'hqdefault', 'sddefault', 'maxresdefault'];
+  const id = img.dataset.ytid;
+  const fb = img.dataset.fb;
+  const n = parseInt(img.dataset.try || '1', 10) || 1;
+  if (n < sizes.length) {
+    img.dataset.try = n + 1;
+    img.src = 'https://i.ytimg.com/vi/' + id + '/' + sizes[n] + '.jpg';
+  } else {
+    img.onerror = null;
+    img.src = fb;
+  }
+}
+
 function renderVideos(shuffle = false) {
   const grid = document.getElementById('news-grid');
   const count = document.getElementById('video-count');
@@ -3708,8 +3722,9 @@ function renderVideos(shuffle = false) {
 
   grid.innerHTML = list.map(v => {
     const thumb = `https://i.ytimg.com/vi/${v.id}/mqdefault.jpg`;
+    const ch = String(v.channel || 'Video').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     const fallback = `data:image/svg+xml;utf8,${encodeURIComponent(
-      `<svg xmlns="http://www.w3.org/2000/svg" width="480" height="360"><rect width="100%" height="100%" fill="%2312141a"/><g fill="%234f9cf9" text-anchor="middle" font-family="Arial" font-size="26" font-weight="bold"><text x="240" y="165">⚡ Video</text><text x="240" y="205" font-size="18" fill="%23888">${v.channel}</text></g></svg>`
+      `<svg xmlns="http://www.w3.org/2000/svg" width="480" height="360"><rect width="100%" height="100%" fill="%2312141a"/><g fill="%234f9cf9" text-anchor="middle" font-family="Arial, sans-serif" font-size="26" font-weight="bold"><text x="240" y="165">Video</text><text x="240" y="205" font-size="18" fill="%23888">${ch}</text></g></svg>`
     )}`;
     return `
       <div class="news-card" style="animation-delay: ${Math.random() * 0.5}s">
@@ -3717,7 +3732,8 @@ function renderVideos(shuffle = false) {
              onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openVideoById('${v.id}');}"
              aria-label="Putar video: ${v.title}">
           <img src="${thumb}" class="news-img" alt="${v.title}" loading="lazy" decoding="async" fetchpriority="low"
-               onerror="this.onerror=null;this.src='${fallback}';">
+               referrerpolicy="no-referrer" data-ytid="${v.id}" data-fb="${fallback}"
+               onerror="loadVideoThumb(this);">
           <span class="vid-play">
             <svg viewBox="0 0 24 24" fill="currentColor" style="width:22px;height:22px;"><path d="M8 5v14l11-7z"/></svg>
           </span>

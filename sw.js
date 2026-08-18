@@ -1,16 +1,16 @@
-// v51: Tambah modul Materi "Instalasi Listrik & K3" (referensi, gambar CC, kuis).
+// v52: Fallback thumbnail video multi-ukuran (mqdefault→hqdefault→sddefault→SVG) + SW fresh.
 // Aset diberi query ?v= agar precache selalu ambil file terbaru (mencegah
 // cache.addAll melewati SW lama yang menyajikan salinan basi).
-const CACHE_NAME = 'elektrodict-v52';
+const CACHE_NAME = 'elektrodict-v53';
 const ASSETS = [
   '/',
-  '/index.html?v=51',
-  '/css/style.css?v=51',
-  '/js/data.js?v=51',
-  '/js/data-materi.js?v=51',
-  '/js/api.js?v=51',
-  '/js/app.js?v=51',
-  '/js/modules/firebase-dashboard.js?v=51',
+  '/index.html?v=52',
+  '/css/style.css?v=52',
+  '/js/data.js?v=52',
+  '/js/data-materi.js?v=52',
+  '/js/api.js?v=52',
+  '/js/app.js?v=52',
+  '/js/modules/firebase-dashboard.js?v=52',
   '/manifest.json',
   'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css',
   'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js',
