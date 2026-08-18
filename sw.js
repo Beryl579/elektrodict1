@@ -1,13 +1,15 @@
-// v39: About di-embed (ABOUT_MD) — hapus /README.md dari precache (Vercel 404 utk .md).
-const CACHE_NAME = 'elektrodict-v39';
+// v41: AI Vision fix — model qwen/qwen3.6-27b (Groq vision) + resize gambar.
+// Aset diberi query ?v= agar precache selalu ambil file terbaru (mencegah
+// cache.addAll melewati SW lama yang menyajikan salinan basi).
+const CACHE_NAME = 'elektrodict-v41';
 const ASSETS = [
   '/',
-  '/index.html',
-  '/css/style.css',
-  '/js/data.js',
-  '/js/api.js',
-  '/js/app.js',
-  '/js/modules/firebase-dashboard.js',
+  '/index.html?v=41',
+  '/css/style.css?v=41',
+  '/js/data.js?v=41',
+  '/js/api.js?v=41',
+  '/js/app.js?v=41',
+  '/js/modules/firebase-dashboard.js?v=41',
   '/manifest.json',
   'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css',
   'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js',

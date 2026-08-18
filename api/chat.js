@@ -106,13 +106,17 @@ ATURAN:
 
       const callGroq = async (model) => {
         const currentKey = groqKeys[Math.floor(Math.random() * groqKeys.length)];
+        const groqBody = { ...aiPayload, model };
+        // reasoning_effort: hanya gpt-oss yang menerima 'low'.
+        // qwen/qwen3.6-27b hanya menerima 'none'/'default' → biarkan default (thinking aktif).
+        if (model.startsWith('openai/gpt-oss')) groqBody.reasoning_effort = 'low';
         return await fetch("https://api.groq.com/openai/v1/chat/completions", {
           method: "POST",
           headers: {
             "Authorization": `Bearer ${currentKey}`,
             "Content-Type": "application/json"
           },
-          body: JSON.stringify({ ...aiPayload, model, reasoning_effort: 'low' })
+          body: JSON.stringify(groqBody)
         });
       };
 

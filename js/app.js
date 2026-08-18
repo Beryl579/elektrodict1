@@ -1089,7 +1089,8 @@ function initResistor(){
 // ═══════════════════════════════════════════════════════════
 // AI VISION — SOAL FOTO + RANGKAIAN ANALYZER
 // ═══════════════════════════════════════════════════════════
-const AIV_MODEL = 'openai/gpt-oss-120b';
+// Groq vision: qwen/qwen3.6-27b (multimodal). gpt-oss-120b di Groq teks-only → ditolak bila ada gambar.
+const AIV_MODEL = 'qwen/qwen3.6-27b';
 let aivMode = 'soal';
 let aivImageB64 = null;
 let aivImageType = 'image/jpeg';
@@ -1135,14 +1136,44 @@ function handleAIVDrop(e){
   if(file && file.type.startsWith('image/')) handleAIVFile(file);
 }
 
+// Resize gambar sebelum dikirim ke AI — foto kamera bisa 5-10MB,
+// Groq menolak request >20MB. Max sisi 1600px + JPEG q0.85 cukup untuk
+// baca soal/rangkaian, tapi jauh lebih kecil dari file asli.
+function resizeImageForAI(dataUrl, maxDim = 1600, quality = 0.85) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      try {
+        let w = img.naturalWidth || img.width;
+        let h = img.naturalHeight || img.height;
+        const scale = Math.min(1, maxDim / Math.max(w, h));
+        if (scale < 1) { w = Math.round(w * scale); h = Math.round(h * scale); }
+        const canvas = document.createElement('canvas');
+        canvas.width = w; canvas.height = h;
+        const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#ffffff'; // PNG transparan → dasar putih biar teks terbaca
+        ctx.fillRect(0, 0, w, h);
+        ctx.drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      } catch (err) {
+        resolve(dataUrl);
+      }
+    };
+    img.onerror = () => resolve(dataUrl);
+    img.src = dataUrl;
+  });
+}
+
 function handleAIVFile(file){
   if(!file) return;
   aivImageType = file.type || 'image/jpeg';
   const reader = new FileReader();
-  reader.onload = e => {
+  reader.onload = async e => {
     const dataUrl = e.target.result;
-    aivImageB64 = dataUrl.split(',')[1];
-    document.getElementById('aiv-img').src = dataUrl;
+    const small = await resizeImageForAI(dataUrl);
+    aivImageB64 = small.split(',')[1];
+    aivImageType = 'image/jpeg'; // hasil resize selalu JPEG
+    document.getElementById('aiv-img').src = dataUrl; // preview tetap gambar asli
     document.getElementById('aiv-preview').classList.add('show');
     document.getElementById('aiv-upload').style.display = 'none';
     document.getElementById('aiv-analyze-btn').disabled = false;
