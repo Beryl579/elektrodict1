@@ -1,16 +1,16 @@
-// v48: Chat panel floating jadi satu-satunya UI chat — sidebar lama di Kamus disembunyikan.
+// v51: Tambah modul Materi "Instalasi Listrik & K3" (referensi, gambar CC, kuis).
 // Aset diberi query ?v= agar precache selalu ambil file terbaru (mencegah
 // cache.addAll melewati SW lama yang menyajikan salinan basi).
-const CACHE_NAME = 'elektrodict-v48';
+const CACHE_NAME = 'elektrodict-v52';
 const ASSETS = [
   '/',
-  '/index.html?v=48',
-  '/css/style.css?v=48',
-  '/js/data.js?v=48',
-  '/js/data-materi.js?v=48',
-  '/js/api.js?v=48',
-  '/js/app.js?v=48',
-  '/js/modules/firebase-dashboard.js?v=48',
+  '/index.html?v=51',
+  '/css/style.css?v=51',
+  '/js/data.js?v=51',
+  '/js/data-materi.js?v=51',
+  '/js/api.js?v=51',
+  '/js/app.js?v=51',
+  '/js/modules/firebase-dashboard.js?v=51',
   '/manifest.json',
   'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css',
   'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js',

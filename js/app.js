@@ -3829,7 +3829,7 @@ function openMateriModule(id) {
   const sections = m.sections.map(s => `
     <div class="mt-section" id="mt-sec-${s.id}">
       <div class="mt-sec-head"><span class="mt-sec-emoji">${s.emoji}</span><h3>${s.title}</h3></div>
-      <div class="mt-sec-body">${s.body}</div>
+      <div class="mt-sec-body">${s.body}</div>${s.referensi ? '<div class="mt-ref">📚 <b>Referensi:</b> ' + s.referensi + '</div>' : ''}
     </div>`).join('');
   const contoh = m.contoh.map((c, i) => `
     <div class="mt-contoh">

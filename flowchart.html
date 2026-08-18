@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>ElektroDict — System Architecture</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -326,6 +326,26 @@
     display: flex; align-items: center; gap: 5px;
   }
 
+  /* ═══════════════════════════════════════════════════════
+     RESPONSIVE — Tablet & Mobile
+     Grid station menumpuk jadi 1 kolom, toolbar & legend
+     menyesuaikan lebar layar, garis metro disembunyikan.
+  ═══════════════════════════════════════════════════════ */
+  @media(max-width:900px){
+    .interactive-view{padding:20px 16px 120px;}
+    .iv-header{margin-bottom:28px;}
+    .iv-header h1{font-size:34px;}
+    .iv-header p{font-size:11px;letter-spacing:1.5px;}
+    .feat-strip{margin-bottom:28px;gap:8px;}
+    .fs-pill{padding:7px 13px;font-size:12px;}
+    .toolbar{position:static;justify-content:center;flex-wrap:wrap;margin-bottom:22px;}
+    .tb{padding:9px 15px;font-size:12px;}
+    .metro-svg{display:none;}
+    .stations-layer{grid-template-columns:1fr;gap:18px;max-width:520px;}
+    .station-col:nth-child(2),.station-col:nth-child(3){padding-top:0;}
+    .legend-float{bottom:12px;left:12px;right:12px;justify-content:center;flex-wrap:wrap;gap:10px 14px;padding:12px 14px;}
+  }
+
 </style>
 </head>
 <body>
@@ -387,7 +407,7 @@
 
   <!-- Feature Strip -->
   <div class="feat-strip">
-    <div class="fs-pill" style="animation-delay:0.1s"><span>📖</span> Kamus 130+</div>
+    <div class="fs-pill" style="animation-delay:0.1s"><span>📖</span> Kamus 150+</div>
     <div class="fs-pill" style="animation-delay:0.15s"><span>⚡</span> Kalkulator RLC</div>
     <div class="fs-pill" style="animation-delay:0.2s"><span>🎨</span> Kode Resistor</div>
     <div class="fs-pill" style="animation-delay:0.25s"><span>🎸</span> Signal Synth</div>
@@ -440,7 +460,7 @@
           <div class="st-badge">LOCAL</div>
         </div>
         <div class="st-body">
-          <div class="st-desc"><strong>data.js</strong> — 130+ objek kamus dengan rumus LaTeX, kategori, dan tag. Array project & quiz categories.<br><br><strong>PUIL 2011 & K3</strong> — Standar kabel SNI, tabel KHA, IP Rating IEC 60529, APD, dan 5 Aturan Emas EN 50110.<br><br><strong>Chip Library</strong> — Datasheet NE555, ESP32, LM358, L298N, 74HC595 dari TI, Espressif, STMicro, Nexperia.</div>
+          <div class="st-desc"><strong>data.js</strong> — 150+ objek kamus dengan rumus LaTeX, kategori, dan tag. Array project & quiz categories.<br><br><strong>PUIL 2011 & K3</strong> — Standar kabel SNI, tabel KHA, IP Rating IEC 60529, APD, dan 5 Aturan Emas EN 50110.<br><br><strong>Chip Library</strong> — Datasheet NE555, ESP32, LM358, L298N, 74HC595 dari TI, Espressif, STMicro, Nexperia.</div>
           <div class="st-chips">
             <span class="st-chip">data.js</span><span class="st-chip">index.html</span><span class="st-chip">Offline</span>
           </div>
@@ -458,7 +478,7 @@
           <div class="st-badge">SERVERLESS</div>
         </div>
         <div class="st-body">
-          <div class="st-desc">Serverless gateway yang menyimpan <strong>API Key</strong> di environment variable. Dua endpoint utama:<br><br>• <strong>/api/chat.js</strong> — Routing untuk ElektroBot chatbot & AI Quiz Generator<br>• <strong>/api/project-gen.js</strong> — JSON-Strict mode untuk Lab Project IoT yang membutuhkan output terstruktur</div>
+          <div class="st-desc">Serverless gateway yang menyimpan <strong>API Key</strong> di environment variable. Dua endpoint utama:<br><br>• <strong>/api/chat.js</strong> — Routing untuk ElektroBot chatbot & AI Quiz Generator<br>• <strong>/api/project-gen.js</strong> — JSON-Strict mode untuk Lab Project IoT yang membutuhkan output terstruktur<br>• <strong>/api/vision.js</strong> — Analisis gambar (Base64) untuk AI Vision</div>
           <div class="st-chips">
             <span class="st-chip">Node.js</span><span class="st-chip">Edge Runtime</span><span class="st-chip">Env Secrets</span>
           </div>
@@ -469,13 +489,13 @@
       <div class="st" style="--accent-color:var(--amber);--glow-color:rgba(251,191,36,0.12)" onclick="togSt(this)">
         <div class="st-top">
           <div class="st-dot2" style="background:var(--amber);color:var(--amber)"></div>
-          <div class="st-title">🧠 Groq LPU Engine</div>
+          <div class="st-title">🧠 LLM Provider Engine</div>
           <div class="st-badge">LLM</div>
         </div>
         <div class="st-body">
-          <div class="st-desc">Hardware akselerator AI dengan <strong>Language Processing Unit</strong> (LPU) — kecepatan inferensi tertinggi di dunia (~800 token/detik).<br><br>Primary model: <strong>LLaMA 3.3 70B Versatile</strong>. Fallback multi-provider via OpenRouter untuk redundancy.</div>
+          <div class="st-desc">Rute AI melalui <strong>OpenRouter</strong> — primary <strong>openai/gpt-oss-20b</strong> (mode pintar: gpt-oss-120b), dengan <strong>Groq LPU</strong> sebagai fallback provider berkecepatan tinggi untuk redundancy.</div>
           <div class="st-chips">
-            <span class="st-chip">Groq Cloud</span><span class="st-chip">LLaMA 3.3 70B</span><span class="st-chip">OpenRouter</span>
+            <span class="st-chip">OpenRouter</span><span class="st-chip">GPT-OSS 20B/120B</span><span class="st-chip">Groq LPU</span>
           </div>
         </div>
         <div class="st-expand"><span class="arrow">▼</span></div>
@@ -506,7 +526,7 @@
           <div class="st-badge">QUIZ</div>
         </div>
         <div class="st-body">
-          <div class="st-desc">Membuat <strong>5 soal pilihan ganda</strong> baru di setiap sesi dari 9 kategori elektro. Output JSON tervalidasi dengan 3 tingkat kesulitan. Hasil skor bisa dibagikan via <strong>WhatsApp</strong> atau disalin.</div>
+          <div class="st-desc">Membuat <strong>5 soal pilihan ganda</strong> baru di setiap sesi dari 14 kategori elektro. Output JSON tervalidasi dengan 3 tingkat kesulitan. Hasil skor bisa dibagikan via <strong>WhatsApp</strong> atau disalin.</div>
           <div class="st-chips">
             <span class="st-chip">JSON Mode</span><span class="st-chip">9 Kategori</span><span class="st-chip">Share Score</span>
           </div>
@@ -536,9 +556,9 @@
           <div class="st-badge">VISION</div>
         </div>
         <div class="st-body">
-          <div class="st-desc">Upload foto sirkuit nyata → dikonversi ke <strong>Base64</strong> → LLaMA Vision Model mengenali komponen, mengidentifikasi fungsi, dan menjelaskan koneksi rangkaian secara detail.</div>
+          <div class="st-desc">Upload foto sirkuit nyata → dikonversi ke <strong>Base64</strong> → <strong>Qwen Vision</strong> (qwen/qwen3.6-27b) mengenali komponen, mengidentifikasi fungsi, dan menjelaskan koneksi rangkaian secara detail.</div>
           <div class="st-chips">
-            <span class="st-chip">Base64 Image</span><span class="st-chip">Vision Model</span><span class="st-chip">Analysis</span>
+            <span class="st-chip">Base64 Image</span><span class="st-chip">Qwen Vision</span><span class="st-chip">Analysis</span>
           </div>
         </div>
         <div class="st-expand"><span class="arrow">▼</span></div>
@@ -615,7 +635,7 @@
       <div class="pdf-card" style="border-left: 3px solid var(--emerald)">
         <div class="pdf-card-icon">💾</div>
         <div class="pdf-card-title">Static Data Layer</div>
-        <div class="pdf-card-desc"><strong>data.js</strong> — 130+ kamus istilah dengan rumus LaTeX.<br><strong>PUIL 2011 & K3</strong> — Standar keselamatan bersumber BSN, IEC, NFPA.<br><strong>Chip Library</strong> — NE555, ESP32, LM358, L298N, 74HC595.</div>
+        <div class="pdf-card-desc"><strong>data.js</strong> — 150+ kamus istilah dengan rumus LaTeX.<br><strong>PUIL 2011 & K3</strong> — Standar keselamatan bersumber BSN, IEC, NFPA.<br><strong>Chip Library</strong> — NE555, ESP32, LM358, L298N, 74HC595.</div>
         <div class="pdf-card-tags">
           <span class="pdf-card-tag">Offline-Ready</span>
           <span class="pdf-card-tag">JSON Data</span>
@@ -640,7 +660,7 @@
       <div class="pdf-card" style="border-left: 3px solid var(--purple)">
         <div class="pdf-card-icon">▲</div>
         <div class="pdf-card-title">Vercel Edge Functions</div>
-        <div class="pdf-card-desc">Serverless gateway yang menyimpan <strong>API Key</strong> di environment variable. Memproteksi secret key dari sisi klien.<br><br><strong>/api/chat.js</strong><br>Routing untuk ElektroBot chatbot dan AI Quiz Generator.<br><br><strong>/api/project-gen.js</strong><br>JSON-Strict mode untuk Lab Project IoT.</div>
+        <div class="pdf-card-desc">Serverless gateway yang menyimpan <strong>API Key</strong> di environment variable. Memproteksi secret key dari sisi klien.<br><br><strong>/api/chat.js</strong><br>Routing untuk ElektroBot chatbot dan AI Quiz Generator.<br><br><strong>/api/project-gen.js</strong><br>JSON-Strict mode untuk Lab Project IoT.<br><br><strong>/api/vision.js</strong><br>Analisis gambar untuk AI Vision.</div>
         <div class="pdf-card-tags">
           <span class="pdf-card-tag">Node.js</span>
           <span class="pdf-card-tag">Edge Runtime</span>
@@ -666,10 +686,10 @@
       <div class="pdf-card" style="border-left: 3px solid var(--amber)">
         <div class="pdf-card-icon">🧠</div>
         <div class="pdf-card-title">Groq Inference (LPU)</div>
-        <div class="pdf-card-desc">Hardware akselerator AI dengan <strong>Language Processing Unit</strong> — kecepatan inferensi tertinggi (~800 tok/s).<br><br>Primary: <strong>LLaMA 3.3 70B Versatile</strong><br>Fallback: Multi-provider via OpenRouter untuk redundancy.</div>
+        <div class="pdf-card-desc">Hardware akselerator AI dengan <strong>Language Processing Unit</strong> — kecepatan inferensi tertinggi (~800 tok/s).<br><br>Primary: <strong>openai/gpt-oss-20b</strong> via OpenRouter (mode pintar gpt-oss-120b)<br>Fallback: Groq LPU untuk redundancy.</div>
         <div class="pdf-card-tags">
           <span class="pdf-card-tag">Groq Cloud</span>
-          <span class="pdf-card-tag">LLaMA 3.3 70B</span>
+          <span class="pdf-card-tag">GPT-OSS 20B/120B</span>
           <span class="pdf-card-tag">~800 tok/s</span>
         </div>
       </div>
@@ -699,8 +719,8 @@
       <div class="pdf-card" style="border-left: 3px solid var(--rose)">
         <div class="pdf-card-icon">🧪</div>
         <div class="pdf-card-title">AI Quiz Generator</div>
-        <div class="pdf-card-desc">Membuat <strong>5 soal pilihan ganda</strong> tiap sesi dari 9 kategori. JSON tervalidasi, 3 difficulty level. Skor bisa di-share via WhatsApp.</div>
-        <div class="pdf-card-tags"><span class="pdf-card-tag">JSON</span><span class="pdf-card-tag">9 Kategori</span></div>
+        <div class="pdf-card-desc">Membuat <strong>5 soal pilihan ganda</strong> tiap sesi dari 14 kategori. JSON tervalidasi, 3 difficulty level. Skor bisa di-share via WhatsApp.</div>
+        <div class="pdf-card-tags"><span class="pdf-card-tag">JSON</span><span class="pdf-card-tag">14 Kategori</span></div>
       </div>
 
       <div class="pdf-card" style="border-left: 3px solid var(--rose)">
@@ -713,8 +733,8 @@
       <div class="pdf-card" style="border-left: 3px solid var(--rose)">
         <div class="pdf-card-icon">🔬</div>
         <div class="pdf-card-title">AI Vision Analyzer</div>
-        <div class="pdf-card-desc">Upload foto sirkuit → <strong>Base64</strong> → LLaMA Vision mengenali komponen dan menjelaskan rangkaian secara detail.</div>
-        <div class="pdf-card-tags"><span class="pdf-card-tag">Base64</span><span class="pdf-card-tag">Vision Model</span></div>
+        <div class="pdf-card-desc">Upload foto sirkuit → <strong>Base64</strong> → Qwen Vision (qwen/qwen3.6-27b) mengenali komponen dan menjelaskan rangkaian secara detail.</div>
+        <div class="pdf-card-tags"><span class="pdf-card-tag">Base64</span><span class="pdf-card-tag">Qwen Vision</span></div>
       </div>
     </div>
 
@@ -723,7 +743,7 @@
   <!-- PDF Features Row -->
   <div class="pdf-features">
     <div class="pdf-feat-title">Offline Feature Modules</div>
-    <div class="pdf-feat"><span>📖</span> Kamus 130+</div>
+    <div class="pdf-feat"><span>📖</span> Kamus 150+</div>
     <div class="pdf-feat"><span>⚡</span> Kalkulator RLC</div>
     <div class="pdf-feat"><span>🎨</span> Kode Resistor</div>
     <div class="pdf-feat"><span>🎸</span> Signal Synth</div>
