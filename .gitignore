@@ -27,3 +27,12 @@ dev-utils/
 
 # Freebuff workspace
 .freebuff/
+
+.vercel
+.env*
+
+# Referensi docs Wokwi (input parser saja)
+wokwi-docs-main/
+
+# Aset SVG katalog (seksi dihapus)
+assets/

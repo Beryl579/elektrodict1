@@ -30,7 +30,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="katexLoaded=true;renderPendingMath()"></script>
-<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/style.css?v=20260818">
 </head>
 <body>
   <!-- Splash Screen Launch Animation -->
@@ -670,6 +670,13 @@
         <span class="btn-ico">💡</span>
         <span class="btn-txt">Generate Proyek</span>
       </button>
+    </div>
+
+    <div class="prj-board-selector">
+      <span class="prj-board-label">🧩 Board target:</span>
+      <div class="prj-board-opts" role="radiogroup" aria-label="Pilih board">
+        <button type="button" class="prj-board-opt on" data-board="uno" onclick="selectBoard('uno')">🟠 Arduino Uno</button>
+        <button type="button" class="prj-board-opt" data-board="esp32" onclick="selectBoard('esp32')">🔵 ESP32 DevKitC V4</button>
       </div>
     </div>
 
@@ -684,6 +691,129 @@
         <p style="font-size:13px;color:var(--text2);">Pola rangkaian yang sudah teruji — klik kartu lalu langsung jalankan di simulator Wokwi, tanpa perlu generate AI.</p>
       </div>
       <div class="projects-grid" id="wokwi-templates-grid"></div>
+    </div>
+
+    <div class="prj-templates-section" style="margin-top:40px;">
+      <div style="margin-bottom:16px;">
+        <h2 style="font-size:16px;">🔌 Katalog Hardware Terdukung</h2>
+        <p style="font-size:13px;color:var(--text2);">Mikrokontroler, sensor, display, motor &amp; lainnya yang disimulasikan Wokwi (dari supported-hardware.md).</p>
+      </div>
+      <div id="wokwi-hardware-list" class="wk-hw-wrap"></div>
+    </div>
+
+    <div class="prj-templates-section" style="margin-top:40px;">
+      <div style="margin-bottom:16px;">
+        <h2 style="font-size:16px;">📚 Panduan Simulator Wokwi</h2>
+        <p style="font-size:13px;color:var(--text2);">Belajar memakai simulator langsung dari dokumentasi resminya.</p>
+      </div>
+      <div id="wokwi-guides-list" class="wk-guide-grid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ FIREBASE IOT DASHBOARD PAGE ═══════ -->
+<div class="page" id="page-dashboard">
+  <div class="fb-wrap">
+    <button class="pd-back" onclick="switchTab('projects')">← Kembali ke Lab Proyek</button>
+
+    <div class="fb-header">
+      <h2>📊 Dashboard IoT Firebase</h2>
+      <p>Pantau sensor ESP32 & kontrol perangkat secara real-time — data dibaca langsung dari Firebase Realtime Database kamu.</p>
+    </div>
+
+    <!-- Status & aksi -->
+    <div id="fb-status" class="fb-status">Masukkan host & secret Firebase lalu klik "Mulai Pantau".</div>
+
+    <!-- Panel konfigurasi -->
+    <div class="fb-config">
+      <h3>🔑 Konfigurasi Firebase</h3>
+      <div class="fb-config-row">
+        <div class="fb-field">
+          <label>URL Database (host)</label>
+          <input type="text" id="fb-host" placeholder="https://proyekmu-default-rtdb.firebaseio.com">
+        </div>
+        <div class="fb-field">
+          <label>Secret (Database secrets)</label>
+          <input type="password" id="fb-secret" placeholder="isi secret (opsional utk mode test)">
+        </div>
+      </div>
+      <div class="fb-config-actions">
+        <button class="fb-btn fb-btn-primary" id="fb-connect-btn">🟢 Mulai Pantau</button>
+        <button class="fb-btn" id="fb-test-btn">🧪 Tes Koneksi</button>
+        <button class="fb-btn" id="fb-save-btn">💾 Simpan Konfigurasi</button>
+      </div>
+    </div>
+
+    <!-- CTA awal -->
+    <div id="fb-start-cta" class="fb-start-cta">
+      <div>💡 Isi URL database Firebase kamu di atas (mis. dari proyek ESP32 "IoT Suhu & Kelembaban Firebase"), lalu klik <b>Mulai Pantau</b>. Data akan tampil real-time di sini.</div>
+    </div>
+
+    <!-- Panel live -->
+    <div id="fb-live-panel" class="fb-live-panel hide">
+      <div style="display:flex; justify-content:flex-end;">
+        <button class="fb-btn" id="fb-stop-btn">⏹️ Hentikan Pemantauan</button>
+      </div>
+      <div class="fb-cards-grid">
+        <div class="fb-card" id="fb-card-suhu"><div class="fb-card-label">🌡️ Suhu</div><div class="fb-card-val">-</div></div>
+        <div class="fb-card" id="fb-card-lembab"><div class="fb-card-label">💧 Kelembaban</div><div class="fb-card-val">-</div></div>
+        <div class="fb-card" id="fb-card-jarak"><div class="fb-card-label">📏 Jarak</div><div class="fb-card-val">-</div></div>
+        <div class="fb-card" id="fb-card-cahaya"><div class="fb-card-label">☀️ Cahaya</div><div class="fb-card-val">-</div></div>
+        <div class="fb-card" id="fb-card-gas"><div class="fb-card-label">💨 Gas</div><div class="fb-card-val">-</div></div>
+        <div class="fb-card" id="fb-card-suhu2"><div class="fb-card-label">🌡️ Suhu Termostat</div><div class="fb-card-val">-</div></div>
+        <div class="fb-card" id="fb-card-gerakan"><div class="fb-card-label">🚶 Gerakan</div><div class="fb-card-val">-</div></div>
+        <div class="fb-card" id="fb-card-bahaya"><div class="fb-card-label">⚠️ Bahaya Jarak</div><div class="fb-card-val">-</div></div>
+        <div class="fb-card" id="fb-card-lampu"><div class="fb-card-label">💡 Lampu</div><div class="fb-card-val">-</div></div>
+        <div class="fb-card" id="fb-card-relay"><div class="fb-card-label">🔌 Beban Relay</div><div class="fb-card-val">-</div></div>
+        <div class="fb-card" id="fb-card-gas-b"><div class="fb-card-label">🚨 Gas Bahaya</div><div class="fb-card-val">-</div></div>
+        <div class="fb-card" id="fb-card-bell"><div class="fb-card-label">🔔 Bel</div><div class="fb-card-val">-</div></div>
+        <div class="fb-card" id="fb-card-status"><div class="fb-card-label">🟢 Status</div><div class="fb-card-val">-</div></div>
+      </div>
+
+      <!-- Grafik riwayat -->
+      <div class="fb-charts-grid">
+        <div class="fb-chart-box"><div class="fb-chart-title">🌡️ Suhu (riwayat)</div><canvas id="fb-chart-_sensor_suhu" class="fb-chart"></canvas></div>
+        <div class="fb-chart-box"><div class="fb-chart-title">💧 Kelembaban (riwayat)</div><canvas id="fb-chart-_sensor_kelembaban" class="fb-chart"></canvas></div>
+        <div class="fb-chart-box"><div class="fb-chart-title">📏 Jarak (riwayat)</div><canvas id="fb-chart-_jarak_cm" class="fb-chart"></canvas></div>
+        <div class="fb-chart-box"><div class="fb-chart-title">☀️ Cahaya (riwayat)</div><canvas id="fb-chart-_cahaya_nilai_adc" class="fb-chart"></canvas></div>
+        <div class="fb-chart-box"><div class="fb-chart-title">💨 Gas (riwayat)</div><canvas id="fb-chart-_gas_nilai_adc" class="fb-chart"></canvas></div>
+      </div>
+
+      <!-- Kontrol keluar -->
+      <div class="fb-controls-grid">
+        <div class="fb-control-box">
+          <h4>🦾 Kontrol Servo</h4>
+          <p class="fb-hint">Tulis sudut 0–180° ke <code>/servo/sudut</code> (proyek "Servo Kendali Jarak Jauh").</p>
+          <div class="fb-slider-row">
+            <input type="range" id="fb-servo-slider" min="0" max="180" value="90">
+            <span class="fb-slider-val" id="fb-servo-val">90°</span>
+          </div>
+          <button class="fb-btn fb-btn-primary" id="fb-servo-send">📤 Kirim Sudut</button>
+        </div>
+        <div class="fb-control-box">
+          <h4>🌈 Kontrol LED RGB</h4>
+          <p class="fb-hint">Tulis nilai 0–255 ke <code>/rgb/merah|hijau|biru</code> (proyek "Lampu RGB Kendali Web").</p>
+          <div class="fb-rgb-rows">
+            <div class="fb-rgb-row"><label>R</label><input type="range" id="fb-rgb-r" min="0" max="255" value="255"></div>
+            <div class="fb-rgb-row"><label>G</label><input type="range" id="fb-rgb-g" min="0" max="255" value="0"></div>
+            <div class="fb-rgb-row"><label>B</label><input type="range" id="fb-rgb-b" min="0" max="255" value="0"></div>
+          </div>
+          <div class="fb-rgb-foot">
+            <div class="fb-rgb-preview" id="fb-rgb-preview"></div>
+            <span class="fb-slider-val" id="fb-rgb-val">255, 0, 0</span>
+            <button class="fb-btn fb-btn-primary" id="fb-rgb-send">📤 Kirim Warna</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Raw JSON -->
+      <div class="fb-json-box">
+        <div class="fb-json-head">
+          <h4>🗂️ Data mentah (snapshot terakhir)</h4>
+          <button class="fb-btn" id="fb-export-btn">⬇️ Export JSON</button>
+        </div>
+        <pre id="fb-json" class="fb-json-pre">(belum ada data)</pre>
+      </div>
     </div>
   </div>
 </div>
@@ -1427,6 +1557,7 @@
 <script src="js/data.js"></script>
 <script src="js/api.js"></script>
 <script src="js/app.js"></script>
+<script src="js/modules/firebase-dashboard.js"></script>
 
 <!-- Service Worker Registration -->
 <script>

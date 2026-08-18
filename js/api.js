@@ -132,14 +132,14 @@
       }, TIMEOUT_TEXT_MS);
     },
 
-    async generateProject(idea) {
+    async generateProject(idea, board = 'uno') {
       try {
         const response = await fetchWithTimeout(
           '/api/project-gen',
           {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ idea })
+            body: JSON.stringify({ idea, board })
           },
           TIMEOUT_TEXT_MS
         );

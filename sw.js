@@ -1,5 +1,5 @@
-// v24: Lab Proyek — bank 8 template Wokwi terverifikasi + validasi diagram AI di backend.
-const CACHE_NAME = 'elektrodict-v24';
+// v38: Pilihan board Uno/ESP32 di AI Project Generator (prompt + validasi board-aware).
+const CACHE_NAME = 'elektrodict-v38';
 const ASSETS = [
   '/',
   '/index.html',
@@ -7,6 +7,7 @@ const ASSETS = [
   '/js/data.js',
   '/js/api.js',
   '/js/app.js',
+  '/js/modules/firebase-dashboard.js',
   '/README.md',
   '/manifest.json',
   'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css',

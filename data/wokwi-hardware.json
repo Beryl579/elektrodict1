@@ -1,0 +1,458 @@
+[
+  {
+    "category": "Microcontrollers",
+    "type": "wokwi-arduino-uno",
+    "name": "Arduino Uno",
+    "desc": "ATmega328P (Arduino Uno, Arduino Nano), ATmega2560 (Arduino Mega), ATtiny85"
+  },
+  {
+    "category": "Microcontrollers",
+    "type": "wokwi-arduino-nano",
+    "name": "Arduino Nano",
+    "desc": "ATmega328P (Arduino Uno, Arduino Nano), ATmega2560 (Arduino Mega), ATtiny85"
+  },
+  {
+    "category": "Microcontrollers",
+    "type": "wokwi-arduino-mega",
+    "name": "Arduino Mega",
+    "desc": "ATmega328P (Arduino Uno, Arduino Nano), ATmega2560 (Arduino Mega), ATtiny85"
+  },
+  {
+    "category": "Microcontrollers",
+    "type": "wokwi-attiny85",
+    "name": "ATtiny85",
+    "desc": "ATmega328P (Arduino Uno, Arduino Nano), ATmega2560 (Arduino Mega), ATtiny85"
+  },
+  {
+    "category": "Microcontrollers",
+    "type": null,
+    "name": "ESP32",
+    "desc": "Xtensa: ESP32, ESP32-S2, ESP32-S3, RISC-V: ESP32-C3, ESP32-C5, ESP32-C6, ESP32-C61, ESP32-H2, ESP32-P4, ESP32-S31"
+  },
+  {
+    "category": "Microcontrollers",
+    "type": "board-st-nucleo-c031c6",
+    "name": "STM32C031",
+    "desc": "STM32C031, STM32L031, STM32F103C8"
+  },
+  {
+    "category": "Microcontrollers",
+    "type": "board-st-nucleo-l031k6",
+    "name": "STM32L031",
+    "desc": "STM32C031, STM32L031, STM32F103C8"
+  },
+  {
+    "category": "Microcontrollers",
+    "type": "board-stm32-bluepill",
+    "name": "STM32F103C8",
+    "desc": "STM32C031, STM32L031, STM32F103C8"
+  },
+  {
+    "category": "Microcontrollers",
+    "type": "wokwi-pi-pico",
+    "name": "Pi Pico",
+    "desc": "RP2040 (Raspberry Pi Pico), a dual-core ARM Cortex-M0+ microcontroller"
+  },
+  {
+    "category": "Sensors",
+    "type": "wokwi-hc-sr04",
+    "name": "HC-SR04",
+    "desc": "HC-SR04 Ultrasonic Distance Sensor"
+  },
+  {
+    "category": "Sensors",
+    "type": "wokwi-dht22",
+    "name": "DHT22",
+    "desc": "Digital Humidity and Temperature sensor"
+  },
+  {
+    "category": "Sensors",
+    "type": "wokwi-ds1307",
+    "name": "DS1307 RTC",
+    "desc": "RTC (Real Time Clock) module with I2C interface and 56 bytes of NV SRAM"
+  },
+  {
+    "category": "Sensors",
+    "type": "wokwi-pir-motion-sensor",
+    "name": "PIR Motion Sensor",
+    "desc": "Passive Infrared (PIR) motion sensor"
+  },
+  {
+    "category": "Sensors",
+    "type": "wokwi-ntc-temperature-sensor",
+    "name": "Analog Temperature Sensor (NTC)",
+    "desc": "Analog temperature sensor: NTC (negative temperature coefficient) thermistor"
+  },
+  {
+    "category": "Sensors",
+    "type": "wokwi-ds18b20",
+    "name": "DS18B20 Temperature Sensor",
+    "desc": "One-Wire digital temperature sensor"
+  },
+  {
+    "category": "Sensors",
+    "type": "board-bmp180",
+    "name": "BMP180",
+    "desc": "Barometric pressure and temperature sensor with I2C interface"
+  },
+  {
+    "category": "Sensors",
+    "type": "wokwi-mpu6050",
+    "name": "MPU6050",
+    "desc": "Integrated sensor with 3-axis accelerometer, 3-axis gyroscope and a temperature sensor with I2C interface"
+  },
+  {
+    "category": "Sensors",
+    "type": "wokwi-photoresistor-sensor",
+    "name": "Photoresistor",
+    "desc": "Photoresistor (LDR) Sensor"
+  },
+  {
+    "category": "Sensors",
+    "type": "wokwi-gas-sensor",
+    "name": "MQ2 Gas Sensor",
+    "desc": "Analog gas sensor for detecting combustible gases (LPG, Propane, Methane, etc.)"
+  },
+  {
+    "category": "Sensors",
+    "type": "wokwi-hx711",
+    "name": "HX711 Load Cell",
+    "desc": "HX711 Load Cell Amplifier with 5kg/50kg/gauge load cell"
+  },
+  {
+    "category": "Sensors",
+    "type": "board-mfrc522",
+    "name": "MFRC522 RFID Reader",
+    "desc": "RFID/NFC reader module with SPI interface for reading 13.56 MHz MIFARE cards"
+  },
+  {
+    "category": "Input devices",
+    "type": "wokwi-pushbutton",
+    "name": "Pushbutton",
+    "desc": "12mm Tactile Switch Button (momentary push button), also available in 6mm variant"
+  },
+  {
+    "category": "Input devices",
+    "type": "wokwi-pushbutton-6mm",
+    "name": "6mm variant",
+    "desc": "12mm Tactile Switch Button (momentary push button), also available in 6mm variant"
+  },
+  {
+    "category": "Input devices",
+    "type": "wokwi-slide-switch",
+    "name": "Slide switch",
+    "desc": "Standard Single Pole Double Throw (SPDT) slide switch"
+  },
+  {
+    "category": "Input devices",
+    "type": "wokwi-dip-switch-8",
+    "name": "DIP Switch 8",
+    "desc": "Set of 8 electrical switches in a single package"
+  },
+  {
+    "category": "Input devices",
+    "type": "wokwi-membrane-keypad",
+    "name": "Keypad",
+    "desc": "A standard 4x4 keypad (for numeric input)"
+  },
+  {
+    "category": "Input devices",
+    "type": "wokwi-analog-joystick",
+    "name": "Analog Joystick",
+    "desc": "Analog Joystick with two axes (horizontal/vertical) and an integrated push button"
+  },
+  {
+    "category": "Input devices",
+    "type": "wokwi-potentiometer",
+    "name": "Potentiometer",
+    "desc": "Knob-controlled variable resistor (linear potentiometer)"
+  },
+  {
+    "category": "Input devices",
+    "type": "wokwi-slide-potentiometer",
+    "name": "Slide Potentiometer",
+    "desc": "Sliding variable resistor (linear potentiometer)"
+  },
+  {
+    "category": "Input devices",
+    "type": "wokwi-ky-040",
+    "name": "Rotary Encoder (KY-040)",
+    "desc": "KY-040 Rotary Encoder module with 20 steps per revolution."
+  },
+  {
+    "category": "LEDs",
+    "type": "wokwi-led",
+    "name": "LED",
+    "desc": "Standard 5mm LED (Light Emitting Diode)"
+  },
+  {
+    "category": "LEDs",
+    "type": "wokwi-rgb-led",
+    "name": "RGB LED",
+    "desc": "5mm Red, Green and Blue (RGB) LED"
+  },
+  {
+    "category": "LEDs",
+    "type": "wokwi-led-bar-graph",
+    "name": "LED Bar Graph",
+    "desc": "10-segment LED Bar Graph"
+  },
+  {
+    "category": "LEDs",
+    "type": "wokwi-neopixel",
+    "name": "WS2812 LED",
+    "desc": "NeoPixel Compatible LED"
+  },
+  {
+    "category": "LEDs",
+    "type": "wokwi-led-ring",
+    "name": "WS2812 LED Ring",
+    "desc": "NeoPixel Compatible LED Ring"
+  },
+  {
+    "category": "LEDs",
+    "type": "wokwi-led-strip",
+    "name": "WS2812 LED Strip",
+    "desc": "NeoPixel Compatible LED Strip"
+  },
+  {
+    "category": "LEDs",
+    "type": "wokwi-led-matrix",
+    "name": "WS2812 LED Matrix",
+    "desc": "NeoPixel Compatible LED Matrix"
+  },
+  {
+    "category": "LEDs",
+    "type": null,
+    "name": "NeoPixel Meter",
+    "desc": "Monitors NeoPixel frame rate and power consumption"
+  },
+  {
+    "category": "LEDs",
+    "type": "wokwi-nlsf595",
+    "name": "NLSF595 LED Driver",
+    "desc": "Serial (SPI) Tri-Color LED Driver"
+  },
+  {
+    "category": "Display",
+    "type": "wokwi-lcd1602",
+    "name": "LCD 1602",
+    "desc": "An LCD with 2 lines, 16 characters per line"
+  },
+  {
+    "category": "Display",
+    "type": "wokwi-lcd2004",
+    "name": "LCD 2004",
+    "desc": "An LCD with 4 lines, 20 characters per line"
+  },
+  {
+    "category": "Display",
+    "type": "wokwi-nokia-5110-screen",
+    "name": "Nokia 5110 Screen",
+    "desc": "Monochrome 84x48 pixel LCD display with SPI interface"
+  },
+  {
+    "category": "Display",
+    "type": "wokwi-ili9341",
+    "name": "ILI9341 2.8\" TFT-LCD display",
+    "desc": "Full color 240x320 2.8\" LCD-TFT display with SPI interface"
+  },
+  {
+    "category": "Display",
+    "type": null,
+    "name": "ILI9341 2.8\" Touch Screen LCD",
+    "desc": "ILI9341 LCD with FT6206 I2C capacitive touch controller"
+  },
+  {
+    "category": "Display",
+    "type": "board-ssd1306",
+    "name": "SSD1306 OLED",
+    "desc": "Monochrome 128x64 OLED display with I2C interface"
+  },
+  {
+    "category": "Display",
+    "type": "board-grove-oled-sh1107",
+    "name": "SH1107 OLED",
+    "desc": "Monochrome 128x128 OLED display with I2C interface"
+  },
+  {
+    "category": "Display",
+    "type": "wokwi-max7219-matrix",
+    "name": "MAX7219 LED Dot Matrix",
+    "desc": "8x8 LED Dot Matrix with MAX7219 Controller"
+  },
+  {
+    "category": "Display",
+    "type": "wokwi-7segment",
+    "name": "Seven Segment Display",
+    "desc": "Seven segment LED display (1 to 4 digits)"
+  },
+  {
+    "category": "Display",
+    "type": "wokwi-tm1637-7segment",
+    "name": "TM1637 Seven Segment Display",
+    "desc": "4 digit seven segment module with TM1637 4-wire interface"
+  },
+  {
+    "category": "Display",
+    "type": null,
+    "name": "2.9\" e-Paper Display",
+    "desc": "2.9\" e-Paper Display"
+  },
+  {
+    "category": "Display",
+    "type": "wokwi-tv",
+    "name": "PAL TV",
+    "desc": "Black and White analog PAL TV screen"
+  },
+  {
+    "category": "Motors",
+    "type": "wokwi-servo",
+    "name": "Servo",
+    "desc": "A standard Micro Servo Motor"
+  },
+  {
+    "category": "Motors",
+    "type": "wokwi-stepper-motor",
+    "name": "Bipolar Stepper Motor",
+    "desc": "A bipolar Stepper Motor"
+  },
+  {
+    "category": "Motors",
+    "type": "wokwi-a4988",
+    "name": "A4988",
+    "desc": "A4988 Stepper Motor Driver"
+  },
+  {
+    "category": "Motors",
+    "type": "wokwi-biaxial-stepper",
+    "name": "Biaxial Stepper Motor",
+    "desc": "A concentric biaxial stepper motor, containing two stepper motors packaged in a single enclosure"
+  },
+  {
+    "category": "Communications",
+    "type": "wokwi-ir-receiver",
+    "name": "IR Receiver",
+    "desc": "38KHz infrared receiver"
+  },
+  {
+    "category": "Communications",
+    "type": "wokwi-ir-remote",
+    "name": "IR Remote",
+    "desc": "38KHz infrared remote with 20 function keys"
+  },
+  {
+    "category": "Logic",
+    "type": null,
+    "name": "NOT gate",
+    "desc": "NOT gate"
+  },
+  {
+    "category": "Logic",
+    "type": null,
+    "name": "AND gate",
+    "desc": "AND gate"
+  },
+  {
+    "category": "Logic",
+    "type": null,
+    "name": "OR gate",
+    "desc": "OR gate"
+  },
+  {
+    "category": "Logic",
+    "type": null,
+    "name": "XOR gate",
+    "desc": "XOR gate"
+  },
+  {
+    "category": "Logic",
+    "type": null,
+    "name": "NAND gate",
+    "desc": "NAND gate"
+  },
+  {
+    "category": "Logic",
+    "type": null,
+    "name": "MUX",
+    "desc": "MUX"
+  },
+  {
+    "category": "Logic",
+    "type": null,
+    "name": "Flip-Flop D",
+    "desc": "Flip-Flop D"
+  },
+  {
+    "category": "Logic",
+    "type": null,
+    "name": "Flip-Flop DSR",
+    "desc": "Flip-Flop DSR"
+  },
+  {
+    "category": "Logic",
+    "type": "wokwi-74hc595",
+    "name": "74HC595 Shift Register",
+    "desc": "8-bit Serial-In Parallel-Out (SIPO) Shift Register"
+  },
+  {
+    "category": "Logic",
+    "type": "wokwi-74hc165",
+    "name": "74HC165 Input Shift Register",
+    "desc": "8-bit Parallel-In Serial-Out (PISO) Shift Register (Input)"
+  },
+  {
+    "category": "Other parts",
+    "type": "wokwi-resistor",
+    "name": "Resistor",
+    "desc": "Resistor"
+  },
+  {
+    "category": "Other parts",
+    "type": "wokwi-buzzer",
+    "name": "Buzzer",
+    "desc": "A piezoelectric buzzer"
+  },
+  {
+    "category": "Other parts",
+    "type": "wokwi-clock-generator",
+    "name": "Clock Generator",
+    "desc": "Configurable clock signal generator"
+  },
+  {
+    "category": "Other parts",
+    "type": "wokwi-relay-module",
+    "name": "Relay Module",
+    "desc": "Relay Module"
+  },
+  {
+    "category": "Other parts",
+    "type": "wokwi-ks2e-m-dc5",
+    "name": "DPDT Relay",
+    "desc": "Double Pole Double Throw (DPDT) Relay"
+  },
+  {
+    "category": "Other parts",
+    "type": null,
+    "name": "Breadboard",
+    "desc": "Standard, half and mini sizes available"
+  },
+  {
+    "category": "Other parts",
+    "type": "wokwi-logic-analyzer",
+    "name": "Logic Analyzer",
+    "desc": "8-Channel Digital Logic Analyzer"
+  },
+  {
+    "category": "Other parts",
+    "type": "wokwi-microsd-card",
+    "name": "microSD card",
+    "desc": "microSD card with SPI interface"
+  },
+  {
+    "category": "Other parts",
+    "type": "wokwi-text",
+    "name": "Text",
+    "desc": "Text annotation element for diagrams"
+  }
+]

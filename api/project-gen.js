@@ -2,12 +2,15 @@
 // AI Project Generator dengan validasi deterministik diagram Wokwi + auto-repair.
 
 // ─────────────────────────────────────────────────────────────
-// KATALOG PART WOKWI (diverifikasi dari docs.wokwi.com, Juli 2026)
+// KATALOG PART WOKWI — dari docs.wokwi.com (wokwi-docs-main/docs/parts)
+// data/wokwi-parts.json di-generate oleh dev-utils/parse-wokwi-docs.js
 // ─────────────────────────────────────────────────────────────
-const WOKWI_PARTS = {
+
+// Pin & catatan yang sudah diverifikasi manual (otoritatif — menimpa data docs)
+const CURATED_PARTS = {
   "wokwi-arduino-uno": {
     pins: ["0","1","2","3","4","5","6","7","8","9","10","11","12","13","A0","A1","A2","A3","A4","A5","5V","VIN","GND.1","GND.2","GND.3"],
-    note: "PWM: 3,5,6,9,10,11. 3V3/IOREF/AREF/RESET tidak disimulasikan di Wokwi"
+    note: "PWM: 3,5,6,9,10,11. 3V3/IOREF/AREF/RESET tidak disimulasikan di Wokwi. Board utama proyek Uno."
   },
   "wokwi-led": {
     pins: ["A","C"],
@@ -51,8 +54,52 @@ const WOKWI_PARTS = {
   "wokwi-servo": {
     pins: ["PWM","V+","GND"],
     note: "PWM ke pin digital PWM (9/10), V+ ke 5V."
+  },
+  "board-esp32-devkit-c-v4": {
+    pins: ["3V3","EN","VP","VN","34","35","32","33","25","26","27","14","12","GND.1","13","D2","D3","CMD","5V","GND.2","23","22","TX","RX","21","GND.3","19","18","5","17","16","4","0","2","15","D1","D0","CLK"],
+    note: "ESP32 DevKitC V4. GPIO ADC (input-only, tanpa pull-up): 34, 35. I2C default: SDA=21, SCL=22. PWM di hampir semua pin digital."
+  },
+  "board-ssd1306": {
+    pins: ["DATA","CLK","DC","RST","CS","3V3","GND","VIN"],
+    note: "OLED 128x64 I2C. DATA=SDA, CLK=SCL. VIN ke 3V3."
+  },
+  "wokwi-a4988": {
+    pins: ["ENABLE","MS1","MS2","MS3","RESET","SLEEP","STEP","DIR","GND","VDD","1B","1A","2A","2B","VMOT"],
+    note: "Driver stepper: STEP=langkah, DIR=arah. Motor: 1B/1A ke B-/B+, 2A/2B ke A+/A-."
+  },
+  "wokwi-wifi-ap": {
+    pins: [],
+    attrs: 'ssid, password, channel, internet',
+    note: "Access point WiFi simulasi. Tanpa part ini ESP32 memakai jaringan default Wokwi-GUEST. Tidak punya koneksi kabel."
   }
 };
+
+// Katalog penuh hasil parse docs — dipakai utk part selain yang sudah dikurasi
+const DOC_PARTS = require('../data/wokwi-parts.json');
+
+// Gabungkan: part kurasi = otoritatif; part docs lain ditambahkan bila punya tabel pin
+const WOKWI_PARTS = {};
+for (const [type, info] of Object.entries(CURATED_PARTS)) {
+  WOKWI_PARTS[type] = { ...info };
+}
+for (const [type, info] of Object.entries(DOC_PARTS)) {
+  if (!info.pins || !info.pins.length) continue; // tanpa tabel pin → tidak bisa divalidasi
+  if (WOKWI_PARTS[type]) {
+    // isi attrs dari docs bila kurasi belum punya
+    if (!WOKWI_PARTS[type].attrs && info.attrs && Object.keys(info.attrs).length) {
+      WOKWI_PARTS[type].attrs = Object.entries(info.attrs)
+        .map(([k, v]) => `${k}: "${v.default || '?'}"`).join(", ");
+    }
+    continue;
+  }
+  WOKWI_PARTS[type] = {
+    pins: info.pins,
+    attrs: Object.keys(info.attrs || {}).length
+      ? Object.entries(info.attrs).map(([k, v]) => `${k}: "${v.default || '?'}"`).join(", ")
+      : undefined,
+    note: info.desc ? info.desc.slice(0, 100) : undefined
+  };
+}
 
 const ALLOWED_TYPES = Object.keys(WOKWI_PARTS);
 
@@ -125,34 +172,55 @@ function validateWokwiDiagram(rawDiagram) {
 // ─────────────────────────────────────────────────────────────
 // SYSTEM PROMPT (Lapis B: katalog ringkas + contoh diagram)
 // ─────────────────────────────────────────────────────────────
-function buildSystemPrompt() {
-  return `You are an IoT Expert for Arduino Uno projects. Reply ONLY with raw JSON (no markdown, no code fences).
+const BOARD_INFO = {
+  'uno': {
+    label: 'Arduino Uno',
+    boardType: 'wokwi-arduino-uno',
+    codePlatform: 'Uno',
+    prompt: `Board utama WAJIB wokwi-arduino-uno (id: "uno"). Pin umum: digital 2-13 (PWM: 3,5,6,9,10,11), analog A0-A5, daya 5V & GND.`,
+    codeRules: `- DHT22 pakai Adafruit DHT: #include <DHT.h>; DHT dht(2, DHT22);
+- LCD 1602 pakai LiquidCrystal lcd(12,11,10,9,8,7); — cocokkan dengan koneksi RS=12,E=11,D4=10,D5=9,D6=8,D7=7.`,
+    example: `{"version":1,"parts":[{"type":"wokwi-arduino-uno","id":"uno","top":0,"left":0,"attrs":{}},{"type":"wokwi-led","id":"led1","top":-100,"left":300,"attrs":{"color":"red"}},{"type":"wokwi-resistor","id":"r1","top":-20,"left":300,"attrs":{"value":"220"}}],"connections":[["uno:13","r1:1","green",["v0"]],["r1:2","led1:A","green",["v0"]],["led1:C","uno:GND.1","black",["v0"]]]}`
+  },
+  'esp32': {
+    label: 'ESP32 DevKitC V4',
+    boardType: 'board-esp32-devkit-c-v4',
+    codePlatform: 'ESP32',
+    prompt: `Board utama WAJIB board-esp32-devkit-c-v4 (id: "esp"). GPIO digital: 2,4,5,12,13,14,15,16,17,18,19,21,22,23,25,26,27,32,33 (PWM hampir semua). ADC (input saja): 34,35. I2C default: SDA=21, SCL=22. Daya: 3V3, 5V, GND.`,
+    codeRules: `- Semua kode pakai platform ESP32 (Arduino core): #include <WiFi.h>, dll.
+- Bila butuh WiFi/IoT, pakai library & konsep ESP32 (WiFi.begin, dll).
+- Sensor DHT22: #include <DHT.h>; DHT dht(4, DHT22);`,
+    example: `{"version":1,"parts":[{"type":"board-esp32-devkit-c-v4","id":"esp","top":0,"left":0,"attrs":{}},{"type":"wokwi-dht22","id":"dht","top":-120,"left":320,"attrs":{}}],"connections":[["dht:VCC","esp:3V3","red",["v0"]],["dht:SDA","esp:4","green",["v0"]],["dht:GND","esp:GND.1","black",["v0"]]]}`
+  }
+};
+
+function buildSystemPrompt(boardKey) {
+  const b = BOARD_INFO[boardKey] || BOARD_INFO['uno'];
+  return `You are an IoT Expert building projects on ${b.label}. Reply ONLY with raw JSON (no markdown, no code fences).
 
 SCHEMA (wajib persis):
-{"title":"Nama","description":"Deskripsi","bom":["1x Arduino Uno","1x LED"],"wiring_guide":[{"komponen":"LED","pin_komponen":"A","koneksi_arduino":"Pin 13 (via resistor)"}],"cpp_code":"Code with \\n hidden string","wokwi_diagram":"MINIFIED stringified JSON"}
+{"title":"Nama","description":"Deskripsi","bom":["1x ${b.label}","1x LED"],"wiring_guide":[{"komponen":"LED","pin_komponen":"A","koneksi_arduino":"Pin 13 (via resistor)"}],"cpp_code":"Code with \\n hidden string","wokwi_diagram":"MINIFIED stringified JSON"}
 
 WOKWI DIAGRAM RULES:
 - wokwi_diagram = satu baris string JSON minified: {"version":1,"parts":[...],"connections":[...]}
 - Setiap part WAJIB objek: {"type":"...","id":"...","top":<angka>,"left":<angka>,"attrs":{...}}
 - connections WAJIB array of arrays: ["partId:pin","partId:pin","color",[]]. JANGAN pernah pakai objek.
 - Semua part & pin WAJIB dari katalog di bawah. DILARANG mengarang nama part/pin.
+- ${b.prompt}
+- Pilih part dari katalog yang paling sesuai fungsi proyek (sensor, aktuator, display, dll).
 
-KATALOG PART WOKWI (satu-satunya yang diizinkan):
+KATALOG PART WOKWI (semua part di bawah diizinkan — pilih yang relevan):
 ${PARTS_CATALOG_TEXT}
 
-CONTOH DIAGRAM 1 — LED Blink (LED merah + resistor 220, pin 13):
-{"version":1,"parts":[{"type":"wokwi-arduino-uno","id":"uno","top":0,"left":0,"attrs":{}},{"type":"wokwi-led","id":"led1","top":-100,"left":300,"attrs":{"color":"red"}},{"type":"wokwi-resistor","id":"r1","top":-20,"left":300,"attrs":{"value":"220"}}],"connections":[["uno:13","r1:1","green",["v0"]],["r1:2","led1:A","green",["v0"]],["led1:C","uno:GND.1","black",["v0"]]]}
-
-CONTOH DIAGRAM 2 — DHT22 suhu & kelembaban (SDA ke pin 2):
-{"version":1,"parts":[{"type":"wokwi-arduino-uno","id":"uno","top":0,"left":0,"attrs":{}},{"type":"wokwi-dht22","id":"dht","top":-120,"left":300,"attrs":{}}],"connections":[["dht:VCC","uno:5V","red",["v0"]],["dht:SDA","uno:2","green",["v0"]],["dht:GND","uno:GND.1","black",["v0"]]]}
+CONTOH DIAGRAM (${b.label}):
+${b.example}
 
 KODE RULES:
 - cpp_code = 1 baris string dengan \\n literal. KOMENTAR BAHASA INDONESIA, maks 5 kata/baris.
-- Baris atas: // Proyek: X \\n // Logika: Y \\n // Platform: Uno
-- DHT22 pakai library Adafruit DHT: #include <DHT.h>; DHT dht(2, DHT22);
-- LCD 1602 pakai LiquidCrystal lcd(12,11,10,9,8,7); — cocokkan dengan koneksi RS=12,E=11,D4=10,D5=9,D6=8,D7=7.
+- Baris atas: // Proyek: X \\n // Logika: Y \\n // Platform: ${b.codePlatform}
+${b.codeRules}
 - ALWAYS akhiri loop() dengan delay(50); (atau lebih besar sesuai kebutuhan).
-- RULES LAIN: semua komponen wajib dapat daya (5V & GND). Motor/pompa/AC WAJIB lewat relay-module. Sensor tak dikenal → fallback wokwi-potentiometer + catatan di description.`;
+- RULES LAIN: semua komponen wajib dapat daya (5V & GND untuk Uno; 3V3/5V & GND untuk ESP32). Motor/pompa/AC WAJIB lewat relay-module. Sensor tak dikenal → fallback wokwi-potentiometer + catatan di description.`;
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -191,13 +259,17 @@ module.exports = async function handler(req, res) {
   }
 
   try {
-    const { idea } = req.body;
+    const { idea, board } = req.body;
 
     if (!idea) {
       return res.status(400).json({ error: { message: "Harap berikan ide proyek." } });
     }
 
-    const systemPrompt = buildSystemPrompt();
+    // Board pilihan user: 'uno' (default) atau 'esp32'
+    const boardKey = (board === 'esp32') ? 'esp32' : 'uno';
+    const expectedBoard = BOARD_INFO[boardKey].boardType;
+
+    const systemPrompt = buildSystemPrompt(boardKey);
 
     // Panggil model: coba OpenRouter dulu, fallback Groq (gpt-oss-120b → gpt-oss-20b)
     const callModel = async (messages, maxTokens) => {
@@ -307,6 +379,18 @@ module.exports = async function handler(req, res) {
 
     let prj = parseResult(result);
     let errors = validateWokwiDiagram(prj.wokwi_diagram);
+
+    // Pastikan board utama diagram sesuai pilihan user
+    const mainBoardOk = (() => {
+      try {
+        const d = typeof prj.wokwi_diagram === 'string' ? JSON.parse(prj.wokwi_diagram) : prj.wokwi_diagram;
+        if (!d || !Array.isArray(d.parts)) return false;
+        return d.parts.some(p => p && p.type === expectedBoard);
+      } catch (e) { return false; }
+    })();
+    if (!mainBoardOk) {
+      errors.push(`Board utama wajib ${expectedBoard} (sesuai pilihan user). Ganti part board di diagram, sesuaikan semua koneksi ke pin board tersebut, dan perbaiki kode platform-nya.`);
+    }
 
     // ── AUTO-REPAIR (Lapis A) — maksimal 2 percobaan ──
     let repairCount = 0;

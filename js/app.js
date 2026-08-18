@@ -361,6 +361,7 @@ function switchTab(t){
 
   if(t === 'news') { videoChips(); renderVideos(); }
   if(t === 'about') loadAbout();
+  if(t === 'dashboard' && window.ElektroFBDash) window.ElektroFBDash.open();
 
   window.scrollTo({top:0,behavior:'smooth'});
 }
@@ -2544,12 +2545,79 @@ function installPWA(){
 // ═══════════════════════════════════════════════════════════
 // #51 — PROJECT HUB LOGIC
 // ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
+// KATALOG KOMPONEN WOKWI + PANDUAN (data dari wokwi-docs-main)
+// ═══════════════════════════════════════════════════════════
+const WOKWI_GUIDES = [
+  { title: 'Serial Monitor', icon: '🖥️', href: 'https://docs.wokwi.com/guides/serial-monitor', desc: 'Terima debug print & kirim perintah teks ke program Arduino.' },
+  { title: 'Logic Analyzer', icon: '📊', href: 'https://docs.wokwi.com/guides/logic-analyzer', desc: 'Rekam & analisis sinyal digital 8 kanal, decode I2C/UART/SPI.' },
+  { title: 'ESP32', icon: '📡', href: 'https://docs.wokwi.com/guides/esp32', desc: 'WiFi, server, dan proyek IoT dengan ESP32 di simulator.' },
+  { title: 'MicroPython', icon: '🐍', href: 'https://docs.wokwi.com/guides/micropython', desc: 'Program mikrokontroler dengan bahasa Python.' },
+  { title: 'CircuitPython', icon: '🐍', href: 'https://docs.wokwi.com/guides/circuitpython', desc: 'CircuitPython untuk board Adafruit / kompatibel.' },
+  { title: 'Libraries', icon: '📚', href: 'https://docs.wokwi.com/guides/libraries', desc: 'Daftar library Arduino populer yang didukung simulator.' },
+  { title: 'Debugger', icon: '🐞', href: 'https://docs.wokwi.com/guides/debugger', desc: 'Debug kode AVR dengan breakpoint dan step execution.' },
+  { title: 'Diagram Editor', icon: '✏️', href: 'https://docs.wokwi.com/guides/diagram-editor', desc: 'Rangkai komponen visual di editor diagram Wokwi.' }
+];
+
+let WOKWI_HARDWARE = [];
+
+async function initWokwiHardware() {
+  try {
+    const hwRes = await fetch('data/wokwi-hardware.json').then(r => r.ok ? r.json() : []);
+    WOKWI_HARDWARE = hwRes || [];
+    renderWokwiHardware();
+  } catch (e) {
+    console.warn('[ElektroDict] Katalog hardware Wokwi gagal dimuat:', e);
+  }
+}
+
+function renderWokwiHardware() {
+  const box = document.getElementById('wokwi-hardware-list');
+  if (!box || !WOKWI_HARDWARE.length) return;
+  const cats = [...new Set(WOKWI_HARDWARE.map(h => h.category))];
+  box.innerHTML = cats.map(cat => {
+    const items = WOKWI_HARDWARE.filter(h => h.category === cat);
+    return `
+      <div class="wk-hw-cat">
+        <div class="wk-hw-cat-title">${escXml(cat)} <span>${items.length}</span></div>
+        <div class="wk-hw-items">
+          ${items.map(h => `<span class="wk-hw-item" title="${escXml(h.desc)}">${escXml(h.name)}</span>`).join('')}
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function renderWokwiGuides() {
+  const box = document.getElementById('wokwi-guides-list');
+  if (!box) return;
+  box.innerHTML = WOKWI_GUIDES.map(g => `
+    <a class="wk-guide-card" href="${g.href}" target="_blank" rel="noopener">
+      <div class="wk-guide-icon">${g.icon}</div>
+      <div class="wk-guide-body">
+        <div class="wk-guide-title">${g.title}</div>
+        <div class="wk-guide-desc">${g.desc}</div>
+      </div>
+    </a>`).join('');
+}
+
 function initProjects() {
   // Render bank template Wokwi terverifikasi
   renderWokwiTemplates();
+  renderWokwiGuides();
+  renderWokwiHardware();
+  initWokwiHardware();
 }
 
 let currentAIProject = null;
+let selectedBoard = 'uno';
+
+// Pilihan board untuk AI Project Generator ('uno' | 'esp32')
+function selectBoard(board) {
+  selectedBoard = board;
+  document.querySelectorAll('.prj-board-opt').forEach(b => {
+    b.classList.toggle('on', b.dataset.board === board);
+  });
+}
 
 async function generateAIProject() {
   const input = document.getElementById('prj-idea-input');
@@ -2571,7 +2639,7 @@ async function generateAIProject() {
   loading.classList.remove('hide');
   
   try {
-    const data = await window.ElektroAPI.generateProject(idea);
+    const data = await window.ElektroAPI.generateProject(idea, selectedBoard);
 
     // 1. Retrieve raw content
     let rawContent = data.result;
@@ -2680,8 +2748,14 @@ function renderWokwiTemplates() {
           <span class="prj-card-diff diff-${diffClass}">${t.difficulty}</span>
           <span style="font-size:11px;color:var(--text3);font-family:var(--mono);">${(t.tags || []).join(' · ')}</span>
         </div>
+        <button class="wk-card-run" onclick="event.stopPropagation(); openProject('${t.id}')">🧰 Buka Panduan Pasang</button>
       </div>`;
   }).join('');
+}
+
+// Escape teks utk disisipkan ke HTML (dipakai katalog Wokwi)
+function escXml(s) {
+  return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
 function renderProjectDetail(prj) {
@@ -2765,6 +2839,23 @@ function renderProjectDetail(prj) {
     </div>`;
 
   // === Wokwi Section (new field: wokwi_diagram) ===
+  // === Firebase Setup HTML (template ESP32 Firebase) ===
+  const fbSteps = prj.firebase_setup || [];
+  const isFirebase = !!fbSteps.length;
+  const firebaseHtml = isFirebase ? `
+    <div class="pd-section" style="border:1px solid rgba(255,152,0,.35); background:rgba(255,152,0,.06);">
+      <h3 class="pd-section-h">🔥 Setup Firebase (wajib diisi sendiri)</h3>
+      <p style="color:var(--text2); font-size:13px; line-height:1.6; margin-bottom:10px;">
+        Kode memakai placeholder <code style="color:#fbbf24;">..alamat-database-firebase..</code> dan
+        <code style="color:#fbbf24;">..secret-database-firebase..</code> — ganti dengan data Firebase milikmu
+        (host &amp; secret) sebelum dijalankan.
+      </p>
+      <ol style="margin:0; padding-left:20px; color:var(--text2); font-size:13px; line-height:1.9;">
+        ${fbSteps.map(s => `<li>${s}</li>`).join('')}
+      </ol>
+      <button class="fb-btn fb-btn-primary" style="margin-top:12px;" onclick="switchTab('dashboard')">📊 Buka Dashboard IoT</button>
+    </div>` : '';
+
   const wokwiRaw = prj.wokwi_diagram || '';
   // wokwi_diagram may be a string (stringified JSON) or already an object
   let wokwiPretty = '';
@@ -2778,58 +2869,67 @@ function renderProjectDetail(prj) {
   }
   const safeWokwi = wokwiPretty.replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
+  // Deteksi board untuk tombol jalankan (Uno / ESP32)
+  const boardLabel = (prj.board || (wokwiRaw.includes('esp32') ? 'board-esp32-devkit-c-v4' : 'wokwi-arduino-uno'));
+  const boardName  = boardLabel.includes('esp32') ? 'ESP32' : 'Arduino Uno';
+
   const wokwiSectionHtml = wokwiPretty ? `
     <div class="pd-section">
       <h3 class="pd-section-h">🛠️ Jalankan di Simulator
         ${prj.wokwi_verified === false ? `<span style="font-size:10px;font-weight:600;color:#f59e0b;background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.35);padding:2px 8px;border-radius:99px;vertical-align:middle;">⚠️ Skema belum lolos validasi — cek manual</span>` : ''}
       </h3>
 
-      <!-- Simulation Setup Dashboard -->
-      <div style="border:1px solid rgba(99,102,241,.25);border-radius:12px;padding:18px;background:rgba(99,102,241,.04);display:flex;flex-direction:column;gap:14px;">
+      <!-- Pasang manual (alur utama) -->
+      <div style="border:1px solid rgba(22,163,74,.35);border-radius:14px;padding:18px;background:linear-gradient(135deg,rgba(22,163,74,.10),rgba(22,163,74,.03));margin-bottom:14px;">
+        <div style="font-weight:700;font-size:14px;color:var(--text);margin-bottom:4px;">🧰 Pasang Manual ke Wokwi (${boardName})</div>
+        <div style="font-size:12px;color:var(--text2);line-height:1.5;margin-bottom:12px;">
+          3 langkah: buka Wokwi, tempel <b>diagram.json</b>, tempel <b>sketch.ino</b>. Wokwi tidak lagi menerima impor otomatis via URL.
+        </div>
 
-        <!-- Step 1 -->
-        <div style="display:flex;gap:14px;align-items:flex-start;">
-          <div style="background:var(--accent);color:#fff;font-weight:700;font-size:13px;min-width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">1</div>
-          <div style="flex:1;">
-            <div style="font-weight:700;font-size:13px;color:var(--text);margin-bottom:6px;">Persiapkan Simulator</div>
-            <a href="https://wokwi.com/projects/new/arduino-uno" target="_blank" rel="noopener"
-              style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:linear-gradient(135deg,#4ade80,#16a34a);color:#fff;border-radius:7px;text-decoration:none;font-weight:600;font-size:12px;box-shadow:0 3px 12px rgba(22,163,74,.3);">
-              🌐 Buka Wokwi (Uno)
-            </a>
+        <details class="wk-manual-details" open>
+        <summary class="wk-manual-summary">🛠️ Lihat langkah (buka) / sembunyikan</summary>
+        <div style="border:1px solid rgba(99,102,241,.25);border-radius:12px;padding:18px;background:rgba(99,102,241,.04);display:flex;flex-direction:column;gap:14px;margin-top:10px;">
+
+          <div style="display:flex;gap:14px;align-items:flex-start;">
+            <div style="background:var(--accent);color:var(--bg);font-weight:700;font-size:13px;min-width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">1</div>
+            <div style="flex:1;">
+              <div style="font-weight:700;font-size:13px;color:var(--text);margin-bottom:6px;">Buka Simulator</div>
+              <a href="https://wokwi.com/projects/new/${boardLabel.includes('esp32') ? 'esp32' : 'arduino-uno'}" target="_blank" rel="noopener"
+                style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:linear-gradient(135deg,#4ade80,#16a34a);color:#fff;border-radius:7px;text-decoration:none;font-weight:600;font-size:12px;box-shadow:0 3px 12px rgba(22,163,74,.3);">
+                🌐 Buka Wokwi (${boardName})
+              </a>
+            </div>
           </div>
-        </div>
 
-        <div style="height:1px;background:var(--line2);opacity:.5;"></div>
+          <div style="height:1px;background:var(--line2);opacity:.5;"></div>
 
-        <!-- Step 2 -->
-        <div style="display:flex;gap:14px;align-items:flex-start;">
-          <div style="background:var(--accent);color:#fff;font-weight:700;font-size:13px;min-width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">2</div>
-          <div style="flex:1;">
-            <div style="font-weight:700;font-size:13px;color:var(--text);margin-bottom:6px;">Pasang Komponen (Wiring)</div>
-            <button class="pd-code-copy" onclick="copyPrjCode(this,'wokwi')">📋 Salin Data Wiring (JSON)</button>
-            <p style="font-size:11px;color:var(--text3);margin-top:7px;line-height:1.5;">Di tab Wokwi, buka file <b>diagram.json</b>, hapus semua isinya, lalu <b>PASTE</b> data ini.</p>
+          <div style="display:flex;gap:14px;align-items:flex-start;">
+            <div style="background:var(--accent);color:var(--bg);font-weight:700;font-size:13px;min-width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">2</div>
+            <div style="flex:1;">
+              <div style="font-weight:700;font-size:13px;color:var(--text);margin-bottom:6px;">Pasang Komponen (Wiring)</div>
+              <button class="pd-code-copy" onclick="copyPrjCode(this,'wokwi')">📋 Salin Data Wiring (JSON)</button>
+              <p style="font-size:11px;color:var(--text3);margin-top:7px;line-height:1.5;">Di tab Wokwi, buka file <b>diagram.json</b>, hapus semua isinya, lalu <b>PASTE</b> data ini.</p>
+            </div>
           </div>
-        </div>
 
-        <div style="height:1px;background:var(--line2);opacity:.5;"></div>
+          <div style="height:1px;background:var(--line2);opacity:.5;"></div>
 
-        <!-- Step 3 -->
-        <div style="display:flex;gap:14px;align-items:flex-start;">
-          <div style="background:var(--accent);color:#fff;font-weight:700;font-size:13px;min-width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">3</div>
-          <div style="flex:1;">
-            <div style="font-weight:700;font-size:13px;color:var(--text);margin-bottom:6px;">Masukkan Program (Sketch)</div>
-            <button class="pd-code-copy" onclick="copyPrjCode(this,'cpp')">📋 Salin Kode Program (INO)</button>
-            <p style="font-size:11px;color:var(--text3);margin-top:7px;line-height:1.5;">Di tab Wokwi, buka file <b>sketch.ino</b>, hapus semua isinya, lalu <b>PASTE</b> kode ini.</p>
+          <div style="display:flex;gap:14px;align-items:flex-start;">
+            <div style="background:var(--accent);color:var(--bg);font-weight:700;font-size:13px;min-width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">3</div>
+            <div style="flex:1;">
+              <div style="font-weight:700;font-size:13px;color:var(--text);margin-bottom:6px;">Masukkan Program (Sketch)</div>
+              <button class="pd-code-copy" onclick="copyPrjCode(this,'cpp')">📋 Salin Kode Program (INO)</button>
+              <p style="font-size:11px;color:var(--text3);margin-top:7px;line-height:1.5;">Di tab Wokwi, buka file <b>sketch.ino</b>, hapus semua isinya, lalu <b>PASTE</b> kode ini.</p>
+            </div>
           </div>
-        </div>
 
-        <!-- Final warning note -->
-        <div style="background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.2);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--text2);line-height:1.6;margin-top:2px;">
-          ⚠️ <b>Penting:</b> Pastikan menghapus kode bawaan Wokwi sebelum mem-paste data dari ElektroDict.
-          Jika komponen asli tidak tersedia, AI menggunakan <b>Potensiometer</b> sebagai pengganti input sensor analog.
-        </div>
+          <div style="background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.2);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--text2);line-height:1.6;margin-top:2px;">
+            ⚠️ <b>Penting:</b> Pastikan menghapus kode bawaan Wokwi sebelum mem-paste data dari ElektroDict.
+            Jika komponen asli tidak tersedia, AI menggunakan <b>Potensiometer</b> sebagai pengganti input sensor analog.
+          </div>
 
-      </div>
+        </div>
+      </details>
 
       <!-- diagram.json preview (collapsible feel via max-height) -->
       <div class="pd-code-wrap" style="margin-top:14px;">
@@ -2880,7 +2980,7 @@ function renderProjectDetail(prj) {
     <div class="pd-header">
       <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:16px; margin-bottom:12px;">
         <h1 class="pd-title" style="margin:0">${prj.title}</h1>
-        <button class="pdf-btn" onclick="exportProjectToPdf()" style="background:var(--accent); color:white; border:none; padding:8px 16px; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:6px; flex-shrink:0; box-shadow:0 4px 12px rgba(79,156,249,0.3)">📄 Export PDF</button>
+        <button class="pdf-btn" onclick="exportProjectToPdf()" style="background:var(--accent); color:var(--bg); border:none; padding:8px 16px; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:6px; flex-shrink:0; box-shadow:0 4px 12px rgba(79,156,249,0.3)">📄 Export PDF</button>
       </div>
       <div class="pd-meta">
         <div class="prj-card-diff diff-${diffClass}">${diffLabel}</div>
@@ -2890,20 +2990,25 @@ function renderProjectDetail(prj) {
 
     <div class="pd-section">
       <h3 class="pd-section-h">📖 Deskripsi</h3>
-      <p style="color:var(--text2); font-size:14px; line-height:1.6;">${prj.description}</p>
+      <p style="color:var(--text2); font-size:14px; line-height:1.6;">${prj.description || prj.desc || ''}</p>
     </div>
 
     ${bomHtml}
     ${disclaimerHtml}
     ${wiringHtml}
+    ${firebaseHtml}
     ${codeHtml}
     ${wokwiSectionHtml}
     ${stepsHtml}
   `;
 
-  // Store wokwi raw string for clipboard access
+  // Store wokwi raw string for clipboard access + globals untuk launcher satu-klik
   if(wokwiPretty) content.dataset.wokwi = wokwiPretty;
   if(rawCode)    content.dataset.cppCode = rawCode;
+  currentPrjLaunchCode = rawCode || '';
+  currentPrjLaunchDiagram = wokwiPretty || '';
+  currentPrjLaunchBoard = prj.board || (wokwiPretty.includes('esp32') ? 'board-esp32-devkit-c-v4' : 'wokwi-arduino-uno');
+  currentPrjLaunchTitle = prj.title || '';
 
   switchTab('project-detail');
 }
@@ -2940,90 +3045,10 @@ function copyPrjCodeDirect(btn) { copyPrjCode(btn, 'cpp'); }
 
 /**
  * Bulletproof One-Click Wokwi Launcher
- * Strategy 1: POST form to https://wokwi.com/_api/setup/arduino-uno (most reliable)
- * Strategy 2: Base64 URL fallback if POST is blocked by browser popup policy
+ * Strategy 1: Base64 data URL — https://wokwi.com/projects/new/<board>?data=...
+ *              (mekanisme share resmi Wokwi, tidak butuh server endpoint)
+ * Strategy 2: Buka halaman proyek kosong (user paste manual)
  */
-function openInWokwi() {
-  const content = document.getElementById('project-detail-content');
-
-  // Source raw data from dataset (never from textContent which is HTML-escaped)
-  const cppCode    = content?.dataset.cppCode || '';
-  const rawDiagram = content?.dataset.wokwi   || '';
-
-  if (!cppCode || !rawDiagram) {
-    alert('Data proyek belum siap. Silakan generate ulang terlebih dahulu.');
-    return;
-  }
-
-  // Validate & compact the diagram JSON
-  let diagramString;
-  try {
-    const data = typeof rawDiagram === 'object' ? rawDiagram : JSON.parse(rawDiagram);
-    diagramString = JSON.stringify(data);          // compact, no extra whitespace
-  } catch(e) {
-    diagramString = typeof rawDiagram === 'string' ? rawDiagram : JSON.stringify(rawDiagram);
-  }
-
-  // Detect board type from diagram (default: arduino-uno, upgrade to esp32 if found)
-  const boardType = diagramString.includes('esp32') ? 'esp32' : 'arduino-uno';
-  const endpoint  = `https://wokwi.com/_api/setup/${boardType}`;
-
-  // ── STRATEGY 1: POST form (preferred — Wokwi officially supports this) ──
-  try {
-    const form = document.createElement('form');
-    form.method  = 'POST';
-    form.action  = endpoint;
-    form.target  = '_blank';
-    form.style.display = 'none';
-
-    const addInput = (name, value) => {
-      const inp = document.createElement('input');
-      inp.type  = 'hidden';
-      inp.name  = name;
-      inp.value = value;
-      form.appendChild(inp);
-    };
-
-    addInput('sketch.ino',   cppCode);
-    addInput('diagram.json', diagramString);
-
-    document.body.appendChild(form);
-    form.submit();
-    setTimeout(() => { if (form.parentNode) form.parentNode.removeChild(form); }, 3000);
-
-  } catch(postError) {
-    // ── STRATEGY 2: Base64 URL fallback ──
-    console.warn('[Wokwi] POST failed, falling back to base64 URL:', postError);
-    _openInWokwiFallback(cppCode, diagramString, boardType);
-  }
-}
-
-/**
- * Fallback: encodes sketch + diagram as base64 and opens Wokwi via URL import.
- * Used when the POST form is blocked by popup/CSP restrictions.
- */
-function _openInWokwiFallback(cppCode, diagramString, boardType) {
-  try {
-    // Build a combined JSON payload Wokwi can import
-    const payload = JSON.stringify({
-      files: [
-        { name: 'sketch.ino',   content: cppCode },
-        { name: 'diagram.json', content: diagramString }
-      ]
-    });
-    const b64 = btoa(unescape(encodeURIComponent(payload)));
-    const url = `https://wokwi.com/projects/new/${boardType}?data=${b64}`;
-    const win = window.open(url, '_blank');
-    if (!win) {
-      // Last resort: copy the Wokwi URL and tell the user
-      navigator.clipboard?.writeText(url).catch(() => {});
-      alert('Popup diblokir browser.\nURL Wokwi sudah dicopy ke clipboard — paste di tab baru!');
-    }
-  } catch(e) {
-    alert('Gagal membuka Wokwi otomatis. Gunakan tombol "Copy diagram.json" dan buka wokwi.com secara manual.');
-  }
-}
-
 function togglePrjStep(id, idx) {
   const row = document.getElementById(`step-${id}-${idx}`);
   if(!row) return;
