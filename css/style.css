@@ -3403,7 +3403,11 @@ body.fade-out {
 /* ═══ MATERI — CHAT AI KONTEKSTUAL ═══ */
 .mt-chat-fab{position:fixed;right:16px;bottom:96px;width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-d,#2563eb));border:none;color:#fff;font-size:22px;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.35);z-index:900;display:none;align-items:center;justify-content:center;transition:transform .2s;}
 body.materi-active .mt-chat-fab{display:flex;}
+@media(min-width:860px){.mt-chat-fab{display:none !important;}} /* desktop: pakai tombol in-flow di header Materi */
 .mt-chat-fab:hover{transform:scale(1.08);}
+.mt-chat-btn{display:none;align-items:center;gap:6px;background:linear-gradient(135deg,var(--accent),var(--accent-d,#2563eb));border:none;color:#fff;font-size:12.5px;font-weight:700;padding:9px 16px;border-radius:99px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.3);transition:transform .2s;white-space:nowrap;}
+.mt-chat-btn:hover{transform:translateY(-1px);}
+@media(min-width:860px){.mt-chat-btn{display:inline-flex;}}
 .mt-chat-fab::after{content:'';position:absolute;inset:-6px;border-radius:50%;border:2px solid var(--accent);opacity:.5;animation:mtFabPulse 2.2s infinite;pointer-events:none;}
 @keyframes mtFabPulse{0%{transform:scale(.88);opacity:.6}70%{transform:scale(1.18);opacity:0}100%{opacity:0}}
 .mchat-welcome{font-size:12.5px;line-height:1.6;color:var(--text);}

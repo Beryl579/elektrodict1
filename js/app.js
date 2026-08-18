@@ -361,7 +361,7 @@ function switchTab(t){
 
   if(t === 'news') { videoChips(); renderVideos(); }
   if(t === 'about') loadAbout();
-  if(t === 'materi') { renderMateri(); document.body.classList.add('materi-active'); positionMtChatFab(); }
+  if(t === 'materi') { renderMateri(); document.body.classList.add('materi-active'); }
   else { stopMateriAnims(); materiChatCtx = null; document.body.classList.remove('materi-active'); }
   if(t === 'dashboard' && window.ElektroFBDash) window.ElektroFBDash.open();
 
@@ -3896,13 +3896,17 @@ function buildMateriCtx(m) {
 function materiOpenChat() {
   materiChatCtx = buildMateriCtx(getMateriModule());
   materiWelcomeShown = false;
-  const isMob = window.innerWidth < 860;
-  if (isMob) {
-    openM();
-  } else {
+  // Cek apakah sidebar chat benar-benar tampil di layar
+  const sb = document.querySelector('.chat-sidebar');
+  const sbVisible = sb && getComputedStyle(sb).display !== 'none' && sb.offsetWidth > 0;
+  if (sbVisible) {
+    // Desktop: sidebar sudah tampil di kanan — fokus + highlight
     const inp = document.getElementById('inpD');
     if (inp) inp.focus();
     flashChatSidebar();
+  } else {
+    // Mobile/tablet atau sidebar tersembunyi → buka panel chat bawah
+    openM();
   }
   materiChatWelcome();
 }
@@ -3933,24 +3937,7 @@ function flashChatSidebar() {
   sb.classList.add('flash');
   setTimeout(() => sb.classList.remove('flash'), 900);
 }
-// Posisi bubble: kanan-bawah kolom konten (di kiri sidebar chat) di desktop,
-// kanan-bawah viewport di mobile — dihitung saat tab Materi aktif / resize.
-function positionMtChatFab() {
-  const fab = document.getElementById('mtChatFab');
-  if (!fab) return;
-  const sb = document.querySelector('.chat-sidebar');
-  const sbW = (sb && getComputedStyle(sb).display !== 'none') ? sb.offsetWidth : 0;
-  if (window.innerWidth >= 860 && sbW > 0) {
-    fab.style.right = (sbW + 32) + 'px';
-    fab.style.bottom = '24px';
-  } else {
-    fab.style.right = '16px';
-    fab.style.bottom = '96px';
-  }
-}
-window.addEventListener('resize', () => {
-  if (document.body.classList.contains('materi-active')) positionMtChatFab();
-});
+
 
 // ── Kuis mini ──
 function renderMateriQuiz() {
