@@ -361,6 +361,8 @@ function switchTab(t){
 
   if(t === 'news') { videoChips(); renderVideos(); }
   if(t === 'about') loadAbout();
+  if(t === 'materi') renderMateri();
+  else stopOhmAnim();
   if(t === 'dashboard' && window.ElektroFBDash) window.ElektroFBDash.open();
 
   window.scrollTo({top:0,behavior:'smooth'});
@@ -3775,6 +3777,327 @@ function closeVideo() {
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') closeVideo();
 });
+
+// ═══════════════════════════════════════════════════════════
+// MATERI — modul belajar + animasi Hukum Ohm + kuis mini
+// ═══════════════════════════════════════════════════════════
+let materiState = { moduleId: null, qIdx: 0, qScore: 0, qAnswered: [], quizDone: false };
+let ohmAnim = { v: 9, r: 300, dots: [], running: false, raf: null };
+
+function getMateriProgress() {
+  try { return JSON.parse(localStorage.getItem('ed_materi_progress') || '{}'); } catch(e){ return {}; }
+}
+function saveMateriProgress(p) { localStorage.setItem('ed_materi_progress', JSON.stringify(p)); }
+function getMateriModule() {
+  return (typeof MATERI_MODULES !== 'undefined' ? MATERI_MODULES : []).find(x => x.id === materiState.moduleId);
+}
+
+function renderMateri() {
+  const list = document.getElementById('materi-list');
+  if (!list) return;
+  const prog = getMateriProgress();
+  const cards = (typeof MATERI_MODULES !== 'undefined' ? MATERI_MODULES : []).map(m => {
+    const p = prog[m.id] || {};
+    const done = p.done ? '<span class="mt-badge-done">✓ Selesai</span>' : '';
+    const quizTxt = p.quizBest != null ? `Kuis terbaik: ${p.quizBest}/${m.soal.length}` : 'Kuis: belum dikerjakan';
+    return `<div class="mt-card" onclick="openMateriModule('${m.id}')">
+      <div class="mt-card-emoji">${m.emoji}</div>
+      <div class="mt-card-body">
+        <div class="mt-card-top"><span class="mt-card-title">${m.title}</span>${done}</div>
+        <div class="mt-card-sub">${m.subtitle}</div>
+        <div class="mt-card-meta">
+          <span class="mt-pill">📶 ${m.level}</span>
+          <span class="mt-pill">⏱ ${m.durasi}</span>
+          <span class="mt-pill">📄 ${m.sections.length} bab</span>
+        </div>
+        <div class="mt-card-foot"><span>${quizTxt}</span><span class="mt-card-open">Buka →</span></div>
+      </div>
+    </div>`;
+  }).join('') || '<div class="empty">Belum ada modul.</div>';
+  list.innerHTML = `<div class="mt-grid">${cards}</div>`;
+  document.getElementById('materi-detail').style.display = 'none';
+  list.style.display = 'block';
+}
+
+function openMateriModule(id) {
+  const m = (typeof MATERI_MODULES !== 'undefined' ? MATERI_MODULES : []).find(x => x.id === id);
+  if (!m) return;
+  materiState = { moduleId: id, qIdx: 0, qScore: 0, qAnswered: Array(m.soal.length).fill(null), quizDone: false };
+  const detail = document.getElementById('materi-detail');
+  const sections = m.sections.map(s => `
+    <div class="mt-section" id="mt-sec-${s.id}">
+      <div class="mt-sec-head"><span class="mt-sec-emoji">${s.emoji}</span><h3>${s.title}</h3></div>
+      <div class="mt-sec-body">${s.body}</div>
+    </div>`).join('');
+  const contoh = m.contoh.map((c, i) => `
+    <div class="mt-contoh">
+      <div class="mt-contoh-head">📝 Contoh ${i+1} — ${c.judul}</div>
+      <div class="mt-contoh-soal">${c.soal}</div>
+      <ol class="mt-contoh-steps">${c.langkah.map(l => `<li>${l}</li>`).join('')}</ol>
+    </div>`).join('');
+  detail.innerHTML = `
+    <button class="mt-back" onclick="closeMateriModule()">← Daftar Materi</button>
+    <div class="mt-hero">
+      <div class="mt-hero-emoji">${m.emoji}</div>
+      <div>
+        <div class="mt-hero-title">${m.title}</div>
+        <div class="mt-hero-sub">${m.subtitle}</div>
+        <div class="mt-card-meta">
+          <span class="mt-pill">📶 ${m.level}</span><span class="mt-pill">⏱ ${m.durasi}</span><span class="mt-pill">📄 ${m.sections.length} bab</span>
+        </div>
+      </div>
+    </div>
+    <div class="mt-toc">${m.sections.map((s,i) => `<button class="mt-toc-item" onclick="document.getElementById('mt-sec-${s.id}').scrollIntoView({behavior:'smooth'})">${i+1}. ${s.title}</button>`).join('')}</div>
+    ${sections}
+    <div class="mt-section">
+      <div class="mt-sec-head"><span class="mt-sec-emoji">🧮</span><h3>Contoh Soal & Pembahasan</h3></div>
+      <div class="mt-sec-body">${contoh}</div>
+    </div>
+    <div class="mt-section">
+      <div class="mt-sec-head"><span class="mt-sec-emoji">🎯</span><h3>Kuis Mini</h3></div>
+      <div class="mt-sec-body">
+        <div id="mt-quiz"></div>
+      </div>
+    </div>
+    <div style="text-align:center;margin:24px 0 48px">
+      <button class="mt-done-btn" id="mt-done-btn" onclick="markMateriDone()">✅ Tandai Modul Selesai</button>
+    </div>`;
+  document.getElementById('materi-list').style.display = 'none';
+  detail.style.display = 'block';
+  setTimeout(() => {
+    detail.querySelectorAll('.mt-sec-body, .mt-contoh').forEach(el => renderMath(el));
+    renderMateriQuiz();
+    mountOhmAnim();
+    updateMateriDoneBtn();
+  }, 60);
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function closeMateriModule() { renderMateri(); }
+
+// ── Kuis mini ──
+function renderMateriQuiz() {
+  const m = getMateriModule();
+  const box = document.getElementById('mt-quiz');
+  if (!m || !box) return;
+  if (materiState.quizDone) { showMateriResult(m); return; }
+  const q = m.soal[materiState.qIdx];
+  box.innerHTML = `
+    <div class="q-num">SOAL ${materiState.qIdx+1} / ${m.soal.length} · Kuis Mini</div>
+    <div class="q-text">${q.q}</div>
+    <div class="q-opts">
+      ${q.opts.map((o,i)=>`<button class="qopt" id="mtq${i}" onclick="answerMateriQ(${i})"><span class="q-letter">${'ABCD'[i]}</span><span>${o}</span></button>`).join('')}
+    </div>
+    <div class="q-explain" id="mtq-exp" style="display:none"></div>`;
+}
+function answerMateriQ(i) {
+  const m = getMateriModule(); if (!m) return;
+  const q = m.soal[materiState.qIdx];
+  if (materiState.qAnswered[materiState.qIdx] !== null) return;
+  materiState.qAnswered[materiState.qIdx] = i;
+  if (i === q.ans) materiState.qScore++;
+  for (let k=0;k<q.opts.length;k++){
+    const b = document.getElementById('mtq'+k);
+    b.disabled = true;
+    if (k === q.ans) b.classList.add('correct');
+    else if (k === i) b.classList.add('wrong');
+  }
+  const exp = document.getElementById('mtq-exp');
+  exp.style.display = 'block';
+  exp.innerHTML = `💡 <strong>Penjelasan:</strong> ${q.exp}`;
+  setTimeout(()=>renderMath(exp), 30);
+  const isLast = materiState.qIdx >= m.soal.length - 1;
+  const box = document.getElementById('mt-quiz');
+  if (!box.querySelector('.mt-quiz-next')) {
+    box.insertAdjacentHTML('beforeend', `<button class="mt-quiz-next" onclick="nextMateriQ()">${isLast ? '🏁 Lihat Hasil' : 'Selanjutnya →'}</button>`);
+  }
+}
+function nextMateriQ() {
+  const m = getMateriModule(); if (!m) return;
+  materiState.qIdx++;
+  if (materiState.qIdx >= m.soal.length) { materiState.quizDone = true; renderMateriQuiz(); }
+  else renderMateriQuiz();
+}
+function showMateriResult(m) {
+  const box = document.getElementById('mt-quiz');
+  if (!box) return;
+  const total = m.soal.length, correct = materiState.qScore;
+  const pct = Math.round(correct/total*100);
+  const emoji = pct===100 ? '🏆' : pct>=80 ? '🎉' : pct>=60 ? '👍' : '📚';
+  box.innerHTML = `
+    <div class="quiz-score" style="display:flex">
+      <div class="score-big">${pct}%</div>
+      <div class="score-label">Skor Kuis Mini ${emoji}</div>
+      <div class="score-bar"><div class="score-fill" style="width:${pct}%"></div></div>
+      <div class="score-detail">
+        <div class="sd c"><div class="sd-num">${correct}</div><div class="sd-lbl">Benar ✅</div></div>
+        <div class="sd w"><div class="sd-num">${total-correct}</div><div class="sd-lbl">Salah ❌</div></div>
+        <div class="sd"><div class="sd-num" style="color:var(--accent)">${total}</div><div class="sd-lbl">Total</div></div>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:8px">
+        <button class="qbtn qbtn-n" onclick="retryMateriQuiz()" style="padding:10px 24px">🔄 Ulangi Kuis</button>
+        <button class="qbtn qbtn-p" onclick="markMateriDone()" style="padding:10px 24px">✅ Tandai Selesai</button>
+      </div>
+    </div>`;
+  const prog = getMateriProgress();
+  const p = prog[m.id] || {};
+  if (p.quizBest == null || correct > p.quizBest) p.quizBest = correct;
+  p.quizTries = (p.quizTries||0) + 1;
+  prog[m.id] = p;
+  saveMateriProgress(prog);
+  updateMateriDoneBtn();
+  if (correct === total) markMateriDone();
+}
+function retryMateriQuiz() {
+  const m = getMateriModule(); if (!m) return;
+  materiState.qIdx=0; materiState.qScore=0; materiState.qAnswered=Array(m.soal.length).fill(null); materiState.quizDone=false;
+  renderMateriQuiz();
+}
+function markMateriDone() {
+  const m = getMateriModule(); if (!m) return;
+  const prog = getMateriProgress();
+  prog[m.id] = prog[m.id] || {};
+  prog[m.id].done = true;
+  saveMateriProgress(prog);
+  updateMateriDoneBtn();
+}
+function updateMateriDoneBtn() {
+  const btn = document.getElementById('mt-done-btn');
+  if (!btn) return;
+  const m = getMateriModule();
+  const done = !!(m && (getMateriProgress()[m.id] || {}).done);
+  btn.textContent = done ? '✅ Modul Selesai — Bagus! 🎉' : '✅ Tandai Modul Selesai';
+  btn.classList.toggle('on', done);
+}
+
+// ── Animasi interaktif Hukum Ohm ──
+function mountOhmAnim() {
+  const wrap = document.getElementById('ohm-anim');
+  if (!wrap) return;
+  wrap.innerHTML = `
+    <div class="ohm-layout">
+      <canvas id="ohm-canvas" width="640" height="240"></canvas>
+      <div class="ohm-caption">● arah arus konvensional (+ → −) · kecepatan & terang lampu mengikuti arus</div>
+      <div class="ohm-controls">
+        <label>Tegangan <b id="ohm-v-val">9</b> V</label>
+        <input type="range" id="ohm-v" min="1" max="24" step="0.5" value="9">
+        <label>Hambatan <b id="ohm-r-val">300</b> Ω</label>
+        <input type="range" id="ohm-r" min="10" max="1000" step="10" value="300">
+      </div>
+      <div class="ohm-readout">
+        <div class="ohm-cell"><div class="ohm-cell-lbl">Tegangan</div><div class="ohm-cell-val" id="ohm-V">9 V</div></div>
+        <div class="ohm-cell"><div class="ohm-cell-lbl">Hambatan</div><div class="ohm-cell-val" id="ohm-R">300 Ω</div></div>
+        <div class="ohm-cell"><div class="ohm-cell-lbl">Arus · I = V/R</div><div class="ohm-cell-val" id="ohm-I">30 mA</div></div>
+        <div class="ohm-cell"><div class="ohm-cell-lbl">Daya · P = V·I</div><div class="ohm-cell-val" id="ohm-P">0,27 W</div></div>
+      </div>
+    </div>`;
+  const vIn = document.getElementById('ohm-v');
+  const rIn = document.getElementById('ohm-r');
+  vIn.oninput = () => { ohmAnim.v = parseFloat(vIn.value); ohmUpdate(); };
+  rIn.oninput = () => { ohmAnim.r = parseFloat(rIn.value); ohmUpdate(); };
+  ohmUpdate();
+  ohmAnim.dots = Array.from({length:14}, (_,i) => ({ t: i/14 }));
+  if (!ohmAnim.running) { ohmAnim.running = true; ohmLoop(); }
+}
+function ohmUpdate() {
+  const v = ohmAnim.v, r = ohmAnim.r, i = v / r;
+  const el = id => document.getElementById(id);
+  el('ohm-v-val').textContent = v;
+  el('ohm-r-val').textContent = r;
+  el('ohm-V').textContent = v + ' V';
+  el('ohm-R').textContent = r + ' Ω';
+  el('ohm-I').textContent = (i*1000 < 100 ? (i*1000).toFixed(1) : Math.round(i*1000)) + ' mA';
+  el('ohm-P').textContent = (v*i).toFixed(2).replace('.',',') + ' W';
+}
+function stopOhmAnim() {
+  if (ohmAnim.raf) { cancelAnimationFrame(ohmAnim.raf); ohmAnim.raf = null; }
+  ohmAnim.running = false;
+}
+function ohmLoop() {
+  const canvas = document.getElementById('ohm-canvas');
+  if (!canvas) { stopOhmAnim(); return; }
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const x0 = 60, x1 = 580, y0 = 40, y1 = 200;
+  const L1 = x1 - x0, L2 = y1 - y0, L3 = L1, L4 = L2;
+  const perim = 2*L1 + 2*L2;
+  const v = ohmAnim.v, r = ohmAnim.r, i = v / r;
+  const speed = 0.0007 + Math.min(0.02, i * 0.011);
+
+  ctx.clearRect(0, 0, W, H);
+
+  // kawat
+  ctx.strokeStyle = 'rgba(255,255,255,0.4)';
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(x0, y0); ctx.lineTo(x1, y0); ctx.lineTo(x1, y1); ctx.lineTo(x0, y1);
+  ctx.closePath(); ctx.stroke();
+
+  // baterai (sebelah kiri)
+  ctx.strokeStyle = '#ffd54f'; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.moveTo(x0 - 8, 108); ctx.lineTo(x0 + 8, 108); ctx.stroke(); // pendek (−)
+  ctx.beginPath(); ctx.moveTo(x0 - 8, 132); ctx.lineTo(x0 + 8, 132); ctx.stroke(); // panjang (+)
+  ctx.fillStyle = 'rgba(255,255,255,0.7)'; ctx.font = '11px monospace'; ctx.textAlign = 'center';
+  ctx.fillText('−', x0, 104); ctx.fillText('+', x0, 148);
+  ctx.fillText('V = ' + v + ' V', x0, 172);
+
+  // resistor (atas, zigzag)
+  const rz = 25, rx0 = 250, rx1 = 390, ry = y0;
+  ctx.strokeStyle = '#81d4fa'; ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  ctx.moveTo(rx0, ry);
+  let dir = 1;
+  for (let x = rx0; x < rx1; x += rz) {
+    ctx.lineTo(Math.min(x + rz/2, rx1), ry + dir*14);
+    dir = -dir;
+  }
+  ctx.lineTo(rx1, ry);
+  ctx.stroke();
+  ctx.fillStyle = 'rgba(255,255,255,0.7)'; ctx.font = '11px monospace';
+  ctx.fillText('R = ' + r + ' Ω', (rx0+rx1)/2, ry - 12);
+
+  // LED (kanan)
+  const lx = x1, ly0 = 110, ly1 = 170;
+  const glow = 3 + Math.min(34, i*26);
+  const on = i > 0.01;
+  const g = ctx.createRadialGradient(lx, (ly0+ly1)/2, 2, lx, (ly0+ly1)/2, glow);
+  if (on) { g.addColorStop(0, 'rgba(255,235,59,0.9)'); g.addColorStop(1, 'rgba(255,235,59,0)'); }
+  else { g.addColorStop(0, 'rgba(120,120,120,0.5)'); g.addColorStop(1, 'rgba(120,120,120,0)'); }
+  ctx.fillStyle = g;
+  ctx.beginPath(); ctx.arc(lx, (ly0+ly1)/2, glow, 0, Math.PI*2); ctx.fill();
+  ctx.strokeStyle = on ? '#ffe082' : 'rgba(255,255,255,0.5)'; ctx.lineWidth = 2.5;
+  ctx.beginPath();
+  ctx.moveTo(lx, ly0); ctx.lineTo(lx, ly1); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(lx, ly0); ctx.lineTo(lx + 10, (ly0+ly1)/2); ctx.lineTo(lx, ly1); ctx.closePath(); ctx.stroke();
+  ctx.fillStyle = on ? '#ffe082' : 'rgba(255,255,255,0.5)'; ctx.font = '11px monospace';
+  ctx.fillText('LED', lx + 22, (ly0+ly1)/2 + 4);
+
+  // amperemeter (bawah)
+  const ax = 300, ay = y1;
+  ctx.strokeStyle = 'rgba(255,255,255,0.6)'; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.arc(ax, ay, 20, 0, Math.PI*2); ctx.stroke();
+  ctx.fillStyle = 'rgba(255,255,255,0.85)'; ctx.font = 'bold 13px monospace';
+  ctx.fillText('A', ax, ay + 4);
+  const iTxt = (i*1000 < 100 ? (i*1000).toFixed(1) : Math.round(i*1000)) + ' mA';
+  ctx.fillStyle = 'rgba(255,255,255,0.6)'; ctx.font = '11px monospace';
+  ctx.fillText('I = ' + iTxt, ax, ay + 40);
+
+  // titik arus (arah konvensional: searah jarum jam = + ke −)
+  ohmAnim.dots.forEach(d => {
+    d.t = (d.t + speed) % 1;
+    const s = d.t * perim;
+    let px, py;
+    if (s < L1) { px = x0 + s; py = y0; }
+    else if (s < L1 + L2) { px = x1; py = y0 + (s - L1); }
+    else if (s < L1 + L2 + L3) { px = x1 - (s - L1 - L2); py = y1; }
+    else { px = x0; py = y1 - (s - L1 - L2 - L3); }
+    ctx.beginPath(); ctx.arc(px, py, 4, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(255,138,101,0.9)';
+    ctx.fill();
+  });
+
+  ohmAnim.raf = requestAnimationFrame(ohmLoop);
+}
 
 // ═══════════════════════════════════════════════════════════
 // TENTANG — render README.md sebagai halaman informasi

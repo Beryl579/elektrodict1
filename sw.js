@@ -1,15 +1,16 @@
-// v41: AI Vision fix — model qwen/qwen3.6-27b (Groq vision) + resize gambar.
+// v42: Tab Materi — modul belajar Dasar Listrik (animasi Ohm + kuis mini).
 // Aset diberi query ?v= agar precache selalu ambil file terbaru (mencegah
 // cache.addAll melewati SW lama yang menyajikan salinan basi).
-const CACHE_NAME = 'elektrodict-v41';
+const CACHE_NAME = 'elektrodict-v42';
 const ASSETS = [
   '/',
-  '/index.html?v=41',
-  '/css/style.css?v=41',
-  '/js/data.js?v=41',
-  '/js/api.js?v=41',
-  '/js/app.js?v=41',
-  '/js/modules/firebase-dashboard.js?v=41',
+  '/index.html?v=42',
+  '/css/style.css?v=42',
+  '/js/data.js?v=42',
+  '/js/data-materi.js?v=42',
+  '/js/api.js?v=42',
+  '/js/app.js?v=42',
+  '/js/modules/firebase-dashboard.js?v=42',
   '/manifest.json',
   'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css',
   'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js',
