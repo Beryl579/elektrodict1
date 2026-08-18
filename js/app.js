@@ -3826,17 +3826,35 @@ function openMateriModule(id) {
   if (!m) return;
   materiState = { moduleId: id, qIdx: 0, qScore: 0, qAnswered: Array(m.soal.length).fill(null), quizDone: false };
   const detail = document.getElementById('materi-detail');
-  const sections = m.sections.map(s => `
-    <div class="mt-section" id="mt-sec-${s.id}">
-      <div class="mt-sec-head"><span class="mt-sec-emoji">${s.emoji}</span><h3>${s.title}</h3></div>
-      <div class="mt-sec-body">${s.body}</div>${s.referensi ? '<div class="mt-ref">📚 <b>Referensi:</b> ' + s.referensi + '</div>' : ''}
-    </div>`).join('');
-  const contoh = m.contoh.map((c, i) => `
+  // Normalisasi skema section (id/emoji/body) & contoh (judul/soal) agar tidak pernah render "undefined"
+  const normSec = s => ({
+    id: (s.id || String(s.title || 'bab').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')),
+    emoji: s.emoji || '📘',
+    title: s.title || 'Bab',
+    body: s.body ?? s.content ?? ''
+  });
+  const normContoh = c => {
+    const steps = Array.isArray(c.langkah) ? c.langkah.slice() : [];
+    const soal = c.soal != null ? c.soal : steps.shift() || '';
+    return { judul: c.judul || c.title || `Contoh`, soal, langkah: steps };
+  };
+  const sections = m.sections.map(s => {
+    const n = normSec(s);
+    return `
+    <div class="mt-section" id="mt-sec-${n.id}">
+      <div class="mt-sec-head"><span class="mt-sec-emoji">${n.emoji}</span><h3>${n.title}</h3></div>
+      <div class="mt-sec-body">${n.body}</div>${n.referensi ? '<div class="mt-ref">📚 <b>Referensi:</b> ' + n.referensi + '</div>' : ''}
+    </div>`;
+  }).join('');
+  const contoh = m.contoh.map((c, i) => {
+    const n = normContoh(c);
+    return `
     <div class="mt-contoh">
-      <div class="mt-contoh-head">📝 Contoh ${i+1} — ${c.judul}</div>
-      <div class="mt-contoh-soal">${c.soal}</div>
-      <ol class="mt-contoh-steps">${c.langkah.map(l => `<li>${l}</li>`).join('')}</ol>
-    </div>`).join('');
+      <div class="mt-contoh-head">📝 Contoh ${i+1} — ${n.judul}</div>
+      <div class="mt-contoh-soal">${n.soal}</div>
+      <ol class="mt-contoh-steps">${n.langkah.map(l => `<li>${l}</li>`).join('')}</ol>
+    </div>`;
+  }).join('');
   detail.innerHTML = `
     <button class="mt-back" onclick="closeMateriModule()">← Daftar Materi</button>
     <div class="mt-hero">
