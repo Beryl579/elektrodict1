@@ -1,16 +1,16 @@
-// v44: Bubble chat AI kontekstual di tab Materi (konteks modul ke ElektroBot).
+// v45: Fix bubble chat Materi di desktop (posisi & klik).
 // Aset diberi query ?v= agar precache selalu ambil file terbaru (mencegah
 // cache.addAll melewati SW lama yang menyajikan salinan basi).
-const CACHE_NAME = 'elektrodict-v44';
+const CACHE_NAME = 'elektrodict-v45';
 const ASSETS = [
   '/',
-  '/index.html?v=44',
-  '/css/style.css?v=44',
-  '/js/data.js?v=44',
-  '/js/data-materi.js?v=44',
-  '/js/api.js?v=44',
-  '/js/app.js?v=44',
-  '/js/modules/firebase-dashboard.js?v=44',
+  '/index.html?v=45',
+  '/css/style.css?v=45',
+  '/js/data.js?v=45',
+  '/js/data-materi.js?v=45',
+  '/js/api.js?v=45',
+  '/js/app.js?v=45',
+  '/js/modules/firebase-dashboard.js?v=45',
   '/manifest.json',
   'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css',
   'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js',
