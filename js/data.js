@@ -488,3 +488,307 @@ const VIDEOS = [
   { id:'mBdWGOKFWIc', title:'Arduino Uno Pin — Tutorial untuk Pemula', channel:'Siapa Tahu Penemuan', channelUrl:'https://www.youtube.com/@SiapaTahuPenemuan', topic:'Arduino & IoT', desc:'Mengenal nama dan fungsi setiap pin Arduino Uno beserta kegunaannya.' },
   { id:'NUZx5TLe4uo', title:'Tutorial Arduino Bahasa Indonesia — Data Type (3)', channel:'Coders Indonesia', channelUrl:'https://www.youtube.com/@codersindonesia', topic:'Arduino & IoT', desc:'Belajar tipe data pemrograman Arduino: integer, float, dan boolean.' },
 ];
+
+// ─────────────────────────────────────────────────────────────
+// BANK PROYEK SIAP PAKAI (Terverifikasi) — Wokwi
+// diagram & kode sudah divalidasi manual; langsung bisa disimulasikan
+// ─────────────────────────────────────────────────────────────
+const WOKWI_TEMPLATES = [
+  {
+    id: "tpl-led-blink",
+    title: "LED Blink (Hello World)",
+    desc: "Kedipkan LED tiap 1 detik — proyek paling dasar untuk memahami struktur setup() dan loop() di Arduino.",
+    difficulty: "Mudah",
+    tags: ["LED", "Dasar"],
+    verified: true,
+    bom: ["1x Arduino Uno", "1x LED merah", "1x Resistor 220 Ohm", "Kabel jumper"],
+    wiring_guide: [
+      { komponen: "Resistor R1", pin_komponen: "1", koneksi_arduino: "Pin 13" },
+      { komponen: "LED D1", pin_komponen: "A (anoda)", koneksi_arduino: "Resistor R1 pin 2" },
+      { komponen: "LED D1", pin_komponen: "C (katoda)", koneksi_arduino: "GND" }
+    ],
+    cpp_code: "// Proyek: LED Blink\n// Logika: Kedip tiap 1 detik\n// Platform: Uno\nvoid setup() {\n  pinMode(13, OUTPUT);\n}\n\nvoid loop() {\n  digitalWrite(13, HIGH);\n  delay(1000);\n  digitalWrite(13, LOW);\n  delay(1000);\n}",
+    wokwi_diagram: JSON.stringify({
+      version: 1, author: "ElektroDict", editor: "wokwi",
+      parts: [
+        { type: "wokwi-arduino-uno", id: "uno", top: 0, left: 0, attrs: {} },
+        { type: "wokwi-led", id: "led1", top: -100, left: 300, attrs: { color: "red" } },
+        { type: "wokwi-resistor", id: "r1", top: -20, left: 300, attrs: { value: "220" } }
+      ],
+      connections: [
+        ["uno:13", "r1:1", "green", ["v0"]],
+        ["r1:2", "led1:A", "green", ["v0"]],
+        ["led1:C", "uno:GND.1", "black", ["v0"]]
+      ]
+    }),
+    steps: [
+      { nama_komponen: "Arduino Uno", alur_perakitan: "Siapkan papan Arduino Uno di breadboard atau meja kerja." },
+      { nama_komponen: "Resistor 220 Ohm", alur_perakitan: "Hubungkan satu ujung resistor ke Pin 13 Arduino." },
+      { nama_komponen: "LED Merah", alur_perakitan: "Hubungkan kaki anoda (panjang) LED ke ujung resistor yang lain." },
+      { nama_komponen: "Ground", alur_perakitan: "Hubungkan kaki katoda (pendek) LED ke pin GND Arduino." }
+    ]
+  },
+  {
+    id: "tpl-traffic-light",
+    title: "Lampu Lalu Lintas 3 LED",
+    desc: "Simulasi lampu lalu lintas: merah 3 detik, kuning 1 detik, hijau 3 detik secara bergantian.",
+    difficulty: "Mudah",
+    tags: ["LED", "Kontrol"],
+    verified: true,
+    bom: ["1x Arduino Uno", "1x LED merah, 1x kuning, 1x hijau", "3x Resistor 220 Ohm", "Kabel jumper"],
+    wiring_guide: [
+      { komponen: "LED Merah", pin_komponen: "A", koneksi_arduino: "Pin 12 (via resistor)" },
+      { komponen: "LED Kuning", pin_komponen: "A", koneksi_arduino: "Pin 11 (via resistor)" },
+      { komponen: "LED Hijau", pin_komponen: "A", koneksi_arduino: "Pin 10 (via resistor)" },
+      { komponen: "Semua LED", pin_komponen: "C", koneksi_arduino: "GND" }
+    ],
+    cpp_code: "// Proyek: Lampu Lalu Lintas\n// Logika: Merah 3s, kuning 1s, hijau 3s\n// Platform: Uno\nint merah = 12, kuning = 11, hijau = 10;\n\nvoid setup() {\n  pinMode(merah, OUTPUT);\n  pinMode(kuning, OUTPUT);\n  pinMode(hijau, OUTPUT);\n}\n\nvoid loop() {\n  digitalWrite(merah, HIGH);\n  delay(3000);\n  digitalWrite(merah, LOW);\n  digitalWrite(kuning, HIGH);\n  delay(1000);\n  digitalWrite(kuning, LOW);\n  digitalWrite(hijau, HIGH);\n  delay(3000);\n  digitalWrite(hijau, LOW);\n  delay(50);\n}",
+    wokwi_diagram: JSON.stringify({
+      version: 1, author: "ElektroDict", editor: "wokwi",
+      parts: [
+        { type: "wokwi-arduino-uno", id: "uno", top: 0, left: 0, attrs: {} },
+        { type: "wokwi-led", id: "ledM", top: -180, left: 300, attrs: { color: "red" } },
+        { type: "wokwi-led", id: "ledK", top: -100, left: 300, attrs: { color: "yellow" } },
+        { type: "wokwi-led", id: "ledH", top: -20, left: 300, attrs: { color: "green" } },
+        { type: "wokwi-resistor", id: "r1", top: -180, left: 200, attrs: { value: "220" } },
+        { type: "wokwi-resistor", id: "r2", top: -100, left: 200, attrs: { value: "220" } },
+        { type: "wokwi-resistor", id: "r3", top: -20, left: 200, attrs: { value: "220" } }
+      ],
+      connections: [
+        ["uno:12", "r1:1", "green", ["v0"]],
+        ["r1:2", "ledM:A", "green", ["v0"]],
+        ["ledM:C", "uno:GND.1", "black", ["v0"]],
+        ["uno:11", "r2:1", "yellow", ["v0"]],
+        ["r2:2", "ledK:A", "yellow", ["v0"]],
+        ["ledK:C", "uno:GND.2", "black", ["v0"]],
+        ["uno:10", "r3:1", "blue", ["v0"]],
+        ["r3:2", "ledH:A", "blue", ["v0"]],
+        ["ledH:C", "uno:GND.3", "black", ["v0"]]
+      ]
+    }),
+    steps: [
+      { nama_komponen: "LED Merah", alur_perakitan: "Anoda LED merah ke Pin 12 via resistor 220 Ohm." },
+      { nama_komponen: "LED Kuning", alur_perakitan: "Anoda LED kuning ke Pin 11 via resistor 220 Ohm." },
+      { nama_komponen: "LED Hijau", alur_perakitan: "Anoda LED hijau ke Pin 10 via resistor 220 Ohm." },
+      { nama_komponen: "Ground", alur_perakitan: "Katoda ketiga LED disambung ke pin GND Arduino." }
+    ]
+  },
+  {
+    id: "tpl-dht22",
+    title: "Suhu & Kelembaban DHT22",
+    desc: "Baca suhu dan kelembaban ruangan dengan sensor DHT22, tampilkan di Serial Monitor tiap 2 detik.",
+    difficulty: "Mudah",
+    tags: ["Sensor", "DHT22"],
+    verified: true,
+    bom: ["1x Arduino Uno", "1x Sensor DHT22", "Kabel jumper"],
+    wiring_guide: [
+      { komponen: "DHT22", pin_komponen: "VCC", koneksi_arduino: "5V" },
+      { komponen: "DHT22", pin_komponen: "SDA", koneksi_arduino: "Pin 2" },
+      { komponen: "DHT22", pin_komponen: "GND", koneksi_arduino: "GND" }
+    ],
+    cpp_code: "// Proyek: Sensor DHT22\n// Logika: Baca suhu & kelembaban\n// Platform: Uno\n#include <DHT.h>\n#define DHTPIN 2\n#define DHTTYPE DHT22\nDHT dht(DHTPIN, DHTTYPE);\n\nvoid setup() {\n  Serial.begin(9600);\n  dht.begin();\n}\n\nvoid loop() {\n  float h = dht.readHumidity();\n  float t = dht.readTemperature();\n  if (!isnan(h) && !isnan(t)) {\n    Serial.print(\"Kelembaban: \");\n    Serial.print(h);\n    Serial.print(\"%  Suhu: \");\n    Serial.print(t);\n    Serial.println(\"C\");\n  }\n  delay(2000);\n}",
+    wokwi_diagram: JSON.stringify({
+      version: 1, author: "ElektroDict", editor: "wokwi",
+      parts: [
+        { type: "wokwi-arduino-uno", id: "uno", top: 0, left: 0, attrs: {} },
+        { type: "wokwi-dht22", id: "dht", top: -120, left: 300, attrs: {} }
+      ],
+      connections: [
+        ["dht:VCC", "uno:5V", "red", ["v0"]],
+        ["dht:SDA", "uno:2", "green", ["v0"]],
+        ["dht:GND", "uno:GND.1", "black", ["v0"]]
+      ]
+    }),
+    steps: [
+      { nama_komponen: "Sensor DHT22", alur_perakitan: "Pasang DHT22 pada breadboard." },
+      { nama_komponen: "VCC", alur_perakitan: "Hubungkan pin VCC sensor ke 5V Arduino." },
+      { nama_komponen: "SDA", alur_perakitan: "Hubungkan pin SDA sensor ke Pin 2 Arduino (data)." },
+      { nama_komponen: "GND", alur_perakitan: "Hubungkan pin GND sensor ke GND Arduino." }
+    ]
+  },
+  {
+    id: "tpl-hc-sr04",
+    title: "Pengukur Jarak HC-SR04",
+    desc: "Ukur jarak benda dengan sensor ultrasonik HC-SR04 dan tampilkan dalam cm di Serial Monitor.",
+    difficulty: "Menengah",
+    tags: ["Sensor", "Ultrasonik"],
+    verified: true,
+    bom: ["1x Arduino Uno", "1x Sensor HC-SR04", "Kabel jumper"],
+    wiring_guide: [
+      { komponen: "HC-SR04", pin_komponen: "VCC", koneksi_arduino: "5V" },
+      { komponen: "HC-SR04", pin_komponen: "TRIG", koneksi_arduino: "Pin 9" },
+      { komponen: "HC-SR04", pin_komponen: "ECHO", koneksi_arduino: "Pin 10" },
+      { komponen: "HC-SR04", pin_komponen: "GND", koneksi_arduino: "GND" }
+    ],
+    cpp_code: "// Proyek: Pengukur Jarak\n// Logika: Ultrasonik -> cm\n// Platform: Uno\nconst int trig = 9, echo = 10;\n\nvoid setup() {\n  Serial.begin(9600);\n  pinMode(trig, OUTPUT);\n  pinMode(echo, INPUT);\n}\n\nvoid loop() {\n  digitalWrite(trig, LOW);\n  delayMicroseconds(2);\n  digitalWrite(trig, HIGH);\n  delayMicroseconds(10);\n  digitalWrite(trig, LOW);\n  long dur = pulseIn(echo, HIGH);\n  float cm = dur * 0.034 / 2;\n  Serial.print(\"Jarak: \");\n  Serial.print(cm);\n  Serial.println(\" cm\");\n  delay(500);\n}",
+    wokwi_diagram: JSON.stringify({
+      version: 1, author: "ElektroDict", editor: "wokwi",
+      parts: [
+        { type: "wokwi-arduino-uno", id: "uno", top: 0, left: 0, attrs: {} },
+        { type: "wokwi-hc-sr04", id: "hc", top: -120, left: 300, attrs: {} }
+      ],
+      connections: [
+        ["hc:VCC", "uno:5V", "red", ["v0"]],
+        ["hc:TRIG", "uno:9", "green", ["v0"]],
+        ["hc:ECHO", "uno:10", "yellow", ["v0"]],
+        ["hc:GND", "uno:GND.1", "black", ["v0"]]
+      ]
+    }),
+    steps: [
+      { nama_komponen: "Sensor HC-SR04", alur_perakitan: "Pasang sensor menghadap area pengukuran." },
+      { nama_komponen: "VCC & GND", alur_perakitan: "Hubungkan VCC ke 5V dan GND ke GND Arduino." },
+      { nama_komponen: "TRIG", alur_perakitan: "Hubungkan TRIG ke Pin 9 Arduino." },
+      { nama_komponen: "ECHO", alur_perakitan: "Hubungkan ECHO ke Pin 10 Arduino." }
+    ]
+  },
+  {
+    id: "tpl-lcd1602",
+    title: "Tampilan LCD 16x2",
+    desc: "Tampilkan teks 'ElektroDict!' pada LCD 16x2 mode parallel 4-bit — dasar untuk proyek display.",
+    difficulty: "Menengah",
+    tags: ["LCD", "Display"],
+    verified: true,
+    bom: ["1x Arduino Uno", "1x LCD 1602", "Kabel jumper"],
+    wiring_guide: [
+      { komponen: "LCD", pin_komponen: "VSS", koneksi_arduino: "GND" },
+      { komponen: "LCD", pin_komponen: "VDD", koneksi_arduino: "5V" },
+      { komponen: "LCD", pin_komponen: "RS", koneksi_arduino: "Pin 12" },
+      { komponen: "LCD", pin_komponen: "RW", koneksi_arduino: "GND" },
+      { komponen: "LCD", pin_komponen: "E", koneksi_arduino: "Pin 11" },
+      { komponen: "LCD", pin_komponen: "D4-D7", koneksi_arduino: "Pin 10, 9, 8, 7" },
+      { komponen: "LCD", pin_komponen: "A/K", koneksi_arduino: "5V / GND (backlight)" }
+    ],
+    cpp_code: "// Proyek: LCD 16x2\n// Logika: Tampilkan teks statis\n// Platform: Uno\n#include <LiquidCrystal.h>\nLiquidCrystal lcd(12, 11, 10, 9, 8, 7);\n\nvoid setup() {\n  lcd.begin(16, 2);\n  lcd.print(\"ElektroDict!\");\n  lcd.setCursor(0, 1);\n  lcd.print(\"Belajar Elektro\");\n}\n\nvoid loop() {\n  delay(50);\n}",
+    wokwi_diagram: JSON.stringify({
+      version: 1, author: "ElektroDict", editor: "wokwi",
+      parts: [
+        { type: "wokwi-arduino-uno", id: "uno", top: 0, left: 0, attrs: {} },
+        { type: "wokwi-lcd1602", id: "lcd", top: -180, left: 300, attrs: {} }
+      ],
+      connections: [
+        ["lcd:VSS", "uno:GND.1", "black", ["v0"]],
+        ["lcd:VDD", "uno:5V", "red", ["v0"]],
+        ["lcd:V0", "uno:GND.2", "black", ["v0"]],
+        ["lcd:RS", "uno:12", "green", ["v0"]],
+        ["lcd:RW", "uno:GND.3", "black", ["v0"]],
+        ["lcd:E", "uno:11", "yellow", ["v0"]],
+        ["lcd:D4", "uno:10", "blue", ["v0"]],
+        ["lcd:D5", "uno:9", "blue", ["v0"]],
+        ["lcd:D6", "uno:8", "blue", ["v0"]],
+        ["lcd:D7", "uno:7", "blue", ["v0"]],
+        ["lcd:A", "uno:5V", "red", ["v0"]],
+        ["lcd:K", "uno:GND.1", "black", ["v0"]]
+      ]
+    }),
+    steps: [
+      { nama_komponen: "LCD 1602", alur_perakitan: "Pasang LCD pada breadboard." },
+      { nama_komponen: "Daya", alur_perakitan: "VSS ke GND, VDD ke 5V, V0 ke GND (kontras)." },
+      { nama_komponen: "Kontrol", alur_perakitan: "RS ke Pin 12, E ke Pin 11, RW ke GND." },
+      { nama_komponen: "Data", alur_perakitan: "D4-D7 ke Pin 10, 9, 8, 7; backlight A ke 5V, K ke GND." }
+    ]
+  },
+  {
+    id: "tpl-relay",
+    title: "Kendali Relay (Motor/Pompa)",
+    desc: "Kendalikan relay untuk menyalakan/mematikan beban (motor, pompa, lampu AC) dari pin digital.",
+    difficulty: "Menengah",
+    tags: ["Relay", "Daya"],
+    verified: true,
+    bom: ["1x Arduino Uno", "1x Modul Relay 1 channel", "Kabel jumper"],
+    wiring_guide: [
+      { komponen: "Modul Relay", pin_komponen: "VCC", koneksi_arduino: "5V" },
+      { komponen: "Modul Relay", pin_komponen: "GND", koneksi_arduino: "GND" },
+      { komponen: "Modul Relay", pin_komponen: "IN", koneksi_arduino: "Pin 8" },
+      { komponen: "Beban", pin_komponen: "COM & NO", koneksi_arduino: "Sumber daya beban (eksternal)" }
+    ],
+    cpp_code: "// Proyek: Kendali Relay\n// Logika: ON 2s, OFF 2s\n// Platform: Uno\nconst int relayPin = 8;\n\nvoid setup() {\n  pinMode(relayPin, OUTPUT);\n}\n\nvoid loop() {\n  digitalWrite(relayPin, HIGH); // Beban ON\n  delay(2000);\n  digitalWrite(relayPin, LOW);  // Beban OFF\n  delay(2000);\n}",
+    wokwi_diagram: JSON.stringify({
+      version: 1, author: "ElektroDict", editor: "wokwi",
+      parts: [
+        { type: "wokwi-arduino-uno", id: "uno", top: 0, left: 0, attrs: {} },
+        { type: "wokwi-relay-module", id: "relay", top: -120, left: 300, attrs: {} }
+      ],
+      connections: [
+        ["relay:VCC", "uno:5V", "red", ["v0"]],
+        ["relay:GND", "uno:GND.1", "black", ["v0"]],
+        ["relay:IN", "uno:8", "green", ["v0"]]
+      ]
+    }),
+    steps: [
+      { nama_komponen: "Modul Relay", alur_perakitan: "Hubungkan VCC ke 5V dan GND ke GND Arduino." },
+      { nama_komponen: "Sinyal", alur_perakitan: "Hubungkan IN ke Pin 8 Arduino." },
+      { nama_komponen: "Beban", alur_perakitan: "Sambungkan beban (motor/pompa) ke terminal COM dan NO relay." },
+      { nama_komponen: "Sumber beban", alur_perakitan: "Berikan sumber daya terpisah sesuai kebutuhan beban." }
+    ]
+  },
+  {
+    id: "tpl-servo",
+    title: "Servo Sweep 0-180°",
+    desc: "Gerakkan servo maju-mundur dari 0° ke 180° dan kembali — dasar kontrol posisi.",
+    difficulty: "Mudah",
+    tags: ["Servo", "Motor"],
+    verified: true,
+    bom: ["1x Arduino Uno", "1x Servo SG90", "Kabel jumper"],
+    wiring_guide: [
+      { komponen: "Servo", pin_komponen: "V+ (merah)", koneksi_arduino: "5V" },
+      { komponen: "Servo", pin_komponen: "PWM (kuning)", koneksi_arduino: "Pin 9" },
+      { komponen: "Servo", pin_komponen: "GND (coklat)", koneksi_arduino: "GND" }
+    ],
+    cpp_code: "// Proyek: Servo Sweep\n// Logika: Sweep 0-180 derajat\n// Platform: Uno\n#include <Servo.h>\nServo servo;\n\nvoid setup() {\n  servo.attach(9);\n}\n\nvoid loop() {\n  for (int a = 0; a <= 180; a++) {\n    servo.write(a);\n    delay(15);\n  }\n  for (int a = 180; a >= 0; a--) {\n    servo.write(a);\n    delay(15);\n  }\n  delay(50);\n}",
+    wokwi_diagram: JSON.stringify({
+      version: 1, author: "ElektroDict", editor: "wokwi",
+      parts: [
+        { type: "wokwi-arduino-uno", id: "uno", top: 0, left: 0, attrs: {} },
+        { type: "wokwi-servo", id: "servo", top: -120, left: 300, attrs: {} }
+      ],
+      connections: [
+        ["servo:V+", "uno:5V", "red", ["v0"]],
+        ["servo:PWM", "uno:9", "yellow", ["v0"]],
+        ["servo:GND", "uno:GND.1", "black", ["v0"]]
+      ]
+    }),
+    steps: [
+      { nama_komponen: "Servo", alur_perakitan: "Hubungkan V+ (merah) servo ke 5V Arduino." },
+      { nama_komponen: "Sinyal", alur_perakitan: "Hubungkan PWM (kuning) servo ke Pin 9 Arduino." },
+      { nama_komponen: "Ground", alur_perakitan: "Hubungkan GND (coklat) servo ke GND Arduino." }
+    ]
+  },
+  {
+    id: "tpl-pushbutton-led",
+    title: "LED Dikontrol Tombol",
+    desc: "Tekan tombol untuk menyalakan LED. Memakai INPUT_PULLUP internal Arduino — tanpa resistor pull-up.",
+    difficulty: "Mudah",
+    tags: ["Tombol", "Input"],
+    verified: true,
+    bom: ["1x Arduino Uno", "1x Pushbutton", "1x LED merah", "1x Resistor 220 Ohm", "Kabel jumper"],
+    wiring_guide: [
+      { komponen: "Pushbutton", pin_komponen: "1.l", koneksi_arduino: "Pin 2" },
+      { komponen: "Pushbutton", pin_komponen: "2.l", koneksi_arduino: "GND" },
+      { komponen: "Resistor R1", pin_komponen: "1", koneksi_arduino: "Pin 13" },
+      { komponen: "LED D1", pin_komponen: "A", koneksi_arduino: "Resistor R1 pin 2" },
+      { komponen: "LED D1", pin_komponen: "C", koneksi_arduino: "GND" }
+    ],
+    cpp_code: "// Proyek: Tombol -> LED\n// Logika: INPUT_PULLUP, tekan = nyala\n// Platform: Uno\nconst int btn = 2, led = 13;\n\nvoid setup() {\n  pinMode(btn, INPUT_PULLUP);\n  pinMode(led, OUTPUT);\n}\n\nvoid loop() {\n  if (digitalRead(btn) == LOW) {\n    digitalWrite(led, HIGH);\n  } else {\n    digitalWrite(led, LOW);\n  }\n  delay(50);\n}",
+    wokwi_diagram: JSON.stringify({
+      version: 1, author: "ElektroDict", editor: "wokwi",
+      parts: [
+        { type: "wokwi-arduino-uno", id: "uno", top: 0, left: 0, attrs: {} },
+        { type: "wokwi-pushbutton", id: "btn", top: -120, left: 300, attrs: {} },
+        { type: "wokwi-led", id: "led1", top: -120, left: 420, attrs: { color: "red" } },
+        { type: "wokwi-resistor", id: "r1", top: -40, left: 420, attrs: { value: "220" } }
+      ],
+      connections: [
+        ["btn:1.l", "uno:2", "green", ["v0"]],
+        ["btn:2.l", "uno:GND.1", "black", ["v0"]],
+        ["uno:13", "r1:1", "green", ["v0"]],
+        ["r1:2", "led1:A", "green", ["v0"]],
+        ["led1:C", "uno:GND.2", "black", ["v0"]]
+      ]
+    }),
+    steps: [
+      { nama_komponen: "Pushbutton", alur_perakitan: "Hubungkan kontak 1.l tombol ke Pin 2 Arduino." },
+      { nama_komponen: "Ground", alur_perakitan: "Hubungkan kontak 2.l tombol ke GND Arduino." },
+      { nama_komponen: "LED + Resistor", alur_perakitan: "Rangkaikan LED ke Pin 13 via resistor 220 Ohm, katoda ke GND." }
+    ]
+  }
+];
