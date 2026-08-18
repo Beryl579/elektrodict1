@@ -1,16 +1,16 @@
-// v42: Tab Materi — modul belajar Dasar Listrik (animasi Ohm + kuis mini).
+// v43: Modul 9 Mikrokontroler (pinout + gambar, animasi PWM, I2C/SPI/UART).
 // Aset diberi query ?v= agar precache selalu ambil file terbaru (mencegah
 // cache.addAll melewati SW lama yang menyajikan salinan basi).
-const CACHE_NAME = 'elektrodict-v42';
+const CACHE_NAME = 'elektrodict-v43';
 const ASSETS = [
   '/',
-  '/index.html?v=42',
-  '/css/style.css?v=42',
-  '/js/data.js?v=42',
-  '/js/data-materi.js?v=42',
-  '/js/api.js?v=42',
-  '/js/app.js?v=42',
-  '/js/modules/firebase-dashboard.js?v=42',
+  '/index.html?v=43',
+  '/css/style.css?v=43',
+  '/js/data.js?v=43',
+  '/js/data-materi.js?v=43',
+  '/js/api.js?v=43',
+  '/js/app.js?v=43',
+  '/js/modules/firebase-dashboard.js?v=43',
   '/manifest.json',
   'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css',
   'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js',
