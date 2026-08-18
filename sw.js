@@ -1,16 +1,16 @@
-// v46: Bubble chat Materi: tombol in-flow di header (desktop) + float hanya mobile.
+// v48: Chat panel floating jadi satu-satunya UI chat — sidebar lama di Kamus disembunyikan.
 // Aset diberi query ?v= agar precache selalu ambil file terbaru (mencegah
 // cache.addAll melewati SW lama yang menyajikan salinan basi).
-const CACHE_NAME = 'elektrodict-v46';
+const CACHE_NAME = 'elektrodict-v48';
 const ASSETS = [
   '/',
-  '/index.html?v=46',
-  '/css/style.css?v=46',
-  '/js/data.js?v=46',
-  '/js/data-materi.js?v=46',
-  '/js/api.js?v=46',
-  '/js/app.js?v=46',
-  '/js/modules/firebase-dashboard.js?v=46',
+  '/index.html?v=48',
+  '/css/style.css?v=48',
+  '/js/data.js?v=48',
+  '/js/data-materi.js?v=48',
+  '/js/api.js?v=48',
+  '/js/app.js?v=48',
+  '/js/modules/firebase-dashboard.js?v=48',
   '/manifest.json',
   'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css',
   'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js',
