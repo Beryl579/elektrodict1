@@ -1,5 +1,5 @@
-// v23: fitur Tabel PUIL (KHA lengkap, MCB standar, kalkulator kabel & MCB).
-const CACHE_NAME = 'elektrodict-v23';
+// v24: Lab Proyek — bank 8 template Wokwi terverifikasi + validasi diagram AI di backend.
+const CACHE_NAME = 'elektrodict-v24';
 const ASSETS = [
   '/',
   '/index.html',

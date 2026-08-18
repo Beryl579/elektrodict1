@@ -2545,8 +2545,8 @@ function installPWA(){
 // #51 — PROJECT HUB LOGIC
 // ═══════════════════════════════════════════════════════════
 function initProjects() {
-  // Static list is removed in favor of AI Generator
-  // We can keep this empty or use it to load previous history
+  // Render bank template Wokwi terverifikasi
+  renderWokwiTemplates();
 }
 
 let currentAIProject = null;
@@ -2659,8 +2659,29 @@ function renderProjectList() {
 }
 
 function openProject(id) {
-  const prj = PROJECTS.find(p => p.id === id);
+  const prj = PROJECTS.find(p => p.id === id) || WOKWI_TEMPLATES.find(t => t.id === id);
   if(prj) renderProjectDetail(prj);
+}
+
+/**
+ * Render bank proyek siap pakai (template Wokwi terverifikasi)
+ * di dalam halaman Lab Proyek.
+ */
+function renderWokwiTemplates() {
+  const grid = document.getElementById('wokwi-templates-grid');
+  if (!grid || typeof WOKWI_TEMPLATES === 'undefined') return;
+  grid.innerHTML = WOKWI_TEMPLATES.map(t => {
+    const diffClass = (t.difficulty || 'mudah').toLowerCase().replace(/\s+/g, '-');
+    return `
+      <div class="prj-card" onclick="openProject('${t.id}')" style="cursor:pointer;">
+        <div class="prj-card-title">${t.title}</div>
+        <div class="prj-card-desc">${t.desc}</div>
+        <div class="prj-card-meta">
+          <span class="prj-card-diff diff-${diffClass}">${t.difficulty}</span>
+          <span style="font-size:11px;color:var(--text3);font-family:var(--mono);">${(t.tags || []).join(' · ')}</span>
+        </div>
+      </div>`;
+  }).join('');
 }
 
 function renderProjectDetail(prj) {
@@ -2673,8 +2694,14 @@ function renderProjectDetail(prj) {
   // Load progress
   const progress = JSON.parse(localStorage.getItem(`ed_prj_progress_${prj.id}`) || '[]');
 
-  // AI Disclaimer HTML
-  const disclaimerHtml = `
+  // AI Disclaimer / Verified badge HTML
+  const disclaimerHtml = prj.verified ? `
+    <div class="pd-disclaimer" style="border-color:rgba(16,185,129,.35);background:rgba(16,185,129,.07);">
+      <div class="pd-disclaimer-icon">✅</div>
+      <div class="pd-disclaimer-text">
+        Rangkaian &amp; kode proyek ini sudah <b>terverifikasi manual</b> dan siap langsung disimulasikan di Wokwi.
+      </div>
+    </div>` : `
     <div class="pd-disclaimer">
       <div class="pd-disclaimer-icon">⚠️</div>
       <div class="pd-disclaimer-text">
@@ -2753,7 +2780,9 @@ function renderProjectDetail(prj) {
 
   const wokwiSectionHtml = wokwiPretty ? `
     <div class="pd-section">
-      <h3 class="pd-section-h">🛠️ Jalankan di Simulator</h3>
+      <h3 class="pd-section-h">🛠️ Jalankan di Simulator
+        ${prj.wokwi_verified === false ? `<span style="font-size:10px;font-weight:600;color:#f59e0b;background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.35);padding:2px 8px;border-radius:99px;vertical-align:middle;">⚠️ Skema belum lolos validasi — cek manual</span>` : ''}
+      </h3>
 
       <!-- Simulation Setup Dashboard -->
       <div style="border:1px solid rgba(99,102,241,.25);border-radius:12px;padding:18px;background:rgba(99,102,241,.04);display:flex;flex-direction:column;gap:14px;">
