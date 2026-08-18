@@ -1,5 +1,5 @@
-// v38: Pilihan board Uno/ESP32 di AI Project Generator (prompt + validasi board-aware).
-const CACHE_NAME = 'elektrodict-v38';
+// v39: About di-embed (ABOUT_MD) — hapus /README.md dari precache (Vercel 404 utk .md).
+const CACHE_NAME = 'elektrodict-v39';
 const ASSETS = [
   '/',
   '/index.html',
@@ -8,7 +8,6 @@ const ASSETS = [
   '/js/api.js',
   '/js/app.js',
   '/js/modules/firebase-dashboard.js',
-  '/README.md',
   '/manifest.json',
   'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css',
   'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js',

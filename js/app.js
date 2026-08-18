@@ -3754,15 +3754,19 @@ async function loadAbout() {
   if (!wrap) return;
   if (aboutLoaded) return;
 
+  // Konten About di-embed langsung di js/data.js (ABOUT_MD) — tidak lagi
+  // bergantung fetch README.md (Vercel tidak menyajikan file .md).
+  const md = (typeof ABOUT_MD !== 'undefined' && ABOUT_MD) || '';
+  if (!md) {
+    wrap.innerHTML = `<div class="empty" style="display:block">⚠️ Konten About belum tersedia.</div>`;
+    return;
+  }
   try {
-    const res = await fetch('README.md', { cache: 'no-cache' });
-    if (!res.ok) throw new Error('README tidak ditemukan');
-    const md = await res.text();
     const renderer = typeof marked !== 'undefined' ? marked.parse(md) : `<pre style="white-space:pre-wrap;font-family:var(--mono);font-size:12px;">${md.replace(/</g,'&lt;')}</pre>`;
     wrap.innerHTML = renderer;
     aboutLoaded = true;
   } catch (err) {
-    wrap.innerHTML = `<div class="empty" style="display:block">⚠️ Gagal memuat README.md. Coba lagi nanti.</div>`;
+    wrap.innerHTML = `<div class="empty" style="display:block">⚠️ Gagal merender konten. Coba lagi nanti.</div>`;
   }
 }
 
