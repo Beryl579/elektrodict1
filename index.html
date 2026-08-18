@@ -282,8 +282,8 @@
   </div>
 </div>
 
-<!-- Bubble chat Materi (body-level: bebas transform .page agar position:fixed benar) -->
-<button class="mt-chat-fab" id="mtChatFab" onclick="materiOpenChat()" title="Tanya AI tentang materi ini">💬</button>
+<!-- Bubble chat AI global (body-level): muncul di semua halaman, klik → panel chat melebar -->
+<button class="mt-chat-fab" id="mtChatFab" onclick="openGlobalChat()" title="Tanya AI — tersedia di halaman mana pun"><span class="mt-chat-fab-ico">💬</span><span class="mt-chat-fab-label">Tanya AI</span></button>
 
 <!-- ═══════ MATERI PAGE ═══════ -->
 <div class="page" id="page-materi">
@@ -292,7 +292,6 @@
       <h2 style="font-family:var(--font-h); font-size:24px; font-weight:700; background:linear-gradient(135deg, var(--text), var(--text2)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; margin-bottom:6px; letter-spacing:-.02em;">📖 Materi</h2>
       <p style="font-size:13px; color:var(--text2);">Belajar elektronika dari nol — modul terstruktur dengan animasi & kuis.</p>
     </div>
-    <button class="mt-chat-btn" id="mtChatBtnDesktop" onclick="materiOpenChat()" title="Tanya AI tentang materi ini">💬 Tanya AI</button>
   </div>
   <div id="materi-list"></div>
   <div id="materi-detail" style="display:none"></div>

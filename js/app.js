@@ -361,8 +361,8 @@ function switchTab(t){
 
   if(t === 'news') { videoChips(); renderVideos(); }
   if(t === 'about') loadAbout();
-  if(t === 'materi') { renderMateri(); document.body.classList.add('materi-active'); }
-  else { stopMateriAnims(); materiChatCtx = null; document.body.classList.remove('materi-active'); }
+  if(t === 'materi') renderMateri();
+  else { stopMateriAnims(); materiChatCtx = null; }
   if(t === 'dashboard' && window.ElektroFBDash) window.ElektroFBDash.open();
 
   window.scrollTo({top:0,behavior:'smooth'});
@@ -547,9 +547,8 @@ function tog(i){
 function askCard(e,en,id){
   e.stopPropagation();
   const q=`Jelaskan lebih detail tentang ${id} (${en}) dalam teknik elektro, termasuk aplikasi praktisnya.`;
-  const mob=window.innerWidth<860;
-  if(mob){if(!mOpen)openM();setTimeout(()=>{document.getElementById('inpM').value=q;send('M');},300);}
-  else{document.getElementById('inpD').value=q;send('D');}
+  if(!mOpen) openM();
+  setTimeout(()=>{document.getElementById('inpM').value=q;send('M');},300);
 }
 
 async function getWikiInfo(e, i, query) {
@@ -1819,10 +1818,8 @@ function closeM(){
 }
 
 function qask(q){
-  const mob=window.innerWidth<860;
-  const id=mob?'inpM':'inpD';
-  if(mob&&!mOpen)openM();
-  setTimeout(()=>{document.getElementById(id).value=q;send(mob?'M':'D');},mob?300:0);
+  if(!mOpen) openM();
+  setTimeout(()=>{document.getElementById('inpM').value=q;send('M');},300);
 }
 
 function ts(){return new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});}
@@ -3893,22 +3890,13 @@ function buildMateriCtx(m) {
     prompt: `User sedang membaca modul "${m.title}" (level ${m.level}). Daftar bab modul ini:\n${m.sections.map((s,i)=>`${i+1}. ${s.title}`).join('\n')}\nJawab dengan fokus pada materi modul ini; kalau ditanya di luar modul, tetap jawab dalam lingkup teknik elektro dan kaitkan dengan modul ini bila relevan.`
   };
 }
-function materiOpenChat() {
-  materiChatCtx = buildMateriCtx(getMateriModule());
+// Bubble chat global: buka panel chat yang melebar — bisa dari halaman mana pun.
+// Konteks materi otomatis aktif saat user sedang di tab Materi (materiChatCtx
+// di-set oleh renderMateri/openMateriModule dan di-reset oleh switchTab).
+function openGlobalChat() {
   materiWelcomeShown = false;
-  // Cek apakah sidebar chat benar-benar tampil di layar
-  const sb = document.querySelector('.chat-sidebar');
-  const sbVisible = sb && getComputedStyle(sb).display !== 'none' && sb.offsetWidth > 0;
-  if (sbVisible) {
-    // Desktop: sidebar sudah tampil di kanan — fokus + highlight
-    const inp = document.getElementById('inpD');
-    if (inp) inp.focus();
-    flashChatSidebar();
-  } else {
-    // Mobile/tablet atau sidebar tersembunyi → buka panel chat bawah
-    openM();
-  }
-  materiChatWelcome();
+  openM();
+  if (materiChatCtx && materiChatCtx.active) materiChatWelcome();
 }
 function materiChatWelcome() {
   if (materiWelcomeShown) return;
@@ -3930,12 +3918,6 @@ function materiChatWelcome() {
     el.appendChild(d);
     el.scrollTop = el.scrollHeight;
   });
-}
-function flashChatSidebar() {
-  const sb = document.querySelector('.chat-sidebar');
-  if (!sb) return;
-  sb.classList.add('flash');
-  setTimeout(() => sb.classList.remove('flash'), 900);
 }
 
 
