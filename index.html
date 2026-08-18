@@ -73,6 +73,10 @@
     <span class="bnav-label">Kamus</span>
   </button>
 
+  <button class="bnav-item desktop-only" id="bnav-materi" onclick="switchTab('materi')">
+    <span class="bnav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1.7 2.7 3 6 3s6-1.3 6-3v-5"/></svg></span>
+    <span class="bnav-label">Materi</span>
+  </button>
 
 
   <button class="bnav-item mobile-visible" id="bnav-quiz" onclick="switchTab('quiz')">
@@ -278,6 +282,18 @@
   </div>
 </div>
 
+<!-- ═══════ MATERI PAGE ═══════ -->
+<div class="page" id="page-materi">
+  <div class="page-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+    <div class="ph-left">
+      <h2 style="font-family:var(--font-h); font-size:24px; font-weight:700; background:linear-gradient(135deg, var(--text), var(--text2)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; margin-bottom:6px; letter-spacing:-.02em;">📖 Materi</h2>
+      <p style="font-size:13px; color:var(--text2);">Belajar elektronika dari nol — modul terstruktur dengan animasi & kuis.</p>
+    </div>
+  </div>
+  <div id="materi-list"></div>
+  <div id="materi-detail" style="display:none"></div>
+</div>
+
 <!-- ═══════ KALKULATOR PAGE ═══════ -->
 <div class="page" id="page-kalk">
   <div class="calc-chatview">
@@ -369,6 +385,10 @@
 <div class="more-sheet" id="moreSheet">
   <div class="sheet-handle"></div>
   <div class="sheet-grid">
+    <div class="sheet-item" onclick="switchTab('materi')">
+      <div class="sheet-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px;"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1.7 2.7 3 6 3s6-1.3 6-3v-5"/></svg></div>
+      <div class="sheet-label">Materi</div>
+    </div>
     <div class="sheet-item" onclick="switchTab('standards')">
       <div class="sheet-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></div>
       <div class="sheet-label">Standar & K3</div>
@@ -1555,6 +1575,7 @@
 
 
 <script src="js/data.js"></script>
+<script src="js/data-materi.js"></script>
 <script src="js/api.js"></script>
 <script src="js/app.js"></script>
 <script src="js/modules/firebase-dashboard.js"></script>
