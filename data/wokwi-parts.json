@@ -1,0 +1,1226 @@
+{
+  "board-bmp180": {
+    "title": "board-bmp180 Barometric Pressure Sensor",
+    "desc": "Barometric pressure and temperature sensor with I2C interface.",
+    "pins": [
+      "VCC",
+      "3.3V",
+      "GND",
+      "SCL",
+      "SDA"
+    ],
+    "attrs": {
+      "temperature": {
+        "desc": "Initial temperature value (celsius)",
+        "default": "\"24\""
+      },
+      "pressure": {
+        "desc": "Initial pressure value (pascals)",
+        "default": "\"101325\""
+      }
+    }
+  },
+  "board-franzininho-wifi": {
+    "title": "board-franzininho-wifi",
+    "desc": "Open source ESP32-S2 development board created in Brazil. See the [ESP32 Guide](../guides/esp32) for more information.",
+    "pins": [],
+    "attrs": {}
+  },
+  "board-grove-oled-sh1107": {
+    "title": "board-grove-oled-sh1107",
+    "desc": "Monochrome display with 128128 resolution",
+    "pins": [],
+    "attrs": {}
+  },
+  "board-mfrc522": {
+    "title": "board-mfrc522 RFID Reader",
+    "desc": "MFRC522 RFID/NFC reader module with SPI interface for reading 13.56 MHz MIFARE cards and tags.",
+    "pins": [
+      "3.3V",
+      "RST",
+      "GND",
+      "IRQ",
+      "MISO",
+      "MOSI",
+      "SCK",
+      "SDA"
+    ],
+    "attrs": {
+      "uid": {
+        "desc": "Custom UID (for Blue Card only)",
+        "default": "\"\""
+      }
+    }
+  },
+  "board-ssd1306": {
+    "title": "board-ssd1306",
+    "desc": "Monochrome 128x64 OLED display with I2C interface",
+    "pins": [
+      "DATA",
+      "CLK",
+      "DC",
+      "RST",
+      "CS",
+      "3V3",
+      "GND",
+      "VIN"
+    ],
+    "attrs": {
+      "i2cAddress": {
+        "desc": "I2C address of the display",
+        "default": "\"0x3c\""
+      }
+    }
+  },
+  "board-st-nucleo-c031c6": {
+    "title": "STM32 Nucleo64 C031C6",
+    "desc": "A Nucleo-64 development board with STM32C031C6 MCU: ARM Cortex-M0+ processor, 32 KB Flash, 12 KB RAM running at 48 MHz.",
+    "pins": [],
+    "attrs": {}
+  },
+  "board-st-nucleo-l031k6": {
+    "title": "STM32 Nucleo32 L031K6",
+    "desc": "A Nucleo-32 development board with STM32L031K6 MCU: ARM Cortex-M0+ processor, 32 KB Flash, 8 KB RAM, 1 KB EEPROM running at 32 MHz.",
+    "pins": [],
+    "attrs": {}
+  },
+  "board-stm32-bluepill": {
+    "title": "STM32 Blue Pill",
+    "desc": "An STM32 Blue Pill development board with STM32F103C8: ARM Cortex-M3 processor, 64KiB flash, 20KiB RAM, running at 72MHz.",
+    "pins": [],
+    "attrs": {}
+  },
+  "wokwi-74hc165": {
+    "title": "wokwi-74hc165",
+    "desc": "8-bit Parallel-In Serial-Out (PISO) Shift Register (Input)",
+    "pins": [],
+    "attrs": {}
+  },
+  "wokwi-74hc595": {
+    "title": "wokwi-74hc595",
+    "desc": "8-bit Serial-In Parallel-Out (SIPO) Shift Register",
+    "pins": [],
+    "attrs": {}
+  },
+  "wokwi-7segment": {
+    "title": "wokwi-7segment",
+    "desc": "Seven segment LED display",
+    "pins": [
+      "A",
+      "B",
+      "C",
+      "D",
+      "E",
+      "F",
+      "G",
+      "DP",
+      "COM",
+      "DIG1",
+      "DIG2",
+      "DIG3",
+      "DIG4",
+      "CLN"
+    ],
+    "attrs": {
+      "common": {
+        "desc": "The common pin: \"cathode\" or \"anode\"",
+        "default": "\"anode\""
+      },
+      "digits": {
+        "desc": "Number of digits: \"1\", \"2\", \"3\" or \"4\"",
+        "default": "\"1\""
+      },
+      "colon": {
+        "desc": "Set to \"1\" to show the colon (clock mode)",
+        "default": "\"\""
+      },
+      "color": {
+        "desc": "The color of the segment LEDs",
+        "default": "\"red\""
+      }
+    }
+  },
+  "wokwi-a4988": {
+    "title": "wokwi-a4988",
+    "desc": "A4988 Stepper Motor driver, for use with [wokwi-stepper-motor](./wokwi-stepper-motor)",
+    "pins": [
+      "ENABLE",
+      "MS1",
+      "MS2",
+      "MS3",
+      "RESET",
+      "SLEEP",
+      "STEP",
+      "DIR",
+      "GND",
+      "VDD",
+      "1B",
+      "1A",
+      "2A",
+      "2B",
+      "VMOT"
+    ],
+    "attrs": {}
+  },
+  "wokwi-analog-joystick": {
+    "title": "wokwi-analog-joystick",
+    "desc": "Analog Joystick with two axes (horizontal/vertical) and an integrated push button.",
+    "pins": [
+      "VCC",
+      "VERT",
+      "HORZ",
+      "SEL",
+      "GND"
+    ],
+    "attrs": {
+      "bounce": {
+        "desc": "Set to \"0\" to disable bouncing",
+        "default": "\"\""
+      }
+    }
+  },
+  "wokwi-arduino-mega": {
+    "title": "wokwi-arduino-mega",
+    "desc": "Arduino Mega 2560. Powered by the ATmega2560 chip, which has 256K bytes of Flash program memory, 8k bytes of SRAM and 4K bytes of EEPROM. The board features 54 digital pins, 16 analog input pins, and 4 serial ports. It runs at 16MHz.",
+    "pins": [],
+    "attrs": {}
+  },
+  "wokwi-arduino-nano": {
+    "title": "wokwi-arduino-nano",
+    "desc": "The Arduino Nano is very similar to the [Arduino Uno](wokwi-arduino-uno), but in a smaller form factor. It carries the same ATmega328p chip, which has 32K bytes of Flash program memory, 2k bytes of SRAM and 1K bytes of EEPROM.",
+    "pins": [],
+    "attrs": {}
+  },
+  "wokwi-arduino-uno": {
+    "title": "wokwi-arduino-uno",
+    "desc": "Arduino Uno is the most popular board in the Arduino family. It is powered by the ATmega328p chip, which has 32K bytes of Flash program memory, 2k bytes of SRAM and 1K bytes of EEPROM.",
+    "pins": [
+      "0",
+      "1",
+      "2",
+      "3",
+      "4",
+      "5",
+      "6",
+      "7",
+      "8",
+      "9",
+      "10",
+      "11",
+      "12",
+      "13",
+      "A0",
+      "A1",
+      "A2",
+      "A3",
+      "A4",
+      "A5",
+      "5V",
+      "VIN",
+      "GND.1",
+      "GND.2",
+      "GND.3"
+    ],
+    "attrs": {
+      "frequency": {
+        "desc": "MCU clock frequency, in hertz. Common values: \"8m\", \"16m\", and \"20m\"",
+        "default": "\"16m\""
+      }
+    }
+  },
+  "wokwi-attiny85": {
+    "title": "wokwi-attiny85",
+    "desc": "The ATtiny85 is a small 8-bit AVR microcontroller. It has 8KB of Flash program memory, 512 bytes of SRAM, and 512 bytes of EEPROM.",
+    "pins": [],
+    "attrs": {
+      "frequency": {
+        "desc": "MCU clock frequency, in hertz. Common values: \"1m\", \"8m\", \"16m\", and \"20m\"",
+        "default": "\"8m\""
+      }
+    }
+  },
+  "wokwi-biaxial-stepper": {
+    "title": "wokwi-biaxial-stepper",
+    "desc": "A concentric biaxial stepper motor, containing two stepper motors packaged in a single enclosure.",
+    "pins": [
+      "A1-",
+      "A1+",
+      "B1+",
+      "B1-",
+      "A2-",
+      "A2+",
+      "B2+",
+      "B2-"
+    ],
+    "attrs": {
+      "outerHandLength": {
+        "desc": "The length of the outer shaft's hand, between \"20\" and \"70\"",
+        "default": "\"30\""
+      },
+      "outerHandColor": {
+        "desc": "The color of the outer shaft's hand",
+        "default": "\"gold\""
+      },
+      "outerHandShape": {
+        "desc": "The shape of the outer shaft's hand: \"plain\", \"arrow\", or \"ornate\"",
+        "default": "\"plain\""
+      },
+      "innerHandLength": {
+        "desc": "The length of the inner shaft's hand, between \"20\" and \"70\"",
+        "default": "\"30\""
+      },
+      "innerHandColor": {
+        "desc": "The color of the inner shaft's hand",
+        "default": "\"silver\""
+      },
+      "innerHandShape": {
+        "desc": "The shape of the inner shaft's hand: \"plain\", \"arrow\", or \"ornate\"",
+        "default": "\"plain\""
+      }
+    }
+  },
+  "wokwi-buzzer": {
+    "title": "wokwi-buzzer",
+    "desc": "A piezoelectric buzzer",
+    "pins": [
+      "1",
+      "2"
+    ],
+    "attrs": {
+      "mode": {
+        "desc": "Buzzer operation mode: \"smooth\" or \"accurate\"",
+        "default": "\"smooth\""
+      },
+      "volume": {
+        "desc": "Volume (loudness) of the sound, between \"0.01\" and \"1.0\"",
+        "default": "\"1.0\""
+      }
+    }
+  },
+  "wokwi-clock-generator": {
+    "title": "wokwi-clock-generator",
+    "desc": "Configurable clock generator component.",
+    "pins": [
+      "CLK"
+    ],
+    "attrs": {
+      "frequency": {
+        "desc": "Set the frequency of the generator (in Hz)",
+        "default": "\"10k\""
+      }
+    }
+  },
+  "wokwi-dht22": {
+    "title": "wokwi-dht22",
+    "desc": "Digital Humidity and Temperature sensor.",
+    "pins": [
+      "VCC",
+      "SDA",
+      "NC",
+      "GND"
+    ],
+    "attrs": {
+      "temperature": {
+        "desc": "Initial temperature value (celsius)",
+        "default": "\"24\""
+      },
+      "humidity": {
+        "desc": "Initial relative humidity value (percentage)",
+        "default": "\"40\""
+      }
+    }
+  },
+  "wokwi-dip-switch-8": {
+    "title": "wokwi-dip-switch-8",
+    "desc": "Set of 8 electrical switches in a single package",
+    "pins": [
+      "1a",
+      "1b",
+      "2a",
+      "2b",
+      "…",
+      "8a",
+      "8b"
+    ],
+    "attrs": {}
+  },
+  "wokwi-ds1307": {
+    "title": "wokwi-ds1307",
+    "desc": "RTC (Real Time Clock) module with I2C interface and 56 bytes of NV SRAM.",
+    "pins": [
+      "GND",
+      "5V",
+      "SDA",
+      "SCL",
+      "SQW"
+    ],
+    "attrs": {
+      "initTime": {
+        "desc": "Initial time of the RTC: \"0\", \"now\", or a valid ISO 8601 date string",
+        "default": "\"now\""
+      }
+    }
+  },
+  "wokwi-ds18b20": {
+    "title": "wokwi-ds18b20",
+    "desc": "Digital temperature sensor with 1-Wire interface.",
+    "pins": [
+      "VCC",
+      "DQ",
+      "GND"
+    ],
+    "attrs": {
+      "temperature": {
+        "desc": "Initial temperature value (celsius)",
+        "default": "\"22\""
+      },
+      "deviceID": {
+        "desc": "12-character hex device ID for the 1-Wire address",
+        "default": "\"010203040506\""
+      },
+      "familyCode": {
+        "desc": "1-Wire family code",
+        "default": "\"28\""
+      }
+    }
+  },
+  "wokwi-franzininho": {
+    "title": "wokwi-franzininho",
+    "desc": "A small ATtiny85-based development board, popular in Brazil.",
+    "pins": [],
+    "attrs": {}
+  },
+  "wokwi-gas-sensor": {
+    "title": "wokwi-gas-sensor",
+    "desc": "MQ2 Gas Sensor module",
+    "pins": [
+      "VCC",
+      "GND",
+      "DO",
+      "AO"
+    ],
+    "attrs": {
+      "ppm": {
+        "desc": "Initial gas concentration (in parts per million)",
+        "default": "\"400\""
+      },
+      "threshold": {
+        "desc": "Digital output threshold voltage",
+        "default": "\"4.4\""
+      }
+    }
+  },
+  "wokwi-hc-sr04": {
+    "title": "wokwi-hc-sr04",
+    "desc": "HC-SR04 Ultrasonic Distance Sensor",
+    "pins": [
+      "VCC",
+      "TRIG",
+      "ECHO",
+      "GND"
+    ],
+    "attrs": {
+      "distance": {
+        "desc": "Initial distance value, in centimeters",
+        "default": "\"400\""
+      }
+    }
+  },
+  "wokwi-hx711": {
+    "title": "wokwi-hx711",
+    "desc": "HX711 Load Cell Amplifier",
+    "pins": [
+      "VCC",
+      "DT",
+      "SCK",
+      "GND"
+    ],
+    "attrs": {
+      "type": {
+        "desc": "Either \"50kg\" (default), \"5kg\", or \"gauge\"",
+        "default": "\"50kg\""
+      }
+    }
+  },
+  "wokwi-ili9341": {
+    "title": "wokwi-ili9341",
+    "desc": "Full color 240x320 2.8\" LCD-TFT display with SPI interface",
+    "pins": [],
+    "attrs": {
+      "flipHorizontal": {
+        "desc": "Set to \"1\" to flip the display horizontally",
+        "default": "\"\""
+      },
+      "flipVertical": {
+        "desc": "Set to \"1\" to flip the display vertically",
+        "default": "\"\""
+      },
+      "swapXY": {
+        "desc": "Set to \"1\" to change the orientation of the display (some LCD panels have the X/Y axes swapped)",
+        "default": "\"\""
+      }
+    }
+  },
+  "wokwi-ir-receiver": {
+    "title": "wokwi-ir-receiver",
+    "desc": "38KHz infrared receiver",
+    "pins": [
+      "GND",
+      "VCC",
+      "DAT"
+    ],
+    "attrs": {}
+  },
+  "wokwi-ir-remote": {
+    "title": "wokwi-ir-remote",
+    "desc": "38KHz infrared remote with 20 function keys. Use together with the [IR Receiver module](wokwi-ir-receiver).",
+    "pins": [],
+    "attrs": {}
+  },
+  "wokwi-ks2e-m-dc5": {
+    "title": "ks2e-m-dc5 Relay",
+    "desc": "Double Pole Double Throw (DPDT) Relay",
+    "pins": [
+      "COIL1",
+      "COIL2",
+      "P1",
+      "NC1",
+      "NO1",
+      "P2",
+      "NC2",
+      "NO2"
+    ],
+    "attrs": {}
+  },
+  "wokwi-ky-040": {
+    "title": "wokwi-ky-040 Rotary Encoder",
+    "desc": "KY-040 Rotary Encoder module with 20 steps per revolution.",
+    "pins": [
+      "CLK",
+      "DT",
+      "SW",
+      "VCC",
+      "GND"
+    ],
+    "attrs": {}
+  },
+  "wokwi-lcd1602": {
+    "title": "wokwi-lcd1602",
+    "desc": "An LCD with 2 lines, 16 characters per line.",
+    "pins": [
+      "VSS",
+      "VDD",
+      "V0",
+      "RS",
+      "RW",
+      "E",
+      "D0",
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5",
+      "D6",
+      "D7",
+      "A",
+      "K",
+      "SDA",
+      "SCL"
+    ],
+    "attrs": {
+      "pins": {
+        "desc": "Set to \"i2c\" for I2C configuration",
+        "default": "\"full\""
+      },
+      "i2cAddress": {
+        "desc": "I2C address (I2C configuration)",
+        "default": "\"0x27\""
+      },
+      "color": {
+        "desc": "The color of the text",
+        "default": "\"black\""
+      },
+      "background": {
+        "desc": "The color of the backlight",
+        "default": "\"green\""
+      },
+      "variant": {
+        "desc": "Font variant: \"A00\" or \"A02\" (see [below](#font))",
+        "default": "\"A00\""
+      }
+    }
+  },
+  "wokwi-lcd2004": {
+    "title": "wokwi-lcd2004",
+    "desc": "An LCD display with 4 lines, 20 characters per line.",
+    "pins": [],
+    "attrs": {}
+  },
+  "wokwi-led-bar-graph": {
+    "title": "wokwi-led-bar-graph",
+    "desc": "10-segment LED Bar Graph.",
+    "pins": [
+      "An",
+      "Cn"
+    ],
+    "attrs": {
+      "color": {
+        "desc": "The color of the LED body, or one of the special values \"GYR\" / \"BCYR\"",
+        "default": "\"red\""
+      }
+    }
+  },
+  "wokwi-led-matrix": {
+    "title": "wokwi-led-matrix",
+    "desc": "WS2812 NeoPixel Compatible LED Matrix.",
+    "pins": [
+      "DIN",
+      "VDD",
+      "VSS",
+      "DOUT"
+    ],
+    "attrs": {
+      "rows": {
+        "desc": "Number of rows",
+        "default": "\"8\""
+      },
+      "cols": {
+        "desc": "Number of columns",
+        "default": "\"8\""
+      },
+      "layout": {
+        "desc": "Pixel wiring pattern (see below)",
+        "default": "\"\""
+      },
+      "brightness": {
+        "desc": "Brightness multiplier",
+        "default": "\"1\""
+      },
+      "pixelShape": {
+        "desc": "Pixel rendering shape: \"square\", \"circle\", or \"\"",
+        "default": "\"\""
+      },
+      "pixelSize": {
+        "desc": "LED package size: \"5050\", \"3535\", or \"2020\"",
+        "default": "\"5050\""
+      }
+    }
+  },
+  "wokwi-led-ring": {
+    "title": "wokwi-led-ring",
+    "desc": "WS2812 NeoPixel Compatible LED Ring.",
+    "pins": [
+      "GND",
+      "VCC",
+      "DIN",
+      "DOUT"
+    ],
+    "attrs": {
+      "pixels": {
+        "desc": "Number of LEDs in the ring",
+        "default": "\"16\""
+      }
+    }
+  },
+  "wokwi-led-strip": {
+    "title": "wokwi-led-strip",
+    "desc": "WS2812 NeoPixel Compatible LED Strip.",
+    "pins": [
+      "VDD",
+      "DIN",
+      "VSS",
+      "VDD.2",
+      "DOUT",
+      "VSS.2"
+    ],
+    "attrs": {
+      "pixels": {
+        "desc": "Number of LEDs in the strip",
+        "default": "\"8\""
+      },
+      "pixelShape": {
+        "desc": "Pixel rendering shape: \"square\", \"circle\", or \"\"",
+        "default": "\"\""
+      },
+      "pixelSize": {
+        "desc": "LED package size: \"5050\", \"3535\", or \"2020\"",
+        "default": "\"5050\""
+      }
+    }
+  },
+  "wokwi-led": {
+    "title": "wokwi-led",
+    "desc": "Standard 5mm LED.",
+    "pins": [
+      "A",
+      "C"
+    ],
+    "attrs": {
+      "color": {
+        "desc": "The color of the LED body",
+        "default": "\"red\""
+      },
+      "lightColor": {
+        "desc": "The color of the light",
+        "default": "depends on the color"
+      },
+      "label": {
+        "desc": "Text that appears below the led",
+        "default": ""
+      },
+      "gamma": {
+        "desc": "Gamma correction factor",
+        "default": "\"2.8\""
+      },
+      "flip": {
+        "desc": "Flips the led horizontally",
+        "default": "\"\""
+      },
+      "fps": {
+        "desc": "The framerate of the LED",
+        "default": "\"80\""
+      }
+    }
+  },
+  "wokwi-logic-analyzer": {
+    "title": "wokwi-logic-analyzer",
+    "desc": "8-Channel Digital Logic Analyzer",
+    "pins": [],
+    "attrs": {
+      "bufferSize": {
+        "desc": "Maximum number of samples to collect",
+        "default": "\"1000000\""
+      },
+      "channelNames": {
+        "desc": "Comma-separated list of channel names for the VCD file",
+        "default": "\"D0,D1,D2,D3,D4,D5,D6,D7\""
+      },
+      "filename": {
+        "desc": "Name of the recording file, without the extension",
+        "default": "\"wokwi-logic\""
+      },
+      "triggerMode": {
+        "desc": "Trigger mode: \"off\", \"level\" or \"edge\"",
+        "default": "\"off\""
+      },
+      "triggerLevel": {
+        "desc": "\"high\" or \"low\"",
+        "default": "\"high\""
+      },
+      "triggerPin": {
+        "desc": "\"D0\" … \"D7\"",
+        "default": "\"D7\""
+      }
+    }
+  },
+  "wokwi-max7219-matrix": {
+    "title": "wokwi-max7219-matrix Dot Matrix",
+    "desc": "8x8 LED Dot Matrix with MAX7219 Controller",
+    "pins": [
+      "VCC",
+      "GND",
+      "DIN",
+      "CS",
+      "CLK",
+      "DOUT"
+    ],
+    "attrs": {
+      "chain": {
+        "desc": "How many units to chain together",
+        "default": "\"1\""
+      },
+      "color": {
+        "desc": "LED color (when lit)",
+        "default": "\"red\""
+      },
+      "layout": {
+        "desc": "Matrix connection layout: \"parola\" or \"fc16\"",
+        "default": "\"parola\""
+      }
+    }
+  },
+  "wokwi-membrane-keypad": {
+    "title": "wokwi-membrane-keypad",
+    "desc": "A standard 4x4 keypad. Great for numeric input, e.g. security pin code.",
+    "pins": [],
+    "attrs": {
+      "columns": {
+        "desc": "Number of columns: \"3\" or \"4\"",
+        "default": "\"4\""
+      },
+      "keys": {
+        "desc": "Labels for the keys",
+        "default": "[\"1\", \"2\", \"3\", \"A\", \"4\", \"5\", \"6\", \"B\", \"7\", \"8\", \"9\", \"C\", \"*\", \"0\", \"#\", \"D\"]"
+      }
+    }
+  },
+  "wokwi-microsd-card": {
+    "title": "wokwi-microsd-card",
+    "desc": "microSD card with SPI interface",
+    "pins": [
+      "CD",
+      "DO",
+      "GND",
+      "SCK",
+      "VCC",
+      "DI",
+      "CS"
+    ],
+    "attrs": {}
+  },
+  "wokwi-mpu6050": {
+    "title": "wokwi-mpu6050 6-Axis Accel & Gyro Sensor",
+    "desc": "Integrated sensor with 3-axis accelerometer, 3-axis gyroscope and a temperature sensor with I2C interface.",
+    "pins": [
+      "VCC",
+      "GND",
+      "SCL",
+      "SDA",
+      "XDA",
+      "XCL",
+      "AD0",
+      "INT"
+    ],
+    "attrs": {
+      "accelX": {
+        "desc": "Initial x acceleration value (g)",
+        "default": "\"0\""
+      },
+      "accelY": {
+        "desc": "Initial y acceleration value (g)",
+        "default": "\"0\""
+      },
+      "accelZ": {
+        "desc": "Initial z acceleration value (g)",
+        "default": "\"1\""
+      },
+      "rotationX": {
+        "desc": "Initial x rotation value (deg/sec)",
+        "default": "\"0\""
+      },
+      "rotationY": {
+        "desc": "Initial y rotation value (deg/sec)",
+        "default": "\"0\""
+      },
+      "rotationZ": {
+        "desc": "Initial z rotation value (deg/sec)",
+        "default": "\"0\""
+      },
+      "temperature": {
+        "desc": "Initial temperature value (celsius)",
+        "default": "\"24\""
+      }
+    }
+  },
+  "wokwi-neopixel": {
+    "title": "wokwi-neopixel",
+    "desc": "WS2812 NeoPixel Compatible Addressable LED.",
+    "pins": [
+      "VDD",
+      "DOUT",
+      "VSS",
+      "DIN"
+    ],
+    "attrs": {}
+  },
+  "wokwi-nlsf595": {
+    "title": "wokwi-nlsf595",
+    "desc": "Serial (SPI) Tri-Color LED Driver",
+    "pins": [],
+    "attrs": {}
+  },
+  "wokwi-nokia-5110-screen": {
+    "title": "wokwi-nokia-5110-screen",
+    "desc": "The Nokia 5110 is a basic graphic LCD screen for lots of applications. The monochrome display has an 84 x 48 pixel resolution.",
+    "pins": [
+      "RST",
+      "CE",
+      "DC",
+      "DIN",
+      "CLK",
+      "VCC",
+      "BL",
+      "GND"
+    ],
+    "attrs": {}
+  },
+  "wokwi-ntc-temperature-sensor": {
+    "title": "wokwi-ntc-temperature-sensor",
+    "desc": "Analog temperature sensor: NTC (negative temperature coefficient) thermistor.",
+    "pins": [
+      "VCC",
+      "OUT",
+      "GND"
+    ],
+    "attrs": {
+      "temperature": {
+        "desc": "Initial temperature value (celsius)",
+        "default": "\"24\""
+      },
+      "beta": {
+        "desc": "The beta coefficient of the thermistor",
+        "default": "\"3950\""
+      }
+    }
+  },
+  "wokwi-photoresistor-sensor": {
+    "title": "wokwi-photoresistor-sensor",
+    "desc": "Photoresistor (LDR) sensor module",
+    "pins": [
+      "VCC",
+      "GND",
+      "DO",
+      "AO"
+    ],
+    "attrs": {
+      "lux": {
+        "desc": "Initial light value (lux)",
+        "default": "\"500\""
+      },
+      "threshold": {
+        "desc": "Digital output threshold voltage",
+        "default": "\"2.5\""
+      },
+      "rl10": {
+        "desc": "LDR resistance @ 10lux (in kilo-ohms)",
+        "default": "\"50\""
+      },
+      "gamma": {
+        "desc": "Slope of the log(R) / log(lux) graph",
+        "default": "\"0.7\""
+      }
+    }
+  },
+  "wokwi-pi-pico": {
+    "title": "wokwi-pi-pico",
+    "desc": "Raspberry Pi Pico, an RP2040 microcontroller board with dual-core ARM Cortex-M0+ processor, 264k of internal RAM, and flexible Programmable I/O (PIO) feature.",
+    "pins": [],
+    "attrs": {}
+  },
+  "wokwi-pir-motion-sensor": {
+    "title": "wokwi-pir-motion-sensor",
+    "desc": "Passive Infrared (PIR) motion sensor.",
+    "pins": [
+      "GND",
+      "OUT",
+      "VCC"
+    ],
+    "attrs": {
+      "delayTime": {
+        "desc": "The number of seconds OUT pin will stay high",
+        "default": "\"5\""
+      },
+      "inhibitTime": {
+        "desc": "The number of seconds the sensor will ignore motion when OUT returns to low",
+        "default": "\"1.2\""
+      },
+      "retrigger": {
+        "desc": "Set to \"0\" to disable retriggering",
+        "default": "\"\""
+      }
+    }
+  },
+  "wokwi-potentiometer": {
+    "title": "wokwi-potentiometer",
+    "desc": "Knob-controlled variable resistor (linear potentiometer)",
+    "pins": [
+      "VCC",
+      "SIG",
+      "GND"
+    ],
+    "attrs": {
+      "value": {
+        "desc": "Initial value of the potentiometer, between 0 and 1023",
+        "default": "\"0\""
+      }
+    }
+  },
+  "wokwi-pushbutton-6mm": {
+    "title": "wokwi-pushbutton-6mm",
+    "desc": "6mm Tactile Switch Button (momentary push button).",
+    "pins": [],
+    "attrs": {}
+  },
+  "wokwi-pushbutton": {
+    "title": "wokwi-pushbutton",
+    "desc": "12mm Tactile Switch Button (momentary push button).",
+    "pins": [
+      "1.l",
+      "1.r",
+      "2.l",
+      "2.r"
+    ],
+    "attrs": {
+      "color": {
+        "desc": "The color of the push button",
+        "default": "\"red\""
+      },
+      "xray": {
+        "desc": "Show internal wiring: \"1\" or \"\"",
+        "default": "\"\""
+      },
+      "label": {
+        "desc": "Text that appears below the button",
+        "default": "\"\""
+      },
+      "key": {
+        "desc": "Keyboard shortcut for button",
+        "default": ""
+      },
+      "bounce": {
+        "desc": "Set to \"0\" to disable bouncing",
+        "default": "\"\""
+      }
+    }
+  },
+  "wokwi-relay-module": {
+    "title": "Relay Module",
+    "desc": "Electrically operated switch",
+    "pins": [
+      "VCC",
+      "GND",
+      "IN",
+      "NC",
+      "COM",
+      "NO"
+    ],
+    "attrs": {
+      "transistor": {
+        "desc": "\"npn\" (active-high) or \"pnp\" (active-low)",
+        "default": "\"npn\""
+      }
+    }
+  },
+  "wokwi-resistor": {
+    "title": "wokwi-resistor",
+    "desc": "A resistor.",
+    "pins": [
+      "1",
+      "2"
+    ],
+    "attrs": {
+      "value": {
+        "desc": "Resistance, in ohms",
+        "default": "\"1000\""
+      }
+    }
+  },
+  "wokwi-rgb-led": {
+    "title": "wokwi-rgb-led",
+    "desc": "5mm Red, Green and Blue (RGB) LED.",
+    "pins": [
+      "R",
+      "G",
+      "B",
+      "COM"
+    ],
+    "attrs": {
+      "common": {
+        "desc": "The common pin type: \"cathode\" or \"anode\"",
+        "default": "\"anode\""
+      }
+    }
+  },
+  "wokwi-servo": {
+    "title": "wokwi-servo",
+    "desc": "A standard Micro Servo Motor.",
+    "pins": [
+      "PWM",
+      "V+",
+      "GND"
+    ],
+    "attrs": {
+      "horn": {
+        "desc": "Horn type: \"single\", \"double\" or \"cross\"",
+        "default": "\"single\""
+      },
+      "hornColor": {
+        "desc": "The color of the servo's horn",
+        "default": "\"#ccc\""
+      }
+    }
+  },
+  "wokwi-slide-potentiometer": {
+    "title": "wokwi-slide-potentiometer",
+    "desc": "Sliding variable resistor (linear potentiometer)",
+    "pins": [],
+    "attrs": {
+      "value": {
+        "desc": "Initial value of the potentiometer, between 0 and 1023",
+        "default": "\"0\""
+      },
+      "travelLength": {
+        "desc": "Travel length of the tip (mm). Controls the width of the potentiometer.<br />Common values: \"15\", \"20\", \"30\", \"45\", \"60\", \"100\"",
+        "default": "\"30\""
+      }
+    }
+  },
+  "wokwi-slide-switch": {
+    "title": "wokwi-slide-switch",
+    "desc": "Standard Single Pole Double Throw (SPDT) slide switch.",
+    "pins": [
+      "1",
+      "2",
+      "3"
+    ],
+    "attrs": {
+      "value": {
+        "desc": "Initial position of the slide switch:<br/>\"\" for left, \"1\" for right",
+        "default": "\"\""
+      },
+      "bounce": {
+        "desc": "Set to \"0\" to disable bouncing",
+        "default": "\"\""
+      }
+    }
+  },
+  "wokwi-ssd1306": {
+    "title": "wokwi-ssd1306",
+    "desc": "Monochrome 128x64 OLED display with I2C interface",
+    "pins": [],
+    "attrs": {
+      "i2cAddress": {
+        "desc": "I2C address of the display",
+        "default": "\"0x3c\""
+      }
+    }
+  },
+  "wokwi-stepper-motor": {
+    "title": "wokwi-stepper-motor",
+    "desc": "A bipolar stepper motor",
+    "pins": [
+      "A-",
+      "A+",
+      "B+",
+      "B-"
+    ],
+    "attrs": {
+      "arrow": {
+        "desc": "Displays an arrow to indicate the position of the stepper. Set to the color of the arrow, e.g. \"orange\"",
+        "default": "\"\""
+      },
+      "display": {
+        "desc": "What number to display on the stepper? Valid values \"steps\", \"angle\" (in degrees), \"none\"",
+        "default": "\"steps\""
+      },
+      "gearRatio": {
+        "desc": "The gear ratio of the motor. set to \"1:1\" for 200 steps/revolution, \"2:1\" for 400 steps/revolution, etc.",
+        "default": "\"1:1\""
+      },
+      "size": {
+        "desc": "The NEMA standard size of the motor. Valid values: \"8\", \"11\", \"14\", \"17\", \"23\", \"34\"",
+        "default": "\"23\""
+      }
+    }
+  },
+  "wokwi-text": {
+    "title": "wokwi-text",
+    "desc": "A simple text element.",
+    "pins": [],
+    "attrs": {
+      "text": {
+        "desc": "The text to display (multi-line supported)",
+        "default": "\"\""
+      }
+    }
+  },
+  "wokwi-tm1637-7segment": {
+    "title": "wokwi-tm1637-7segment",
+    "desc": "Seven segment LED display module with TM1637 4-wire interface",
+    "pins": [
+      "CLK",
+      "DIO",
+      "VCC",
+      "GND"
+    ],
+    "attrs": {
+      "color": {
+        "desc": "The color of the segment LEDs",
+        "default": "\"red\""
+      }
+    }
+  },
+  "wokwi-tv": {
+    "title": "wokwi-tv",
+    "desc": "Black and White analog PAL TV screen.",
+    "pins": [
+      "IN",
+      "SYNC",
+      "GND"
+    ],
+    "attrs": {}
+  },
+  "wokwi-wifi-ap": {
+    "title": "wokwi-wifi-ap",
+    "desc": "Simulated WiFi access point. Add one or more to your diagram to create custom WiFi networks for ESP32 projects.",
+    "pins": [],
+    "attrs": {
+      "ssid": {
+        "desc": "Network name (SSID)",
+        "default": "\"MyNetwork\""
+      },
+      "password": {
+        "desc": "WPA2-PSK password (empty = open network)",
+        "default": "\"\""
+      },
+      "channel": {
+        "desc": "WiFi channel (1-13)",
+        "default": "\"6\""
+      },
+      "internet": {
+        "desc": "Internet access (\"0\" = disabled)",
+        "default": "\"\" (enabled)"
+      },
+      "bssid": {
+        "desc": "MAC address (auto-generated if omitted)",
+        "default": "\"\""
+      }
+    }
+  },
+  "board-esp32-devkit-c-v4": {
+    "type": "board-esp32-devkit-c-v4",
+    "title": "board-esp32-devkit-c-v4",
+    "desc": "Kurasi manual (pin dari wokwi-boards resmi)",
+    "pins": [
+      "3V3",
+      "EN",
+      "VP",
+      "VN",
+      "34",
+      "35",
+      "32",
+      "33",
+      "25",
+      "26",
+      "27",
+      "14",
+      "12",
+      "GND.1",
+      "13",
+      "D2",
+      "D3",
+      "CMD",
+      "5V",
+      "GND.2",
+      "23",
+      "22",
+      "TX",
+      "RX",
+      "21",
+      "GND.3",
+      "19",
+      "18",
+      "5",
+      "17",
+      "16",
+      "4",
+      "0",
+      "2",
+      "15",
+      "D1",
+      "D0",
+      "CLK"
+    ],
+    "attrs": {}
+  }
+}

@@ -790,5 +790,1552 @@ const WOKWI_TEMPLATES = [
       { nama_komponen: "Ground", alur_perakitan: "Hubungkan kontak 2.l tombol ke GND Arduino." },
       { nama_komponen: "LED + Resistor", alur_perakitan: "Rangkaikan LED ke Pin 13 via resistor 220 Ohm, katoda ke GND." }
     ]
-  }
+  },
+  {
+  "id": "tpl-rgb-led",
+  "title": "LED RGB Warna Berganti",
+  "desc": "LED RGB menyala bergantian merah, hijau, biru, dan campurannya — latihan dasar PWM 3 kanal.",
+  "difficulty": "Mudah",
+  "tags": [
+    "LED",
+    "RGB",
+    "PWM"
+  ],
+  "verified": true,
+  "bom": [
+    "1x Arduino Uno",
+    "1x LED RGB katoda bersama",
+    "3x Resistor 220 Ohm",
+    "Kabel jumper"
+  ],
+  "wiring_guide": [
+    {
+      "komponen": "LED RGB",
+      "pin_komponen": "R",
+      "koneksi_arduino": "Pin 9 (via resistor)"
+    },
+    {
+      "komponen": "LED RGB",
+      "pin_komponen": "G",
+      "koneksi_arduino": "Pin 10 (via resistor)"
+    },
+    {
+      "komponen": "LED RGB",
+      "pin_komponen": "B",
+      "koneksi_arduino": "Pin 11 (via resistor)"
+    },
+    {
+      "komponen": "LED RGB",
+      "pin_komponen": "COM (katoda)",
+      "koneksi_arduino": "GND"
+    }
+  ],
+  "cpp_code": "// Proyek: LED RGB Warna Berganti\n// Logika: Nyala bergantian RGB\n// Platform: Uno\nint R = 9, G = 10, B = 11;\n\nvoid setup() {\n  pinMode(R, OUTPUT); pinMode(G, OUTPUT); pinMode(B, OUTPUT);\n}\n\nvoid warna(int r, int g, int b) {\n  analogWrite(R, r); analogWrite(G, g); analogWrite(B, b);\n}\n\nvoid loop() {\n  warna(255, 0, 0); delay(800);\n  warna(0, 255, 0); delay(800);\n  warna(0, 0, 255); delay(800);\n  warna(255, 255, 0); delay(800);\n  warna(0, 255, 255); delay(800);\n  warna(255, 0, 255); delay(800);\n}",
+  "wokwi_diagram": "{\"version\":1,\"author\":\"ElektroDict\",\"editor\":\"wokwi\",\"parts\":[{\"type\":\"wokwi-arduino-uno\",\"id\":\"uno\",\"top\":0,\"left\":0,\"attrs\":{}},{\"type\":\"wokwi-rgb-led\",\"id\":\"rgb\",\"top\":-140,\"left\":340,\"attrs\":{}},{\"type\":\"wokwi-resistor\",\"id\":\"r1\",\"top\":-210,\"left\":340,\"attrs\":{\"value\":\"220\"}},{\"type\":\"wokwi-resistor\",\"id\":\"r2\",\"top\":-210,\"left\":440,\"attrs\":{\"value\":\"220\"}},{\"type\":\"wokwi-resistor\",\"id\":\"r3\",\"top\":-210,\"left\":540,\"attrs\":{\"value\":\"220\"}}],\"connections\":[[\"uno:9\",\"r1:1\",\"red\",[\"v0\"]],[\"r1:2\",\"rgb:R\",\"red\",[\"v0\"]],[\"uno:10\",\"r2:1\",\"green\",[\"v0\"]],[\"r2:2\",\"rgb:G\",\"green\",[\"v0\"]],[\"uno:11\",\"r3:1\",\"blue\",[\"v0\"]],[\"r3:2\",\"rgb:B\",\"blue\",[\"v0\"]],[\"rgb:COM\",\"uno:GND.1\",\"black\",[\"v0\"]]]}",
+  "steps": [
+    {
+      "nama_komponen": "LED RGB",
+      "alur_perakitan": "Pasang LED RGB di breadboard."
+    },
+    {
+      "nama_komponen": "Resistor",
+      "alur_perakitan": "R via 220 Ohm ke Pin 9, G ke Pin 10, B ke Pin 11."
+    },
+    {
+      "nama_komponen": "Ground",
+      "alur_perakitan": "Kaki COM (katoda bersama) ke GND Arduino."
+    }
+  ]
+},
+  {
+  "id": "tpl-pir-alarm",
+  "title": "Alarm Gerakan PIR",
+  "desc": "Sensor PIR mendeteksi gerakan lalu menyalakan LED dan membunyikan buzzer sebagai alarm sederhana.",
+  "difficulty": "Mudah",
+  "tags": [
+    "Sensor",
+    "PIR",
+    "Alarm"
+  ],
+  "verified": true,
+  "bom": [
+    "1x Arduino Uno",
+    "1x Sensor PIR HC-SR501",
+    "1x Buzzer aktif",
+    "1x LED merah",
+    "1x Resistor 220 Ohm",
+    "Kabel jumper"
+  ],
+  "wiring_guide": [
+    {
+      "komponen": "PIR",
+      "pin_komponen": "VCC",
+      "koneksi_arduino": "5V"
+    },
+    {
+      "komponen": "PIR",
+      "pin_komponen": "OUT",
+      "koneksi_arduino": "Pin 2"
+    },
+    {
+      "komponen": "PIR",
+      "pin_komponen": "GND",
+      "koneksi_arduino": "GND"
+    },
+    {
+      "komponen": "Buzzer",
+      "pin_komponen": "2 (+)",
+      "koneksi_arduino": "Pin 8"
+    },
+    {
+      "komponen": "LED",
+      "pin_komponen": "A",
+      "koneksi_arduino": "Pin 13 (via resistor)"
+    },
+    {
+      "komponen": "Buzzer & LED",
+      "pin_komponen": "(-)/(C)",
+      "koneksi_arduino": "GND"
+    }
+  ],
+  "cpp_code": "// Proyek: Alarm Gerakan PIR\n// Logika: PIR -> buzzer + LED\n// Platform: Uno\nint pir = 2, buzzer = 8, led = 13;\n\nvoid setup() {\n  pinMode(pir, INPUT); pinMode(buzzer, OUTPUT); pinMode(led, OUTPUT);\n  Serial.begin(9600);\n}\n\nvoid loop() {\n  if (digitalRead(pir) == HIGH) {\n    Serial.println(\"Gerakan terdeteksi!\");\n    digitalWrite(buzzer, HIGH); digitalWrite(led, HIGH);\n    delay(2000);\n    digitalWrite(buzzer, LOW); digitalWrite(led, LOW);\n  }\n  delay(200);\n}",
+  "wokwi_diagram": "{\"version\":1,\"author\":\"ElektroDict\",\"editor\":\"wokwi\",\"parts\":[{\"type\":\"wokwi-arduino-uno\",\"id\":\"uno\",\"top\":0,\"left\":0,\"attrs\":{}},{\"type\":\"wokwi-pir-motion-sensor\",\"id\":\"pir\",\"top\":-130,\"left\":340,\"attrs\":{}},{\"type\":\"wokwi-buzzer\",\"id\":\"buz\",\"top\":-260,\"left\":340,\"attrs\":{}},{\"type\":\"wokwi-led\",\"id\":\"led\",\"top\":-260,\"left\":520,\"attrs\":{\"color\":\"red\"}}],\"connections\":[[\"pir:VCC\",\"uno:5V\",\"red\",[\"v0\"]],[\"pir:OUT\",\"uno:2\",\"green\",[\"v0\"]],[\"pir:GND\",\"uno:GND.1\",\"black\",[\"v0\"]],[\"buz:2\",\"uno:8\",\"yellow\",[\"v0\"]],[\"buz:1\",\"uno:GND.2\",\"black\",[\"v0\"]],[\"led:A\",\"uno:13\",\"blue\",[\"v0\"]],[\"led:C\",\"uno:GND.3\",\"black\",[\"v0\"]]]}",
+  "steps": [
+    {
+      "nama_komponen": "PIR",
+      "alur_perakitan": "VCC ke 5V, OUT ke Pin 2, GND ke GND."
+    },
+    {
+      "nama_komponen": "Buzzer",
+      "alur_perakitan": "(+) ke Pin 8, (-) ke GND."
+    },
+    {
+      "nama_komponen": "LED",
+      "alur_perakitan": "Anoda via resistor ke Pin 13, katoda ke GND."
+    }
+  ]
+},
+  {
+  "id": "tpl-ldr-night-light",
+  "title": "Lampu Otomatis (LDR)",
+  "desc": "Modul sensor cahaya LDR menyalakan LED otomatis saat ruangan gelap — simulasi lampu jalan hemat energi.",
+  "difficulty": "Mudah",
+  "tags": [
+    "Sensor",
+    "LDR",
+    "Otomatis"
+  ],
+  "verified": true,
+  "bom": [
+    "1x Arduino Uno",
+    "1x Modul sensor cahaya (LDR)",
+    "1x LED",
+    "1x Resistor 220 Ohm",
+    "Kabel jumper"
+  ],
+  "wiring_guide": [
+    {
+      "komponen": "Modul LDR",
+      "pin_komponen": "VCC",
+      "koneksi_arduino": "5V"
+    },
+    {
+      "komponen": "Modul LDR",
+      "pin_komponen": "DO",
+      "koneksi_arduino": "Pin 2"
+    },
+    {
+      "komponen": "Modul LDR",
+      "pin_komponen": "GND",
+      "koneksi_arduino": "GND"
+    },
+    {
+      "komponen": "LED",
+      "pin_komponen": "A",
+      "koneksi_arduino": "Pin 13 (via resistor)"
+    },
+    {
+      "komponen": "LED",
+      "pin_komponen": "C",
+      "koneksi_arduino": "GND"
+    }
+  ],
+  "cpp_code": "// Proyek: Lampu Otomatis LDR\n// Logika: Gelap -> LED nyala\n// Platform: Uno\nint ldr = 2, led = 13;\n\nvoid setup() {\n  pinMode(ldr, INPUT); pinMode(led, OUTPUT);\n}\n\nvoid loop() {\n  int gelap = digitalRead(ldr);\n  if (gelap == HIGH) digitalWrite(led, HIGH);  // modul DO aktif saat gelap\n  else digitalWrite(led, LOW);\n  delay(200);\n}",
+  "wokwi_diagram": "{\"version\":1,\"author\":\"ElektroDict\",\"editor\":\"wokwi\",\"parts\":[{\"type\":\"wokwi-arduino-uno\",\"id\":\"uno\",\"top\":0,\"left\":0,\"attrs\":{}},{\"type\":\"wokwi-photoresistor-sensor\",\"id\":\"ldr\",\"top\":-130,\"left\":340,\"attrs\":{}},{\"type\":\"wokwi-led\",\"id\":\"led\",\"top\":-260,\"left\":340,\"attrs\":{\"color\":\"white\"}},{\"type\":\"wokwi-resistor\",\"id\":\"r1\",\"top\":-330,\"left\":340,\"attrs\":{\"value\":\"220\"}}],\"connections\":[[\"ldr:VCC\",\"uno:5V\",\"red\",[\"v0\"]],[\"ldr:DO\",\"uno:2\",\"green\",[\"v0\"]],[\"ldr:GND\",\"uno:GND.1\",\"black\",[\"v0\"]],[\"uno:13\",\"r1:1\",\"yellow\",[\"v0\"]],[\"r1:2\",\"led:A\",\"yellow\",[\"v0\"]],[\"led:C\",\"uno:GND.2\",\"black\",[\"v0\"]]]}",
+  "steps": [
+    {
+      "nama_komponen": "Modul LDR",
+      "alur_perakitan": "VCC ke 5V, DO ke Pin 2, GND ke GND."
+    },
+    {
+      "nama_komponen": "LED",
+      "alur_perakitan": "Anoda via 220 Ohm ke Pin 13, katoda ke GND."
+    },
+    {
+      "nama_komponen": "Uji coba",
+      "alur_perakitan": "Tutup sensor (gelapkan) — LED menyala otomatis."
+    }
+  ]
+},
+  {
+  "id": "tpl-servo-knob",
+  "title": "Servo Knob",
+  "desc": "Putar potensiometer untuk menggerakkan sudut servo 0-180 derajat — dasar kontrol posisi analog.",
+  "difficulty": "Mudah",
+  "tags": [
+    "Servo",
+    "Potensiometer",
+    "Analog"
+  ],
+  "verified": true,
+  "bom": [
+    "1x Arduino Uno",
+    "1x Servo SG90",
+    "1x Potensiometer 10k",
+    "Kabel jumper"
+  ],
+  "wiring_guide": [
+    {
+      "komponen": "Potensiometer",
+      "pin_komponen": "VCC",
+      "koneksi_arduino": "5V"
+    },
+    {
+      "komponen": "Potensiometer",
+      "pin_komponen": "SIG",
+      "koneksi_arduino": "A0"
+    },
+    {
+      "komponen": "Potensiometer",
+      "pin_komponen": "GND",
+      "koneksi_arduino": "GND"
+    },
+    {
+      "komponen": "Servo",
+      "pin_komponen": "V+",
+      "koneksi_arduino": "5V"
+    },
+    {
+      "komponen": "Servo",
+      "pin_komponen": "PWM",
+      "koneksi_arduino": "Pin 9"
+    },
+    {
+      "komponen": "Servo",
+      "pin_komponen": "GND",
+      "koneksi_arduino": "GND"
+    }
+  ],
+  "cpp_code": "// Proyek: Servo Knob\n// Logika: Potensiometer -> servo\n// Platform: Uno\n#include <Servo.h>\nServo servo;\nint pot = A0;\n\nvoid setup() {\n  servo.attach(9);\n}\n\nvoid loop() {\n  int baca = analogRead(pot);\n  int sudut = map(baca, 0, 1023, 0, 180);\n  servo.write(sudut);\n  delay(15);\n}",
+  "wokwi_diagram": "{\"version\":1,\"author\":\"ElektroDict\",\"editor\":\"wokwi\",\"parts\":[{\"type\":\"wokwi-arduino-uno\",\"id\":\"uno\",\"top\":0,\"left\":0,\"attrs\":{}},{\"type\":\"wokwi-potentiometer\",\"id\":\"pot\",\"top\":-130,\"left\":340,\"attrs\":{}},{\"type\":\"wokwi-servo\",\"id\":\"servo\",\"top\":-260,\"left\":340,\"attrs\":{}}],\"connections\":[[\"pot:VCC\",\"uno:5V\",\"red\",[\"v0\"]],[\"pot:SIG\",\"uno:A0\",\"green\",[\"v0\"]],[\"pot:GND\",\"uno:GND.1\",\"black\",[\"v0\"]],[\"servo:V+\",\"uno:5V\",\"red\",[\"v0\"]],[\"servo:PWM\",\"uno:9\",\"yellow\",[\"v0\"]],[\"servo:GND\",\"uno:GND.2\",\"black\",[\"v0\"]]]}",
+  "steps": [
+    {
+      "nama_komponen": "Potensiometer",
+      "alur_perakitan": "VCC ke 5V, SIG ke A0, GND ke GND."
+    },
+    {
+      "nama_komponen": "Servo",
+      "alur_perakitan": "V+ ke 5V, PWM ke Pin 9, GND ke GND."
+    },
+    {
+      "nama_komponen": "Uji coba",
+      "alur_perakitan": "Putar knob — servo bergerak mengikuti posisi potensiometer."
+    }
+  ]
+},
+  {
+  "id": "tpl-joystick-servo",
+  "title": "Servo Kendali Joystick",
+  "desc": "Joystick analog menggerakkan servo secara halus — sumbu X mengontrol posisi, sumbu Y mengontrol kecepatan.",
+  "difficulty": "Menengah",
+  "tags": [
+    "Joystick",
+    "Servo",
+    "Analog"
+  ],
+  "verified": true,
+  "bom": [
+    "1x Arduino Uno",
+    "1x Modul joystick analog",
+    "1x Servo SG90",
+    "Kabel jumper"
+  ],
+  "wiring_guide": [
+    {
+      "komponen": "Joystick",
+      "pin_komponen": "VCC",
+      "koneksi_arduino": "5V"
+    },
+    {
+      "komponen": "Joystick",
+      "pin_komponen": "VERT",
+      "koneksi_arduino": "A1"
+    },
+    {
+      "komponen": "Joystick",
+      "pin_komponen": "HORZ",
+      "koneksi_arduino": "A0"
+    },
+    {
+      "komponen": "Joystick",
+      "pin_komponen": "GND",
+      "koneksi_arduino": "GND"
+    },
+    {
+      "komponen": "Servo",
+      "pin_komponen": "V+",
+      "koneksi_arduino": "5V"
+    },
+    {
+      "komponen": "Servo",
+      "pin_komponen": "PWM",
+      "koneksi_arduino": "Pin 9"
+    },
+    {
+      "komponen": "Servo",
+      "pin_komponen": "GND",
+      "koneksi_arduino": "GND"
+    }
+  ],
+  "cpp_code": "// Proyek: Servo Kendali Joystick\n// Logika: Joystick X -> servo\n// Platform: Uno\n#include <Servo.h>\nServo servo;\nconst int hX = A0, hY = A1;\n\nvoid setup() {\n  servo.attach(9);\n}\n\nvoid loop() {\n  int x = analogRead(hX);\n  int sudut = map(x, 0, 1023, 0, 180);\n  servo.write(sudut);\n  delay(15);\n}",
+  "wokwi_diagram": "{\"version\":1,\"author\":\"ElektroDict\",\"editor\":\"wokwi\",\"parts\":[{\"type\":\"wokwi-arduino-uno\",\"id\":\"uno\",\"top\":0,\"left\":0,\"attrs\":{}},{\"type\":\"wokwi-analog-joystick\",\"id\":\"joy\",\"top\":-130,\"left\":340,\"attrs\":{}},{\"type\":\"wokwi-servo\",\"id\":\"servo\",\"top\":-260,\"left\":340,\"attrs\":{}}],\"connections\":[[\"joy:VCC\",\"uno:5V\",\"red\",[\"v0\"]],[\"joy:HORZ\",\"uno:A0\",\"green\",[\"v0\"]],[\"joy:VERT\",\"uno:A1\",\"yellow\",[\"v0\"]],[\"joy:GND\",\"uno:GND.1\",\"black\",[\"v0\"]],[\"servo:V+\",\"uno:5V\",\"red\",[\"v0\"]],[\"servo:PWM\",\"uno:9\",\"blue\",[\"v0\"]],[\"servo:GND\",\"uno:GND.2\",\"black\",[\"v0\"]]]}",
+  "steps": [
+    {
+      "nama_komponen": "Joystick",
+      "alur_perakitan": "VCC ke 5V, HORZ ke A0, VERT ke A1, GND ke GND."
+    },
+    {
+      "nama_komponen": "Servo",
+      "alur_perakitan": "V+ ke 5V, PWM ke Pin 9, GND ke GND."
+    },
+    {
+      "nama_komponen": "Uji coba",
+      "alur_perakitan": "Geser joystick kiri-kanan — servo mengikuti."
+    }
+  ]
+},
+  {
+  "id": "tpl-7segment-counter",
+  "title": "Counter 7-Segmen 0-9",
+  "desc": "Tampilkan angka 0-9 bergantian di display 7-segmen setiap detik — belajar decode BCD ke segmen.",
+  "difficulty": "Menengah",
+  "tags": [
+    "Display",
+    "7-Segmen",
+    "Counter"
+  ],
+  "verified": true,
+  "bom": [
+    "1x Arduino Uno",
+    "1x Display 7-segmen (katoda bersama)",
+    "8x Resistor 220 Ohm",
+    "Kabel jumper"
+  ],
+  "wiring_guide": [
+    {
+      "komponen": "7-Segmen",
+      "pin_komponen": "A-G",
+      "koneksi_arduino": "Pin 2-8 (via resistor)"
+    },
+    {
+      "komponen": "7-Segmen",
+      "pin_komponen": "DP",
+      "koneksi_arduino": "Pin 9 (via resistor)"
+    },
+    {
+      "komponen": "7-Segmen",
+      "pin_komponen": "COM",
+      "koneksi_arduino": "GND"
+    }
+  ],
+  "cpp_code": "// Proyek: Counter 7-Segmen\n// Logika: Hitung 0-9 tiap detik\n// Platform: Uno\nbyte seg[10] = {0x3F, 0x06, 0x5B, 0x4F, 0x66, 0x6D, 0x7D, 0x07, 0x7F, 0x6F};\nint pins[7] = {2, 3, 4, 5, 6, 7, 8};\n\nvoid setup() {\n  for (int i = 0; i < 7; i++) pinMode(pins[i], OUTPUT);\n}\n\nvoid tampil(int n) {\n  for (int i = 0; i < 7; i++) {\n    digitalWrite(pins[i], bitRead(seg[n], i) ? HIGH : LOW);\n  }\n}\n\nvoid loop() {\n  for (int n = 0; n <= 9; n++) { tampil(n); delay(1000); }\n}",
+  "wokwi_diagram": "{\"version\":1,\"author\":\"ElektroDict\",\"editor\":\"wokwi\",\"parts\":[{\"type\":\"wokwi-arduino-uno\",\"id\":\"uno\",\"top\":0,\"left\":0,\"attrs\":{}},{\"type\":\"wokwi-7segment\",\"id\":\"seg\",\"top\":-140,\"left\":340,\"attrs\":{}},{\"type\":\"wokwi-resistor\",\"id\":\"r1\",\"top\":-220,\"left\":340,\"attrs\":{\"value\":\"220\"}},{\"type\":\"wokwi-resistor\",\"id\":\"r2\",\"top\":-220,\"left\":400,\"attrs\":{\"value\":\"220\"}},{\"type\":\"wokwi-resistor\",\"id\":\"r3\",\"top\":-220,\"left\":460,\"attrs\":{\"value\":\"220\"}},{\"type\":\"wokwi-resistor\",\"id\":\"r4\",\"top\":-220,\"left\":520,\"attrs\":{\"value\":\"220\"}},{\"type\":\"wokwi-resistor\",\"id\":\"r5\",\"top\":-220,\"left\":580,\"attrs\":{\"value\":\"220\"}},{\"type\":\"wokwi-resistor\",\"id\":\"r6\",\"top\":-220,\"left\":640,\"attrs\":{\"value\":\"220\"}},{\"type\":\"wokwi-resistor\",\"id\":\"r7\",\"top\":-220,\"left\":700,\"attrs\":{\"value\":\"220\"}}],\"connections\":[[\"uno:2\",\"r1:1\",\"green\",[\"v0\"]],[\"r1:2\",\"seg:A\",\"green\",[\"v0\"]],[\"uno:3\",\"r2:1\",\"green\",[\"v0\"]],[\"r2:2\",\"seg:B\",\"green\",[\"v0\"]],[\"uno:4\",\"r3:1\",\"green\",[\"v0\"]],[\"r3:2\",\"seg:C\",\"green\",[\"v0\"]],[\"uno:5\",\"r4:1\",\"green\",[\"v0\"]],[\"r4:2\",\"seg:D\",\"green\",[\"v0\"]],[\"uno:6\",\"r5:1\",\"green\",[\"v0\"]],[\"r5:2\",\"seg:E\",\"green\",[\"v0\"]],[\"uno:7\",\"r6:1\",\"green\",[\"v0\"]],[\"r6:2\",\"seg:F\",\"green\",[\"v0\"]],[\"uno:8\",\"r7:1\",\"green\",[\"v0\"]],[\"r7:2\",\"seg:G\",\"green\",[\"v0\"]],[\"seg:COM\",\"uno:GND.1\",\"black\",[\"v0\"]]]}",
+  "steps": [
+    {
+      "nama_komponen": "7-Segmen",
+      "alur_perakitan": "Pasang display di breadboard, kaki A-G via resistor 220 Ohm ke Pin 2-8."
+    },
+    {
+      "nama_komponen": "Ground",
+      "alur_perakitan": "Kaki COM (katoda bersama) ke GND."
+    },
+    {
+      "nama_komponen": "Uji coba",
+      "alur_perakitan": "Angka 0-9 tampil bergantian tiap detik."
+    }
+  ]
+},
+  {
+  "id": "tpl-stepper-motor",
+  "title": "Motor Stepper Berputar",
+  "desc": "Motor stepper bipolar berputar satu arah lalu berbalik — dasar kontrol presisi untuk printer/CNC mini.",
+  "difficulty": "Menengah",
+  "tags": [
+    "Motor",
+    "Stepper"
+  ],
+  "verified": true,
+  "bom": [
+    "1x Arduino Uno",
+    "1x Motor stepper bipolar",
+    "1x Driver A4988",
+    "Kabel jumper"
+  ],
+  "wiring_guide": [
+    {
+      "komponen": "Stepper",
+      "pin_komponen": "A-, A+, B+, B-",
+      "koneksi_arduino": "Driver A4988 (1A,1B,2A,2B)"
+    },
+    {
+      "komponen": "Driver A4988",
+      "pin_komponen": "STEP",
+      "koneksi_arduino": "Pin 3"
+    },
+    {
+      "komponen": "Driver A4988",
+      "pin_komponen": "DIR",
+      "koneksi_arduino": "Pin 4"
+    },
+    {
+      "komponen": "Driver A4988",
+      "pin_komponen": "VDD/GND",
+      "koneksi_arduino": "5V/GND"
+    }
+  ],
+  "cpp_code": "// Proyek: Motor Stepper Berputar\n// Logika: Maju 200 langkah, mundur 200\n// Platform: Uno (via driver A4988)\nint stepPin = 3, dirPin = 4;\n\nvoid setup() {\n  pinMode(stepPin, OUTPUT); pinMode(dirPin, OUTPUT);\n}\n\nvoid gerak(int langkah) {\n  digitalWrite(dirPin, langkah > 0 ? HIGH : LOW);\n  for (int i = 0; i < abs(langkah); i++) {\n    digitalWrite(stepPin, HIGH); delayMicroseconds(1000);\n    digitalWrite(stepPin, LOW); delayMicroseconds(1000);\n  }\n}\n\nvoid loop() {\n  gerak(200); delay(500);\n  gerak(-200); delay(500);\n}",
+  "wokwi_diagram": "{\"version\":1,\"author\":\"ElektroDict\",\"editor\":\"wokwi\",\"parts\":[{\"type\":\"wokwi-arduino-uno\",\"id\":\"uno\",\"top\":0,\"left\":0,\"attrs\":{}},{\"type\":\"wokwi-stepper-motor\",\"id\":\"stp\",\"top\":-140,\"left\":340,\"attrs\":{}},{\"type\":\"wokwi-a4988\",\"id\":\"drv\",\"top\":-20,\"left\":340,\"attrs\":{}}],\"connections\":[[\"uno:3\",\"drv:STEP\",\"green\",[\"v0\"]],[\"uno:4\",\"drv:DIR\",\"yellow\",[\"v0\"]],[\"drv:2A\",\"stp:A+\",\"blue\",[\"v0\"]],[\"drv:2B\",\"stp:A-\",\"blue\",[\"v0\"]],[\"drv:1A\",\"stp:B+\",\"red\",[\"v0\"]],[\"drv:1B\",\"stp:B-\",\"red\",[\"v0\"]]]}",
+  "steps": [
+    {
+      "nama_komponen": "Driver A4988",
+      "alur_perakitan": "STEP ke Pin 3, DIR ke Pin 4, VDD ke 5V, GND ke GND."
+    },
+    {
+      "nama_komponen": "Stepper",
+      "alur_perakitan": "Kumparan A ke 1A/1B, kumparan B ke 2A/2B driver."
+    },
+    {
+      "nama_komponen": "Uji coba",
+      "alur_perakitan": "Motor berputar maju-mundur 200 langkah."
+    }
+  ]
+},
+  {
+  "id": "tpl-ultrasonic-buzzer",
+  "title": "Alarm Jarak Ultrasonik",
+  "desc": "HC-SR04 mengukur jarak; buzzer berbunyi semakin cepat saat objek semakin dekat — simulasi sensor parkir.",
+  "difficulty": "Menengah",
+  "tags": [
+    "Sensor",
+    "Ultrasonik",
+    "Alarm"
+  ],
+  "verified": true,
+  "bom": [
+    "1x Arduino Uno",
+    "1x HC-SR04",
+    "1x Buzzer aktif",
+    "Kabel jumper"
+  ],
+  "wiring_guide": [
+    {
+      "komponen": "HC-SR04",
+      "pin_komponen": "VCC",
+      "koneksi_arduino": "5V"
+    },
+    {
+      "komponen": "HC-SR04",
+      "pin_komponen": "TRIG",
+      "koneksi_arduino": "Pin 9"
+    },
+    {
+      "komponen": "HC-SR04",
+      "pin_komponen": "ECHO",
+      "koneksi_arduino": "Pin 10"
+    },
+    {
+      "komponen": "HC-SR04",
+      "pin_komponen": "GND",
+      "koneksi_arduino": "GND"
+    },
+    {
+      "komponen": "Buzzer",
+      "pin_komponen": "2 (+)",
+      "koneksi_arduino": "Pin 8"
+    },
+    {
+      "komponen": "Buzzer",
+      "pin_komponen": "1 (-)",
+      "koneksi_arduino": "GND"
+    }
+  ],
+  "cpp_code": "// Proyek: Alarm Jarak Ultrasonik\n// Logika: Jarak -> frekuensi buzzer\n// Platform: Uno\nint trig = 9, echo = 10, buz = 8;\n\nlong bacaJarak() {\n  digitalWrite(trig, LOW); delayMicroseconds(2);\n  digitalWrite(trig, HIGH); delayMicroseconds(10);\n  digitalWrite(trig, LOW);\n  return pulseIn(echo, HIGH) * 0.034 / 2;\n}\n\nvoid setup() {\n  pinMode(trig, OUTPUT); pinMode(echo, INPUT); pinMode(buz, OUTPUT);\n  Serial.begin(9600);\n}\n\nvoid loop() {\n  long cm = bacaJarak();\n  Serial.print(cm); Serial.println(\" cm\");\n  if (cm < 30) { digitalWrite(buz, HIGH); delay(100); digitalWrite(buz, LOW); delay(map(cm, 0, 30, 50, 400)); }\n  else delay(300);\n}",
+  "wokwi_diagram": "{\"version\":1,\"author\":\"ElektroDict\",\"editor\":\"wokwi\",\"parts\":[{\"type\":\"wokwi-arduino-uno\",\"id\":\"uno\",\"top\":0,\"left\":0,\"attrs\":{}},{\"type\":\"wokwi-hc-sr04\",\"id\":\"ultra\",\"top\":-130,\"left\":340,\"attrs\":{}},{\"type\":\"wokwi-buzzer\",\"id\":\"buz\",\"top\":-260,\"left\":340,\"attrs\":{}}],\"connections\":[[\"ultra:VCC\",\"uno:5V\",\"red\",[\"v0\"]],[\"ultra:TRIG\",\"uno:9\",\"green\",[\"v0\"]],[\"ultra:ECHO\",\"uno:10\",\"yellow\",[\"v0\"]],[\"ultra:GND\",\"uno:GND.1\",\"black\",[\"v0\"]],[\"buz:2\",\"uno:8\",\"blue\",[\"v0\"]],[\"buz:1\",\"uno:GND.2\",\"black\",[\"v0\"]]]}",
+  "steps": [
+    {
+      "nama_komponen": "HC-SR04",
+      "alur_perakitan": "VCC ke 5V, TRIG ke Pin 9, ECHO ke Pin 10, GND ke GND."
+    },
+    {
+      "nama_komponen": "Buzzer",
+      "alur_perakitan": "(+) ke Pin 8, (-) ke GND."
+    },
+    {
+      "nama_komponen": "Uji coba",
+      "alur_perakitan": "Dekatkan objek — bunyi buzzer semakin cepat."
+    }
+  ]
+},
+  {
+  "id": "tpl-dht22-lcd",
+  "title": "Termometer LCD (DHT22)",
+  "desc": "Suhu & kelembaban dari DHT22 ditampilkan di LCD 1602 — kombinasi sensor dan display populer.",
+  "difficulty": "Menengah",
+  "tags": [
+    "Sensor",
+    "DHT22",
+    "LCD"
+  ],
+  "verified": true,
+  "bom": [
+    "1x Arduino Uno",
+    "1x DHT22",
+    "1x LCD 1602 (parallel)",
+    "1x Potensiometer 10k (kontras)",
+    "Kabel jumper"
+  ],
+  "wiring_guide": [
+    {
+      "komponen": "DHT22",
+      "pin_komponen": "VCC",
+      "koneksi_arduino": "5V"
+    },
+    {
+      "komponen": "DHT22",
+      "pin_komponen": "SDA",
+      "koneksi_arduino": "Pin 2"
+    },
+    {
+      "komponen": "DHT22",
+      "pin_komponen": "GND",
+      "koneksi_arduino": "GND"
+    },
+    {
+      "komponen": "LCD 1602",
+      "pin_komponen": "VSS, V0, RW, K",
+      "koneksi_arduino": "GND"
+    },
+    {
+      "komponen": "LCD 1602",
+      "pin_komponen": "VDD, A",
+      "koneksi_arduino": "5V"
+    },
+    {
+      "komponen": "LCD 1602",
+      "pin_komponen": "RS, E, D4-D7",
+      "koneksi_arduino": "Pin 12, 11, 5-2"
+    }
+  ],
+  "cpp_code": "// Proyek: Termometer LCD\n// Logika: DHT22 -> LCD 1602\n// Platform: Uno\n#include <LiquidCrystal.h>\n#include <DHT.h>\nLiquidCrystal lcd(12, 11, 5, 4, 3, 2);\n#define DHTPIN 6\n#define DHTTYPE DHT22\nDHT dht(DHTPIN, DHTTYPE);\n\nvoid setup() {\n  lcd.begin(16, 2);\n  dht.begin();\n}\n\nvoid loop() {\n  float h = dht.readHumidity();\n  float t = dht.readTemperature();\n  if (!isnan(h) && !isnan(t)) {\n    lcd.setCursor(0, 0); lcd.print(\"Suhu: \"); lcd.print(t); lcd.print(\" C\");\n    lcd.setCursor(0, 1); lcd.print(\"Lembab: \"); lcd.print(h); lcd.print(\"%\");\n  }\n  delay(2000);\n}",
+  "wokwi_diagram": "{\"version\":1,\"author\":\"ElektroDict\",\"editor\":\"wokwi\",\"parts\":[{\"type\":\"wokwi-arduino-uno\",\"id\":\"uno\",\"top\":0,\"left\":0,\"attrs\":{}},{\"type\":\"wokwi-dht22\",\"id\":\"dht\",\"top\":-130,\"left\":340,\"attrs\":{}},{\"type\":\"wokwi-lcd1602\",\"id\":\"lcd\",\"top\":-260,\"left\":340,\"attrs\":{\"pins\":\"full\"}}],\"connections\":[[\"dht:VCC\",\"uno:5V\",\"red\",[\"v0\"]],[\"dht:SDA\",\"uno:6\",\"green\",[\"v0\"]],[\"dht:GND\",\"uno:GND.1\",\"black\",[\"v0\"]],[\"lcd:VSS\",\"uno:GND.2\",\"black\",[\"v0\"]],[\"lcd:VDD\",\"uno:5V\",\"red\",[\"v0\"]],[\"lcd:RS\",\"uno:12\",\"yellow\",[\"v0\"]],[\"lcd:E\",\"uno:11\",\"yellow\",[\"v0\"]],[\"lcd:D4\",\"uno:5\",\"blue\",[\"v0\"]],[\"lcd:D5\",\"uno:4\",\"blue\",[\"v0\"]],[\"lcd:D6\",\"uno:3\",\"blue\",[\"v0\"]],[\"lcd:D7\",\"uno:2\",\"blue\",[\"v0\"]]]}",
+  "steps": [
+    {
+      "nama_komponen": "DHT22",
+      "alur_perakitan": "VCC ke 5V, data ke Pin 6, GND ke GND."
+    },
+    {
+      "nama_komponen": "LCD 1602",
+      "alur_perakitan": "RS ke 12, E ke 11, D4-D7 ke Pin 5-2, VSS/GND, VDD ke 5V."
+    },
+    {
+      "nama_komponen": "Uji coba",
+      "alur_perakitan": "Suhu & kelembaban tampil di LCD tiap 2 detik."
+    }
+  ]
+},
+  {
+  "id": "tpl-ntc-thermostat",
+  "title": "Termostat Otomatis (NTC)",
+  "desc": "Sensor NTC membaca suhu; relay menyala/mati untuk mengontrol beban seperti kipas atau pemanas sesuai ambang batas.",
+  "difficulty": "Menengah",
+  "tags": [
+    "Sensor",
+    "NTC",
+    "Relay",
+    "Otomasi"
+  ],
+  "verified": true,
+  "bom": [
+    "1x Arduino Uno",
+    "1x Sensor suhu NTC",
+    "1x Modul relay 1 kanal",
+    "Kabel jumper"
+  ],
+  "wiring_guide": [
+    {
+      "komponen": "NTC",
+      "pin_komponen": "VCC",
+      "koneksi_arduino": "5V"
+    },
+    {
+      "komponen": "NTC",
+      "pin_komponen": "OUT",
+      "koneksi_arduino": "A0"
+    },
+    {
+      "komponen": "NTC",
+      "pin_komponen": "GND",
+      "koneksi_arduino": "GND"
+    },
+    {
+      "komponen": "Relay",
+      "pin_komponen": "VCC",
+      "koneksi_arduino": "5V"
+    },
+    {
+      "komponen": "Relay",
+      "pin_komponen": "IN",
+      "koneksi_arduino": "Pin 8"
+    },
+    {
+      "komponen": "Relay",
+      "pin_komponen": "GND",
+      "koneksi_arduino": "GND"
+    }
+  ],
+  "cpp_code": "// Proyek: Termostat NTC\n// Logika: Suhu > ambang -> relay nyala\n// Platform: Uno\nint ntc = A0, relay = 8;\nint ambang = 30;\n\nvoid setup() {\n  pinMode(relay, OUTPUT);\n  Serial.begin(9600);\n}\n\nvoid loop() {\n  int adc = analogRead(ntc);\n  float suhu = map(adc, 0, 1023, 0, 100);  // kalibrasi sederhana\n  if (suhu > ambang) digitalWrite(relay, HIGH);\n  else digitalWrite(relay, LOW);\n  Serial.print(\"Suhu: \"); Serial.println(suhu);\n  delay(1000);\n}",
+  "wokwi_diagram": "{\"version\":1,\"author\":\"ElektroDict\",\"editor\":\"wokwi\",\"parts\":[{\"type\":\"wokwi-arduino-uno\",\"id\":\"uno\",\"top\":0,\"left\":0,\"attrs\":{}},{\"type\":\"wokwi-ntc-temperature-sensor\",\"id\":\"ntc\",\"top\":-130,\"left\":340,\"attrs\":{}},{\"type\":\"wokwi-relay-module\",\"id\":\"rel\",\"top\":-260,\"left\":340,\"attrs\":{}}],\"connections\":[[\"ntc:VCC\",\"uno:5V\",\"red\",[\"v0\"]],[\"ntc:OUT\",\"uno:A0\",\"green\",[\"v0\"]],[\"ntc:GND\",\"uno:GND.1\",\"black\",[\"v0\"]],[\"rel:VCC\",\"uno:5V\",\"red\",[\"v0\"]],[\"rel:IN\",\"uno:8\",\"yellow\",[\"v0\"]],[\"rel:GND\",\"uno:GND.2\",\"black\",[\"v0\"]]]}",
+  "steps": [
+    {
+      "nama_komponen": "NTC",
+      "alur_perakitan": "VCC ke 5V, OUT ke A0, GND ke GND."
+    },
+    {
+      "nama_komponen": "Relay",
+      "alur_perakitan": "VCC ke 5V, IN ke Pin 8, GND ke GND. Beban ke COM & NO."
+    },
+    {
+      "nama_komponen": "Uji coba",
+      "alur_perakitan": "Relay aktif saat suhu melewati ambang."
+    }
+  ]
+},
+  {
+  "id": "tpl-ds18b20",
+  "title": "Suhu Digital DS18B20",
+  "desc": "Sensor DS18B20 1-Wire mengukur suhu presisi dan mengirim data via satu kabel data saja.",
+  "difficulty": "Menengah",
+  "tags": [
+    "Sensor",
+    "DS18B20",
+    "1-Wire"
+  ],
+  "verified": true,
+  "bom": [
+    "1x Arduino Uno",
+    "1x DS18B20 (TO-92)",
+    "1x Resistor 4.7k Ohm (pull-up)",
+    "Kabel jumper"
+  ],
+  "wiring_guide": [
+    {
+      "komponen": "DS18B20",
+      "pin_komponen": "VCC",
+      "koneksi_arduino": "5V"
+    },
+    {
+      "komponen": "DS18B20",
+      "pin_komponen": "DQ",
+      "koneksi_arduino": "Pin 2 (via 4.7k ke 5V)"
+    },
+    {
+      "komponen": "DS18B20",
+      "pin_komponen": "GND",
+      "koneksi_arduino": "GND"
+    }
+  ],
+  "cpp_code": "// Proyek: Suhu Digital DS18B20\n// Logika: 1-Wire -> Serial\n// Platform: Uno\n#include <OneWire.h>\n#include <DallasTemperature.h>\n#define PIN 2\nOneWire oneWire(PIN);\nDallasTemperature sensor(&oneWire);\n\nvoid setup() {\n  Serial.begin(9600);\n  sensor.begin();\n}\n\nvoid loop() {\n  sensor.requestTemperatures();\n  float suhu = sensor.getTempCByIndex(0);\n  Serial.print(\"Suhu: \"); Serial.println(suhu);\n  delay(1000);\n}",
+  "wokwi_diagram": "{\"version\":1,\"author\":\"ElektroDict\",\"editor\":\"wokwi\",\"parts\":[{\"type\":\"wokwi-arduino-uno\",\"id\":\"uno\",\"top\":0,\"left\":0,\"attrs\":{}},{\"type\":\"wokwi-ds18b20\",\"id\":\"ds\",\"top\":-130,\"left\":340,\"attrs\":{}},{\"type\":\"wokwi-resistor\",\"id\":\"r1\",\"top\":-200,\"left\":340,\"attrs\":{\"value\":\"4.7k\"}}],\"connections\":[[\"ds:VCC\",\"uno:5V\",\"red\",[\"v0\"]],[\"ds:DQ\",\"uno:2\",\"green\",[\"v0\"]],[\"ds:GND\",\"uno:GND.1\",\"black\",[\"v0\"]],[\"r1:1\",\"uno:5V\",\"red\",[\"v0\"]],[\"r1:2\",\"ds:DQ\",\"green\",[\"v0\"]]]}",
+  "steps": [
+    {
+      "nama_komponen": "DS18B20",
+      "alur_perakitan": "VCC ke 5V, DQ ke Pin 2, GND ke GND."
+    },
+    {
+      "nama_komponen": "Pull-up",
+      "alur_perakitan": "Resistor 4.7k antara DQ dan 5V."
+    },
+    {
+      "nama_komponen": "Uji coba",
+      "alur_perakitan": "Suhu tampil di Serial Monitor tiap detik."
+    }
+  ]
+},
+  {
+  "id": "tpl-hx711-scale",
+  "title": "Timbangan Digital HX711",
+  "desc": "Modul HX711 + load cell menimbang beban dan menampilkan berat gram di Serial Monitor — dasar timbangan digital.",
+  "difficulty": "Sulit",
+  "tags": [
+    "Sensor",
+    "HX711",
+    "Load Cell"
+  ],
+  "verified": true,
+  "bom": [
+    "1x Arduino Uno",
+    "1x Modul HX711",
+    "1x Load cell 1kg",
+    "Kabel jumper"
+  ],
+  "wiring_guide": [
+    {
+      "komponen": "HX711",
+      "pin_komponen": "VCC",
+      "koneksi_arduino": "5V"
+    },
+    {
+      "komponen": "HX711",
+      "pin_komponen": "DT",
+      "koneksi_arduino": "Pin 3"
+    },
+    {
+      "komponen": "HX711",
+      "pin_komponen": "SCK",
+      "koneksi_arduino": "Pin 2"
+    },
+    {
+      "komponen": "HX711",
+      "pin_komponen": "GND",
+      "koneksi_arduino": "GND"
+    },
+    {
+      "komponen": "Load Cell",
+      "pin_komponen": "E+, E-, S+, S-",
+      "koneksi_arduino": "Screw terminal HX711"
+    }
+  ],
+  "cpp_code": "// Proyek: Timbangan Digital HX711\n// Logika: Load cell -> gram\n// Platform: Uno\n#include <HX711.h>\nHX711 timbangan;\nconst int DT = 3, SCK = 2;\nfloat kalibrasi = 2280.0;  // sesuaikan dengan beban standar\n\nvoid setup() {\n  Serial.begin(9600);\n  timbangan.begin(DT, SCK);\n  timbangan.set_scale(kalibrasi);\n  timbangan.tare();\n}\n\nvoid loop() {\n  if (timbangan.is_ready()) {\n    float gram = timbangan.get_units(5);\n    Serial.print(\"Berat: \"); Serial.print(gram); Serial.println(\" g\");\n  } else {\n    Serial.println(\"HX711 belum siap\");\n  }\n  delay(500);\n}",
+  "wokwi_diagram": "{\"version\":1,\"author\":\"ElektroDict\",\"editor\":\"wokwi\",\"parts\":[{\"type\":\"wokwi-arduino-uno\",\"id\":\"uno\",\"top\":0,\"left\":0,\"attrs\":{}},{\"type\":\"wokwi-hx711\",\"id\":\"hx\",\"top\":-130,\"left\":340,\"attrs\":{}}],\"connections\":[[\"hx:VCC\",\"uno:5V\",\"red\",[\"v0\"]],[\"hx:DT\",\"uno:3\",\"green\",[\"v0\"]],[\"hx:SCK\",\"uno:2\",\"yellow\",[\"v0\"]],[\"hx:GND\",\"uno:GND.1\",\"black\",[\"v0\"]]]}",
+  "steps": [
+    {
+      "nama_komponen": "HX711",
+      "alur_perakitan": "VCC ke 5V, DT ke Pin 3, SCK ke Pin 2, GND ke GND."
+    },
+    {
+      "nama_komponen": "Load Cell",
+      "alur_perakitan": "Sambung ke screw terminal HX711 (E+/E-/S+/S-)."
+    },
+    {
+      "nama_komponen": "Kalibrasi",
+      "alur_perakitan": "Ubah nilai kalibrasi dengan beban standar yang diketahui."
+    }
+  ]
+},
+  {
+  "id": "tpl-mpu6050-tilt",
+  "title": "Servo Pengikut Kemiringan",
+  "desc": "MPU6050 mendeteksi kemiringan sumbu dan menggerakkan servo agar selalu tegak — dasar stabilisasi gimbal.",
+  "difficulty": "Sulit",
+  "tags": [
+    "Sensor",
+    "MPU6050",
+    "Servo",
+    "I2C"
+  ],
+  "verified": true,
+  "bom": [
+    "1x Arduino Uno",
+    "1x MPU6050",
+    "1x Servo SG90",
+    "Kabel jumper"
+  ],
+  "wiring_guide": [
+    {
+      "komponen": "MPU6050",
+      "pin_komponen": "VCC",
+      "koneksi_arduino": "5V"
+    },
+    {
+      "komponen": "MPU6050",
+      "pin_komponen": "GND",
+      "koneksi_arduino": "GND"
+    },
+    {
+      "komponen": "MPU6050",
+      "pin_komponen": "SCL",
+      "koneksi_arduino": "A5 (SCL)"
+    },
+    {
+      "komponen": "MPU6050",
+      "pin_komponen": "SDA",
+      "koneksi_arduino": "A4 (SDA)"
+    },
+    {
+      "komponen": "MPU6050",
+      "pin_komponen": "INT",
+      "koneksi_arduino": "Pin 3"
+    },
+    {
+      "komponen": "Servo",
+      "pin_komponen": "V+",
+      "koneksi_arduino": "5V"
+    },
+    {
+      "komponen": "Servo",
+      "pin_komponen": "PWM",
+      "koneksi_arduino": "Pin 9"
+    },
+    {
+      "komponen": "Servo",
+      "pin_komponen": "GND",
+      "koneksi_arduino": "GND"
+    }
+  ],
+  "cpp_code": "// Proyek: Servo Kemiringan\n// Logika: MPU6050 -> servo\n// Platform: Uno\n#include <Wire.h>\n#include <Servo.h>\nServo servo;\nconst int addr = 0x68;\n\nvoid setup() {\n  Wire.begin();\n  servo.attach(9);\n  Wire.beginTransmission(addr);\n  Wire.write(0x6B);\n  Wire.write(0);\n  Wire.endTransmission();\n}\n\nvoid loop() {\n  Wire.beginTransmission(addr);\n  Wire.write(0x3B);\n  Wire.endTransmission(false);\n  Wire.requestFrom(addr, 6, true);\n  int16_t ax = Wire.read() << 8 | Wire.read();\n  int16_t ay = Wire.read() << 8 | Wire.read();\n  int16_t az = Wire.read() << 8 | Wire.read();\n  long sudut = atan2(-ax, az) * 180 / PI;\n  int pos = map(sudut, -90, 90, 0, 180);\n  servo.write(constrain(pos, 0, 180));\n  delay(50);\n}",
+  "wokwi_diagram": "{\"version\":1,\"author\":\"ElektroDict\",\"editor\":\"wokwi\",\"parts\":[{\"type\":\"wokwi-arduino-uno\",\"id\":\"uno\",\"top\":0,\"left\":0,\"attrs\":{}},{\"type\":\"wokwi-mpu6050\",\"id\":\"imu\",\"top\":-120,\"left\":300,\"attrs\":{}},{\"type\":\"wokwi-servo\",\"id\":\"servo\",\"top\":-120,\"left\":460,\"attrs\":{}}],\"connections\":[[\"imu:VCC\",\"uno:5V\",\"red\",[\"v0\"]],[\"imu:GND\",\"uno:GND.1\",\"black\",[\"v0\"]],[\"imu:SCL\",\"uno:A5\",\"yellow\",[\"v0\"]],[\"imu:SDA\",\"uno:A4\",\"green\",[\"v0\"]],[\"imu:INT\",\"uno:3\",\"blue\",[\"v0\"]],[\"servo:V+\",\"uno:5V\",\"red\",[\"v0\"]],[\"servo:PWM\",\"uno:9\",\"yellow\",[\"v0\"]],[\"servo:GND\",\"uno:GND.2\",\"black\",[\"v0\"]]]}",
+  "steps": [
+    {
+      "nama_komponen": "MPU6050",
+      "alur_perakitan": "VCC ke 5V, GND ke GND, SCL ke A5, SDA ke A4."
+    },
+    {
+      "nama_komponen": "Interupsi",
+      "alur_perakitan": "Hubungkan INT ke Pin 3 (opsional)."
+    },
+    {
+      "nama_komponen": "Servo",
+      "alur_perakitan": "V+ ke 5V, PWM ke Pin 9, GND ke GND."
+    },
+    {
+      "nama_komponen": "Uji coba",
+      "alur_perakitan": "Miringkan sensor; servo mengikuti arah kemiringan."
+    }
+  ]
+},
+  {
+  "id": "tpl-esp32-firebase-dht",
+  "title": "IoT Suhu & Kelembaban Firebase",
+  "desc": "ESP32 membaca DHT22 lalu mengirim suhu & kelembaban ke Firebase Realtime Database — pantau dari dashboard web kapan saja.",
+  "difficulty": "Menengah",
+  "tags": [
+    "ESP32",
+    "Firebase",
+    "IoT",
+    "DHT22"
+  ],
+  "verified": true,
+  "board": "board-esp32-devkit-c-v4",
+  "bom": [
+    "1x ESP32 DevKitC V4",
+    "1x Sensor DHT22",
+    "Kabel jumper"
+  ],
+  "firebase_setup": [
+    "Buka console.firebase.google.com → buat project baru (gratis).",
+    "Build → Realtime Database → Create Database (mode test agar mudah dicoba).",
+    "Salin URL database (mis. https://xyz-default-rtdb.firebaseio.com) → isi FIREBASE_HOST.",
+    "Project settings → Service accounts → Database secrets → salin secret → isi FIREBASE_AUTH.",
+    "Ganti WIFI_SSID & WIFI_PASSWORD dengan WiFi kamu (di simulator Wokwi: SSID 'Wokwi-GUEST', password kosong)."
+  ],
+  "wiring_guide": [
+    {
+      "komponen": "DHT22",
+      "pin_komponen": "VCC",
+      "koneksi_arduino": "3V3"
+    },
+    {
+      "komponen": "DHT22",
+      "pin_komponen": "SDA (data)",
+      "koneksi_arduino": "GPIO 4"
+    },
+    {
+      "komponen": "DHT22",
+      "pin_komponen": "GND",
+      "koneksi_arduino": "GND"
+    }
+  ],
+  "cpp_code": "// ===== IoT Suhu & Kelembaban → Firebase =====\n// ESP32 DevKitC V4 + DHT22 + Firebase Realtime Database\n// INSTALL: Library Manager -> Firebase ESP32 Client by Mobizt (v4.3.x)\n// Isi 4 bagian bertanda TODO di bawah ini.\n\n#include <WiFi.h>\n#include <FirebaseESP32.h>\n#include <DHT.h>\n\n// ===== TODO 1: WiFi kamu =====\n// Di simulator Wokwi: SSID \"Wokwi-GUEST\", password \"\" (kosong)\n#define WIFI_SSID     \"Wokwi-GUEST\"\n#define WIFI_PASSWORD \"\"\n\n// ===== TODO 2: Firebase =====\n#define FIREBASE_HOST \"..alamat-database-firebase..\"   // mis. https://proyekmu-default-rtdb.firebaseio.com\n#define FIREBASE_AUTH \"..secret-database-firebase..\"   // Database secrets (Project settings)\n\n#define DHTPIN 4\n#define DHTTYPE DHT22\nDHT dht(DHTPIN, DHTTYPE);\n\nFirebaseData fbdo;\nFirebaseAuth auth;\nFirebaseConfig config;\n\nvoid setup() {\n  Serial.begin(115200);\n  dht.begin();\n\n  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);\n  Serial.print(\"Menghubungkan WiFi\");\n  while (WiFi.status() != WL_CONNECTED) { delay(300); Serial.print(\".\"); }\n  Serial.println(\"\\nWiFi OK - IP: \" + WiFi.localIP().toString());\n\n  config.host = FIREBASE_HOST;\n  config.signer.tokens.legacy_token = FIREBASE_AUTH;\n  Firebase.begin(&config, &auth);\n  Firebase.reconnectWiFi(true);\n}\n\nvoid loop() {\n  float h = dht.readHumidity();\n  float t = dht.readTemperature();\n  if (isnan(h) || isnan(t)) { Serial.println(\"Gagal baca DHT22\"); delay(2000); return; }\n\n  // Kirim ke Firebase (dashboard membaca path ini)\n  Firebase.setFloat(fbdo, \"/sensor/suhu\", t);\n  Firebase.setFloat(fbdo, \"/sensor/kelembaban\", h);\n  Firebase.setString(fbdo, \"/sensor/status\", \"online\");\n\n  Serial.printf(\"Suhu: %.1f C | Kelembaban: %.1f %%\\n\", t, h);\n  delay(5000);\n}\n",
+  "wokwi_diagram": "{\"version\":1,\"author\":\"ElektroDict\",\"editor\":\"wokwi\",\"parts\":[{\"type\":\"board-esp32-devkit-c-v4\",\"id\":\"esp\",\"top\":0,\"left\":0,\"attrs\":{}},{\"type\":\"wokwi-dht22\",\"id\":\"dht\",\"top\":-130,\"left\":340,\"attrs\":{}},{\"type\":\"wokwi-wifi-ap\",\"id\":\"ap\",\"top\":-260,\"left\":0,\"attrs\":{\"ssid\":\"Wokwi-GUEST\",\"password\":\"\"}}],\"connections\":[[\"dht:VCC\",\"esp:3V3\",\"red\",[\"v0\"]],[\"dht:SDA\",\"esp:4\",\"green\",[\"v0\"]],[\"dht:GND\",\"esp:GND.1\",\"black\",[\"v0\"]]]}",
+  "steps": [
+    {
+      "nama_komponen": "DHT22",
+      "alur_perakitan": "VCC ke 3V3, data (SDA) ke GPIO 4, GND ke GND."
+    },
+    {
+      "nama_komponen": "WiFi AP (simulator)",
+      "alur_perakitan": "Part wokwi-wifi-ap menyediakan jaringan 'Wokwi-GUEST' (bebas). Untuk hardware asli, ganti WIFI_SSID/PASSWORD."
+    },
+    {
+      "nama_komponen": "Firebase",
+      "alur_perakitan": "Isi FIREBASE_HOST & FIREBASE_AUTH di kode, lalu install library Firebase ESP32 Client."
+    },
+    {
+      "nama_komponen": "Uji coba",
+      "alur_perakitan": "Buka Realtime Database → path /sensor — suhu & kelembaban ter-update tiap 5 detik."
+    }
+  ]
+},
+  {
+  "id": "tpl-esp32-firebase-ultrasonic",
+  "title": "Monitor Jarak + Alarm Firebase",
+  "desc": "HC-SR04 mengukur jarak, buzzer berbunyi jika ada objek terlalu dekat, dan data jarak dikirim ke Firebase untuk dashboard.",
+  "difficulty": "Menengah",
+  "tags": [
+    "ESP32",
+    "Firebase",
+    "Ultrasonik",
+    "Buzzer"
+  ],
+  "verified": true,
+  "board": "board-esp32-devkit-c-v4",
+  "bom": [
+    "1x ESP32 DevKitC V4",
+    "1x HC-SR04",
+    "1x Buzzer aktif",
+    "Kabel jumper"
+  ],
+  "firebase_setup": [
+    "Buat project Firebase gratis → Realtime Database mode test.",
+    "Salin URL database → isi FIREBASE_HOST.",
+    "Database secrets → isi FIREBASE_AUTH.",
+    "Ganti WiFi sesuai jaringan kamu (simulator: 'Wokwi-GUEST')."
+  ],
+  "wiring_guide": [
+    {
+      "komponen": "HC-SR04",
+      "pin_komponen": "VCC",
+      "koneksi_arduino": "5V"
+    },
+    {
+      "komponen": "HC-SR04",
+      "pin_komponen": "TRIG",
+      "koneksi_arduino": "GPIO 5"
+    },
+    {
+      "komponen": "HC-SR04",
+      "pin_komponen": "ECHO",
+      "koneksi_arduino": "GPIO 18"
+    },
+    {
+      "komponen": "HC-SR04",
+      "pin_komponen": "GND",
+      "koneksi_arduino": "GND"
+    },
+    {
+      "komponen": "Buzzer",
+      "pin_komponen": "2 (+)",
+      "koneksi_arduino": "GPIO 19"
+    },
+    {
+      "komponen": "Buzzer",
+      "pin_komponen": "1 (-)",
+      "koneksi_arduino": "GND"
+    }
+  ],
+  "cpp_code": "// ===== Monitor Jarak + Alarm → Firebase =====\n// ESP32 + HC-SR04 + Buzzer + Firebase Realtime Database\n// INSTALL: Firebase ESP32 Client by Mobizt\n\n#include <WiFi.h>\n#include <FirebaseESP32.h>\n\n#define WIFI_SSID     \"Wokwi-GUEST\"   // TODO: ganti WiFi kamu\n#define WIFI_PASSWORD \"\"\n#define FIREBASE_HOST \"..alamat-database-firebase..\"  // TODO\n#define FIREBASE_AUTH \"..secret-database-firebase..\"  // TODO\n\n#define TRIG 5\n#define ECHO 18\n#define BUZZ 19\n#define BATAS_BAHAYA 30  // cm\n\nFirebaseData fbdo;\nFirebaseAuth auth;\nFirebaseConfig config;\n\nfloat bacaJarak() {\n  digitalWrite(TRIG, LOW); delayMicroseconds(2);\n  digitalWrite(TRIG, HIGH); delayMicroseconds(10);\n  digitalWrite(TRIG, LOW);\n  long durasi = pulseIn(ECHO, HIGH);\n  return durasi * 0.034 / 2;\n}\n\nvoid setup() {\n  Serial.begin(115200);\n  pinMode(TRIG, OUTPUT); pinMode(ECHO, INPUT); pinMode(BUZZ, OUTPUT);\n\n  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);\n  while (WiFi.status() != WL_CONNECTED) { delay(300); Serial.print(\".\"); }\n  Serial.println(\"\\nWiFi OK\");\n\n  config.host = FIREBASE_HOST;\n  config.signer.tokens.legacy_token = FIREBASE_AUTH;\n  Firebase.begin(&config, &auth);\n  Firebase.reconnectWiFi(true);\n}\n\nvoid loop() {\n  float cm = bacaJarak();\n  bool bahaya = (cm > 0 && cm < BATAS_BAHAYA);\n  digitalWrite(BUZZ, bahaya ? HIGH : LOW);\n\n  Firebase.setFloat(fbdo, \"/jarak/cm\", cm);\n  Firebase.setBool(fbdo, \"/jarak/bahaya\", bahaya);\n\n  Serial.printf(\"Jarak: %.1f cm | Bahaya: %s\\n\", cm, bahaya ? \"YA\" : \"tidak\");\n  delay(1000);\n}\n",
+  "wokwi_diagram": "{\"version\":1,\"author\":\"ElektroDict\",\"editor\":\"wokwi\",\"parts\":[{\"type\":\"board-esp32-devkit-c-v4\",\"id\":\"esp\",\"top\":0,\"left\":0,\"attrs\":{}},{\"type\":\"wokwi-hc-sr04\",\"id\":\"ultra\",\"top\":-130,\"left\":340,\"attrs\":{}},{\"type\":\"wokwi-buzzer\",\"id\":\"buz\",\"top\":-260,\"left\":340,\"attrs\":{}},{\"type\":\"wokwi-wifi-ap\",\"id\":\"ap\",\"top\":-260,\"left\":0,\"attrs\":{\"ssid\":\"Wokwi-GUEST\",\"password\":\"\"}}],\"connections\":[[\"ultra:VCC\",\"esp:5V\",\"red\",[\"v0\"]],[\"ultra:TRIG\",\"esp:5\",\"green\",[\"v0\"]],[\"ultra:ECHO\",\"esp:18\",\"yellow\",[\"v0\"]],[\"ultra:GND\",\"esp:GND.1\",\"black\",[\"v0\"]],[\"buz:2\",\"esp:19\",\"blue\",[\"v0\"]],[\"buz:1\",\"esp:GND.2\",\"black\",[\"v0\"]]]}",
+  "steps": [
+    {
+      "nama_komponen": "HC-SR04",
+      "alur_perakitan": "VCC ke 5V, TRIG ke GPIO 5, ECHO ke GPIO 18, GND ke GND."
+    },
+    {
+      "nama_komponen": "Buzzer",
+      "alur_perakitan": "Kaki (+) ke GPIO 19, kaki (-) ke GND."
+    },
+    {
+      "nama_komponen": "Firebase",
+      "alur_perakitan": "Isi host & secret Firebase, ganti WiFi bila perlu."
+    },
+    {
+      "nama_komponen": "Uji coba",
+      "alur_perakitan": "Dekatkan objek ke sensor — buzzer berbunyi < 30 cm dan /jarak/bahaya jadi true di Firebase."
+    }
+  ]
+},
+  {
+  "id": "tpl-esp32-firebase-pir",
+  "title": "Deteksi Gerakan + Notifikasi",
+  "desc": "Sensor PIR mendeteksi gerakan, LED menyala sebagai indikator, dan status gerakan dikirim ke Firebase untuk dashboard keamanan rumah.",
+  "difficulty": "Mudah",
+  "tags": [
+    "ESP32",
+    "Firebase",
+    "PIR",
+    "Keamanan"
+  ],
+  "verified": true,
+  "board": "board-esp32-devkit-c-v4",
+  "bom": [
+    "1x ESP32 DevKitC V4",
+    "1x Sensor PIR HC-SR501",
+    "1x LED merah",
+    "1x Resistor 220 Ohm",
+    "Kabel jumper"
+  ],
+  "firebase_setup": [
+    "Buat project Firebase gratis → Realtime Database mode test.",
+    "Isi FIREBASE_HOST & FIREBASE_AUTH di kode.",
+    "Ganti WiFi sesuai jaringan kamu (simulator: 'Wokwi-GUEST')."
+  ],
+  "wiring_guide": [
+    {
+      "komponen": "PIR",
+      "pin_komponen": "VCC",
+      "koneksi_arduino": "3V3"
+    },
+    {
+      "komponen": "PIR",
+      "pin_komponen": "OUT",
+      "koneksi_arduino": "GPIO 26"
+    },
+    {
+      "komponen": "PIR",
+      "pin_komponen": "GND",
+      "koneksi_arduino": "GND"
+    },
+    {
+      "komponen": "LED (via 220 Ohm)",
+      "pin_komponen": "A",
+      "koneksi_arduino": "GPIO 13"
+    },
+    {
+      "komponen": "LED",
+      "pin_komponen": "C",
+      "koneksi_arduino": "GND"
+    }
+  ],
+  "cpp_code": "// ===== Deteksi Gerakan → Firebase =====\n// ESP32 + PIR + LED + Firebase Realtime Database\n// INSTALL: Firebase ESP32 Client by Mobizt\n\n#include <WiFi.h>\n#include <FirebaseESP32.h>\n\n#define WIFI_SSID     \"Wokwi-GUEST\"   // TODO: ganti WiFi kamu\n#define WIFI_PASSWORD \"\"\n#define FIREBASE_HOST \"..alamat-database-firebase..\"  // TODO\n#define FIREBASE_AUTH \"..secret-database-firebase..\"  // TODO\n\n#define PIR_PIN 26\n#define LED_PIN 13\n\nFirebaseData fbdo;\nFirebaseAuth auth;\nFirebaseConfig config;\n\nvoid setup() {\n  Serial.begin(115200);\n  pinMode(PIR_PIN, INPUT); pinMode(LED_PIN, OUTPUT);\n\n  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);\n  while (WiFi.status() != WL_CONNECTED) { delay(300); Serial.print(\".\"); }\n  Serial.println(\"\\nWiFi OK\");\n\n  config.host = FIREBASE_HOST;\n  config.signer.tokens.legacy_token = FIREBASE_AUTH;\n  Firebase.begin(&config, &auth);\n  Firebase.reconnectWiFi(true);\n\n  Firebase.setString(fbdo, \"/keamanan/status\", \"siap\");\n}\n\nvoid loop() {\n  int gerakan = digitalRead(PIR_PIN);\n  digitalWrite(LED_PIN, gerakan ? HIGH : LOW);\n\n  if (gerakan) {\n    Firebase.setBool(fbdo, \"/keamanan/gerakan\", true);\n    Firebase.setString(fbdo, \"/keamanan/waktu_terakhir\", \"ada gerakan\");\n    Serial.println(\"Gerakan terdeteksi!\");\n  } else {\n    Firebase.setBool(fbdo, \"/keamanan/gerakan\", false);\n  }\n  delay(500);\n}\n",
+  "wokwi_diagram": "{\"version\":1,\"author\":\"ElektroDict\",\"editor\":\"wokwi\",\"parts\":[{\"type\":\"board-esp32-devkit-c-v4\",\"id\":\"esp\",\"top\":0,\"left\":0,\"attrs\":{}},{\"type\":\"wokwi-pir-motion-sensor\",\"id\":\"pir\",\"top\":-130,\"left\":340,\"attrs\":{}},{\"type\":\"wokwi-led\",\"id\":\"led\",\"top\":-130,\"left\":520,\"attrs\":{\"color\":\"red\"}},{\"type\":\"wokwi-resistor\",\"id\":\"r1\",\"top\":-50,\"left\":520,\"attrs\":{\"value\":\"220\"}},{\"type\":\"wokwi-wifi-ap\",\"id\":\"ap\",\"top\":-260,\"left\":0,\"attrs\":{\"ssid\":\"Wokwi-GUEST\",\"password\":\"\"}}],\"connections\":[[\"pir:VCC\",\"esp:3V3\",\"red\",[\"v0\"]],[\"pir:OUT\",\"esp:26\",\"green\",[\"v0\"]],[\"pir:GND\",\"esp:GND.1\",\"black\",[\"v0\"]],[\"esp:13\",\"r1:1\",\"yellow\",[\"v0\"]],[\"r1:2\",\"led:A\",\"yellow\",[\"v0\"]],[\"led:C\",\"esp:GND.2\",\"black\",[\"v0\"]]]}",
+  "steps": [
+    {
+      "nama_komponen": "PIR",
+      "alur_perakitan": "VCC ke 3V3, OUT ke GPIO 26, GND ke GND."
+    },
+    {
+      "nama_komponen": "LED indikator",
+      "alur_perakitan": "Anoda via resistor 220 Ohm ke GPIO 13, katoda ke GND."
+    },
+    {
+      "nama_komponen": "Firebase",
+      "alur_perakitan": "Isi host & secret Firebase, ganti WiFi bila perlu."
+    },
+    {
+      "nama_komponen": "Uji coba",
+      "alur_perakitan": "Lewat di depan sensor — LED menyala dan /keamanan/gerakan jadi true di dashboard."
+    }
+  ]
+},
+  {
+  "id": "tpl-esp32-firebase-ldr",
+  "title": "Lampu Otomatis Sensor Cahaya",
+  "desc": "LDR mendeteksi intensitas cahaya; ESP32 menyalakan LED saat gelap dan mengirim data ke Firebase untuk dashboard monitoring.",
+  "difficulty": "Mudah",
+  "tags": [
+    "ESP32",
+    "Firebase",
+    "LDR",
+    "Otomatis"
+  ],
+  "verified": true,
+  "board": "board-esp32-devkit-c-v4",
+  "bom": [
+    "1x ESP32 DevKitC V4",
+    "1x Modul sensor cahaya (LDR)",
+    "1x LED",
+    "1x Resistor 220 Ohm",
+    "Kabel jumper"
+  ],
+  "firebase_setup": [
+    "Buat project Firebase gratis → Realtime Database mode test.",
+    "Isi FIREBASE_HOST & FIREBASE_AUTH di kode.",
+    "Ganti WiFi sesuai jaringan kamu (simulator: 'Wokwi-GUEST')."
+  ],
+  "wiring_guide": [
+    {
+      "komponen": "Modul LDR",
+      "pin_komponen": "VCC",
+      "koneksi_arduino": "3V3"
+    },
+    {
+      "komponen": "Modul LDR",
+      "pin_komponen": "AO",
+      "koneksi_arduino": "GPIO 34 (ADC)"
+    },
+    {
+      "komponen": "Modul LDR",
+      "pin_komponen": "GND",
+      "koneksi_arduino": "GND"
+    },
+    {
+      "komponen": "LED (via 220 Ohm)",
+      "pin_komponen": "A",
+      "koneksi_arduino": "GPIO 25"
+    },
+    {
+      "komponen": "LED",
+      "pin_komponen": "C",
+      "koneksi_arduino": "GND"
+    }
+  ],
+  "cpp_code": "// ===== Lampu Otomatis Sensor Cahaya → Firebase =====\n// ESP32 + modul LDR + LED + Firebase Realtime Database\n// INSTALL: Firebase ESP32 Client by Mobizt\n\n#include <WiFi.h>\n#include <FirebaseESP32.h>\n\n#define WIFI_SSID     \"Wokwi-GUEST\"   // TODO: ganti WiFi kamu\n#define WIFI_PASSWORD \"\"\n#define FIREBASE_HOST \"..alamat-database-firebase..\"  // TODO\n#define FIREBASE_AUTH \"..secret-database-firebase..\"  // TODO\n\n#define LDR_PIN 34   // GPIO 34 = ADC (input saja)\n#define LED_PIN 25\n#define AMBANG_GELAP 2000  // nilai ADC di bawah ini = gelap\n\nFirebaseData fbdo;\nFirebaseAuth auth;\nFirebaseConfig config;\n\nvoid setup() {\n  Serial.begin(115200);\n  pinMode(LED_PIN, OUTPUT);\n\n  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);\n  while (WiFi.status() != WL_CONNECTED) { delay(300); Serial.print(\".\"); }\n  Serial.println(\"\\nWiFi OK\");\n\n  config.host = FIREBASE_HOST;\n  config.signer.tokens.legacy_token = FIREBASE_AUTH;\n  Firebase.begin(&config, &auth);\n  Firebase.reconnectWiFi(true);\n}\n\nvoid loop() {\n  int cahaya = analogRead(LDR_PIN);  // kecil = gelap\n  bool lampu = (cahaya < AMBANG_GELAP);\n  digitalWrite(LED_PIN, lampu ? HIGH : LOW);\n\n  Firebase.setInt(fbdo, \"/cahaya/nilai_adc\", cahaya);\n  Firebase.setBool(fbdo, \"/cahaya/lampu_nyala\", lampu);\n\n  Serial.printf(\"Cahaya: %d | Lampu: %s\\n\", cahaya, lampu ? \"NYALA\" : \"mati\");\n  delay(1000);\n}\n",
+  "wokwi_diagram": "{\"version\":1,\"author\":\"ElektroDict\",\"editor\":\"wokwi\",\"parts\":[{\"type\":\"board-esp32-devkit-c-v4\",\"id\":\"esp\",\"top\":0,\"left\":0,\"attrs\":{}},{\"type\":\"wokwi-photoresistor-sensor\",\"id\":\"ldr\",\"top\":-130,\"left\":340,\"attrs\":{}},{\"type\":\"wokwi-led\",\"id\":\"led\",\"top\":-130,\"left\":520,\"attrs\":{\"color\":\"white\"}},{\"type\":\"wokwi-resistor\",\"id\":\"r1\",\"top\":-50,\"left\":520,\"attrs\":{\"value\":\"220\"}},{\"type\":\"wokwi-wifi-ap\",\"id\":\"ap\",\"top\":-260,\"left\":0,\"attrs\":{\"ssid\":\"Wokwi-GUEST\",\"password\":\"\"}}],\"connections\":[[\"ldr:VCC\",\"esp:3V3\",\"red\",[\"v0\"]],[\"ldr:AO\",\"esp:34\",\"green\",[\"v0\"]],[\"ldr:GND\",\"esp:GND.1\",\"black\",[\"v0\"]],[\"esp:25\",\"r1:1\",\"yellow\",[\"v0\"]],[\"r1:2\",\"led:A\",\"yellow\",[\"v0\"]],[\"led:C\",\"esp:GND.2\",\"black\",[\"v0\"]]]}",
+  "steps": [
+    {
+      "nama_komponen": "Modul LDR",
+      "alur_perakitan": "VCC ke 3V3, AO ke GPIO 34, GND ke GND."
+    },
+    {
+      "nama_komponen": "LED",
+      "alur_perakitan": "Anoda via resistor 220 Ohm ke GPIO 25, katoda ke GND."
+    },
+    {
+      "nama_komponen": "Firebase",
+      "alur_perakitan": "Isi host & secret Firebase, ganti WiFi bila perlu."
+    },
+    {
+      "nama_komponen": "Uji coba",
+      "alur_perakitan": "Tutup sensor LDR (gelapkan) — LED menyala dan /cahaya/lampu_nyala jadi true."
+    }
+  ]
+},
+  {
+  "id": "tpl-esp32-firebase-thermostat",
+  "title": "Termostat + Relay Firebase",
+  "desc": "NTC membaca suhu; relay memutus/menyambung beban (mis. kipas/pemanas) otomatis dan statusnya dikirim ke Firebase.",
+  "difficulty": "Menengah",
+  "tags": [
+    "ESP32",
+    "Firebase",
+    "NTC",
+    "Relay",
+    "Otomasi"
+  ],
+  "verified": true,
+  "board": "board-esp32-devkit-c-v4",
+  "bom": [
+    "1x ESP32 DevKitC V4",
+    "1x Sensor suhu NTC",
+    "1x Modul relay 1 kanal",
+    "Kabel jumper"
+  ],
+  "firebase_setup": [
+    "Buat project Firebase gratis → Realtime Database mode test.",
+    "Isi FIREBASE_HOST & FIREBASE_AUTH di kode.",
+    "Ganti WiFi sesuai jaringan kamu (simulator: 'Wokwi-GUEST')."
+  ],
+  "wiring_guide": [
+    {
+      "komponen": "NTC",
+      "pin_komponen": "VCC",
+      "koneksi_arduino": "3V3"
+    },
+    {
+      "komponen": "NTC",
+      "pin_komponen": "OUT",
+      "koneksi_arduino": "GPIO 35 (ADC)"
+    },
+    {
+      "komponen": "NTC",
+      "pin_komponen": "GND",
+      "koneksi_arduino": "GND"
+    },
+    {
+      "komponen": "Relay",
+      "pin_komponen": "VCC",
+      "koneksi_arduino": "5V"
+    },
+    {
+      "komponen": "Relay",
+      "pin_komponen": "IN",
+      "koneksi_arduino": "GPIO 25"
+    },
+    {
+      "komponen": "Relay",
+      "pin_komponen": "GND",
+      "koneksi_arduino": "GND"
+    }
+  ],
+  "cpp_code": "// ===== Termostat + Relay → Firebase =====\n// ESP32 + NTC + relay + Firebase Realtime Database\n// INSTALL: Firebase ESP32 Client by Mobizt\n// Kalibrasi: nilai ADC NTC -> suhu perkiraan (sesuaikan dengan datasheet NTC kamu)\n\n#include <WiFi.h>\n#include <FirebaseESP32.h>\n\n#define WIFI_SSID     \"Wokwi-GUEST\"   // TODO: ganti WiFi kamu\n#define WIFI_PASSWORD \"\"\n#define FIREBASE_HOST \"..alamat-database-firebase..\"  // TODO\n#define FIREBASE_AUTH \"..secret-database-firebase..\"  // TODO\n\n#define NTC_PIN 35\n#define RELAY_PIN 25\n#define SUHU_TARGET 30.0  // nyalakan beban di atas 30 C\n\nFirebaseData fbdo;\nFirebaseAuth auth;\nFirebaseConfig config;\n\nfloat bacaSuhu() {\n  int adc = analogRead(NTC_PIN);\n  // Konversi sederhana ADC -> suhu (kalibrasi opsional di sini)\n  return map(adc, 0, 4095, 0, 100);\n}\n\nvoid setup() {\n  Serial.begin(115200);\n  pinMode(RELAY_PIN, OUTPUT);\n  digitalWrite(RELAY_PIN, LOW);\n\n  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);\n  while (WiFi.status() != WL_CONNECTED) { delay(300); Serial.print(\".\"); }\n  Serial.println(\"\\nWiFi OK\");\n\n  config.host = FIREBASE_HOST;\n  config.signer.tokens.legacy_token = FIREBASE_AUTH;\n  Firebase.begin(&config, &auth);\n  Firebase.reconnectWiFi(true);\n}\n\nvoid loop() {\n  float suhu = bacaSuhu();\n  bool nyala = (suhu > SUHU_TARGET);\n  digitalWrite(RELAY_PIN, nyala ? HIGH : LOW);\n\n  Firebase.setFloat(fbdo, \"/termostat/suhu\", suhu);\n  Firebase.setBool(fbdo, \"/termostat/beban_nyala\", nyala);\n\n  Serial.printf(\"Suhu: %.1f C | Beban: %s\\n\", suhu, nyala ? \"NYALA\" : \"mati\");\n  delay(2000);\n}\n",
+  "wokwi_diagram": "{\"version\":1,\"author\":\"ElektroDict\",\"editor\":\"wokwi\",\"parts\":[{\"type\":\"board-esp32-devkit-c-v4\",\"id\":\"esp\",\"top\":0,\"left\":0,\"attrs\":{}},{\"type\":\"wokwi-ntc-temperature-sensor\",\"id\":\"ntc\",\"top\":-130,\"left\":340,\"attrs\":{}},{\"type\":\"wokwi-relay-module\",\"id\":\"rel\",\"top\":-130,\"left\":520,\"attrs\":{}},{\"type\":\"wokwi-wifi-ap\",\"id\":\"ap\",\"top\":-260,\"left\":0,\"attrs\":{\"ssid\":\"Wokwi-GUEST\",\"password\":\"\"}}],\"connections\":[[\"ntc:VCC\",\"esp:3V3\",\"red\",[\"v0\"]],[\"ntc:OUT\",\"esp:35\",\"green\",[\"v0\"]],[\"ntc:GND\",\"esp:GND.1\",\"black\",[\"v0\"]],[\"rel:VCC\",\"esp:5V\",\"red\",[\"v0\"]],[\"rel:IN\",\"esp:25\",\"yellow\",[\"v0\"]],[\"rel:GND\",\"esp:GND.2\",\"black\",[\"v0\"]]]}",
+  "steps": [
+    {
+      "nama_komponen": "NTC",
+      "alur_perakitan": "VCC ke 3V3, OUT ke GPIO 35, GND ke GND."
+    },
+    {
+      "nama_komponen": "Relay",
+      "alur_perakitan": "VCC ke 5V, IN ke GPIO 25, GND ke GND. Beban (kipas/pemanas) ke COM & NO."
+    },
+    {
+      "nama_komponen": "Firebase",
+      "alur_perakitan": "Isi host & secret Firebase, ganti WiFi bila perlu."
+    },
+    {
+      "nama_komponen": "Uji coba",
+      "alur_perakitan": "Naikkan suhu di atas target — relay aktif dan /termostat/beban_nyala jadi true."
+    }
+  ]
+},
+  {
+  "id": "tpl-esp32-firebase-servo",
+  "title": "Servo Kendali Jarak Jauh",
+  "desc": "Kontrol posisi servo dari dashboard Firebase — tulis nilai 0-180 di path /servo/sudut, dan ESP32 langsung menggerakkan servo.",
+  "difficulty": "Menengah",
+  "tags": [
+    "ESP32",
+    "Firebase",
+    "Servo",
+    "Kontrol"
+  ],
+  "verified": true,
+  "board": "board-esp32-devkit-c-v4",
+  "bom": [
+    "1x ESP32 DevKitC V4",
+    "1x Servo SG90",
+    "Kabel jumper"
+  ],
+  "firebase_setup": [
+    "Buat project Firebase gratis → Realtime Database mode test.",
+    "Isi FIREBASE_HOST & FIREBASE_AUTH di kode.",
+    "Ganti WiFi sesuai jaringan kamu (simulator: 'Wokwi-GUEST').",
+    "Dashboard: tulis angka 0-180 di node /servo/sudut untuk menggerakkan servo."
+  ],
+  "wiring_guide": [
+    {
+      "komponen": "Servo",
+      "pin_komponen": "V+",
+      "koneksi_arduino": "5V"
+    },
+    {
+      "komponen": "Servo",
+      "pin_komponen": "PWM",
+      "koneksi_arduino": "GPIO 13"
+    },
+    {
+      "komponen": "Servo",
+      "pin_komponen": "GND",
+      "koneksi_arduino": "GND"
+    }
+  ],
+  "cpp_code": "// ===== Servo Kendali dari Firebase =====\n// ESP32 + Servo SG90 + Firebase Realtime Database\n// INSTALL: Firebase ESP32 Client by Mobizt + ESP32Servo\n\n#include <WiFi.h>\n#include <FirebaseESP32.h>\n#include <ESP32Servo.h>\n\n#define WIFI_SSID     \"Wokwi-GUEST\"   // TODO: ganti WiFi kamu\n#define WIFI_PASSWORD \"\"\n#define FIREBASE_HOST \"..alamat-database-firebase..\"  // TODO\n#define FIREBASE_AUTH \"..secret-database-firebase..\"  // TODO\n\n#define SERVO_PIN 13\nServo servo;\nFirebaseData fbdo;\nFirebaseAuth auth;\nFirebaseConfig config;\n\nint sudutSekarang = 90;\n\nvoid setup() {\n  Serial.begin(115200);\n  servo.attach(SERVO_PIN);\n  servo.write(sudutSekarang);\n\n  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);\n  while (WiFi.status() != WL_CONNECTED) { delay(300); Serial.print(\".\"); }\n  Serial.println(\"\\nWiFi OK\");\n\n  config.host = FIREBASE_HOST;\n  config.signer.tokens.legacy_token = FIREBASE_AUTH;\n  Firebase.begin(&config, &auth);\n  Firebase.reconnectWiFi(true);\n\n  Firebase.setInt(fbdo, \"/servo/sudut\", sudutSekarang);\n}\n\nvoid loop() {\n  // Baca perintah dari dashboard: tulis 0-180 di /servo/sudut\n  if (Firebase.getInt(fbdo, \"/servo/sudut\")) {\n    int sudut = fbdo.intData();\n    sudut = constrain(sudut, 0, 180);\n    if (sudut != sudutSekarang) {\n      servo.write(sudut);\n      sudutSekarang = sudut;\n      Serial.printf(\"Servo -> %d derajat\\n\", sudut);\n    }\n  }\n  delay(300);\n}\n",
+  "wokwi_diagram": "{\"version\":1,\"author\":\"ElektroDict\",\"editor\":\"wokwi\",\"parts\":[{\"type\":\"board-esp32-devkit-c-v4\",\"id\":\"esp\",\"top\":0,\"left\":0,\"attrs\":{}},{\"type\":\"wokwi-servo\",\"id\":\"servo\",\"top\":-130,\"left\":340,\"attrs\":{}},{\"type\":\"wokwi-wifi-ap\",\"id\":\"ap\",\"top\":-260,\"left\":0,\"attrs\":{\"ssid\":\"Wokwi-GUEST\",\"password\":\"\"}}],\"connections\":[[\"servo:V+\",\"esp:5V\",\"red\",[\"v0\"]],[\"servo:PWM\",\"esp:13\",\"yellow\",[\"v0\"]],[\"servo:GND\",\"esp:GND.1\",\"black\",[\"v0\"]]]}",
+  "steps": [
+    {
+      "nama_komponen": "Servo",
+      "alur_perakitan": "V+ ke 5V, PWM ke GPIO 13, GND ke GND."
+    },
+    {
+      "nama_komponen": "Firebase",
+      "alur_perakitan": "Isi host & secret Firebase, ganti WiFi bila perlu."
+    },
+    {
+      "nama_komponen": "Dashboard",
+      "alur_perakitan": "Buka Realtime Database → ubah /servo/sudut menjadi angka 0-180."
+    },
+    {
+      "nama_komponen": "Uji coba",
+      "alur_perakitan": "Servo bergerak mengikuti nilai yang ditulis dari dashboard."
+    }
+  ]
+},
+  {
+  "id": "tpl-esp32-firebase-rgb",
+  "title": "Lampu RGB Kendali Web",
+  "desc": "Atur warna LED RGB dari dashboard Firebase — tulis nilai R, G, B (0-255) di database dan ESP32 menampilkannya via PWM.",
+  "difficulty": "Menengah",
+  "tags": [
+    "ESP32",
+    "Firebase",
+    "RGB LED",
+    "Kontrol"
+  ],
+  "verified": true,
+  "board": "board-esp32-devkit-c-v4",
+  "bom": [
+    "1x ESP32 DevKitC V4",
+    "1x LED RGB (katoda bersama)",
+    "3x Resistor 220 Ohm",
+    "Kabel jumper"
+  ],
+  "firebase_setup": [
+    "Buat project Firebase gratis → Realtime Database mode test.",
+    "Isi FIREBASE_HOST & FIREBASE_AUTH di kode.",
+    "Ganti WiFi sesuai jaringan kamu (simulator: 'Wokwi-GUEST').",
+    "Dashboard: tulis nilai 0-255 di /rgb/merah, /rgb/hijau, /rgb/biru."
+  ],
+  "wiring_guide": [
+    {
+      "komponen": "LED RGB",
+      "pin_komponen": "R (via 220 Ohm)",
+      "koneksi_arduino": "GPIO 25"
+    },
+    {
+      "komponen": "LED RGB",
+      "pin_komponen": "G (via 220 Ohm)",
+      "koneksi_arduino": "GPIO 26"
+    },
+    {
+      "komponen": "LED RGB",
+      "pin_komponen": "B (via 220 Ohm)",
+      "koneksi_arduino": "GPIO 27"
+    },
+    {
+      "komponen": "LED RGB",
+      "pin_komponen": "COM (katoda)",
+      "koneksi_arduino": "GND"
+    }
+  ],
+  "cpp_code": "// ===== Lampu RGB Kendali dari Firebase =====\n// ESP32 + LED RGB + Firebase Realtime Database\n// INSTALL: Firebase ESP32 Client by Mobizt\n\n#include <WiFi.h>\n#include <FirebaseESP32.h>\n\n#define WIFI_SSID     \"Wokwi-GUEST\"   // TODO: ganti WiFi kamu\n#define WIFI_PASSWORD \"\"\n#define FIREBASE_HOST \"..alamat-database-firebase..\"  // TODO\n#define FIREBASE_AUTH \"..secret-database-firebase..\"  // TODO\n\n#define PIN_R 25\n#define PIN_G 26\n#define PIN_B 27\n\nFirebaseData fbdo;\nFirebaseAuth auth;\nFirebaseConfig config;\nint nilai[3] = {0, 0, 0};\n\nint bacaNilai(const char* path, int fallback) {\n  if (Firebase.getInt(fbdo, path)) return constrain(fbdo.intData(), 0, 255);\n  return fallback;\n}\n\nvoid setup() {\n  Serial.begin(115200);\n  ledcSetup(0, 5000, 8); ledcAttachPin(PIN_R, 0);\n  ledcSetup(1, 5000, 8); ledcAttachPin(PIN_G, 1);\n  ledcSetup(2, 5000, 8); ledcAttachPin(PIN_B, 2);\n\n  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);\n  while (WiFi.status() != WL_CONNECTED) { delay(300); Serial.print(\".\"); }\n  Serial.println(\"\\nWiFi OK\");\n\n  config.host = FIREBASE_HOST;\n  config.signer.tokens.legacy_token = FIREBASE_AUTH;\n  Firebase.begin(&config, &auth);\n  Firebase.reconnectWiFi(true);\n}\n\nvoid loop() {\n  nilai[0] = bacaNilai(\"/rgb/merah\", nilai[0]);\n  nilai[1] = bacaNilai(\"/rgb/hijau\", nilai[1]);\n  nilai[2] = bacaNilai(\"/rgb/biru\", nilai[2]);\n\n  ledcWrite(0, nilai[0]);\n  ledcWrite(1, nilai[1]);\n  ledcWrite(2, nilai[2]);\n\n  Serial.printf(\"RGB: %d %d %d\\n\", nilai[0], nilai[1], nilai[2]);\n  delay(500);\n}\n",
+  "wokwi_diagram": "{\"version\":1,\"author\":\"ElektroDict\",\"editor\":\"wokwi\",\"parts\":[{\"type\":\"board-esp32-devkit-c-v4\",\"id\":\"esp\",\"top\":0,\"left\":0,\"attrs\":{}},{\"type\":\"wokwi-rgb-led\",\"id\":\"rgb\",\"top\":-130,\"left\":340,\"attrs\":{}},{\"type\":\"wokwi-resistor\",\"id\":\"r1\",\"top\":-200,\"left\":340,\"attrs\":{\"value\":\"220\"}},{\"type\":\"wokwi-resistor\",\"id\":\"r2\",\"top\":-200,\"left\":440,\"attrs\":{\"value\":\"220\"}},{\"type\":\"wokwi-resistor\",\"id\":\"r3\",\"top\":-200,\"left\":540,\"attrs\":{\"value\":\"220\"}},{\"type\":\"wokwi-wifi-ap\",\"id\":\"ap\",\"top\":-320,\"left\":0,\"attrs\":{\"ssid\":\"Wokwi-GUEST\",\"password\":\"\"}}],\"connections\":[[\"esp:25\",\"r1:1\",\"red\",[\"v0\"]],[\"r1:2\",\"rgb:R\",\"red\",[\"v0\"]],[\"esp:26\",\"r2:1\",\"green\",[\"v0\"]],[\"r2:2\",\"rgb:G\",\"green\",[\"v0\"]],[\"esp:27\",\"r3:1\",\"blue\",[\"v0\"]],[\"r3:2\",\"rgb:B\",\"blue\",[\"v0\"]],[\"rgb:COM\",\"esp:GND.1\",\"black\",[\"v0\"]]]}",
+  "steps": [
+    {
+      "nama_komponen": "LED RGB",
+      "alur_perakitan": "R via 220 Ohm ke GPIO 25, G via 220 Ohm ke GPIO 26, B via 220 Ohm ke GPIO 27, COM ke GND."
+    },
+    {
+      "nama_komponen": "Firebase",
+      "alur_perakitan": "Isi host & secret Firebase, ganti WiFi bila perlu."
+    },
+    {
+      "nama_komponen": "Dashboard",
+      "alur_perakitan": "Tulis nilai 0-255 di /rgb/merah, /rgb/hijau, /rgb/biru."
+    },
+    {
+      "nama_komponen": "Uji coba",
+      "alur_perakitan": "LED RGB berubah warna sesuai nilai dari dashboard."
+    }
+  ]
+},
+  {
+  "id": "tpl-esp32-firebase-gas",
+  "title": "Deteksi Gas Bocor + Alarm",
+  "desc": "Sensor MQ2 mendeteksi kadar gas/asap; buzzer berbunyi saat berbahaya dan data dikirim ke Firebase untuk dashboard keamanan.",
+  "difficulty": "Menengah",
+  "tags": [
+    "ESP32",
+    "Firebase",
+    "MQ2",
+    "Keamanan"
+  ],
+  "verified": true,
+  "board": "board-esp32-devkit-c-v4",
+  "bom": [
+    "1x ESP32 DevKitC V4",
+    "1x Sensor gas MQ2",
+    "1x Buzzer aktif",
+    "1x LED merah",
+    "Kabel jumper"
+  ],
+  "firebase_setup": [
+    "Buat project Firebase gratis → Realtime Database mode test.",
+    "Isi FIREBASE_HOST & FIREBASE_AUTH di kode.",
+    "Ganti WiFi sesuai jaringan kamu (simulator: 'Wokwi-GUEST')."
+  ],
+  "wiring_guide": [
+    {
+      "komponen": "MQ2",
+      "pin_komponen": "VCC",
+      "koneksi_arduino": "5V"
+    },
+    {
+      "komponen": "MQ2",
+      "pin_komponen": "AO",
+      "koneksi_arduino": "GPIO 35 (ADC)"
+    },
+    {
+      "komponen": "MQ2",
+      "pin_komponen": "GND",
+      "koneksi_arduino": "GND"
+    },
+    {
+      "komponen": "Buzzer",
+      "pin_komponen": "2 (+)",
+      "koneksi_arduino": "GPIO 19"
+    },
+    {
+      "komponen": "LED merah",
+      "pin_komponen": "A",
+      "koneksi_arduino": "GPIO 13 (via resistor)"
+    },
+    {
+      "komponen": "Buzzer & LED",
+      "pin_komponen": "(-)/(C)",
+      "koneksi_arduino": "GND"
+    }
+  ],
+  "cpp_code": "// ===== Deteksi Gas Bocor → Firebase =====\n// ESP32 + MQ2 + buzzer + LED + Firebase Realtime Database\n// INSTALL: Firebase ESP32 Client by Mobizt\n\n#include <WiFi.h>\n#include <FirebaseESP32.h>\n\n#define WIFI_SSID     \"Wokwi-GUEST\"   // TODO: ganti WiFi kamu\n#define WIFI_PASSWORD \"\"\n#define FIREBASE_HOST \"..alamat-database-firebase..\"  // TODO\n#define FIREBASE_AUTH \"..secret-database-firebase..\"  // TODO\n\n#define GAS_PIN 35   // AO (analog)\n#define BUZZ_PIN 19\n#define LED_PIN 13\n#define AMBANG_BAHAYA 2500  // kalibrasi sesuai lingkungan\n\nFirebaseData fbdo;\nFirebaseAuth auth;\nFirebaseConfig config;\n\nvoid setup() {\n  Serial.begin(115200);\n  pinMode(BUZZ_PIN, OUTPUT); pinMode(LED_PIN, OUTPUT);\n\n  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);\n  while (WiFi.status() != WL_CONNECTED) { delay(300); Serial.print(\".\"); }\n  Serial.println(\"\\nWiFi OK\");\n\n  config.host = FIREBASE_HOST;\n  config.signer.tokens.legacy_token = FIREBASE_AUTH;\n  Firebase.begin(&config, &auth);\n  Firebase.reconnectWiFi(true);\n}\n\nvoid loop() {\n  int gas = analogRead(GAS_PIN);\n  bool bahaya = (gas > AMBANG_BAHAYA);\n  digitalWrite(BUZZ_PIN, bahaya ? HIGH : LOW);\n  digitalWrite(LED_PIN, bahaya ? HIGH : LOW);\n\n  Firebase.setInt(fbdo, \"/gas/nilai_adc\", gas);\n  Firebase.setBool(fbdo, \"/gas/bahaya\", bahaya);\n\n  Serial.printf(\"Gas: %d | Bahaya: %s\\n\", gas, bahaya ? \"YA!!\" : \"aman\");\n  delay(1000);\n}\n",
+  "wokwi_diagram": "{\"version\":1,\"author\":\"ElektroDict\",\"editor\":\"wokwi\",\"parts\":[{\"type\":\"board-esp32-devkit-c-v4\",\"id\":\"esp\",\"top\":0,\"left\":0,\"attrs\":{}},{\"type\":\"wokwi-gas-sensor\",\"id\":\"mq2\",\"top\":-130,\"left\":340,\"attrs\":{}},{\"type\":\"wokwi-buzzer\",\"id\":\"buz\",\"top\":-130,\"left\":540,\"attrs\":{}},{\"type\":\"wokwi-led\",\"id\":\"led\",\"top\":-260,\"left\":540,\"attrs\":{\"color\":\"red\"}},{\"type\":\"wokwi-wifi-ap\",\"id\":\"ap\",\"top\":-320,\"left\":0,\"attrs\":{\"ssid\":\"Wokwi-GUEST\",\"password\":\"\"}}],\"connections\":[[\"mq2:VCC\",\"esp:5V\",\"red\",[\"v0\"]],[\"mq2:AO\",\"esp:35\",\"green\",[\"v0\"]],[\"mq2:GND\",\"esp:GND.1\",\"black\",[\"v0\"]],[\"buz:2\",\"esp:19\",\"blue\",[\"v0\"]],[\"buz:1\",\"esp:GND.2\",\"black\",[\"v0\"]],[\"led:A\",\"esp:13\",\"yellow\",[\"v0\"]],[\"led:C\",\"esp:GND.3\",\"black\",[\"v0\"]]]}",
+  "steps": [
+    {
+      "nama_komponen": "MQ2",
+      "alur_perakitan": "VCC ke 5V, AO ke GPIO 35, GND ke GND."
+    },
+    {
+      "nama_komponen": "Buzzer & LED",
+      "alur_perakitan": "Buzzer (+) ke GPIO 19, LED via resistor ke GPIO 13, semua (-)/(C) ke GND."
+    },
+    {
+      "nama_komponen": "Firebase",
+      "alur_perakitan": "Isi host & secret Firebase, ganti WiFi bila perlu."
+    },
+    {
+      "nama_komponen": "Uji coba",
+      "alur_perakitan": "Dekatkan asap/gas — buzzer dan LED menyala, /gas/bahaya jadi true."
+    }
+  ]
+},
+  {
+  "id": "tpl-esp32-firebase-oled",
+  "title": "Cuaca Lokal + OLED Firebase",
+  "desc": "DHT22 + OLED SSD1306: suhu & kelembaban tampil di layar sekaligus dikirim ke Firebase untuk dashboard dan grafik.",
+  "difficulty": "Menengah",
+  "tags": [
+    "ESP32",
+    "Firebase",
+    "OLED",
+    "DHT22",
+    "Display"
+  ],
+  "verified": true,
+  "board": "board-esp32-devkit-c-v4",
+  "bom": [
+    "1x ESP32 DevKitC V4",
+    "1x DHT22",
+    "1x OLED SSD1306 128x64 (I2C)",
+    "Kabel jumper"
+  ],
+  "firebase_setup": [
+    "Buat project Firebase gratis → Realtime Database mode test.",
+    "Isi FIREBASE_HOST & FIREBASE_AUTH di kode.",
+    "Ganti WiFi sesuai jaringan kamu (simulator: 'Wokwi-GUEST')."
+  ],
+  "wiring_guide": [
+    {
+      "komponen": "DHT22",
+      "pin_komponen": "VCC",
+      "koneksi_arduino": "3V3"
+    },
+    {
+      "komponen": "DHT22",
+      "pin_komponen": "SDA (data)",
+      "koneksi_arduino": "GPIO 4"
+    },
+    {
+      "komponen": "DHT22",
+      "pin_komponen": "GND",
+      "koneksi_arduino": "GND"
+    },
+    {
+      "komponen": "OLED SSD1306",
+      "pin_komponen": "VIN",
+      "koneksi_arduino": "3V3"
+    },
+    {
+      "komponen": "OLED SSD1306",
+      "pin_komponen": "DATA (SDA)",
+      "koneksi_arduino": "GPIO 21"
+    },
+    {
+      "komponen": "OLED SSD1306",
+      "pin_komponen": "CLK (SCL)",
+      "koneksi_arduino": "GPIO 22"
+    },
+    {
+      "komponen": "OLED SSD1306",
+      "pin_komponen": "GND",
+      "koneksi_arduino": "GND"
+    }
+  ],
+  "cpp_code": "// ===== Cuaca Lokal + OLED → Firebase =====\n// ESP32 + DHT22 + OLED SSD1306 (I2C) + Firebase Realtime Database\n// INSTALL: Firebase ESP32 Client by Mobizt, Adafruit SSD1306, Adafruit GFX, DHT sensor library\n\n#include <WiFi.h>\n#include <FirebaseESP32.h>\n#include <Wire.h>\n#include <Adafruit_GFX.h>\n#include <Adafruit_SSD1306.h>\n#include <DHT.h>\n\n#define WIFI_SSID     \"Wokwi-GUEST\"   // TODO: ganti WiFi kamu\n#define WIFI_PASSWORD \"\"\n#define FIREBASE_HOST \"..alamat-database-firebase..\"  // TODO\n#define FIREBASE_AUTH \"..secret-database-firebase..\"  // TODO\n\n#define DHTPIN 4\n#define DHTTYPE DHT22\nDHT dht(DHTPIN, DHTTYPE);\n\n#define OLED_W 128\n#define OLED_H 64\nAdafruit_SSD1306 oled(OLED_W, OLED_H, &Wire, -1);\n\nFirebaseData fbdo;\nFirebaseAuth auth;\nFirebaseConfig config;\n\nvoid setup() {\n  Serial.begin(115200);\n  dht.begin();\n  if (!oled.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { Serial.println(\"OLED gagal\"); }\n  oled.clearDisplay(); oled.setTextSize(1); oled.setTextColor(SSD1306_WHITE);\n\n  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);\n  while (WiFi.status() != WL_CONNECTED) { delay(300); Serial.print(\".\"); }\n  Serial.println(\"\\nWiFi OK\");\n\n  config.host = FIREBASE_HOST;\n  config.signer.tokens.legacy_token = FIREBASE_AUTH;\n  Firebase.begin(&config, &auth);\n  Firebase.reconnectWiFi(true);\n}\n\nvoid loop() {\n  float h = dht.readHumidity();\n  float t = dht.readTemperature();\n  if (!isnan(h) && !isnan(t)) {\n    // Tampil di OLED\n    oled.clearDisplay();\n    oled.setCursor(0, 0); oled.println(\"  Cuaca Lokal\");\n    oled.setCursor(0, 20); oled.printf(\"Suhu: %.1f C\", t);\n    oled.setCursor(0, 36); oled.printf(\"Lembab: %.1f%%\", h);\n    oled.display();\n\n    // Kirim ke Firebase\n    Firebase.setFloat(fbdo, \"/cuaca/suhu\", t);\n    Firebase.setFloat(fbdo, \"/cuaca/kelembaban\", h);\n    Serial.printf(\"Suhu: %.1f | Lembab: %.1f\\n\", t, h);\n  }\n  delay(4000);\n}\n",
+  "wokwi_diagram": "{\"version\":1,\"author\":\"ElektroDict\",\"editor\":\"wokwi\",\"parts\":[{\"type\":\"board-esp32-devkit-c-v4\",\"id\":\"esp\",\"top\":0,\"left\":0,\"attrs\":{}},{\"type\":\"wokwi-dht22\",\"id\":\"dht\",\"top\":-130,\"left\":340,\"attrs\":{}},{\"type\":\"board-ssd1306\",\"id\":\"oled\",\"top\":-260,\"left\":340,\"attrs\":{}},{\"type\":\"wokwi-wifi-ap\",\"id\":\"ap\",\"top\":-260,\"left\":0,\"attrs\":{\"ssid\":\"Wokwi-GUEST\",\"password\":\"\"}}],\"connections\":[[\"dht:VCC\",\"esp:3V3\",\"red\",[\"v0\"]],[\"dht:SDA\",\"esp:4\",\"green\",[\"v0\"]],[\"dht:GND\",\"esp:GND.1\",\"black\",[\"v0\"]],[\"oled:VIN\",\"esp:3V3\",\"red\",[\"v0\"]],[\"oled:DATA\",\"esp:21\",\"green\",[\"v0\"]],[\"oled:CLK\",\"esp:22\",\"yellow\",[\"v0\"]],[\"oled:GND\",\"esp:GND.2\",\"black\",[\"v0\"]]]}",
+  "steps": [
+    {
+      "nama_komponen": "DHT22",
+      "alur_perakitan": "VCC ke 3V3, data ke GPIO 4, GND ke GND."
+    },
+    {
+      "nama_komponen": "OLED SSD1306",
+      "alur_perakitan": "VIN ke 3V3, DATA (SDA) ke GPIO 21, CLK (SCL) ke GPIO 22, GND ke GND."
+    },
+    {
+      "nama_komponen": "Firebase",
+      "alur_perakitan": "Isi host & secret Firebase, ganti WiFi bila perlu."
+    },
+    {
+      "nama_komponen": "Uji coba",
+      "alur_perakitan": "OLED menampilkan suhu & kelembaban; data juga masuk ke /cuaca di Firebase."
+    }
+  ]
+},
+  {
+  "id": "tpl-esp32-firebase-bell",
+  "title": "Bel Pintu Smart + Notifikasi",
+  "desc": "Tombol bel mengaktifkan buzzer dan mengirim notifikasi ke Firebase — dashboard mencatat waktu bel ditekan.",
+  "difficulty": "Mudah",
+  "tags": [
+    "ESP32",
+    "Firebase",
+    "Pushbutton",
+    "Buzzer",
+    "Rumah"
+  ],
+  "verified": true,
+  "board": "board-esp32-devkit-c-v4",
+  "bom": [
+    "1x ESP32 DevKitC V4",
+    "1x Pushbutton",
+    "1x Buzzer aktif",
+    "1x Resistor 10k Ohm (pull-down)",
+    "Kabel jumper"
+  ],
+  "firebase_setup": [
+    "Buat project Firebase gratis → Realtime Database mode test.",
+    "Isi FIREBASE_HOST & FIREBASE_AUTH di kode.",
+    "Ganti WiFi sesuai jaringan kamu (simulator: 'Wokwi-GUEST')."
+  ],
+  "wiring_guide": [
+    {
+      "komponen": "Pushbutton",
+      "pin_komponen": "1.l",
+      "koneksi_arduino": "GPIO 4"
+    },
+    {
+      "komponen": "Pushbutton",
+      "pin_komponen": "2.r",
+      "koneksi_arduino": "GND"
+    },
+    {
+      "komponen": "Buzzer",
+      "pin_komponen": "2 (+)",
+      "koneksi_arduino": "GPIO 18"
+    },
+    {
+      "komponen": "Buzzer",
+      "pin_komponen": "1 (-)",
+      "koneksi_arduino": "GND"
+    }
+  ],
+  "cpp_code": "// ===== Bel Pintu Smart → Firebase =====\n// ESP32 + pushbutton + buzzer + Firebase Realtime Database\n// INSTALL: Firebase ESP32 Client by Mobizt\n\n#include <WiFi.h>\n#include <FirebaseESP32.h>\n\n#define WIFI_SSID     \"Wokwi-GUEST\"   // TODO: ganti WiFi kamu\n#define WIFI_PASSWORD \"\"\n#define FIREBASE_HOST \"..alamat-database-firebase..\"  // TODO\n#define FIREBASE_AUTH \"..secret-database-firebase..\"  // TODO\n\n#define BELL_PIN 4\n#define BUZZ_PIN 18\n\nFirebaseData fbdo;\nFirebaseAuth auth;\nFirebaseConfig config;\n\nvoid setup() {\n  Serial.begin(115200);\n  pinMode(BELL_PIN, INPUT_PULLUP);\n  pinMode(BUZZ_PIN, OUTPUT);\n\n  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);\n  while (WiFi.status() != WL_CONNECTED) { delay(300); Serial.print(\".\"); }\n  Serial.println(\"\\nWiFi OK\");\n\n  config.host = FIREBASE_HOST;\n  config.signer.tokens.legacy_token = FIREBASE_AUTH;\n  Firebase.begin(&config, &auth);\n  Firebase.reconnectWiFi(true);\n}\n\nvoid loop() {\n  if (digitalRead(BELL_PIN) == LOW) {  // tombol ditekan\n    digitalWrite(BUZZ_PIN, HIGH);\n    Serial.println(\"Bel berbunyi!\");\n\n    // Kirim notifikasi & timestamp ke Firebase\n    Firebase.setBool(fbdo, \"/bel/ditekan\", true);\n    Firebase.setInt(fbdo, \"/bel/waktu_ms\", millis());\n    delay(1000);\n    digitalWrite(BUZZ_PIN, LOW);\n    Firebase.setBool(fbdo, \"/bel/ditekan\", false);\n  }\n  delay(50);\n}\n",
+  "wokwi_diagram": "{\"version\":1,\"author\":\"ElektroDict\",\"editor\":\"wokwi\",\"parts\":[{\"type\":\"board-esp32-devkit-c-v4\",\"id\":\"esp\",\"top\":0,\"left\":0,\"attrs\":{}},{\"type\":\"wokwi-pushbutton\",\"id\":\"btn\",\"top\":-130,\"left\":340,\"attrs\":{}},{\"type\":\"wokwi-buzzer\",\"id\":\"buz\",\"top\":-260,\"left\":340,\"attrs\":{}},{\"type\":\"wokwi-wifi-ap\",\"id\":\"ap\",\"top\":-260,\"left\":0,\"attrs\":{\"ssid\":\"Wokwi-GUEST\",\"password\":\"\"}}],\"connections\":[[\"btn:1.l\",\"esp:4\",\"green\",[\"v0\"]],[\"btn:2.r\",\"esp:GND.1\",\"black\",[\"v0\"]],[\"buz:2\",\"esp:18\",\"yellow\",[\"v0\"]],[\"buz:1\",\"esp:GND.2\",\"black\",[\"v0\"]]]}",
+  "steps": [
+    {
+      "nama_komponen": "Pushbutton",
+      "alur_perakitan": "Satu kaki ke GPIO 4, kaki diagonal ke GND (pakai pull-up internal di kode)."
+    },
+    {
+      "nama_komponen": "Buzzer",
+      "alur_perakitan": "(+) ke GPIO 18, (-) ke GND."
+    },
+    {
+      "nama_komponen": "Firebase",
+      "alur_perakitan": "Isi host & secret Firebase, ganti WiFi bila perlu."
+    },
+    {
+      "nama_komponen": "Uji coba",
+      "alur_perakitan": "Tekan tombol — buzzer berbunyi dan /bel/ditekan jadi true di Firebase."
+    }
+  ]
+}
 ];
