@@ -542,9 +542,8 @@ $$R = \\rho \\cdot \\frac{L}{A} \\qquad \\Rightarrow \\qquad \\Delta V = 2 \\cdo
       { q: 'Kode IP67 berarti peralatan…', opts: ['Kedap debu total dan tahan perendaman sementara', 'Tahan percikan air dan debu sebagian', 'Tanpa proteksi debu dan air', 'Kedap debu total dan tahan pancaran kuat'], ans: 0, exp: 'Digit pertama 6 = kedap debu total; digit kedua 7 = tahan perendaman sementara (IEC 60529).' },
       { q: 'RCD/ELCB untuk proteksi manusia terhadap kejut listrik memiliki sensitivitas arus sisa…', opts: ['300 mA', '30 mA', '3 A', '30 A'], ans: 1, exp: 'RCD proteksi kejut listrik standar 30 mA; 300 mA dipakai untuk proteksi kebakaran.' }
     ]
-  }
-,
-{
+  },
+  {
     id: 'komponen-elektronika',
     emoji: '🔌',
     title: 'Komponen Elektronika',
@@ -552,23 +551,26 @@ $$R = \\rho \\cdot \\frac{L}{A} \\qquad \\Rightarrow \\qquad \\Delta V = 2 \\cdo
     level: 'Pemula → Menengah',
     durasi: '±30 menit',
     materi: ['Resistor', 'Kapasitor', 'Dioda', 'Transistor', 'Op-amp', 'Datasheet'],
-
     sections: [
       {
+        id: 'resistor-kode-warna',
+        emoji: '🔌',
         title: 'Resistor & Kode Warna',
-        content: `<p>Resistor adalah komponen pasif yang memberikan hambatan terhadap arus listrik. Satuan hambatan adalah <strong>ohm (Ω)</strong>.</p>
+        body: `<p>Resistor adalah komponen pasif yang memberikan hambatan terhadap arus listrik. Satuan hambatan adalah <strong>ohm (Ω)</strong>.</p>
 <p>Kode warna pada resistor band karbon terdiri dari 4 atau 5 strip warna yang menunjukkan nilai hambatan dan toleransi.</p>
-<div class="mt-img-wrap"><img src="Asset Materi/resistor-color-code.png" alt="Tabel kode warna resistor" loading="lazy"><div class="mt-img-cap">Tabel kode warna resistor (CC BY-SA 4.0 Wikimedia Commons)</div></div>
+<div class="mt-img-wrap"><img class="mt-img" src="Asset%20Materi/resistor-color-code.png" alt="Tabel kode warna resistor" loading="lazy" onclick="openMateriImg(this)"><div class="mt-img-cap">Tabel kode warna resistor (CC BY-SA 4.0 Wikimedia Commons)</div></div>
 <p><strong>Rumus dasar seri & paralel:</strong></p>
-<p>$$R_{seri} = R_1 + R_2 + \dots + R_n$$</p>
-<p>$$\frac{1}{R_{paralel}} = \frac{1}{R_1} + \frac{1}{R_2} + \dots + \frac{1}{R_n}$$</p>
+<p>$$R_{seri} = R_1 + R_2 + \\dots + R_n$$</p>
+<p>$$\\frac{1}{R_{paralel}} = \\frac{1}{R_1} + \\frac{1}{R_2} + \\dots + \\frac{1}{R_n}$$</p>
 <div class="mt-tip">💡 <strong>Tip:</strong> Resistor SMD menggunakan kode angka — misalnya 103 = 10 × 10³ = 10 kΩ, 4R7 = 4,7 Ω.</div>`,
         referensi: 'Tabel kode warna resistor mengikuti standar IEC 60062. Nilai E-series (E12, E24) ditetapkan dalam standar yang sama.'
       },
       {
+        id: 'kapasitor',
+        emoji: '🔋',
         title: 'Kapasitor',
-        content: `<p>Kapasitor menyimpan energi dalam medan listrik. Satuan kapasitansi adalah <strong>farad (F)</strong>, namun nilai praktis umumnya dalam µF, nF, atau pF.</p>
-<p>$$Q = C \cdot V \qquad E = \tfrac{1}{2} C V^2$$</p>
+        body: `<p>Kapasitor menyimpan energi dalam medan listrik. Satuan kapasitansi adalah <strong>farad (F)</strong>, namun nilai praktis umumnya dalam µF, nF, atau pF.</p>
+<p>$$Q = C \\cdot V \\qquad E = \\tfrac{1}{2} C V^2$$</p>
 <table class="mt-table"><thead><tr><th>Tipe</th><th>Karakteristik</th><th>Aplikasi Umum</th></tr></thead><tbody>
 <tr><td>Elektrolitik</td><td>Polaritas, kapasitas besar (1µF–10.000µF)</td><td>Filter catu daya, coupling audio</td></tr>
 <tr><td>Keramik (MLCC)</td><td>Non-polar, kapasitas kecil (1pF–100µF)</td><td>Bypass, filter frekuensi tinggi</td></tr>
@@ -579,9 +581,11 @@ $$R = \\rho \\cdot \\frac{L}{A} \\qquad \\Rightarrow \\qquad \\Delta V = 2 \\cdo
         referensi: 'Karakteristik tipe kapasitor dari datasheet vendor (Kemet, Murata, Panasonic). ESR & lifetime referensi datasheet komponen spesifik.'
       },
       {
+        id: 'dioda',
+        emoji: '💡',
         title: 'Dioda',
-        content: `<p>Dioda adalah komponen semiconductor yang mengalirkan arus hanya dalam satu arah (anoda → katoda).</p>
-<div class="mt-img-wrap"><img src="Asset Materi/diode-symbol.jpg" alt="Simbol dioda dalam berbagai jenis" loading="lazy"><div class="mt-img-cap">Simbol berbagai jenis dioda (CC BY-SA 4.0 Wikimedia Commons)</div></div>
+        body: `<p>Dioda adalah komponen semiconductor yang mengalirkan arus hanya dalam satu arah (anoda → katoda).</p>
+<div class="mt-img-wrap"><img class="mt-img" src="Asset%20Materi/diode-symbol.jpg" alt="Simbol dioda dalam berbagai jenis" loading="lazy" onclick="openMateriImg(this)"><div class="mt-img-cap">Simbol berbagai jenis dioda (CC BY-SA 4.0 Wikimedia Commons)</div></div>
 <p><strong>Jenis dioda utama:</strong></p>
 <ul>
 <li><strong>Dioda biasa:</strong> Forward voltage ~0,7V (Si) atau ~0,3V (Ge)</li>
@@ -590,14 +594,16 @@ $$R = \\rho \\cdot \\frac{L}{A} \\qquad \\Rightarrow \\qquad \\Delta V = 2 \\cdo
 <li><strong>Schottky:</strong> Vf rendah (~0,3V), switching cepat, cocok untuk catu daya switching</li>
 </ul>
 <p>Persamaan Shockley untuk dioda:</p>
-<p>$$I = I_s \left( e^{V/nV_T} - 1 \right)$$</p>
+<p>$$I = I_s \\left( e^{V/nV_T} - 1 \\right)$$</p>
 <div class="mt-tip">💡 Dioda Schottky ditandai huruf "S" atau nomor seri 1N58xx. Zener ditandai seri 1N47xx/1N52xx.</div>`,
         referensi: 'Persamaan Shockley dari teori semiconductor (Sze, Physics of Semiconductor Devices). Voltage drop Si=0.7V, Ge=0.3V dari datasheet material.'
       },
       {
+        id: 'transistor',
+        emoji: '🔀',
         title: 'Transistor (BJT & MOSFET)',
-        content: `<p>Transistor adalah komponen aktif yang berfungsi sebagai sakelar atau penguat sinyal.</p>
-<div class="mt-img-wrap"><img src="Asset Materi/bjt-npn-symbol.png" alt="Simbol transistor BJT NPN dan PNP" loading="lazy"><div class="mt-img-cap">Simbol transistor BJT NPN & PNP (CC BY-SA 4.0 Wikimedia Commons)</div></div>
+        body: `<p>Transistor adalah komponen aktif yang berfungsi sebagai sakelar atau penguat sinyal.</p>
+<div class="mt-img-wrap"><img class="mt-img" src="Asset%20Materi/bjt-npn-symbol.png" alt="Simbol transistor BJT NPN dan PNP" loading="lazy" onclick="openMateriImg(this)"><div class="mt-img-cap">Simbol transistor BJT NPN & PNP (CC BY-SA 4.0 Wikimedia Commons)</div></div>
 <p><strong>BJT (Bipolar Junction Transistor):</strong></p>
 <table class="mt-table"><thead><tr><th>Tipe</th><th>Kutub</th><th>Arus</th><th>Kondisi aktif</th></tr></thead><tbody>
 <tr><td>NPN</td><td>Emitor, Basis, Kolektor</td><td>E → K</td><td>Vbe &gt; 0,7V; Vce &gt; 0,2V</td></tr>
@@ -613,9 +619,11 @@ $$R = \\rho \\cdot \\frac{L}{A} \\qquad \\Rightarrow \\qquad \\Delta V = 2 \\cdo
         referensi: 'Simbol BJT & MOSFET mengikuti IEC 60617. Parameter Vbe, Vth, Rds(on) dari datasheet vendor (ON Semi, Infineon, Vishay).'
       },
       {
+        id: 'op-amp',
+        emoji: '⚙️',
         title: 'Op-Amp (Operational Amplifier)',
-        content: `<p>Op-amp adalah IC penguat analog serbaguna. Dalam konfigurasi ideal: impedansi masuk tak hingga, impedansi keluar nol, penguatan terbuka tak hingga.</p>
-<div class="mt-img-wrap"><img src="Asset Materi/opamp-symbol.png" alt="Simbol op-amp" loading="lazy"><div class="mt-img-cap">Simbol op-amp standar (CC BY-SA 4.0 Wikimedia Commons)</div></div>
+        body: `<p>Op-amp adalah IC penguat analog serbaguna. Dalam konfigurasi ideal: impedansi masuk tak hingga, impedansi keluar nol, penguatan terbuka tak hingga.</p>
+<div class="mt-img-wrap"><img class="mt-img" src="Asset%20Materi/opamp-symbol.png" alt="Simbol op-amp" loading="lazy" onclick="openMateriImg(this)"><div class="mt-img-cap">Simbol op-amp standar (CC BY-SA 4.0 Wikimedia Commons)</div></div>
 <p><strong>Konfigurasi dasar:</strong></p>
 <table class="mt-table"><thead><tr><th>Konfigurasi</th><th>Penguatan (Av)</th><th>Aplikasi</th></tr></thead><tbody>
 <tr><td>Inverting</td><td>-Rf / Rin</td><td>Pembalik sinyal, mixer audio</td></tr>
@@ -627,8 +635,10 @@ $$R = \\rho \\cdot \\frac{L}{A} \\qquad \\Rightarrow \\qquad \\Delta V = 2 \\cdo
         referensi: 'Konfigurasi op-amp dari teori analog electronics (Sedra/Smith, Microelectronic Circuits). Parameter GBW, slew rate dari datasheet (LM358, TL072).'
       },
       {
+        id: 'cara-membaca-datasheet',
+        emoji: '📄',
         title: 'Cara Membaca Datasheet',
-        content: `<p>Datasheet adalah dokumen resmi dari pabrikan yang berisi semua spesifikasi teknis komponen.</p>
+        body: `<p>Datasheet adalah dokumen resmi dari pabrikan yang berisi semua spesifikasi teknis komponen.</p>
 <p><strong>Bagian penting dalam datasheet:</strong></p>
 <ol>
 <li><strong>Absolute Maximum Ratings:</strong> Batas maksimum yang TIDAK BOLEH dilampaui</li>
@@ -642,28 +652,26 @@ $$R = \\rho \\cdot \\frac{L}{A} \\qquad \\Rightarrow \\qquad \\Delta V = 2 \\cdo
         referensi: 'Struktur datasheet mengikuti standar JEDEC. Contoh datasheet di situs vendor: ti.com, digikey.com, mouser.com, vishay.com.'
       }
     ],
-
     contoh: [
       {
-        title: 'Menghitung Hambatan Paralel',
+        judul: 'Menghitung Hambatan Paralel',
+        soal: 'Tiga resistor R₁ = 100Ω, R₂ = 220Ω, R₃ = 330Ω dipasang paralel.',
         langkah: [
-          'Tiga resistor R₁ = 100Ω, R₂ = 220Ω, R₃ = 330Ω dipasang paralel.',
           'Gunakan rumus: 1/R = 1/R₁ + 1/R₂ + 1/R₃',
           '1/R = 0,01 + 0,004545 + 0,003030 = 0,017575',
           'R = 1/0,017575 ≈ 56,9Ω'
         ]
       },
       {
-        title: 'Menghitung Arus Basis Transistor NPN',
+        judul: 'Menghitung Arus Basis Transistor NPN',
+        soal: 'Transistor NPN: Vcc = 12V, Rb = 10kΩ, β = 100',
         langkah: [
-          'Transistor NPN: Vcc = 12V, Rb = 10kΩ, β = 100',
           'Arus basis: Ib = (Vcc - Vbe) / Rb = (12 - 0,7) / 10.000 = 1,13 mA',
           'Arus kolektor: Ic = β × Ib = 100 × 1,13mA = 113 mA',
           'Jika Rc = 100Ω, Vce = 12 - 0,113 × 100 = 0,7V (mendekati saturasi)'
         ]
       }
     ],
-
     soal: [
       { q: 'Nilai resistor dari kode warna kuning-violet-cemas emas adalah…', opts: ['47Ω ±5%', '470Ω ±5%', '47kΩ ±5%', '470kΩ ±5%'], ans: 0, exp: 'Kuning=4, Violet=7, Emas=×10⁰=×1, toleransi ±5%. Jadi 47Ω ±5%.' },
       { q: 'Kapasitor elektrolitik dipasang terbalik pada tegangan kerja, yang paling mungkin terjadi adalah…', opts: ['Tidak ada efek', 'Kapasitor mengembung atau meledak', 'Nilai kapasitansi berkurang', 'Arus bocor meningkat'], ans: 1, exp: 'Kapasitor elektrolitik terbalik mengalami elektrolisis → tekanan gas → mengembung atau meledak.' },
@@ -672,7 +680,7 @@ $$R = \\rho \\cdot \\frac{L}{A} \\qquad \\Rightarrow \\qquad \\Delta V = 2 \\cdo
       { q: 'MOSFET N-channel enhancement aktif (ON) ketika…', opts: ['Vgs &lt; 0', 'Vgs &gt; Vth (threshold positive)', 'Vgs = 0', 'Vds &gt; Vth'], ans: 1, exp: 'MOSFET N-channel enhancement aktif ketika Vgs > Vth (threshold), biasanya 2–4V.' }
     ]
   },
-{
+  {
     id: 'rangkaian-ac-daya',
     emoji: '⚡',
     title: 'Rangkaian AC & Daya',
@@ -680,25 +688,28 @@ $$R = \\rho \\cdot \\frac{L}{A} \\qquad \\Rightarrow \\qquad \\Delta V = 2 \\cdo
     level: 'Menengah',
     durasi: '±35 menit',
     materi: ['Sinusoida AC', 'Impedansi RLC', 'Faktor Daya', 'Daya AC', 'Transformator'],
-
     sections: [
       {
+        id: 'gelombang-sinusoidal-frekuensi',
+        emoji: '🌊',
         title: 'Gelombang Sinusoidal & Frekuensi',
-        content: `<p>Arus bolak-balik (AC) berupa gelombang sinusoidal:</p>
-<p>$$v(t) = V_p \sin(\omega t + \phi)$$</p>
+        body: `<p>Arus bolak-balik (AC) berupa gelombang sinusoidal:</p>
+<p>$$v(t) = V_p \\sin(\\omega t + \\phi)$$</p>
 <p>Di mana Vp = tegangan puncak, ω = 2πf (frekuensi sudut), f = frekuensi (Hz), φ = sudut fase awal.</p>
-<div class="mt-img-wrap"><img src="Asset Materi/3phase-waveform.png" alt="Gelombang sinusoidal 3 fasa" loading="lazy"><div class="mt-img-cap">Gelombang sinusoidal 3 fasa (CC BY-SA 4.0 Wikimedia Commons)</div></div>
+<div class="mt-img-wrap"><img class="mt-img" src="Asset%20Materi/3phase-waveform.png" alt="Gelombang sinusoidal 3 fasa" loading="lazy" onclick="openMateriImg(this)"><div class="mt-img-cap">Gelombang sinusoidal 3 fasa (CC BY-SA 4.0 Wikimedia Commons)</div></div>
 <p><strong>Hubungan RMS dan peak:</strong></p>
-<p>$$V_{rms} = \frac{V_p}{\sqrt{2}} \approx 0,707 \cdot V_p$$</p>
+<p>$$V_{rms} = \\frac{V_p}{\\sqrt{2}} \\approx 0,707 \\cdot V_p$$</p>
 <p>Di Indonesia: 220V RMS, 50Hz → Vp = 220 × √2 ≈ 311V.</p>
 <div class="mt-tip">💡 Semua perhitungan daya pada rangkaian AC menggunakan nilai RMS, bukan nilai puncak.</div>`,
         referensi: 'Standar frekuensi jaringan listrik Indonesia: 50 Hz (PLN, Peraturan Menteri ESDM). Nilai RMS dari definisi umum AC theory.'
       },
       {
+        id: 'impedansi-rlc',
+        emoji: '🔗',
         title: 'Impedansi RLC',
-        content: `<p>Dalam rangkaian AC, hambatan terhadap arus disebut <strong>impedansi (Z)</strong>:</p>
-<p>$$Z = R + j(X_L - X_C) \qquad X_L = 2\pi f L \qquad X_C = \frac{1}{2\pi f C}$$</p>
-<p>$$|Z| = \sqrt{R^2 + (X_L - X_C)^2}$$</p>
+        body: `<p>Dalam rangkaian AC, hambatan terhadap arus disebut <strong>impedansi (Z)</strong>:</p>
+<p>$$Z = R + j(X_L - X_C) \\qquad X_L = 2\\pi f L \\qquad X_C = \\frac{1}{2\\pi f C}$$</p>
+<p>$$|Z| = \\sqrt{R^2 + (X_L - X_C)^2}$$</p>
 <table class="mt-table"><thead><tr><th>Kondisi</th><th>Sifat</th><th>Arus vs Tegangan</th></tr></thead><tbody>
 <tr><td>Xl &gt; Xc</td><td>Induktif</td><td>Arus tertinggal tegangan</td></tr>
 <tr><td>Xl &lt; Xc</td><td>Kapasitif</td><td>Arus mendahului tegangan</td></tr>
@@ -708,9 +719,11 @@ $$R = \\rho \\cdot \\frac{L}{A} \\qquad \\Rightarrow \\qquad \\Delta V = 2 \\cdo
         referensi: 'Rumus impedansi dari teori rangkaian AC (Alexander & Sadiku, Fundamentals of Electric Circuits). Resonansi: f₀ = 1/(2π√LC).'
       },
       {
+        id: 'faktor-daya',
+        emoji: '📐',
         title: 'Faktor Daya (Power Factor)',
-        content: `<p>Faktor daya (cos φ) menunjukkan seberapa efisien energi dimanfaatkan:</p>
-<p>$$\cos\phi = \frac{P}{S} = \frac{R}{|Z|}$$</p>
+        body: `<p>Faktor daya (cos φ) menunjukkan seberapa efisien energi dimanfaatkan:</p>
+<p>$$\\cos\\phi = \\frac{P}{S} = \\frac{R}{|Z|}$$</p>
 <ul>
 <li><strong>cos φ = 1</strong> → Semua daya berguna (beban resistif)</li>
 <li><strong>cos φ = 0,8</strong> → 20% daya hilang (beban induktif seperti motor)</li>
@@ -721,21 +734,25 @@ $$R = \\rho \\cdot \\frac{L}{A} \\qquad \\Rightarrow \\qquad \\Delta V = 2 \\cdo
         referensi: 'Rumus power factor dari teori daya AC. Koreksi kapasitor: teori umum power engineering.'
       },
       {
+        id: 'daya-aktif-reaktif-semu',
+        emoji: '⚡',
         title: 'Daya Aktif, Reaktif & Semu',
-        content: `<p>Tiga jenis daya dalam Segitiga Daya:</p>
-<div class="mt-img-wrap"><img src="Asset Materi/power-triangle.png" alt="Segitiga daya AC" loading="lazy"><div class="mt-img-cap">Segitiga Daya — hubungan P, Q, dan S (CC BY-SA 4.0 Wikimedia Commons)</div></div>
+        body: `<p>Tiga jenis daya dalam Segitiga Daya:</p>
+<div class="mt-img-wrap"><img class="mt-img" src="Asset%20Materi/power-triangle.png" alt="Segitiga daya AC" loading="lazy" onclick="openMateriImg(this)"><div class="mt-img-cap">Segitiga Daya — hubungan P, Q, dan S (CC BY-SA 4.0 Wikimedia Commons)</div></div>
 <table class="mt-table"><thead><tr><th>Jenis</th><th>Simbol</th><th>Satuan</th><th>Fungsi</th></tr></thead><tbody>
 <tr><td>Aktif</td><td>P</td><td>Watt (W)</td><td>Daya yang melakukan kerja</td></tr>
 <tr><td>Reaktif</td><td>Q</td><td>VAR</td><td>Daya dalam medan listrik/magnet</td></tr>
 <tr><td>Semu</td><td>S</td><td>VA</td><td>Total daya dari jaringan</td></tr>
 </tbody></table>
-<p>$$S = \sqrt{P^2 + Q^2} \qquad P_{3\phi} = \sqrt{3} \cdot V_L \cdot I_L \cdot \cos\phi$$</p>`,
+<p>$$S = \\sqrt{P^2 + Q^2} \\qquad P_{3\\phi} = \\sqrt{3} \\cdot V_L \\cdot I_L \\cdot \\cos\\phi$$</p>`,
         referensi: 'Segitiga daya: konsep fundamental power engineering. Rumus 3 fasa dari Standard Handbook for Electrical Engineers (IEEE).'
       },
       {
+        id: 'transformator',
+        emoji: '🔁',
         title: 'Transformator',
-        content: `<p>Transformator mengubah tegangan AC berdasarkan induksi elektromagnetik (Faraday):</p>
-<p>$$\frac{V_1}{V_2} = \frac{N_1}{N_2} = k \qquad I_1 V_1 = I_2 V_2 \cdot \eta$$</p>
+        body: `<p>Transformator mengubah tegangan AC berdasarkan induksi elektromagnetik (Faraday):</p>
+<p>$$\\frac{V_1}{V_2} = \\frac{N_1}{N_2} = k \\qquad I_1 V_1 = I_2 V_2 \\cdot \\eta$$</p>
 <table class="mt-table"><thead><tr><th>Tipe</th><th>Rasio</th><th>Aplikasi</th></tr></thead><tbody>
 <tr><td>Step-down</td><td>k &lt; 1</td><td>Adaptor charger, catu daya</td></tr>
 <tr><td>Step-up</td><td>k &gt; 1</td><td>Transmisi daya, inverter surya</td></tr>
@@ -746,12 +763,11 @@ $$R = \\rho \\cdot \\frac{L}{A} \\qquad \\Rightarrow \\qquad \\Delta V = 2 \\cdo
         referensi: 'Hukum Faraday & Lenz. Rumus dari teori mesin listrik (Chapman, Electric Machinery Fundamentals).'
       }
     ],
-
     contoh: [
       {
-        title: 'Menghitung Impedansi RLC Seri',
+        judul: 'Menghitung Impedansi RLC Seri',
+        soal: 'Rangkaian: R=100Ω, L=0,2H, C=10µF, f=50Hz',
         langkah: [
-          'Rangkaian: R=100Ω, L=0,2H, C=10µF, f=50Hz',
           'Xl = 2πfL = 2 × 3,14 × 50 × 0,2 = 62,8Ω',
           'Xc = 1/(2πfC) = 1/(2 × 3,14 × 50 × 10⁻⁶) = 318,3Ω',
           'Z = √(100² + (62,8-318,3)²) = √(10.000 + 65.230) ≈ 274,3Ω',
@@ -759,9 +775,9 @@ $$R = \\rho \\cdot \\frac{L}{A} \\qquad \\Rightarrow \\qquad \\Delta V = 2 \\cdo
         ]
       },
       {
-        title: 'Koreksi Faktor Daya Motor Induksi',
+        judul: 'Koreksi Faktor Daya Motor Induksi',
+        soal: 'Motor 3 fasa 10kW, cos φ = 0,7, V = 380V',
         langkah: [
-          'Motor 3 fasa 10kW, cos φ = 0,7, V = 380V',
           'Q_old = P × tan(acos(0,7)) = 10.000 × 1,02 = 10.200 VAR',
           'Target cos φ = 0,95 → Q_new = 10.000 × 0,329 = 3.290 VAR',
           'ΔQ = 10.200 - 3.290 = 6.910 VAR',
@@ -769,7 +785,6 @@ $$R = \\rho \\cdot \\frac{L}{A} \\qquad \\Rightarrow \\qquad \\Delta V = 2 \\cdo
         ]
       }
     ],
-
     soal: [
       { q: 'Rumus impedansi Z pada rangkaian RLC seri adalah…', opts: ['Z = R + XL + XC', 'Z = √(R² + (XL - XC)²)', 'Z = R × XL × XC', 'Z = (R + XL) / XC'], ans: 1, exp: 'Impedansi seri: Z = √(R² + (XL - XC)²).' },
       { q: 'Pada resonansi seri RLC, impedansi total adalah…', opts: ['Minimum = R', 'Maksimum = ∞', 'Nol', 'Sama dengan XL'], ans: 0, exp: 'Pada resonansi, XL = XC → Z = R (minimum).' },
@@ -778,7 +793,7 @@ $$R = \\rho \\cdot \\frac{L}{A} \\qquad \\Rightarrow \\qquad \\Delta V = 2 \\cdo
       { q: 'Transformator step-down N1=1000, N2=200, V1=220V, V2 = …', opts: ['1100V', '44V', '220V', '4.400V'], ans: 1, exp: 'V2 = V1 × N2/N1 = 220 × 200/1000 = 44V.' }
     ]
   },
-{
+  {
     id: 'sistem-digital',
     emoji: '🔀',
     title: 'Sistem Digital & Gerbang Logika',
@@ -786,12 +801,13 @@ $$R = \\rho \\cdot \\frac{L}{A} \\qquad \\Rightarrow \\qquad \\Delta V = 2 \\cdo
     level: 'Menengah',
     durasi: '±30 menit',
     materi: ['Gerbang Logika', 'Tabel Kebenaran', 'Aljabar Boolean', 'Flip-Flop', 'Half/Full Adder'],
-
     sections: [
       {
+        id: 'gerbang-logika-dasar',
+        emoji: '🚪',
         title: 'Gerbang Logika Dasar',
-        content: `<p>Gerbang logika adalah blok bangunan dasar sistem digital — menerima input biner (0/1) dan menghasilkan output sesuai fungsi logikanya.</p>
-<div class="mt-img-wrap"><img src="Asset Materi/logic-gates.png" alt="Simbol 7 gerbang logika dasar" loading="lazy"><div class="mt-img-cap">Simbol 7 gerbang logika dasar (CC BY-SA 4.0 Wikimedia Commons)</div></div>
+        body: `<p>Gerbang logika adalah blok bangunan dasar sistem digital — menerima input biner (0/1) dan menghasilkan output sesuai fungsi logikanya.</p>
+<div class="mt-img-wrap"><img class="mt-img" src="Asset%20Materi/logic-gates.png" alt="Simbol 7 gerbang logika dasar" loading="lazy" onclick="openMateriImg(this)"><div class="mt-img-cap">Simbol 7 gerbang logika dasar (CC BY-SA 4.0 Wikimedia Commons)</div></div>
 <table class="mt-table"><thead><tr><th>Gerbang</th><th>Fungsi</th><th>Boolean</th></tr></thead><tbody>
 <tr><td>AND</td><td>Output=1 jika SEMUA input=1</td><td>Y = A · B</td></tr>
 <tr><td>OR</td><td>Output=1 jika SETIDAKNYA SATU input=1</td><td>Y = A + B</td></tr>
@@ -805,8 +821,10 @@ $$R = \\rho \\cdot \\frac{L}{A} \\qquad \\Rightarrow \\qquad \\Delta V = 2 \\cdo
         referensi: 'Simbol gerbang logika mengikuti IEC 60617-12. Konsep gerbang universal dari teori digital design (Tocci, Digital Systems).'
       },
       {
+        id: 'tabel-kebenaran',
+        emoji: '📋',
         title: 'Tabel Kebenaran',
-        content: `<p>Tabel kebenaran menunjukkan semua kombinasi input dan output.</p>
+        body: `<p>Tabel kebenaran menunjukkan semua kombinasi input dan output.</p>
 <table class="mt-table"><thead><tr><th>A</th><th>B</th><th>A·B</th><th>A+B</th><th>A⊕B</th></tr></thead><tbody>
 <tr><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
 <tr><td>0</td><td>1</td><td>0</td><td>1</td><td>1</td></tr>
@@ -818,8 +836,10 @@ $$R = \\rho \\cdot \\frac{L}{A} \\qquad \\Rightarrow \\qquad \\Delta V = 2 \\cdo
         referensi: 'Tabel kebenaran: notasi standar teori digital. XOR sebagai pengali dari prinsip aritmetika biner.'
       },
       {
+        id: 'aljabar-boolean',
+        emoji: '🧮',
         title: 'Aljabar Boolean',
-        content: `<p>Aljabar Boolean menyederhanakan rangkaian logika.</p>
+        body: `<p>Aljabar Boolean menyederhanakan rangkaian logika.</p>
 <table class="mt-table"><thead><tr><th>Hukum</th><th>OR (+)</th><th>AND (·)</th></tr></thead><tbody>
 <tr><td>Identitas</td><td>A + 0 = A</td><td>A · 1 = A</td></tr>
 <tr><td>Null</td><td>A + 1 = 1</td><td>A · 0 = 0</td></tr>
@@ -828,14 +848,16 @@ $$R = \\rho \\cdot \\frac{L}{A} \\qquad \\Rightarrow \\qquad \\Delta V = 2 \\cdo
 <tr><td>Komutatif</td><td>A + B = B + A</td><td>A · B = B · A</td></tr>
 </tbody></table>
 <p><strong>Hukum De Morgan:</strong></p>
-<p>$$\overline{A + B} = \bar{A} \cdot \bar{B} \qquad \overline{A \cdot B} = \bar{A} + \bar{B}$$</p>
+<p>$$\\overline{A + B} = \\bar{A} \\cdot \\bar{B} \\qquad \\overline{A \\cdot B} = \\bar{A} + \\bar{B}$$</p>
 <div class="mt-tip">💡 De Morgan mengkonversi bentuk OR-dominan ↔ AND-dominan — kunci simplifikasi rangkaian minimum gerbang.</div>`,
         referensi: 'Aljabar Boolean: George Boole (1815–1864). Hukum De Morgan dari teori set & logika matematika.'
       },
       {
+        id: 'flip-flop',
+        emoji: '💾',
         title: 'Flip-Flop',
-        content: `<p>Flip-flop adalah elemen memori dasar — menyimpan 1 bit data (berbeda dari gerbang kombinasional).</p>
-<div class="mt-img-wrap"><img src="Asset Materi/d-flipflop.png" alt="Simbol D flip-flop" loading="lazy"><div class="mt-img-cap">D Flip-Flop — blok memori dasar (CC BY-SA 4.0 Wikimedia Commons)</div></div>
+        body: `<p>Flip-flop adalah elemen memori dasar — menyimpan 1 bit data (berbeda dari gerbang kombinasional).</p>
+<div class="mt-img-wrap"><img class="mt-img" src="Asset%20Materi/d-flipflop.png" alt="Simbol D flip-flop" loading="lazy" onclick="openMateriImg(this)"><div class="mt-img-cap">D Flip-Flop — blok memori dasar (CC BY-SA 4.0 Wikimedia Commons)</div></div>
 <table class="mt-table"><thead><tr><th>Tipe</th><th>Input</th><th>Fungsi</th><th>Aplikasi</th></tr></thead><tbody>
 <tr><td>SR</td><td>S, R</td><td>Set(Q=1) atau Reset(Q=0)</td><td>Debounce switch</td></tr>
 <tr><td>D</td><td>D, CLK</td><td>Simpan D pada edge clock</td><td>Register, latch data</td></tr>
@@ -846,38 +868,38 @@ $$R = \\rho \\cdot \\frac{L}{A} \\qquad \\Rightarrow \\qquad \\Delta V = 2 \\cdo
         referensi: 'Flip-flop dari teori digital systems (Tocci, Widmer, Moos). Register & counter dari arsitektur komputer dasar.'
       },
       {
+        id: 'half-adder-full-adder',
+        emoji: '➕',
         title: 'Half Adder & Full Adder',
-        content: `<p>Adder menjumlahkan bit biner — fondasi ALU dalam processor.</p>
+        body: `<p>Adder menjumlahkan bit biner — fondasi ALU dalam processor.</p>
 <p><strong>Half Adder</strong> (2 bit): S = A ⊕ B, C = A · B</p>
 <p><strong>Full Adder</strong> (3 bit, termasuk carry-in):</p>
-<p>$S = A \oplus B \oplus C_{in} \qquad C_{out} = A \cdot B + C_{in}(A \oplus B)$</p>
+<p>$S = A \\oplus B \\oplus C_{in} \\qquad C_{out} = A \\cdot B + C_{in}(A \\oplus B)$</p>
 <p>Empat full adder cascading → <strong>4-bit parallel adder</strong>, bisa di-stack untuk 8-bit, 16-bit, dst.</p>
 <div class="mt-tip">💡 CPU modern menjumlahkan angka 64-bit dengan Carry-Lookahead untuk percepatan propagasi carry.</div>`,
         referensi: 'Half/Full Adder dari teori digital design (Mano, Digital Design). Carry-Lookahead dari Patterson & Hennessy, Computer Organization.'
       }
     ],
-
     contoh: [
       {
-        title: 'Menyederhanakan dengan De Morgan',
+        judul: 'Menyederhanakan dengan De Morgan',
+        soal: 'Fungsi: Y = (A · B) + (A · C)',
         langkah: [
-          'Fungsi: Y = (A · B) + (A · C)',
           'Faktorkan: Y = A · (B + C)',
           'Dari 3 gerbang (2 AND + 1 OR) menjadi 2 gerbang (1 AND + 1 OR)',
           'Penghematan: mengurangi IC & konsumsi daya'
         ]
       },
       {
-        title: '2-bit Counter dengan JK Flip-Flop',
+        judul: '2-bit Counter dengan JK Flip-Flop',
+        soal: 'Counter biner: 00 → 01 → 10 → 11 → 00 (mod-4)',
         langkah: [
-          'Counter biner: 00 → 01 → 10 → 11 → 00 (mod-4)',
           'Stage 1: J=K=1 (toggle setiap clock) → Q0 berubah tiap clock',
           'Stage 2: J=K=Q0 → toggle saat Q0=1 (carry dari stage 1)',
           'Hasil: Q1Q0 = 00, 01, 10, 11, 00, ...'
         ]
       }
     ],
-
     soal: [
       { q: 'Gerbang yang bisa membangun semua fungsi logika hanya dari dirinya sendiri adalah…', opts: ['AND', 'OR', 'NAND', 'XOR'], ans: 2, exp: 'NAND (dan NOR) adalah gerbang universal.' },
       { q: 'Hukum De Morgan: (A + B)̄ = …', opts: ['Ā · B̄', 'Ā + B̄', 'A · B', 'A + B'], ans: 0, exp: 'De Morgan: complement OR = AND dari complement → Ā · B̄.' },
@@ -886,7 +908,7 @@ $$R = \\rho \\cdot \\frac{L}{A} \\qquad \\Rightarrow \\qquad \\Delta V = 2 \\cdo
       { q: 'Jumlah baris tabel kebenaran untuk 4 input adalah…', opts: ['4', '8', '16', '32'], ans: 2, exp: '2⁴ = 16 baris.' }
     ]
   },
-{
+  {
     id: 'motor-listrik',
     emoji: '🏭',
     title: 'Motor Listrik & Pengendalian',
@@ -894,12 +916,13 @@ $$R = \\rho \\cdot \\frac{L}{A} \\qquad \\Rightarrow \\qquad \\Delta V = 2 \\cdo
     level: 'Menengah',
     durasi: '±40 menit',
     materi: ['Motor DC', 'Motor Induksi', 'Kontaktor & Relay', 'Star-Delta', 'VFD'],
-
     sections: [
       {
+        id: 'motor-dc-arus-searah',
+        emoji: '🔋',
         title: 'Motor DC & Arus Searah',
-        content: `<p>Motor DC mengubah energi listrik menjadi energi mekanik berdasarkan gaya Lorentz pada konduktor dalam medan magnet.</p>
-<p>$$T = k \cdot \Phi \cdot I_a \qquad E_b = k \cdot \Phi \cdot \omega$$</p>
+        body: `<p>Motor DC mengubah energi listrik menjadi energi mekanik berdasarkan gaya Lorentz pada konduktor dalam medan magnet.</p>
+<p>$$T = k \\cdot \\Phi \\cdot I_a \\qquad E_b = k \\cdot \\Phi \\cdot \\omega$$</p>
 <p>Di mana T = torsi (Nm), k = konstanta motor, Φ = fluks, Ia = arus armatur, Eb = back-EMF, ω = kecepatan sudut (rad/s).</p>
 <p><strong>Tipe motor DC:</strong></p>
 <table class="mt-table"><thead><tr><th>Tipe</th><th>Karakteristik</th><th>Aplikasi</th></tr></thead><tbody>
@@ -911,9 +934,11 @@ $$R = \\rho \\cdot \\frac{L}{A} \\qquad \\Rightarrow \\qquad \\Delta V = 2 \\cdo
         referensi: 'Prinsip motor DC dari teori mesin listrik (Chapman, Electric Machinery Fundamentals). Formula back-EMF dan torsi dari definisi dasar electromechanical conversion.'
       },
       {
+        id: 'motor-induksi',
+        emoji: '🌀',
         title: 'Motor Induksi (Asinkron)',
-        content: `<p>Motor induksi 3 fasa adalah motor industri paling banyak digunakan — murah, kuat, minim perawatan.</p>
-<div class="mt-img-wrap"><img src="Asset Materi/induction-motor.png" alt="Diagram motor induksi 3 fasa" loading="lazy"><div class="mt-img-cap">Motor induksi 3 fasa — prinsip kerja (CC BY-SA 4.0 Wikimedia Commons)</div></div>
+        body: `<p>Motor induksi 3 fasa adalah motor industri paling banyak digunakan — murah, kuat, minim perawatan.</p>
+<div class="mt-img-wrap"><img class="mt-img" src="Asset%20Materi/induction-motor.png" alt="Diagram motor induksi 3 fasa" loading="lazy" onclick="openMateriImg(this)"><div class="mt-img-cap">Motor induksi 3 fasa — prinsip kerja (CC BY-SA 4.0 Wikimedia Commons)</div></div>
 <p><strong>Prinsip kerja:</strong></p>
 <ol>
 <li>Arus AC 3 fasa pada stator menghasilkan medan magnet berputar (rotating magnetic field)</li>
@@ -921,14 +946,16 @@ $$R = \\rho \\cdot \\frac{L}{A} \\qquad \\Rightarrow \\qquad \\Delta V = 2 \\cdo
 <li>Arus pada rotor dalam medan stator → gaya Lorentz → rotor berputar</li>
 </ol>
 <p><strong>Slip:</strong></p>
-<p>$$s = \frac{n_s - n_r}{n_s} \times 100\%$$</p>
+<p>$$s = \\frac{n_s - n_r}{n_s} \\times 100\\%$$</p>
 <p>Di mana ns = kecepatan sinkron (120f/p), nr = kecepatan rotor aktual. Slip tipikal 2–5% pada beban nominal.</p>
 <div class="mt-warn">⚠️ Motor induksi tidak bisa mengontrol kecepatan secara presisi tanpa VFD (Variable Frequency Drive).</div>`,
         referensi: 'Prinsip motor induksi: Nikola Tesla & Galileo Ferraris (1888). Slip dan sinkron dari teori AC machines (Chapman, Fitzgerald & Kingsley).'
       },
       {
+        id: 'kontaktor-relay',
+        emoji: '🔌',
         title: 'Kontaktor & Relay',
-        content: `<p><strong>Kontaktor</strong> adalah sakelar elektromagnetik untuk menghubungkan/memutus arus beban besar (10A–600A).</p>
+        body: `<p><strong>Kontaktor</strong> adalah sakelar elektromagnetik untuk menghubungkan/memutus arus beban besar (10A–600A).</p>
 <p><strong>Relay</strong> bekerja seperti kontaktor tapi untuk arus lebih kecil (10mA–10A), biasanya untuk sinyal kontrol.</p>
 <table class="mt-table"><thead><tr><th>Fitur</th><th>Kontaktor</th><th>Relay</th></tr></thead><tbody>
 <tr><td>Arus nominal</td><td>10A – 600A</td><td>10mA – 10A</td></tr>
@@ -940,9 +967,11 @@ $$R = \\rho \\cdot \\frac{L}{A} \\qquad \\Rightarrow \\qquad \\Delta V = 2 \\cdo
         referensi: 'Spesifikasi kontaktor dari katalog vendor (Schneider Electric, ABB, Siemens). Pemilihan berdasarkan IEC 60947-4-1.'
       },
       {
+        id: 'rangkaian-star-delta',
+        emoji: '🔺',
         title: 'Rangkaian Star-Delta (Y-Δ)',
-        content: `<p>Star-delta adalah metode starting motor induksi untuk mengurangi arus start hingga 1/3 dari arus direct-on-line.</p>
-<div class="mt-img-wrap"><img src="Asset Materi/star-delta.png" alt="Diagram rangkaian star-delta motor" loading="lazy"><div class="mt-img-cap">Rangkaian star-delta (CC BY-SA 4.0 Wikimedia Commons)</div></div>
+        body: `<p>Star-delta adalah metode starting motor induksi untuk mengurangi arus start hingga 1/3 dari arus direct-on-line.</p>
+<div class="mt-img-wrap"><img class="mt-img" src="Asset%20Materi/star-delta.png" alt="Diagram rangkaian star-delta motor" loading="lazy" onclick="openMateriImg(this)"><div class="mt-img-cap">Rangkaian star-delta (CC BY-SA 4.0 Wikimedia Commons)</div></div>
 <p><strong>Prinsip:</strong></p>
 <ul>
 <li><strong>Star (Y):</strong> Tegangan per fasa = V_line/√3 → arus start lebih kecil</li>
@@ -954,8 +983,10 @@ $$R = \\rho \\cdot \\frac{L}{A} \\qquad \\Rightarrow \\qquad \\Delta V = 2 \\cdo
         referensi: 'Prinsip star-delta dari teori motor AC. Pemilihan: Siemens/ABB application guide for motor starting methods.'
       },
       {
+        id: 'thermal-overload-relay',
+        emoji: '🌡️',
         title: 'Thermal Overload Relay (TOR)',
-        content: `<p>TOR melindungi motor dari panas berlebih (overload) yang merusak isolasi winding.</p>
+        body: `<p>TOR melindungi motor dari panas berlebih (overload) yang merusak isolasi winding.</p>
 <p><strong>Prinsip kerja:</strong></p>
 <ol>
 <li>Arus motor melewati bimetal strip di dalam TOR</li>
@@ -967,10 +998,12 @@ $$R = \\rho \\cdot \\frac{L}{A} \\qquad \\Rightarrow \\qquad \\Delta V = 2 \\cdo
         referensi: 'TOR dari standar IEC 60947-4-1. Setting berdasarkan nameplate motor (FLA = Full Load Ampere).'
       },
       {
+        id: 'vfd',
+        emoji: '🎚️',
         title: 'VFD (Variable Frequency Drive)',
-        content: `<p>VFD mengontrol kecepatan motor induksi dengan mengubah frekuensi dan tegangan supply motor.</p>
+        body: `<p>VFD mengontrol kecepatan motor induksi dengan mengubah frekuensi dan tegangan supply motor.</p>
 <p><strong>Prinsip:</strong></p>
-<p>$$n = \frac{120f}{p}(1-s)$$</p>
+<p>$$n = \\frac{120f}{p}(1-s)$$</p>
 <p>Mengubah frekuensi (f) → mengubah kecepatan sinkron → mengubah kecepatan rotor.</p>
 <p><strong>Tahapan dalam VFD:</strong></p>
 <ol>
@@ -985,25 +1018,24 @@ $$R = \\rho \\cdot \\frac{L}{A} \\qquad \\Rightarrow \\qquad \\Delta V = 2 \\cdo
 <li>Penghematan energi (pompa & kipas: daya ∝ kecepatan³)</li>
 <li>Torsi rendah bisa dipertahankan pada kecepatan rendah</li>
 </ul>
-<div class="mt-img-wrap"><img src="Asset Materi/vfd.jpg" alt="Variable Frequency Drive (VFD) untuk motor AC" loading="lazy"><div class="mt-img-cap">Variable Frequency Drive (CC BY-SA 4.0 Wikimedia Commons)</div></div>`,
+<div class="mt-img-wrap"><img class="mt-img" src="Asset%20Materi/vfd.jpg" alt="Variable Frequency Drive (VFD) untuk motor AC" loading="lazy" onclick="openMateriImg(this)"><div class="mt-img-cap">Variable Frequency Drive (CC BY-SA 4.0 Wikimedia Commons)</div></div>`,
         referensi: 'Prinsip VFD dari power electronics (Muhammad, Power Electronics). Efisiensi pompa/kipas: hukum affinity (P ∝ n³) dari fluid mechanics.'
       }
     ],
-
     contoh: [
       {
-        title: 'Menghitung Slip Motor Induksi',
+        judul: 'Menghitung Slip Motor Induksi',
+        soal: 'Motor 4-pole, 50Hz, nameplate: 1440 RPM',
         langkah: [
-          'Motor 4-pole, 50Hz, nameplate: 1440 RPM',
           'Ns = 120 × f / p = 120 × 50 / 4 = 1500 RPM',
           'Slip s = (1500 - 1440) / 1500 = 60/1500 = 0,04 = 4%',
           'Slip 4% → motor dalam kondisi normal (tipikal 2–5%)'
         ]
       },
       {
-        title: 'Penghematan Energi VFD pada Pompa',
+        judul: 'Penghematan Energi VFD pada Pompa',
+        soal: 'Pompa beroperasi 80% dari kecepatan nominal (n₂ = 0,8 × n₁)',
         langkah: [
-          'Pompa beroperasi 80% dari kecepatan nominal (n₂ = 0,8 × n₁)',
           'Hukum affinity: P₂/P₁ = (n₂/n₁)³ = (0,8)³ = 0,512',
           'Daya turun 48,8% — penghematan besar!',
           'Contoh: pompa 10kW → dijalankan VFD pada 80% → hanya butuh 5,12kW',
@@ -1011,7 +1043,6 @@ $$R = \\rho \\cdot \\frac{L}{A} \\qquad \\Rightarrow \\qquad \\Delta V = 2 \\cdo
         ]
       }
     ],
-
     soal: [
       { q: 'Motor induksi 4-pole, 50Hz memiliki kecepatan sinkron (ns) sebesar…', opts: ['3000 RPM', '1500 RPM', '1000 RPM', '750 RPM'], ans: 1, exp: 'ns = 120f/p = 120 × 50/4 = 1500 RPM.' },
       { q: 'Torsi motor induksi dalam konfigurasi star adalah…', opts: ['3× torsi delta', 'Sama dengan delta', '1/3 torsi delta', '2× torsi delta'], ans: 2, exp: 'Torsi ∝ V², dan tegangan star = V/√3 → torsi star = torsi delta / 3.' },
@@ -1020,7 +1051,7 @@ $$R = \\rho \\cdot \\frac{L}{A} \\qquad \\Rightarrow \\qquad \\Delta V = 2 \\cdo
       { q: 'Pompa beroperasi pada 80% kecepatan, daya yang dibutuhkan menjadi…', opts: ['80% dari awal', '64% dari awal', '51,2% dari awal', '40% dari awal'], ans: 2, exp: 'P ∝ n³ → (0,8)³ = 0,512 = 51,2% dari daya awal.' }
     ]
   },
-{
+  {
     id: 'plc-otomasi',
     emoji: '🛠️',
     title: 'PLC & Otomasi Industri',
@@ -1028,12 +1059,13 @@ $$R = \\rho \\cdot \\frac{L}{A} \\qquad \\Rightarrow \\qquad \\Delta V = 2 \\cdo
     level: 'Menengah → Lanjutan',
     durasi: '±45 menit',
     materi: ['Konsep PLC', 'Ladder Diagram', 'Timer & Counter', 'HMI', 'SCADA', 'Studi Kasus'],
-
     sections: [
       {
+        id: 'pengenalan-plc',
+        emoji: '🏭',
         title: 'Pengenalan PLC',
-        content: `<p>PLC (Programmable Logic Controller) adalah komputer industri yang dirancang untuk mengendalikan mesin dan proses produksi secara real-time.</p>
-<div class="mt-img-wrap"><img src="Asset Materi/plc-cpu.jpg" alt="Unit PLC industri" loading="lazy"><div class="mt-img-cap">Unit PLC industri — CPU, modul I/O, dan power supply (CC BY-SA 4.0 Wikimedia Commons)</div></div>
+        body: `<p>PLC (Programmable Logic Controller) adalah komputer industri yang dirancang untuk mengendalikan mesin dan proses produksi secara real-time.</p>
+<div class="mt-img-wrap"><img class="mt-img" src="Asset%20Materi/plc-cpu.jpg" alt="Unit PLC industri" loading="lazy" onclick="openMateriImg(this)"><div class="mt-img-cap">Unit PLC industri — CPU, modul I/O, dan power supply (CC BY-SA 4.0 Wikimedia Commons)</div></div>
 <p><strong>Arsitektur dasar PLC:</strong></p>
 <ol>
 <li><strong>CPU:</strong> Memproses program kontrol (scan cycle: baca input → eksekusi program → tulis output)</li>
@@ -1052,9 +1084,11 @@ $$R = \\rho \\cdot \\frac{L}{A} \\qquad \\Rightarrow \\qquad \\Delta V = 2 \\cdo
         referensi: 'Konsep PLC dari standar IEC 61131-3 (programming languages). Arsitektur PLC dari referensi otomasi (Ogata, Modern Control Engineering). Vendor: Siemens S7-1200/1500, Mitsubishi FX5U, Omron NX/NJ, Allen-Bradley CompactLogix.'
       },
       {
+        id: 'ladder-diagram',
+        emoji: '🪜',
         title: 'Ladder Diagram (LD)',
-        content: `<p>Ladder Diagram adalah bahasa pemrograman PLC paling populer — menyerupai rangkaian relay elektrik yang mudah dipahami teknisi listrik.</p>
-<div class="mt-img-wrap"><img src="Asset Materi/ladder-and.jpg" alt="Contoh ladder diagram AND gate" loading="lazy"><div class="mt-img-cap">Ladder diagram — contact seri (AND) dan paralel (OR) (CC BY-SA 4.0 Wikimedia Commons)</div></div>
+        body: `<p>Ladder Diagram adalah bahasa pemrograman PLC paling populer — menyerupai rangkaian relay elektrik yang mudah dipahami teknisi listrik.</p>
+<div class="mt-img-wrap"><img class="mt-img" src="Asset%20Materi/ladder-and.jpg" alt="Contoh ladder diagram AND gate" loading="lazy" onclick="openMateriImg(this)"><div class="mt-img-cap">Ladder diagram — contact seri (AND) dan paralel (OR) (CC BY-SA 4.0 Wikimedia Commons)</div></div>
 <p><strong>Simbol dasar ladder:</strong></p>
 <table class="mt-table"><thead><tr><th>Simbol</th><th>Fungsi</th><th>Notasi PLC</th></tr></thead><tbody>
 <tr><td>| |</td><td>Normally Open (NO) contact</td><td>XIC (Examine If Closed)</td></tr>
@@ -1072,8 +1106,10 @@ $$R = \\rho \\cdot \\frac{L}{A} \\qquad \\Rightarrow \\qquad \\Delta V = 2 \\cdo
         referensi: 'Ladder Diagram dari IEC 61131-3 (salah satu dari 5 bahasa PLC). Simbol mengikuti standar relay logic industrial.'
       },
       {
+        id: 'timer-counter',
+        emoji: '⏱️',
         title: 'Timer & Counter',
-        content: `<p>Timer dan counter adalah fungsi paling sering digunakan dalam program PLC.</p>
+        body: `<p>Timer dan counter adalah fungsi paling sering digunakan dalam program PLC.</p>
 <p><strong>Timer (TON, TOF, TONR):</strong></p>
 <table class="mt-table"><thead><tr><th>Tipe</th><th>Fungsi</th><th>Contoh Aplikasi</th></tr></thead><tbody>
 <tr><td>TON (On-Delay)</td><td>Delay sebelum output ON</td><td>Kipas pendingin: motor ON → delay 5s → kipas ON</td></tr>
@@ -1090,8 +1126,10 @@ $$R = \\rho \\cdot \\frac{L}{A} \\qquad \\Rightarrow \\qquad \\Delta V = 2 \\cdo
         referensi: 'Timer & Counter fungsi dari IEC 61131-3. Resolusi dari spesifikasi scan time PLC (Siemens S7: 1ms–10ms tergantung ukuran program).'
       },
       {
+        id: 'hmi',
+        emoji: '🖥️',
         title: 'HMI (Human-Machine Interface)',
-        content: `<p>HMI adalah panel layar sentuh yang memungkinkan operator berinteraksi dengan PLC — memantau status, mengubah parameter, dan melihat alarm.</p>
+        body: `<p>HMI adalah panel layar sentuh yang memungkinkan operator berinteraksi dengan PLC — memantau status, mengubah parameter, dan melihat alarm.</p>
 <p><strong>Fungsi utama HMI:</strong></p>
 <ol>
 <li><strong>Visualisasi:</strong> Diagram alir proses, gauge, trend chart real-time</li>
@@ -1108,8 +1146,10 @@ $$R = \\rho \\cdot \\frac{L}{A} \\qquad \\Rightarrow \\qquad \\Delta V = 2 \\cdo
         referensi: 'Desain HMI mengikuti ISA-101 (HMI Display Design). Komunikasi HMI-PLC via protocol industri (Modbus, Ethernet/IP, PROFINET) dari vendor documentation.'
       },
       {
+        id: 'scada',
+        emoji: '📊',
         title: 'SCADA (Supervisory Control and Data Acquisition)',
-        content: `<p>SCADA adalah sistem monitoring dan kontrol terpusat untuk fasilitas industri berskala besar — mengumpulkan data dari banyak PLC/RTU dan menampilkannya di satu pusat kontrol.</p>
+        body: `<p>SCADA adalah sistem monitoring dan kontrol terpusat untuk fasilitas industri berskala besar — mengumpulkan data dari banyak PLC/RTU dan menampilkannya di satu pusat kontrol.</p>
 <p><strong>Elemen SCADA:</strong></p>
 <table class="mt-table"><thead><tr><th>Komponen</th><th>Fungsi</th></tr></thead><tbody>
 <tr><td>RTU (Remote Terminal Unit)</td><td>Interface field device → jaringan komunikasi</td></tr>
@@ -1128,8 +1168,10 @@ $$R = \\rho \\cdot \\frac{L}{A} \\qquad \\Rightarrow \\qquad \\Delta V = 2 \\cdo
         referensi: 'SCADA dari standar ISA-95 / IEC 62264. Keamanan SCADA: IEC 62443 (Industrial Automation and Control Systems Security). Historian: OSIsoft PI, GE Proficy.'
       },
       {
+        id: 'studi-kasus-sistem-konveyor-otomatis',
+        emoji: '⚙️',
         title: 'Studi Kasus: Sistem Konveyor Otomatis',
-        content: `<p>Simulasi sistem konveyor dengan 3 stasiun kerja yang dikontrol PLC:</p>
+        body: `<p>Simulasi sistem konveyor dengan 3 stasiun kerja yang dikontrol PLC:</p>
 <p><strong>Spesifikasi:</strong></p>
 <ul>
 <li>Konveyor utama (motor 3 fasa, VFD)</li>
@@ -1154,12 +1196,11 @@ $$R = \\rho \\cdot \\frac{L}{A} \\qquad \\Rightarrow \\qquad \\Delta V = 2 \\cdo
         referensi: 'Studi kasus konveyor dari aplikasi nyata otomasi industri. Konsep dasar dari Siemens S7 TIA Portal application examples.'
       }
     ],
-
     contoh: [
       {
-        title: 'Membuat Timer On-Delay di Ladder',
+        judul: 'Membuat Timer On-Delay di Ladder',
+        soal: 'Input X0 = start button (NO), Output Y0 = lampu',
         langkah: [
-          'Input X0 = start button (NO), Output Y0 = lampu',
           'Timer T1 = TON, preset = 50 (5,0 detik pada timer 100ms)',
           'Ladder: ---[X0]---[TON T1 K50]---',
           '           ---[T1]---(Y0)---',
@@ -1167,9 +1208,9 @@ $$R = \\rho \\cdot \\frac{L}{A} \\qquad \\Rightarrow \\qquad \\Delta V = 2 \\cdo
         ]
       },
       {
-        title: 'Counter Produk pada Konveyor',
+        judul: 'Counter Produk pada Konveyor',
+        soal: 'Sensor photocell = X1 (pulse setiap produk lewat)',
         langkah: [
-          'Sensor photocell = X1 (pulse setiap produk lewat)',
           'Counter C1 = CTU, preset = 100',
           'Saat C1.ACC ≥ 100 → C1.DN = ON → output Y5 (lampu "batch selesai")',
           'Reset counter: X2 (manual reset button) → RES C1',
@@ -1177,7 +1218,6 @@ $$R = \\rho \\cdot \\frac{L}{A} \\qquad \\Rightarrow \\qquad \\Delta V = 2 \\cdo
         ]
       }
     ],
-
     soal: [
       { q: 'Scan cycle PLC terdiri dari 3 langkah utama, urutan yang benar adalah…', opts: ['Eksekusi program → Baca input → Tulis output', 'Baca input → Eksekusi program → Tulis output', 'Tulis output → Baca input → Eksekusi program', 'Baca output → Tulis input → Eksekusi program'], ans: 1, exp: 'PLC scan cycle: Baca input → Eksekusi program → Tulis output (repeat terus-menerus).' },
       { q: 'Timer TON (On-Delay) dengan preset 50 pada timer 100ms akan menunda output selama…', opts: ['50 ms', '500 ms', '5 detik', '50 detik'], ans: 2, exp: '50 × 100ms = 5000ms = 5 detik.' },
@@ -1186,7 +1226,7 @@ $$R = \\rho \\cdot \\frac{L}{A} \\qquad \\Rightarrow \\qquad \\Delta V = 2 \\cdo
       { q: 'PLC scan time tipikal adalah…', opts: ['1–10 µs', '1–10 ms', '1–10 detik', '1–10 menit'], ans: 1, exp: 'Scan time PLC industri tipikal 1–10ms tergantung ukuran program dan jenis CPU.' }
     ]
   },
-{
+  {
     id: 'iot-firebase',
     emoji: '📶',
     title: 'IoT & Firebase',
@@ -1194,12 +1234,13 @@ $$R = \\rho \\cdot \\frac{L}{A} \\qquad \\Rightarrow \\qquad \\Delta V = 2 \\cdo
     level: 'Lanjutan',
     durasi: '±40 menit',
     materi: ['ESP32', 'Sensor', 'WiFi & MQTT', 'Firebase', 'Dashboard'],
-
     sections: [
       {
+        id: 'pengenalan-esp32-untuk-iot',
+        emoji: '📶',
         title: 'Pengenalan ESP32 untuk IoT',
-        content: `<p>ESP32 adalah microcontroller populer untuk proyek IoT karena memiliki WiFi & Bluetooth bawaan, cukup powerful untuk aplikasi real-time, dan harganya sangat terjangkau.</p>
-<div class="mt-img-wrap"><img src="Asset Materi/esp32-devkitc-pinout.png" alt="Pinout ESP32 DevKit" loading="lazy"><div class="mt-img-cap">ESP32 DevKit pinout (CC BY-SA 4.0 Wikimedia Commons)</div></div>
+        body: `<p>ESP32 adalah microcontroller populer untuk proyek IoT karena memiliki WiFi & Bluetooth bawaan, cukup powerful untuk aplikasi real-time, dan harganya sangat terjangkau.</p>
+<div class="mt-img-wrap"><img class="mt-img" src="Asset%20Materi/esp32-devkitc-pinout.png" alt="Pinout ESP32 DevKit" loading="lazy" onclick="openMateriImg(this)"><div class="mt-img-cap">ESP32 DevKit pinout (CC BY-SA 4.0 Wikimedia Commons)</div></div>
 <p><strong>Fitur utama ESP32:</strong></p>
 <table class="mt-table"><thead><tr><th>Fitur</th><th>Spesifikasi</th></tr></thead><tbody>
 <tr><td>Processor</td><td>Dual-core 240MHz, Xtensa LX6</td></tr>
@@ -1213,8 +1254,10 @@ $$R = \\rho \\cdot \\frac{L}{A} \\qquad \\Rightarrow \\qquad \\Delta V = 2 \\cdo
         referensi: 'Spesifikasi ESP32 dari datasheet resmi Espressif Systems (esp32.com). ESP-IDF documentation untuk programming framework.'
       },
       {
+        id: 'sensor-untuk-iot',
+        emoji: '🔍',
         title: 'Sensor untuk IoT',
-        content: `<p>Sensor mengubah besaran fisik menjadi sinyal listrik yang bisa dibaca oleh microcontroller.</p>
+        body: `<p>Sensor mengubah besaran fisik menjadi sinyal listrik yang bisa dibaca oleh microcontroller.</p>
 <p><strong>Sensor populer untuk IoT:</strong></p>
 <table class="mt-table"><thead><tr><th>Sensor</th><th>Output</th><th>Interface</th><th>Aplikasi</th></tr></thead><tbody>
 <tr><td>DHT22</td><td>Suhu & kelembaban</td><td>1-wire</td><td>Monitoring lingkungan</td></tr>
@@ -1233,8 +1276,10 @@ $$R = \\rho \\cdot \\frac{L}{A} \\qquad \\Rightarrow \\qquad \\Delta V = 2 \\cdo
         referensi: 'Interface sensor dari dokumentasi ESP32 (Espressif). Spesifikasi ADC dari errata ESP32 — non-linearity pada low voltage.'
       },
       {
+        id: 'wifi-protokol-komunikasi',
+        emoji: '📡',
         title: 'WiFi & Protokol Komunikasi',
-        content: `<p>ESP32 terhubung ke internet via WiFi, lalu mengirim data menggunakan protokol ringan untuk IoT.</p>
+        body: `<p>ESP32 terhubung ke internet via WiFi, lalu mengirim data menggunakan protokol ringan untuk IoT.</p>
 <p><strong>Protokol komunikasi IoT:</strong></p>
 <table class="mt-table"><thead><tr><th>Protokol</th><th>Tipe</th><th>Port</th><th>Kelebihan</th></tr></thead><tbody>
 <tr><td>HTTP/REST</td><td>Request-response</td><td>80/443</td><td>Mudah, universal</td></tr>
@@ -1253,9 +1298,11 @@ $$R = \\rho \\cdot \\frac{L}{A} \\qquad \\Rightarrow \\qquad \\Delta V = 2 \\cdo
         referensi: 'MQTT specification v5.0 dari OASIS Standard. HTTP REST API dari konsep umum web development. CoAP dari RFC 7252.'
       },
       {
+        id: 'firebase-realtime-database',
+        emoji: '🔥',
         title: 'Firebase Realtime Database',
-        content: `<p>Firebase adalah platform backend-as-a-service dari Google yang menyediakan Realtime Database (NoSQL JSON tree) yang tersinkronisasi secara real-time ke semua client.</p>
-<div class="mt-img-wrap"><img src="Asset Materi/iot-diagram.jpg" alt="Diagram arsitektur IoT dengan Firebase" loading="lazy"><div class="mt-img-cap">Arsitektur IoT: Sensor → ESP32 → Firebase → Dashboard (CC BY-SA 4.0 Wikimedia Commons)</div></div>
+        body: `<p>Firebase adalah platform backend-as-a-service dari Google yang menyediakan Realtime Database (NoSQL JSON tree) yang tersinkronisasi secara real-time ke semua client.</p>
+<div class="mt-img-wrap"><img class="mt-img" src="Asset%20Materi/iot-diagram.jpg" alt="Diagram arsitektur IoT dengan Firebase" loading="lazy" onclick="openMateriImg(this)"><div class="mt-img-cap">Arsitektur IoT: Sensor → ESP32 → Firebase → Dashboard (CC BY-SA 4.0 Wikimedia Commons)</div></div>
 <p><strong>Cara kerja Firebase RTDB:</strong></p>
 <ol>
 <li>ESP32 mengirim data sensor ke Firebase via HTTP REST API</li>
@@ -1274,8 +1321,10 @@ $$R = \\rho \\cdot \\frac{L}{A} \\qquad \\Rightarrow \\qquad \\Delta V = 2 \\cdo
         referensi: 'Firebase RTDB documentation dari Firebase Google (firebase.google.com). ESP32 Firebase library: Firebase-ESP-Client by mobizt (GitHub).'
       },
       {
+        id: 'dashboard-iot-monitoring',
+        emoji: '📈',
         title: 'Dashboard IoT & Monitoring',
-        content: `<p>Dashboard adalah antarmuka visual untuk memantau data IoT secara real-time — mirip SCADA tapi berbasis web.</p>
+        body: `<p>Dashboard adalah antarmuka visual untuk memantau data IoT secara real-time — mirip SCADA tapi berbasis web.</p>
 <p><strong>Opsi dashboard untuk IoT:</strong></p>
 <table class="mt-table"><thead><tr><th>Platform</th><th>Tipe</th><th>Biaya</th><th>Cocok Untuk</th></tr></thead><tbody>
 <tr><td>ThingSpeak</td><td>Cloud</td><td>Free (limit channel)</td><td>Prototype, akademik</td></tr>
@@ -1295,12 +1344,11 @@ $$R = \\rho \\cdot \\frac{L}{A} \\qquad \\Rightarrow \\qquad \\Delta V = 2 \\cdo
         referensi: 'Platform IoT dari komparasi umum IoT ecosystem. Grafana: grafana.com. Node-RED: nodered.org. ThingSpeak: mathworks.com/products/thingspeak.'
       }
     ],
-
     contoh: [
       {
-        title: 'Membaca Sensor DHT22 & Kirim ke Firebase',
+        judul: 'Membaca Sensor DHT22 & Kirim ke Firebase',
+        soal: 'Koneksi: DHT22 DATA pin → GPIO4 (ESP32), dengan pull-up 10kΩ',
         langkah: [
-          'Koneksi: DHT22 DATA pin → GPIO4 (ESP32), dengan pull-up 10kΩ',
           'Install library: DHT sensor library (Adafruit) + Firebase-ESP-Client (mobizt)',
           'Inisialisasi: WiFi.begin(ssid, pass); Firebase.begin(databaseURL, apiToken);',
           'Loop: float t = dht.readTemperature(); Firebase.setFloat(fb, "/sensors/node1/temp", t);',
@@ -1308,9 +1356,9 @@ $$R = \\rho \\cdot \\frac{L}{A} \\qquad \\Rightarrow \\qquad \\Delta V = 2 \\cdo
         ]
       },
       {
-        title: 'MQTT Publish & Subscribe untuk Smart Home',
+        judul: 'MQTT Publish & Subscribe untuk Smart Home',
+        soal: 'Broker: Mosquitto (localhost:1883) atau cloud (broker.hivemq.com)',
         langkah: [
-          'Broker: Mosquitto (localhost:1883) atau cloud (broker.hivemq.com)',
           'Publisher (ESP32 suhu): mqtt.publish("home/livingroom/temp", "28.5")',
           'Subscriber (Node-RED / dashboard): subscribe ke "home/#" (semua topik home)',
           'Topic hierarchy: home/room/sensor_type → home/livingroom/temp, home/bedroom/humid',
@@ -1318,7 +1366,6 @@ $$R = \\rho \\cdot \\frac{L}{A} \\qquad \\Rightarrow \\qquad \\Delta V = 2 \\cdo
         ]
       }
     ],
-
     soal: [
       { q: 'ESP32 memiliki berapa core processor?', opts: ['1', '2', '4', '8'], ans: 1, exp: 'ESP32 memiliki dual-core Xtensa LX6 240MHz.' },
       { q: 'Protokol IoT yang paling hemat bandwidth adalah…', opts: ['HTTP', 'MQTT', 'WebSocket', 'FTP'], ans: 1, exp: 'MQTT header minimal 2 bytes, dirancang khusus untuk IoT dengan bandwidth terbatas.' },
@@ -1327,7 +1374,7 @@ $$R = \\rho \\cdot \\frac{L}{A} \\qquad \\Rightarrow \\qquad \\Delta V = 2 \\cdo
       { q: 'Deep sleep mode ESP32 mengkonsumsi arus sekitar…', opts: ['1 mA', '100 µA', '10 µA', '1 µA'], ans: 2, exp: 'Deep sleep ESP32 mengkonsumsi &lt;10µA — cocok untuk aplikasi baterai jangka panjang.' }
     ]
   },
-{
+  {
     id: 'energi-terbarukan',
     emoji: '🌱',
     title: 'Energi Terbarukan & Pembangkit',
@@ -1335,12 +1382,13 @@ $$R = \\rho \\cdot \\frac{L}{A} \\qquad \\Rightarrow \\qquad \\Delta V = 2 \\cdo
     level: 'Menengah',
     durasi: '±30 menit',
     materi: ['PLTS', 'PLTA', 'PLTB', 'Biomassa', 'Inverter & Baterai'],
-
     sections: [
       {
+        id: 'pembangkit-listrik-tenaga-surya',
+        emoji: '☀️',
         title: 'Pembangkit Listrik Tenaga Surya (PLTS)',
-        content: `<p>PLTS mengubah energi matahari menjadi listrik menggunakan efek photovoltaic pada sel surya semikonduktor.</p>
-<div class="mt-img-wrap"><img src="Asset Materi/pv-system.jpg" alt="Sistem PLTS: panel surya, inverter, dan meter" loading="lazy"><div class="mt-img-cap">Sistem PLTS atap — panel, inverter, dan meter (CC BY-SA 4.0 Wikimedia Commons)</div></div>
+        body: `<p>PLTS mengubah energi matahari menjadi listrik menggunakan efek photovoltaic pada sel surya semikonduktor.</p>
+<div class="mt-img-wrap"><img class="mt-img" src="Asset%20Materi/pv-system.png" alt="Sistem PLTS: panel surya, inverter, dan meter" loading="lazy" onclick="openMateriImg(this)"><div class="mt-img-cap">Sistem PLTS atap — panel, inverter, dan meter (CC BY-SA 4.0 Wikimedia Commons)</div></div>
 <p><strong>Jenis sel surya:</strong></p>
 <table class="mt-table"><thead><tr><th>Tipe</th><th>Efisiensi</th><th>Harga/Watt</th><th>Karakteristik</th></tr></thead><tbody>
 <tr><td>Monokristal</td><td>20–22%</td><td>Tinggi</td><td>Warna gelap, efisiensi tertinggi, umur panjang</td></tr>
@@ -1359,11 +1407,13 @@ $$R = \\rho \\cdot \\frac{L}{A} \\qquad \\Rightarrow \\qquad \\Delta V = 2 \\cdo
         referensi: 'Efisiensi sel surya dari NREL (National Renewable Energy Laboratory) Best Research-Cell Efficiency Chart. Komponen PLTS dari standar IEC 62446 (grid-connected PV systems).'
       },
       {
+        id: 'pembangkit-listrik-tenaga-air',
+        emoji: '💧',
         title: 'Pembangkit Listrik Tenaga Air (PLTA)',
-        content: `<p>PLTA memanfaatkan potensial air dari ketinggian (head) dan debit air untuk memutar turbin yang menggerakkan generator.</p>
-<div class="mt-img-wrap"><img src="Asset Materi/hydro-dam.png" alt="Diagram pembangkit listrik tenaga air" loading="lazy"><div class="mt-img-cap">Diagram PLTA: dam → penstock → turbin → generator (CC BY-SA 4.0 Wikimedia Commons)</div></div>
+        body: `<p>PLTA memanfaatkan potensial air dari ketinggian (head) dan debit air untuk memutar turbin yang menggerakkan generator.</p>
+<div class="mt-img-wrap"><img class="mt-img" src="Asset%20Materi/hydro-dam.png" alt="Diagram pembangkit listrik tenaga air" loading="lazy" onclick="openMateriImg(this)"><div class="mt-img-cap">Diagram PLTA: dam → penstock → turbin → generator (CC BY-SA 4.0 Wikimedia Commons)</div></div>
 <p><strong>Prinsip kerja:</strong></p>
-<p>$$P = \eta \cdot \rho \cdot g \cdot Q \cdot H$$</p>
+<p>$$P = \\eta \\cdot \\rho \\cdot g \\cdot Q \\cdot H$$</p>
 <p>Di mana P = daya (Watt), η = efisiensi turbin, ρ = densitas air (1000 kg/m³), g = gravitasi (9,81 m/s²), Q = debit (m³/s), H = head/tinggi jatuhan (m).</p>
 <p><strong>Jenis turbin:</strong></p>
 <table class="mt-table"><thead><tr><th>Tipe</th><th>Head</th><th>Debit</th><th>Contoh</th></tr></thead><tbody>
@@ -1375,11 +1425,13 @@ $$R = \\rho \\cdot \\frac{L}{A} \\qquad \\Rightarrow \\qquad \\Delta V = 2 \\cdo
         referensi: 'Rumus daya hidro dari fluid mechanics (Bernoulli). Efisiensi turbin dari IEC 60193. PLTA Indonesia: PLTA Saguling (705MW), PLTA Cirata (1008MW), PLTA Karangkates (340MW).'
       },
       {
+        id: 'pembangkit-listrik-tenaga-bayu',
+        emoji: '🌬️',
         title: 'Pembangkit Listrik Tenaga Bayu (PLTB)',
-        content: `<p>PLTB mengubah energi kinetik angin menjadi listrik menggunakan turbin angin.</p>
-<div class="mt-img-wrap"><img src="Asset Materi/wind-turbine.png" alt="Turbin angin modern (Horizontal Axis Wind Turbine)" loading="lazy"><div class="mt-img-cap">Turbin angin modern — HAWT (CC BY-SA 4.0 Wikimedia Commons)</div></div>
+        body: `<p>PLTB mengubah energi kinetik angin menjadi listrik menggunakan turbin angin.</p>
+<div class="mt-img-wrap"><img class="mt-img" src="Asset%20Materi/wind-turbine.png" alt="Turbin angin modern (Horizontal Axis Wind Turbine)" loading="lazy" onclick="openMateriImg(this)"><div class="mt-img-cap">Turbin angin modern — HAWT (CC BY-SA 4.0 Wikimedia Commons)</div></div>
 <p><strong>Rumus daya angin:</strong></p>
-<p>$$P = \tfrac{1}{2} \cdot \rho \cdot A \cdot v^3 \cdot C_p$$</p>
+<p>$$P = \\tfrac{1}{2} \\cdot \\rho \\cdot A \\cdot v^3 \\cdot C_p$$</p>
 <p>Di mana ρ = densitas udara (1,225 kg/m³), A = area swept rotor, v = kecepatan angin, Cp = koefisien daya (maks teoritis 59,3% = Limit Betz).</p>
 <p><strong>Tipis angin:</strong></p>
 <ul>
@@ -1391,8 +1443,10 @@ $$R = \\rho \\cdot \\frac{L}{A} \\qquad \\Rightarrow \\qquad \\Delta V = 2 \\cdo
         referensi: 'Rumus daya angin & Limit Betz (59,3%) dari aerodinamika turbomachinery (Manwell, Wind Energy Explained). PLTB Indonesia: PLTB Sidrap (75MW), PLTB Tolo (65MW).'
       },
       {
+        id: 'biomassa-biogas',
+        emoji: '🌱',
         title: 'Biomassa & Biogas',
-        content: `<p>Biomassa adalah material organik dari tumbuhan/hewan yang bisa dibakar atau difermentasi untuk menghasilkan energi.</p>
+        body: `<p>Biomassa adalah material organik dari tumbuhan/hewan yang bisa dibakar atau difermentasi untuk menghasilkan energi.</p>
 <p><strong>Sumber biomassa:</strong></p>
 <ul>
 <li>Bagase tebu (pabrik gula)</li>
@@ -1412,8 +1466,10 @@ $$R = \\rho \\cdot \\frac{L}{A} \\qquad \\Rightarrow \\qquad \\Delta V = 2 \\cdo
         referensi: 'Potensi biomassa Indonesia dari Kementerian ESDM. Efisiensi biogas dari studi IEA (International Energy Agency) Bioenergy.'
       },
       {
+        id: 'inverter-surya-sistem-penyimpanan',
+        emoji: '🔋',
         title: 'Inverter Surya & Sistem Penyimpanan',
-        content: `<p>Inverter adalah jantung sistem PLTS — mengkonversi DC dari panel menjadi AC yang bisa dipakai rumah/industri atau diekspor ke jaringan PLN.</p>
+        body: `<p>Inverter adalah jantung sistem PLTS — mengkonversi DC dari panel menjadi AC yang bisa dipakai rumah/industri atau diekspor ke jaringan PLN.</p>
 <p><strong>Tipe inverter surya:</strong></p>
 <table class="mt-table"><thead><tr><th>Tipe</th><th>Fitur</th><th>Cocok Untuk</th></tr></thead><tbody>
 <tr><td>Grid-tied</td><td>Sinkron dengan grid PLN, ekspor kelebihan</td><td>Rumah dengan net metering</td></tr>
@@ -1431,12 +1487,11 @@ $$R = \\rho \\cdot \\frac{L}{A} \\qquad \\Rightarrow \\qquad \\Delta V = 2 \\cdo
         referensi: 'Tipe inverter dari IEC 62109 (safety of power converters for PV). Baterai LiFePO4: datasheet CATL, BYD. DoD: studi cycle life dari Sandia National Laboratories.'
       }
     ],
-
     contoh: [
       {
-        title: 'Menghitung Daya PLTS Atap',
+        judul: 'Menghitung Daya PLTS Atap',
+        soal: 'Atap tersedia 40m², panel monokristal 400Wp (dimensi 1,7m × 1m)',
         langkah: [
-          'Atap tersedia 40m², panel monokristal 400Wp (dimensi 1,7m × 1m)',
           'Jumlah panel = 40m² / (1,7 × 1) ≈ 23 panel (maks)',
           'Daya puncak = 23 × 400W = 9.200 Wp = 9,2 kWp',
           'Rata-rata harian (Indonesia, kondisi ideal) = 4–5 jam equivalent sun → 9,2 × 4,5 = 41,4 kWh/hari',
@@ -1444,9 +1499,9 @@ $$R = \\rho \\cdot \\frac{L}{A} \\qquad \\Rightarrow \\qquad \\Delta V = 2 \\cdo
         ]
       },
       {
-        title: 'Menghitung Daya Micro-Hydro',
+        judul: 'Menghitung Daya Micro-Hydro',
+        soal: 'Sungai di desa: debit Q = 0,5 m³/s, head H = 15m',
         langkah: [
-          'Sungai di desa: debit Q = 0,5 m³/s, head H = 15m',
           'P = η × ρ × g × Q × H = 0,7 × 1000 × 9,81 × 0,5 × 15',
           'P = 0,7 × 1000 × 9,81 × 0,5 × 15 = 51.502 W ≈ 51,5 kW',
           'Kebutuhan desa 200 KK × 500W = 100 kW → micro-hydro menyediakan ~50% kebutuhan',
@@ -1454,7 +1509,6 @@ $$R = \\rho \\cdot \\frac{L}{A} \\qquad \\Rightarrow \\qquad \\Delta V = 2 \\cdo
         ]
       }
     ],
-
     soal: [
       { q: 'Limit Betz menyatakan bahwa maksimum energi angin yang bisa ditangkap turbin adalah…', opts: ['25%', '40%', '59,3%', '85%'], ans: 2, exp: 'Limit Betz = 16/27 ≈ 59,3% — batas teoritis konversi energi kinetik angin.' },
       { q: 'Efisiensi panel surya monokristal tipikal adalah…', opts: ['5–10%', '10–13%', '20–22%', '30–35%'], ans: 2, exp: 'Panel monokristal memiliki efisiensi tertinggi: 20–22% untuk komersial.' },
