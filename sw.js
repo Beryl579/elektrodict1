@@ -1,16 +1,16 @@
-// v45: Fix bubble chat Materi di desktop (posisi & klik).
+// v46: Bubble chat Materi: tombol in-flow di header (desktop) + float hanya mobile.
 // Aset diberi query ?v= agar precache selalu ambil file terbaru (mencegah
 // cache.addAll melewati SW lama yang menyajikan salinan basi).
-const CACHE_NAME = 'elektrodict-v45';
+const CACHE_NAME = 'elektrodict-v46';
 const ASSETS = [
   '/',
-  '/index.html?v=45',
-  '/css/style.css?v=45',
-  '/js/data.js?v=45',
-  '/js/data-materi.js?v=45',
-  '/js/api.js?v=45',
-  '/js/app.js?v=45',
-  '/js/modules/firebase-dashboard.js?v=45',
+  '/index.html?v=46',
+  '/css/style.css?v=46',
+  '/js/data.js?v=46',
+  '/js/data-materi.js?v=46',
+  '/js/api.js?v=46',
+  '/js/app.js?v=46',
+  '/js/modules/firebase-dashboard.js?v=46',
   '/manifest.json',
   'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css',
   'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js',
