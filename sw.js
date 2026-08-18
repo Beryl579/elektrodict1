@@ -1,16 +1,16 @@
-// v43: Modul 9 Mikrokontroler (pinout + gambar, animasi PWM, I2C/SPI/UART).
+// v44: Bubble chat AI kontekstual di tab Materi (konteks modul ke ElektroBot).
 // Aset diberi query ?v= agar precache selalu ambil file terbaru (mencegah
 // cache.addAll melewati SW lama yang menyajikan salinan basi).
-const CACHE_NAME = 'elektrodict-v43';
+const CACHE_NAME = 'elektrodict-v44';
 const ASSETS = [
   '/',
-  '/index.html?v=43',
-  '/css/style.css?v=43',
-  '/js/data.js?v=43',
-  '/js/data-materi.js?v=43',
-  '/js/api.js?v=43',
-  '/js/app.js?v=43',
-  '/js/modules/firebase-dashboard.js?v=43',
+  '/index.html?v=44',
+  '/css/style.css?v=44',
+  '/js/data.js?v=44',
+  '/js/data-materi.js?v=44',
+  '/js/api.js?v=44',
+  '/js/app.js?v=44',
+  '/js/modules/firebase-dashboard.js?v=44',
   '/manifest.json',
   'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css',
   'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js',
