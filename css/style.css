@@ -31,7 +31,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
 }
 
 /* ── TOP NAV (desktop) ── */
-.nav{position:sticky;top:0;z-index:100;background:var(--glass);backdrop-filter:blur(var(--blur));border-bottom:1px solid var(--line);transition:all 0.3s ease;}
+.nav{position:sticky;top:0;z-index:100;background:var(--glass);backdrop-filter:blur(var(--blur));border-bottom:1px solid var(--line);transition:all 0.3s ease;padding-top:env(safe-area-inset-top);} /* safe-area: 0 di desktop & Android — hanya berpengaruh di HP ber-notch (iPhone) */
 .nav-inner{max-width:1400px;margin:0 auto;padding:0 20px;display:flex;align-items:center;gap:0;height:54px}
 .logo{display:flex;align-items:center;gap:8px;text-decoration:none;margin-right:16px;flex-shrink:0}
 .logo-mark{width:28px;height:28px;border-radius:7px;background:var(--line);border:1px solid var(--bg5);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
@@ -3360,6 +3360,8 @@ body.fade-out {
 .mt-sec-body .katex{color:var(--amber);}
 .mt-tip{background:rgba(64,145,255,.08);border:1px solid rgba(64,145,255,.25);border-radius:10px;padding:10px 13px;font-size:12.5px;color:var(--text2);margin:12px 0;}
 .mt-warn{background:rgba(255,152,0,.08);border:1px solid rgba(255,152,0,.3);border-radius:10px;padding:10px 13px;font-size:12.5px;color:var(--text2);margin:12px 0;}
+.mt-ref{background:rgba(0,180,140,.07);border:1px dashed rgba(0,180,140,.35);border-radius:10px;padding:9px 13px;font-size:11.5px;color:var(--text3);margin:12px 0 4px;line-height:1.65;}
+.mt-ref b{color:var(--green);}
 .mt-contoh{background:var(--bg3);border:1px solid var(--line);border-radius:12px;padding:14px;margin-bottom:12px;}
 .mt-contoh-head{font-size:13px;font-weight:700;color:var(--accent);margin-bottom:8px;}
 .mt-contoh-soal{font-size:13px;color:var(--text);margin-bottom:10px;line-height:1.6;}
@@ -3403,6 +3405,7 @@ body.fade-out {
 /* ═══ BUBBLE CHAT AI GLOBAL (semua halaman) ═══ */
 .mt-chat-fab{position:fixed;right:16px;bottom:96px;height:52px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-d,#2563eb));border:none;color:#fff;cursor:pointer;box-shadow:0 6px 20px rgba(0,0,0,.35);z-index:900;display:flex;align-items:center;justify-content:center;transition:transform .2s;padding:0;}
 .mt-chat-fab-ico{font-size:22px;line-height:1;}
+.mt-chat-fab-svg{display:none;} /* ikon SVG hanya dipakai di mobile (<860px); desktop tetap emoji */
 .mt-chat-fab-label{display:none;font-size:13px;font-weight:700;margin-left:8px;}
 .mt-chat-fab:hover{transform:scale(1.08);}
 .mt-chat-fab::after{content:'';position:absolute;inset:-6px;border-radius:50%;border:2px solid var(--accent);opacity:.5;animation:mtFabPulse 2.2s infinite;pointer-events:none;}
@@ -3411,6 +3414,14 @@ body.fade-out {
 @media(min-width:860px){
   .mt-chat-fab{right:24px;bottom:24px;width:auto;padding:0 18px;border-radius:99px;}
   .mt-chat-fab-label{display:inline;}
+}
+/* ── MOBILE ONLY (<860px): bubble biru bulat di KIRI dengan ikon SVG ──
+   Mode desktop (>=860px) TIDAK disentuh. */
+@media(max-width:859.98px){
+  .mt-chat-fab{left:16px;right:auto;width:52px;height:52px;background:linear-gradient(135deg,#4f9cf9,#2563eb);box-shadow:0 6px 20px rgba(37,99,235,.4);}
+  .mt-chat-fab-emoji{display:none;}
+  .mt-chat-fab-svg{display:block;width:26px;height:26px;fill:currentColor;}
+  .mt-chat-fab::after{border-color:rgba(147,197,253,.7);}
 }
 /* Sembunyikan bubble lama yang duplikat — semua pakai bubble Tanya AI */
 .chat-fab-left-wrap, .fab { display:none !important; }

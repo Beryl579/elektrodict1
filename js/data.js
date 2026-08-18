@@ -433,7 +433,7 @@ const PROJECTS = [
 // Sumber: channel edukasi berbahasa Indonesia, diverifikasi via
 // YouTube oEmbed. Thumbnail diambil dari i.ytimg.com.
 // ═══════════════════════════════════════════════════════════
-const VIDEO_TOPICS = ['Semua','Dasar Listrik','Elektronika & Komponen','Motor Listrik','Energi Terbarukan','Instalasi & Panel','Digital & Kontrol','Arduino & IoT'];
+const VIDEO_TOPICS = ['Semua','Dasar Listrik','Elektronika & Komponen','Motor Listrik','Energi Terbarukan','Instalasi & Panel','Digital & Kontrol','Arduino & IoT','PLC, HMI & SCADA'];
 
 const VIDEOS = [
   // ── DASAR LISTRIK ──
@@ -487,6 +487,25 @@ const VIDEOS = [
   { id:'9dHfT9M0DYU', title:'#1 Pengenalan — Tutorial Arduino Indonesia', channel:'Sigit Indriyanto', channelUrl:'https://www.youtube.com/@neosigitindriyanto', topic:'Arduino & IoT', desc:'Seri tutorial Arduino Indonesia: pengenalan hardware dan komponen pendukung.' },
   { id:'mBdWGOKFWIc', title:'Arduino Uno Pin — Tutorial untuk Pemula', channel:'Siapa Tahu Penemuan', channelUrl:'https://www.youtube.com/@SiapaTahuPenemuan', topic:'Arduino & IoT', desc:'Mengenal nama dan fungsi setiap pin Arduino Uno beserta kegunaannya.' },
   { id:'NUZx5TLe4uo', title:'Tutorial Arduino Bahasa Indonesia — Data Type (3)', channel:'Coders Indonesia', channelUrl:'https://www.youtube.com/@codersindonesia', topic:'Arduino & IoT', desc:'Belajar tipe data pemrograman Arduino: integer, float, dan boolean.' },
+
+  // ── PLC, HMI & SCADA (dari dasar hingga kompleks) ──
+  // DASAR
+  { id:'df7sxxhGKvw', title:'Pengenalan Dasar PLC | Apa itu PLC?', channel:'Anak Elektro', channelUrl:'https://www.youtube.com/@anakelektro3459', topic:'PLC, HMI & SCADA', desc:'Pengenalan PLC: apa itu Programmable Logic Controller, komponen penyusunnya, dan perannya dalam otomasi industri.' },
+  { id:'59aLF8bxPoQ', title:'DASAR PLC — Komunitas Teknik Listrik', channel:'TEKNIK LISTRIK', channelUrl:'https://www.youtube.com/@TEKNIKLISTRIK29', topic:'PLC, HMI & SCADA', desc:'Materi dasar PLC dari komunitas Teknik Listrik — cocok untuk pemula dari SMK hingga otodidak.' },
+  { id:'DU27_ece_50', title:'FUNGSI PLC (Programmable Logic Controller)', channel:'TEKNIK LISTRIK', channelUrl:'https://www.youtube.com/@TEKNIKLISTRIK29', topic:'PLC, HMI & SCADA', desc:'Fungsi-fungsi utama PLC dalam sistem kontrol industri: logika, timing, counting, hingga komunikasi antar device.' },
+  { id:'2tneV_ZeUSA', title:'Belajar Ladder Program PLC dari NOL | Episode 1 | Gerbang Logika AND', channel:'JAGO LISTRIK', channelUrl:'https://www.youtube.com/@JAGOLISTRIK', topic:'PLC, HMI & SCADA', desc:'Memahami cara kerja PLC dan ladder diagram dari nol — episode 1 membahas gerbang logika AND.' },
+  // MENENGAH
+  { id:'-2AvewJbOZU', title:'Belajar Ladder Program PLC dari NOL | Episode 2 | Gerbang Logika OR dan NOT', channel:'JAGO LISTRIK', channelUrl:'https://www.youtube.com/@JAGOLISTRIK', topic:'PLC, HMI & SCADA', desc:'Lanjutan ladder diagram: kombinasi gerbang logika OR dan NOT untuk menyusun program kontrol nyata.' },
+  { id:'MhIb4JGlhvU', title:'Mengoperasikan PLC — Teknik Otomasi Industri', channel:'Direktorat SMK - Kemdikdasmen', channelUrl:'https://www.youtube.com/@DirektoratSMKKemendikdasmen', topic:'PLC, HMI & SCADA', desc:'Video pembelajaran SMK Teknik Otomasi Industri: mengoperasikan PLC mulai dari wiring hingga menjalankan program.' },
+  { id:'p--wbxOj7jE', title:'Belajar PLC Zelio: Rangkaian Program, Pengkabelan & Ladder Diagram', channel:'AMK2 Channel', channelUrl:'https://www.youtube.com/@amk2channel996', topic:'PLC, HMI & SCADA', desc:'Tutorial PLC Zelio Soft: membuat rangkaian program, pengkabelan PLC, ladder diagram, dan transfer program.' },
+  { id:'XYon1CVK47c', title:'KEKURANGAN PLC (Programmable Logic Controller)', channel:'TEKNIK LISTRIK', channelUrl:'https://www.youtube.com/@TEKNIKLISTRIK29', topic:'PLC, HMI & SCADA', desc:'Sisi lain PLC: keterbatasan dan hal yang perlu dipertimbangkan saat memilih PLC untuk sistem kontrol.' },
+  { id:'OA1WcpH3Orw', title:'Wecon HMI — Modbus RS-485 dari Inverter ke HMI Levi Series', channel:'Wecon Indonesia', channelUrl:'https://www.youtube.com/@weconindonesia', topic:'PLC, HMI & SCADA', desc:'Dasar komunikasi HMI: menghubungkan inverter ke HMI Wecon Levi Series via protokol Modbus RTU (RS-485).' },
+  // KOMPLEKS
+  { id:'Kz7nquKf3CQ', title:'Inverter Wecon ke HMI Wecon via Modbus 485', channel:'Wecon Indonesia', channelUrl:'https://www.youtube.com/@weconindonesia', topic:'PLC, HMI & SCADA', desc:'Konfigurasi komunikasi Modbus 485 antara inverter dan HMI Wecon untuk monitoring dan kontrol parameter motor.' },
+  { id:'Hxf3B-neJ88', title:'Komunikasi Wecon HMI dengan Mitsubishi FX3U (RS-422)', channel:'Wecon Indonesia', channelUrl:'https://www.youtube.com/@weconindonesia', topic:'PLC, HMI & SCADA', desc:'Cara menghubungkan HMI Wecon ke PLC Mitsubishi FX3U menggunakan protokol RS-422, lengkap dengan setting address.' },
+  { id:'DP41lE_hyAA', title:'Wecon HMI — Komunikasi Modbus dengan Servo Wecon', channel:'Wecon Indonesia', channelUrl:'https://www.youtube.com/@weconindonesia', topic:'PLC, HMI & SCADA', desc:'Integrasi HMI dengan servo drive Wecon via Modbus: setting parameter, display, dan kontrol posisi/kecepatan.' },
+  { id:'TmTyxr_D_n8', title:'Pengenalan SCADA (Supervisory Control And Data Acquisition)', channel:'Anak Elektro 09', channelUrl:'https://www.youtube.com/@AnakElektro09', topic:'PLC, HMI & SCADA', desc:'Apa itu SCADA: kumpulan software & hardware untuk memantau dan mengendalikan proses industri secara real-time.' },
+  { id:'32qBzn3Wk2s', title:'Implementasi SCADA Pompa Sunter Selatan Jakarta Utara', channel:'Dinas Sumber Daya Air Provinsi DKI Jakarta', channelUrl:'https://www.youtube.com/@dinassdajakarta', topic:'PLC, HMI & SCADA', desc:'Contoh nyata penerapan SCADA di lapangan: monitoring dan kontrol pompa air secara terpusat dan real-time.' },
 ];
 
 // ─────────────────────────────────────────────────────────────
