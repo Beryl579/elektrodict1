@@ -362,7 +362,7 @@ function switchTab(t){
   if(t === 'news') { videoChips(); renderVideos(); }
   if(t === 'about') loadAbout();
   if(t === 'materi') renderMateri();
-  else stopMateriAnims();
+  else { stopMateriAnims(); materiChatCtx = null; }
   if(t === 'dashboard' && window.ElektroFBDash) window.ElektroFBDash.open();
 
   window.scrollTo({top:0,behavior:'smooth'});
@@ -1906,7 +1906,10 @@ async function send(v){
     const mc = document.getElementById('modelChoiceD') ? document.getElementById('modelChoiceD').value : 'openai/gpt-oss-20b';
     // Sanitize history: remove 'file', 'image', or any extra properties before API call
     const cleanHistory = chatHistory.slice(-10).map(m => ({ role: m.role, content: m.content }));
-    const data = await callAI({model: mc, messages:[{role:'system',content:SYS},...cleanHistory]});
+    // Suntikkan konteks materi bila chat dibuka dari tab Materi
+    let sys = SYS;
+    if (materiChatCtx && materiChatCtx.active) sys += '\n\n── KONTEKS MATERI (rujukan utama) ──\n' + materiChatCtx.prompt;
+    const data = await callAI({model: mc, messages:[{role:'system',content:sys},...cleanHistory]});
     hideDots('D'); hideDots('M');
     if(data.error) throw new Error(data.error.message);
     const rep=stripThink(data.choices?.[0]?.message?.content)||'(tidak ada respons)';
@@ -3817,6 +3820,8 @@ function renderMateri() {
   list.innerHTML = `<div class="mt-grid">${cards}</div>`;
   document.getElementById('materi-detail').style.display = 'none';
   list.style.display = 'block';
+  materiChatCtx = buildMateriCtx(null);
+  materiWelcomeShown = false;
 }
 
 function openMateriModule(id) {
@@ -3864,6 +3869,8 @@ function openMateriModule(id) {
     </div>`;
   document.getElementById('materi-list').style.display = 'none';
   detail.style.display = 'block';
+  materiChatCtx = buildMateriCtx(m);
+  materiWelcomeShown = false;
   setTimeout(() => {
     detail.querySelectorAll('.mt-sec-body, .mt-contoh').forEach(el => renderMath(el));
     renderMateriQuiz();
@@ -3875,6 +3882,57 @@ function openMateriModule(id) {
 }
 
 function closeMateriModule() { renderMateri(); }
+
+// ── Chat AI kontekstual di tab Materi ──
+let materiChatCtx = null;      // { active, prompt } — disuntikkan ke system prompt chat
+let materiWelcomeShown = false;
+function buildMateriCtx(m) {
+  if (!m) return { active: true, prompt: 'User sedang menjelajah halaman Materi ElektroDict (modul belajar elektronika berbahasa Indonesia). Bantu jelaskan materi, bandingkan antar modul, atau rekomendasikan urutan belajar.' };
+  return {
+    active: true,
+    prompt: `User sedang membaca modul "${m.title}" (level ${m.level}). Daftar bab modul ini:\n${m.sections.map((s,i)=>`${i+1}. ${s.title}`).join('\n')}\nJawab dengan fokus pada materi modul ini; kalau ditanya di luar modul, tetap jawab dalam lingkup teknik elektro dan kaitkan dengan modul ini bila relevan.`
+  };
+}
+function materiOpenChat() {
+  materiChatCtx = buildMateriCtx(getMateriModule());
+  materiWelcomeShown = false;
+  const isMob = window.innerWidth < 860;
+  if (isMob) {
+    openM();
+  } else {
+    const inp = document.getElementById('inpD');
+    if (inp) inp.focus();
+    flashChatSidebar();
+  }
+  materiChatWelcome();
+}
+function materiChatWelcome() {
+  if (materiWelcomeShown) return;
+  materiWelcomeShown = true;
+  const m = getMateriModule();
+  const title = m ? m.title : 'Materi ElektroDict';
+  const esc = s => String(s).replace(/'/g, "\\'").replace(/"/g, '&quot;');
+  const chips = m
+    ? m.sections.slice(0, 4).map(s => `<button class="mchat-chip" onclick="qask('${esc(s.title)} — jelaskan dengan contoh?')">${esc(s.title)}</button>`).join('') +
+      `<button class="mchat-chip" onclick="qask('Beri contoh soal dari modul ${esc(m.title)}')">Contoh soal</button>`
+    : `<button class="mchat-chip" onclick="qask('Modul apa saja yang tersedia di Materi?')">Daftar modul</button>`;
+  const html = `<div class="mchat-welcome">📖 Kamu sedang di <strong>${esc(title)}</strong>. Tanya apa aja seputar materi ini 👇<br>${chips}</div>`;
+  ['D','M'].forEach(v => {
+    const el = msgs(v);
+    if (!el) return;
+    const d = document.createElement('div');
+    d.className = 'cm b';
+    d.innerHTML = html;
+    el.appendChild(d);
+    el.scrollTop = el.scrollHeight;
+  });
+}
+function flashChatSidebar() {
+  const sb = document.querySelector('.chat-sidebar');
+  if (!sb) return;
+  sb.classList.add('flash');
+  setTimeout(() => sb.classList.remove('flash'), 900);
+}
 
 // ── Kuis mini ──
 function renderMateriQuiz() {
