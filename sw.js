@@ -1,18 +1,18 @@
+// v61: Panduan setup Firebase di halaman Dashboard + fix 42 panah → mojibake di data.js.
 // v60: Fix SW offline — match cache by path tanpa ?v= (asset diprecache ?v=58 tapi HTML load tanpa query).
-// v59: Fix mojibake emoji di ABOUT_MD (Halaman Tentang) — ⚡📖👨‍💻🌐📄 + em-dash.
 // Aset diberi query ?v= agar precache selalu ambil file terbaru (mencegah
 // cache.addAll melewati SW lama yang menyajikan salinan basi).
-const CACHE_NAME = 'elektrodict-v60';
+const CACHE_NAME = 'elektrodict-v61';
 const ASSETS = [
   '/',
-  '/index.html?v=59',
-  '/css/style.css?v=59',
-  '/js/data.js?v=59',
-  '/js/data-materi.js?v=59',
-  '/js/api.js?v=59',
-  '/js/app.js?v=59',
-  '/js/modules/firebase-dashboard.js?v=59',
-  '/js/modules/chips.js?v=59',
+  '/index.html?v=60',
+  '/css/style.css?v=60',
+  '/js/data.js?v=60',
+  '/js/data-materi.js?v=60',
+  '/js/api.js?v=60',
+  '/js/app.js?v=60',
+  '/js/modules/firebase-dashboard.js?v=60',
+  '/js/modules/chips.js?v=60',
   '/manifest.json',
   'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css',
   'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js',

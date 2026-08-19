@@ -30,7 +30,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="katexLoaded=true;renderPendingMath()"></script>
-<link rel="stylesheet" href="css/style.css?v=59">
+<link rel="stylesheet" href="css/style.css?v=60">
 </head>
 <body>
   <!-- Splash Screen Launch Animation -->
@@ -766,6 +766,30 @@
         <button class="fb-btn" id="fb-save-btn">💾 Simpan Konfigurasi</button>
       </div>
     </div>
+
+    <!-- Panduan Setup Firebase -->
+    <details class="fb-guide">
+      <summary>📖 Panduan Setup Firebase (5 langkah)</summary>
+      <div class="fb-guide-body">
+        <ol class="fb-guide-steps">
+          <li><b>Buat proyek Firebase</b> — buka <a href="https://console.firebase.google.com" target="_blank" rel="noopener">console.firebase.google.com</a> → <b>Add project</b> → beri nama (mis. <code>iot-suhu-ku</code>) → <b>Create</b>.</li>
+          <li><b>Aktifkan Realtime Database</b> — menu kiri <b>Build → Realtime Database</b> → <b>Create database</b> → pilih lokasi (mis. <code>asia-southeast1</code>) → pilih <b>mode test</b> (aman untuk belajar) → <b>Enable</b>.</li>
+          <li><b>Salin URL database</b> — di tab <b>Data</b>, salin URL yang berbentuk <code>https://NAMA-PROYEK-default-rtdb.asia-southeast1.firebasedatabase.app</code> → isikan ke kolom <b>URL Database (host)</b> di atas.</li>
+          <li><b>Ambil Secret (opsional)</b> — klik <b>Project settings</b> (⚙️) → <b>Service accounts</b> → <b>Database secrets</b> → <b>Show</b> → salin → isikan ke kolom <b>Secret</b>. Dengan secret, database boleh di-set mode terkunci (Rules privat).</li>
+          <li><b>Klik 🧪 Tes Koneksi</b> — jika muncul "✅ Terhubung!", klik <b>🟢 Mulai Pantau</b>. Data sensor ESP32 akan tampil real-time.</li>
+        </ol>
+
+        <div class="fb-guide-note">
+          <b>Di sisi ESP32:</b> buka template proyek Firebase di <b>Lab Proyek</b> (mis. "IoT Suhu &amp; Kelembaban Firebase" atau "Servo Kendali dari Firebase"), lalu isi <code>FIREBASE_HOST</code> dengan URL database dan <code>FIREBASE_AUTH</code> dengan secret. Template sudah memakai library <b>Firebase ESP32 Client by Mobizt</b>. Setelah kode dijalankan (Wokwi/ESP32 asli), ESP32 otomatis menulis data ke path seperti <code>/sensor/suhu</code>, <code>/sensor/kelembaban</code>, <code>/jarak/cm</code>, <code>/cahaya/nilai_adc</code>, <code>/gas/nilai_adc</code> — dan dashboard ini membacanya.
+        </div>
+        <div class="fb-guide-note">
+          <b>Path kontrol keluar:</b> servo menulis ke <code>/servo/sudut</code>, LED RGB ke <code>/rgb/merah</code>, <code>/rgb/hijau</code>, <code>/rgb/biru</code>. ESP32 harus memantau path tersebut (template sudah menyediakannya).
+        </div>
+        <div class="fb-guide-note">
+          <b>Rules:</b> mode <b>test</b> = siapa pun boleh baca/tulis (cocok untuk belajar, JANGAN untuk produksi). Tanpa secret, rules harus tetap mode test supaya browser bisa membaca &amp; menulis.
+        </div>
+      </div>
+    </details>
 
     <!-- CTA awal -->
     <div id="fb-start-cta" class="fb-start-cta">
