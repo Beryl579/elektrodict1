@@ -1,18 +1,18 @@
+// v60: Fix SW offline — match cache by path tanpa ?v= (asset diprecache ?v=58 tapi HTML load tanpa query).
 // v59: Fix mojibake emoji di ABOUT_MD (Halaman Tentang) — ⚡📖👨‍💻🌐📄 + em-dash.
-// v58: Chip Library — database pinout 17 IC populer + visual viewer.
 // Aset diberi query ?v= agar precache selalu ambil file terbaru (mencegah
 // cache.addAll melewati SW lama yang menyajikan salinan basi).
-const CACHE_NAME = 'elektrodict-v59';
+const CACHE_NAME = 'elektrodict-v60';
 const ASSETS = [
   '/',
-  '/index.html?v=58',
-  '/css/style.css?v=58',
-  '/js/data.js?v=58',
-  '/js/data-materi.js?v=58',
-  '/js/api.js?v=58',
-  '/js/app.js?v=58',
-  '/js/modules/firebase-dashboard.js?v=58',
-  '/js/modules/chips.js?v=58',
+  '/index.html?v=59',
+  '/css/style.css?v=59',
+  '/js/data.js?v=59',
+  '/js/data-materi.js?v=59',
+  '/js/api.js?v=59',
+  '/js/app.js?v=59',
+  '/js/modules/firebase-dashboard.js?v=59',
+  '/js/modules/chips.js?v=59',
   '/manifest.json',
   'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css',
   'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js',
@@ -41,14 +41,23 @@ self.addEventListener('fetch', (e) => {
 
   // Don't cache API calls
   if (e.request.url.includes('/api/')) return;
-  
+
+  const pathOnly = new URL(e.request.url).pathname;
+
   e.respondWith(
     caches.match(e.request).then((response) => {
-      return response || fetch(e.request).catch((err) => {
-        if (e.request.mode === 'navigate') {
-          return caches.match('/index.html');
-        }
-        throw err;
+      if (response) return response;
+      // Fallback: match by path only (assets are precached with ?v= suffix
+      // but index.html loads them without the query string)
+      return caches.match(pathOnly).then((r) => {
+        if (r) return r;
+        return fetch(e.request).catch((err) => {
+          if (e.request.mode === 'navigate') {
+            // index.html is precached as '/' and '/index.html?v=58'
+            return caches.match('/').then((r2) => r2 || caches.match('/index.html'));
+          }
+          throw err;
+        });
       });
     })
   );

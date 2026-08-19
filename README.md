@@ -1,15 +1,15 @@
-﻿# âš¡ ElektroDict
+﻿# ⚡ ElektroDict
 
-> **Kamus teknik elektro lengkap â€” buat mahasiswa, oleh mahasiswa.**
+> **Kamus teknik elektro lengkap — buat mahasiswa, oleh mahasiswa.**
 
 ElektroDict adalah aplikasi web (PWA) pembelajaran teknik elektro berbahasa Indonesia.
 Mulai dari istilah & rumus dasar, kalkulator, konversi satuan, kode warna resistor,
 timeline sejarah kelistrikan, sampai latihan soal berbasis AI dan video pembelajaran
-dari channel YouTube Indonesia â€” semua dalam satu tempat.
+dari channel YouTube Indonesia — semua dalam satu tempat.
 
 ---
 
-## âœ¨ Fitur Utama
+## ✨ Fitur Utama
 
 | Fitur | Deskripsi |
 |---|---|
@@ -35,17 +35,17 @@ dari channel YouTube Indonesia â€” semua dalam satu tempat.
 
 ---
 
-## ðŸ§‘â€ðŸ’» Kredit & Kontak
+## 👨‍💻 Kredit & Kontak
 
 **Beryl Nathaniel Sinaga**
 
-ðŸŒ [berylnathaniel.my.id](https://berylnathaniel.my.id/)
+🌐 [berylnathaniel.my.id](https://berylnathaniel.my.id/)
 
 ---
 
-## ðŸ“„ Lisensi & Catatan
+## 📄 Lisensi & Catatan
 
 - Konten edukasi (istilah, materi, video) bersumber dari referensi umum & channel
-  YouTube edukasi Indonesia â€” hak cipta masing-masing tetap pada pemiliknya.
+  YouTube edukasi Indonesia — hak cipta masing-masing tetap pada pemiliknya.
 - Respon AI bersifat generatif dan bisa saja kurang akurat; gunakan sebagai
   bantuan belajar, bukan satu-satunya sumber kebenaran.
