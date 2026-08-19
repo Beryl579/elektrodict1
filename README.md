@@ -24,7 +24,7 @@ dari channel YouTube Indonesia — semua dalam satu tempat.
 | **Latihan Soal AI** | Soal random di-generate tiap sesi oleh AI |
 | **ElektroBot AI** | Chatbot tanya-jawab materi elektro, jawab gaul & akurat |
 | **AI Vision** | Analisis foto rangkaian/komponen dengan AI |
-| **Lab Proyek (AI)** | Rancang proyek mikrokontroler (Arduino Uno / ESP32) secara instan + 31 template siap pakai |
+| **Lab Proyek (AI)** | Rancang proyek mikrokontroler (Arduino Uno / ESP32) secara instan + 41 template siap pakai |
 | **Dashboard IoT Firebase** | Pantau sensor ESP32 real-time dengan grafik & kontrol servo/RGB via Firebase |
 | **Video Pembelajaran** | Kumpulan video edukasi elektronika dari channel YouTube Indonesia, bisa diputar langsung di dalam app |
 | **Synth** | Eksperimen sintesis suara & sinyal |

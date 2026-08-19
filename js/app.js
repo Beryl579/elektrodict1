@@ -2779,6 +2779,7 @@ function renderWokwiTemplates() {
         <div class="prj-card-desc">${t.desc}</div>
         <div class="prj-card-meta">
           <span class="prj-card-diff diff-${diffClass}">${t.difficulty}</span>
+          ${(t.libraries && t.libraries.length) ? `<span class="prj-card-diff" style="background:rgba(139,92,246,.12);color:#c4b5fd;border:1px solid rgba(139,92,246,.35);">📚 ${t.libraries.length} library</span>` : ''}
           <span style="font-size:11px;color:var(--text3);font-family:var(--mono);">${(t.tags || []).join(' · ')}</span>
         </div>
         <button class="wk-card-run" onclick="event.stopPropagation(); openProject('${t.id}')">🧰 Buka Panduan Pasang</button>
@@ -2827,6 +2828,24 @@ function renderProjectDetail(prj) {
         </ul>
       </div>
     </div>` : '';
+
+  // === Libraries HTML (field baru: libraries — daftar library Wokwi) ===
+  const libsList = Array.isArray(prj.libraries) ? prj.libraries : null;
+  const libsHtml = libsList ? (libsList.length ? `
+    <div class="pd-section" style="border:1px solid rgba(139,92,246,.3); background:rgba(139,92,246,.05);">
+      <h3 class="pd-section-h">📚 Library Wokwi yang Dibutuhkan</h3>
+      <p style="color:var(--text2); font-size:13px; line-height:1.6; margin-bottom:10px;">
+        Template ini memakai library pihak ketiga. Wokwi butuh file <code style="color:#c4b5fd;">libraries.txt</code> berisi daftar di bawah — salin lalu tempel saat langkah 3, Wokwi otomatis menginstallnya saat start.
+      </p>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;">
+        ${libsList.map(l => `<span style="background:rgba(139,92,246,.12);border:1px solid rgba(139,92,246,.3);color:#c4b5fd;font-size:11px;font-weight:600;padding:3px 10px;border-radius:99px;">📚 ${l}</span>`).join('')}
+      </div>
+      <button class="pd-code-copy" onclick="copyPrjCode(this,'libs')">📋 Salin libraries.txt</button>
+    </div>` : `
+    <div class="pd-section" style="border:1px solid rgba(22,163,74,.25); background:rgba(22,163,74,.05);">
+      <h3 class="pd-section-h">📚 Library yang Dibutuhkan</h3>
+      <p style="color:var(--text2); font-size:13px; line-height:1.6; margin:0;">✅ Semua library bawaan Arduino — tidak perlu install library apa pun.</p>
+    </div>`) : '';
 
   // === Wiring Guide HTML (new field: wiring_guide, fallback to wiring_table) ===
   const wiringData = prj.wiring_guide || prj.wiring_table || prj.wiring || [];
@@ -2906,6 +2925,23 @@ function renderProjectDetail(prj) {
   const boardLabel = (prj.board || (wokwiRaw.includes('esp32') ? 'board-esp32-devkit-c-v4' : 'wokwi-arduino-uno'));
   const boardName  = boardLabel.includes('esp32') ? 'ESP32' : 'Arduino Uno';
 
+  // Step 3 kondisional: pasang library (hanya jika template butuh library pihak ketiga)
+  const libsStepHtml = (libsList && libsList.length) ? `
+          <div style="height:1px;background:var(--line2);opacity:.5;"></div>
+
+          <div style="display:flex;gap:14px;align-items:flex-start;">
+            <div style="background:var(--accent);color:var(--bg);font-weight:700;font-size:13px;min-width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">3</div>
+            <div style="flex:1;">
+              <div style="font-weight:700;font-size:13px;color:var(--text);margin-bottom:6px;">Pasang Library (libraries.txt)</div>
+              <button class="pd-code-copy" onclick="copyPrjCode(this,'libs')">📋 Salin libraries.txt</button>
+              <p style="font-size:11px;color:var(--text3);margin-top:7px;line-height:1.5;">Di tab Wokwi, buat file baru bernama <b>libraries.txt</b> (satu nama library per baris), lalu <b>PASTE</b> isinya. Wokwi otomatis menginstall library saat start.</p>
+            </div>
+          </div>` : '';
+  const sketchStepNum = (libsList && libsList.length) ? 4 : 3;
+  const stepIntroText = (libsList && libsList.length)
+    ? '4 langkah: buka Wokwi, tempel <b>diagram.json</b>, tempel <b>libraries.txt</b>, tempel <b>sketch.ino</b>. Wokwi tidak lagi menerima impor otomatis via URL.'
+    : '3 langkah: buka Wokwi, tempel <b>diagram.json</b>, tempel <b>sketch.ino</b>. Wokwi tidak lagi menerima impor otomatis via URL.';
+
   const wokwiSectionHtml = wokwiPretty ? `
     <div class="pd-section">
       <h3 class="pd-section-h">🛠️ Jalankan di Simulator
@@ -2916,7 +2952,7 @@ function renderProjectDetail(prj) {
       <div style="border:1px solid rgba(22,163,74,.35);border-radius:14px;padding:18px;background:linear-gradient(135deg,rgba(22,163,74,.10),rgba(22,163,74,.03));margin-bottom:14px;">
         <div style="font-weight:700;font-size:14px;color:var(--text);margin-bottom:4px;">🧰 Pasang Manual ke Wokwi (${boardName})</div>
         <div style="font-size:12px;color:var(--text2);line-height:1.5;margin-bottom:12px;">
-          3 langkah: buka Wokwi, tempel <b>diagram.json</b>, tempel <b>sketch.ino</b>. Wokwi tidak lagi menerima impor otomatis via URL.
+          ${stepIntroText}
         </div>
 
         <details class="wk-manual-details" open>
@@ -2947,8 +2983,12 @@ function renderProjectDetail(prj) {
 
           <div style="height:1px;background:var(--line2);opacity:.5;"></div>
 
+          ${libsStepHtml}
+
+          ${libsStepHtml ? '<div style="height:1px;background:var(--line2);opacity:.5;"></div>' : ''}
+
           <div style="display:flex;gap:14px;align-items:flex-start;">
-            <div style="background:var(--accent);color:var(--bg);font-weight:700;font-size:13px;min-width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">3</div>
+            <div style="background:var(--accent);color:var(--bg);font-weight:700;font-size:13px;min-width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">${sketchStepNum}</div>
             <div style="flex:1;">
               <div style="font-weight:700;font-size:13px;color:var(--text);margin-bottom:6px;">Masukkan Program (Sketch)</div>
               <button class="pd-code-copy" onclick="copyPrjCode(this,'cpp')">📋 Salin Kode Program (INO)</button>
@@ -3027,6 +3067,7 @@ function renderProjectDetail(prj) {
     </div>
 
     ${bomHtml}
+    ${libsHtml}
     ${disclaimerHtml}
     ${wiringHtml}
     ${firebaseHtml}
@@ -3038,6 +3079,7 @@ function renderProjectDetail(prj) {
   // Store wokwi raw string for clipboard access + globals untuk launcher satu-klik
   if(wokwiPretty) content.dataset.wokwi = wokwiPretty;
   if(rawCode)    content.dataset.cppCode = rawCode;
+  if(libsList)   content.dataset.libraries = libsList.join('\n');
   currentPrjLaunchCode = rawCode || '';
   currentPrjLaunchDiagram = wokwiPretty || '';
   currentPrjLaunchBoard = prj.board || (wokwiPretty.includes('esp32') ? 'board-esp32-devkit-c-v4' : 'wokwi-arduino-uno');
@@ -3052,6 +3094,8 @@ function copyPrjCode(btn, type) {
   let text = '';
   if (type === 'wokwi') {
     text = content?.dataset.wokwi || document.getElementById('code-content-wokwi')?.textContent || '';
+  } else if (type === 'libs') {
+    text = content?.dataset.libraries || '';
   } else {
     text = content?.dataset.cppCode || document.getElementById('code-content-cpp')?.textContent || document.getElementById('code-content')?.textContent || '';
   }

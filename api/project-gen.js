@@ -103,6 +103,64 @@ for (const [type, info] of Object.entries(DOC_PARTS)) {
 
 const ALLOWED_TYPES = Object.keys(WOKWI_PARTS);
 
+// ─────────────────────────────────────────────────────────────
+// KATALOG LIBRARY WOKWI (Library Manager) — nama WAJIB persis
+// dipakai untuk: prompt AI + auto-fill deterministik via #include
+// ─────────────────────────────────────────────────────────────
+const LIBRARY_CATALOG = {
+  // header #include → nama library Wokwi yang valid
+  'DHT.h': ['DHT sensor library', 'DHT sensor library for ESPx'],
+  'OneWire.h': ['OneWire'],
+  'DallasTemperature.h': ['DallasTemperature'],
+  'HX711.h': ['HX711'],
+  'FirebaseESP32.h': ['Firebase ESP32 Client'],
+  'ESP32Servo.h': ['ESP32Servo'],
+  'Adafruit_SSD1306.h': ['Adafruit SSD1306'],
+  'Adafruit_GFX.h': ['Adafruit GFX Library'],
+  'Adafruit_BusIO.h': ['Adafruit BusIO'],
+  'Adafruit_NeoPixel.h': ['Adafruit NeoPixel'],
+  'Adafruit_BMP085.h': ['Adafruit BMP085 Library'],
+  'Keypad.h': ['Keypad'],
+  'LiquidCrystal_I2C.h': ['LiquidCrystal I2C'],
+  'TM1637Display.h': ['TM1637'],
+  'IRremote.h': ['IRremote'],
+  'RTClib.h': ['RTClib'],
+  'LedControl.h': ['LedControl'],
+  'MFRC522.h': ['MFRC522'],
+  'SevSeg.h': ['SevSeg'],
+  'SdFat.h': ['SdFat'],
+  'IRMP.h': ['IRMP']
+};
+
+// Header bawaan Arduino/ESP32 — tidak butuh library eksternal
+const BUILTIN_HEADERS = [
+  'Arduino.h', 'Wire.h', 'SPI.h', 'LiquidCrystal.h', 'Servo.h', 'Stepper.h',
+  'SoftwareSerial.h', 'EEPROM.h', 'SD.h', 'WiFi.h', 'WebServer.h', 'HTTPClient.h',
+  'WiFiClient.h', 'WiFiServer.h', 'WiFiUdp.h', 'math.h', 'string.h', 'stdlib.h',
+  'stdio.h', 'avr/io.h', 'avr/pgmspace.h', 'util/delay.h', 'esp32-hal.h', 'HardwareSerial.h'
+];
+
+const KNOWN_LIB_NAMES = [...new Set(Object.values(LIBRARY_CATALOG).flat())];
+
+// Auto-fill deterministik: scan #include di cpp_code → daftar library.
+// Menimpa tebakan AI (0 token tambahan, hasil selalu konsisten).
+function detectLibraries(cppCode, boardKey) {
+  const libs = new Set();
+  const includes = [...String(cppCode || '').matchAll(/#include\s*<([^>]+)>/g)].map((m) => m[1]);
+  for (const h of includes) {
+    const candidates = LIBRARY_CATALOG[h];
+    if (!candidates) continue;
+    if (h === 'DHT.h' && boardKey === 'esp32') {
+      libs.add('DHT sensor library for ESPx');
+    } else if (h === 'DHT.h' && boardKey !== 'esp32') {
+      libs.add('DHT sensor library');
+    } else {
+      libs.add(candidates[0]);
+    }
+  }
+  return [...libs];
+}
+
 // Teks katalog untuk system prompt (ringkas — hemat token)
 const PARTS_CATALOG_TEXT = ALLOWED_TYPES.map(t => {
   const p = WOKWI_PARTS[t];
@@ -199,7 +257,12 @@ function buildSystemPrompt(boardKey) {
   return `You are an IoT Expert building projects on ${b.label}. Reply ONLY with raw JSON (no markdown, no code fences).
 
 SCHEMA (wajib persis):
-{"title":"Nama","description":"Deskripsi","bom":["1x ${b.label}","1x LED"],"wiring_guide":[{"komponen":"LED","pin_komponen":"A","koneksi_arduino":"Pin 13 (via resistor)"}],"cpp_code":"Code with \\n hidden string","wokwi_diagram":"MINIFIED stringified JSON"}
+{"title":"Nama","description":"Deskripsi","bom":["1x ${b.label}","1x LED"],"wiring_guide":[{"komponen":"LED","pin_komponen":"A","koneksi_arduino":"Pin 13 (via resistor)"}],"cpp_code":"Code with \\n hidden string","libraries":["DHT sensor library"],"wokwi_diagram":"MINIFIED stringified JSON"}
+
+LIBRARY RULES:
+- Field "libraries" = array nama library Wokwi (Library Manager) yang dipakai cpp_code. JANGAN mengarang nama.
+- Nama WAJIB dari daftar ini: ${KNOWN_LIB_NAMES.join(", ")}
+- Kode hanya pakai library bawaan Arduino (Wire.h, SPI.h, LiquidCrystal.h, Servo.h, WiFi.h, dll) → libraries: []
 
 WOKWI DIAGRAM RULES:
 - wokwi_diagram = satu baris string JSON minified: {"version":1,"parts":[...],"connections":[...]}
@@ -399,7 +462,7 @@ module.exports = async function handler(req, res) {
       const repairPrompt =
         `Diagram Wokwi kamu memiliki ${errors.length} kesalahan:\n` +
         errors.map(e => `- ${e}`).join("\n") +
-        `\nPerbaiki SEMUA kesalahan di atas sesuai KATALOG PART yang diberikan, lalu keluarkan ulang SELURUH objek JSON dengan schema yang sama persis (title, description, bom, wiring_guide, cpp_code, wokwi_diagram).`;
+        `\nPerbaiki SEMUA kesalahan di atas sesuai KATALOG PART yang diberikan, lalu keluarkan ulang SELURUH objek JSON dengan schema yang sama persis (title, description, bom, wiring_guide, cpp_code, libraries, wokwi_diagram).`;
 
       result = await callModel(
         [
@@ -422,6 +485,9 @@ module.exports = async function handler(req, res) {
 
     // Tandai status validasi untuk frontend
     prj.wokwi_verified = errors.length === 0;
+
+    // Auto-fill library (deterministik): timpa tebakan AI dengan hasil scan #include
+    prj.libraries = detectLibraries(prj.cpp_code, boardKey);
 
     if (errors.length) {
       // Diagram tidak lolos: coba selamatkan — drop hanya jika tidak bisa di-parse sama sekali

@@ -1,16 +1,16 @@
-// v52: Fallback thumbnail video multi-ukuran (mqdefault→hqdefault→sddefault→SVG) + SW fresh.
+// v53: Bank template Wokwi +41 (10 baru, library Wokwi) & hapus duplikat LDR.
 // Aset diberi query ?v= agar precache selalu ambil file terbaru (mencegah
 // cache.addAll melewati SW lama yang menyajikan salinan basi).
-const CACHE_NAME = 'elektrodict-v53';
+const CACHE_NAME = 'elektrodict-v54';
 const ASSETS = [
   '/',
-  '/index.html?v=52',
-  '/css/style.css?v=52',
-  '/js/data.js?v=52',
-  '/js/data-materi.js?v=52',
-  '/js/api.js?v=52',
-  '/js/app.js?v=52',
-  '/js/modules/firebase-dashboard.js?v=52',
+  '/index.html?v=53',
+  '/css/style.css?v=53',
+  '/js/data.js?v=53',
+  '/js/data-materi.js?v=53',
+  '/js/api.js?v=53',
+  '/js/app.js?v=53',
+  '/js/modules/firebase-dashboard.js?v=53',
   '/manifest.json',
   'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css',
   'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js',
