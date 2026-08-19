@@ -206,27 +206,6 @@
         console.error('[ElektroAPI] Wiki Fetch Error:', error);
         throw error;
       }
-    },
-
-    async fetchTechNews() {
-      try {
-        const apiKey = '706c0eb85ea248f1ad8d18261b9ac159';
-        // NewsAPI Everything endpoint proxied via Vercel
-        const query = encodeURIComponent('electronics OR semiconductor OR "electrical engineering" OR "microchip" OR robotics');
-        const url = `/api/news-proxy/everything?q=${query}&sortBy=publishedAt&language=en&pageSize=24&apiKey=${apiKey}`;
-
-        const response = await fetchWithTimeout(url, {}, 15000);
-        
-        if (!response.ok) {
-          throw new Error("Gagal mengambil berita terbaru.");
-        }
-
-        const data = await response.json();
-        return data.articles || [];
-      } catch (error) {
-        console.error('[ElektroAPI] News Fetch Error:', error);
-        throw error;
-      }
     }
   };
 })();

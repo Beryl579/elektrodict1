@@ -650,7 +650,7 @@ function setDiff(btn, d){
 function initQuiz(){
   document.getElementById('quiz-cats').innerHTML = Object.entries(QUIZ_CATS).map(([k,v])=>
     `<button class="qcat-btn" onclick="selectQuizCat(this,'${k}')">
-      ${v.emoji} ${v.label}
+      ${v.emoji ? v.emoji + ' ' : ''}${v.label}
      </button>`
   ).join('');
 }
@@ -1318,12 +1318,16 @@ function parseAIText(text){
 }
 
 // Override renderMath untuk handle custom span LaTeX
+let _katexRetryCount = 0;
 function renderAIVMath(el){
-  // Kalau KaTeX belum ready, tunggu dulu
+  // Kalau KaTeX belum ready, tunggu dulu (maks 20x retry ≈ 6 detik, lalu render polos)
   if(typeof katex === 'undefined'){
+    if(_katexRetryCount >= 20) return;
+    _katexRetryCount++;
     setTimeout(() => renderAIVMath(el), 300);
     return;
   }
+  _katexRetryCount = 0;
   // Render semua span yang punya data-latex
   el.querySelectorAll('[data-latex]').forEach(span => {
     const latex = span.getAttribute('data-latex');
@@ -3198,7 +3202,9 @@ function renderProjectDetail(prj) {
   const safeWokwi = wokwiPretty.replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
   // Deteksi board untuk tombol jalankan (Uno / ESP32)
-  const boardLabel = (prj.board || (wokwiRaw.includes('esp32') ? 'board-esp32-devkit-c-v4' : 'wokwi-arduino-uno'));
+  // wokwi_diagram bisa berupa string ATAU objek — jangan panggil .includes() pada objek
+  const wokwiStr = typeof wokwiRaw === 'string' ? wokwiRaw : JSON.stringify(wokwiRaw || '');
+  const boardLabel = (prj.board || (wokwiStr.includes('esp32') ? 'board-esp32-devkit-c-v4' : 'wokwi-arduino-uno'));
   const boardName  = boardLabel.includes('esp32') ? 'ESP32' : 'Arduino Uno';
 
   // Step 3 kondisional: pasang library (hanya jika template butuh library pihak ketiga)
@@ -3675,9 +3681,20 @@ async function exportProjectToPdf() {
     const prj = window.currentPrjForExport;
     if (!prj) return;
 
-    // Muat jsPDF on-demand (tidak lagi dimuat di awal halaman)
-    await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js');
-    await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js');
+    try {
+        // Muat jsPDF on-demand (tidak lagi dimuat di awal halaman)
+        await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js');
+        await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js');
+    } catch (err) {
+        console.error('[PDF] Gagal memuat library:', err);
+        showPrjToast('Gagal memuat library PDF — cek koneksi internet lalu coba lagi.', 'error');
+        return;
+    }
+
+    if (!window.jspdf || !window.jspdf.jsPDF) {
+        showPrjToast('Library PDF tidak tersedia — coba lagi nanti.', 'error');
+        return;
+    }
 
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
@@ -3900,6 +3917,9 @@ async function generateDiagram(userPrompt) {
     ];
 
     const data = await window.ElektroAPI.chat(messages, { temperature: 0.2 });
+    if (!data || !data.choices || !data.choices[0] || !data.choices[0].message) {
+      throw new Error('Respons AI tidak valid (mungkin rate limit / server sibuk). Coba lagi.');
+    }
     const responseText = data.choices[0].message.content;
 
     // DEBUG: Simpan di console buat kalau gagal
