@@ -1,18 +1,18 @@
+// v59: Fix mojibake emoji di ABOUT_MD (Halaman Tentang) — ⚡📖👨‍💻🌐📄 + em-dash.
 // v58: Chip Library — database pinout 17 IC populer + visual viewer.
-// v57: Dashboard HTML mandiri (dashboard.html) untuk 10 template ESP32 Firebase.
 // Aset diberi query ?v= agar precache selalu ambil file terbaru (mencegah
 // cache.addAll melewati SW lama yang menyajikan salinan basi).
-const CACHE_NAME = 'elektrodict-v58';
+const CACHE_NAME = 'elektrodict-v59';
 const ASSETS = [
   '/',
-  '/index.html?v=57',
-  '/css/style.css?v=57',
-  '/js/data.js?v=57',
-  '/js/data-materi.js?v=57',
-  '/js/api.js?v=57',
-  '/js/app.js?v=57',
-  '/js/modules/firebase-dashboard.js?v=57',
-  '/js/modules/chips.js?v=57',
+  '/index.html?v=58',
+  '/css/style.css?v=58',
+  '/js/data.js?v=58',
+  '/js/data-materi.js?v=58',
+  '/js/api.js?v=58',
+  '/js/app.js?v=58',
+  '/js/modules/firebase-dashboard.js?v=58',
+  '/js/modules/chips.js?v=58',
   '/manifest.json',
   'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css',
   'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js',
