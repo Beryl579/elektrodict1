@@ -7,7 +7,7 @@ const ASSETS = [
   '/',
   '/index.html?v=56',
   '/css/style.css?v=56',
-  '/js/data.js?v=56',
+  '/js/data.js?v=57',
   '/js/data-materi.js?v=56',
   '/js/api.js?v=56',
   '/js/app.js?v=56',
