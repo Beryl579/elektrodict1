@@ -551,6 +551,62 @@ function askCard(e,en,id){
   setTimeout(()=>{document.getElementById('inpM').value=q;send('M');},300);
 }
 
+// Cache ringan hasil Wikipedia (7 hari) — klik ulang instan & hemat kuota
+const WIKI_CACHE_TTL = 7 * 24 * 3600 * 1000;
+
+function renderWikiResult(resEl, btn, data) {
+  resEl.innerHTML = `
+    <div class="wiki-content">
+      ${data.thumbnail ? `<img src="${data.thumbnail.source}" class="wiki-img" alt="Wiki Image">` : ''}
+      <div class="wiki-text">
+        <div class="wiki-title-ref">${data.displaytitle || data.title}</div>
+        <p>${data.extract}</p>
+        <a href="${data.content_urls.desktop.page}" target="_blank" rel="noopener" class="wiki-link">Baca selengkapnya di Wikipedia →</a>
+      </div>
+    </div>
+  `;
+  resEl.classList.add('show');
+  btn.classList.add('active');
+}
+
+function renderWikiEmpty(resEl, btn, query, isNetwork) {
+  const i = Number(resEl.id.slice(2)) || 0;
+  const qSafe = query.replace(/'/g, "\\'").replace(/"/g, '');
+  const pesan = isNetwork
+    ? '🌐 Tidak bisa terhubung ke Wikipedia (butuh internet). Periksa koneksi, lalu coba lagi.'
+    : '📭 Artikel tidak ditemukan di Wikipedia Indonesia maupun Inggris.';
+  resEl.innerHTML = `
+    <div class="wiki-content">
+      <div class="wiki-text">
+        <p>${pesan}</p>
+        ${isNetwork
+          ? `<button class="wiki-link wiki-retry" onclick="event.stopPropagation(); fetchWikiContent(document.getElementById('wr${i}'), document.getElementById('wb${i}'), '${qSafe}')">🔄 Coba lagi</button>`
+          : `<a href="https://en.wikipedia.org/w/index.php?search=${encodeURIComponent(query)}" target="_blank" rel="noopener" class="wiki-link">🔍 Cari istilah di Wikipedia Inggris →</a>`}
+      </div>
+    </div>
+  `;
+  resEl.classList.add('show');
+  btn.classList.add('active');
+}
+
+async function fetchWikiContent(resEl, btn, query, cacheKey) {
+  const k = cacheKey || `ed_wiki_${query.trim().toLowerCase()}`;
+  btn.disabled = true;
+  btn.innerHTML = `<span>⏳</span> Memuat...`;
+
+  try {
+    const data = await window.ElektroAPI.fetchWikiSummary(query);
+    try { localStorage.setItem(k, JSON.stringify({ t: Date.now(), d: data })); } catch (err) { /* kuota penuh → abaikan */ }
+    renderWikiResult(resEl, btn, data);
+  } catch (err) {
+    const isNetwork = !String(err.message || '').includes('Referensi tidak ditemukan');
+    renderWikiEmpty(resEl, btn, query, isNetwork);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = `<span>📖</span> Wikipedia`;
+  }
+}
+
 async function getWikiInfo(e, i, query) {
   e.stopPropagation();
   const btn = document.getElementById(`wb${i}`);
@@ -562,31 +618,20 @@ async function getWikiInfo(e, i, query) {
     return;
   }
 
-  // Loading state
-  btn.disabled = true;
-  btn.innerHTML = `<span>⏳</span> Memuat...`;
-  
-  try {
-    const data = await window.ElektroAPI.fetchWikiSummary(query);
-    
-    resEl.innerHTML = `
-      <div class="wiki-content">
-        ${data.thumbnail ? `<img src="${data.thumbnail.source}" class="wiki-img" alt="Wiki Image">` : ''}
-        <div class="wiki-text">
-          <div class="wiki-title-ref">${data.displaytitle || data.title}</div>
-          <p>${data.extract}</p>
-          <a href="${data.content_urls.desktop.page}" target="_blank" class="wiki-link">Baca selengkapnya di Wikipedia →</a>
-        </div>
-      </div>
-    `;
-    resEl.classList.add('show');
-    btn.classList.add('active');
-  } catch (err) {
-    alert(err.message || "Gagal mengambil data Wikipedia.");
-  } finally {
-    btn.disabled = false;
-    btn.innerHTML = `<span>📖</span> Wikipedia`;
+  // Cek cache lokal dulu (instan, tanpa internet)
+  const cacheKey = `ed_wiki_${query.trim().toLowerCase()}`;
+  const cached = localStorage.getItem(cacheKey);
+  if (cached) {
+    try {
+      const c = JSON.parse(cached);
+      if (c && c.d && c.d.extract && Date.now() - c.t < WIKI_CACHE_TTL) {
+        renderWikiResult(resEl, btn, c.d);
+        return;
+      }
+    } catch (err) { /* cache korup → ambil ulang */ }
   }
+
+  fetchWikiContent(resEl, btn, query, cacheKey);
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -2780,6 +2825,7 @@ function renderWokwiTemplates() {
         <div class="prj-card-meta">
           <span class="prj-card-diff diff-${diffClass}">${t.difficulty}</span>
           ${(t.libraries && t.libraries.length) ? `<span class="prj-card-diff" style="background:rgba(139,92,246,.12);color:#c4b5fd;border:1px solid rgba(139,92,246,.35);">📚 ${t.libraries.length} library</span>` : ''}
+          ${t.dashboard ? `<span class="prj-card-diff" style="background:rgba(52,211,153,.12);color:#6ee7b7;border:1px solid rgba(52,211,153,.35);">🌐 Dashboard</span>` : ''}
           <span style="font-size:11px;color:var(--text3);font-family:var(--mono);">${(t.tags || []).join(' · ')}</span>
         </div>
         <button class="wk-card-run" onclick="event.stopPropagation(); openProject('${t.id}')">🧰 Buka Panduan Pasang</button>
@@ -2790,6 +2836,210 @@ function renderWokwiTemplates() {
 // Escape teks utk disisipkan ke HTML (dipakai katalog Wokwi)
 function escXml(s) {
   return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+// ── Dashboard HTML generator (template Firebase -> dashboard.html mandiri) ──
+// Tema: vector art pastel (mint + biru muda). Placeholder: @@TITLE@@, @@CONFIG@@
+const WOKWI_DASHBOARD_TEMPLATE = `<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>@@TITLE@@ - Dashboard IoT</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'Segoe UI',system-ui,-apple-system,Roboto,sans-serif;min-height:100vh;background:linear-gradient(160deg,#e9f8f2 0%,#e4f1fb 100%);color:#123b35;padding:20px 16px 48px}
+  .wrap{max-width:560px;margin:0 auto}
+  header{display:flex;align-items:center;gap:12px;margin-bottom:4px}
+  .logo{width:40px;height:40px;border-radius:13px;background:linear-gradient(135deg,#34d399,#60a5fa);display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff;flex-shrink:0;box-shadow:0 4px 10px rgba(52,211,153,.35)}
+  h1{font-size:18px;font-weight:800;letter-spacing:-.3px;line-height:1.2}
+  .sub{font-size:11.5px;color:#5b7a75;margin:2px 0 14px}
+  .status{font-size:11.5px;font-weight:700;padding:6px 12px;border-radius:99px;white-space:nowrap;margin-left:auto}
+  .st-conn{background:#d1fae5;color:#065f46}.st-wait{background:#dbeafe;color:#1e40af}.st-err{background:#fee2e2;color:#b91c1c}
+  .status::before{content:"\\25CF  "}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:12px}
+  .card{background:#fff;border-radius:18px;padding:16px;box-shadow:0 4px 14px rgba(18,59,53,.08);border-top:4px solid #34d399}
+  .card.blue{border-top-color:#60a5fa}
+  .icon{width:38px;height:38px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:19px;margin-bottom:10px;background:#e9f8f2}
+  .card.blue .icon{background:#e4f1fb}
+  .label{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:#7c9a95}
+  .val{font-size:26px;font-weight:800;margin-top:3px}
+  .unit{font-size:12.5px;font-weight:600;color:#5b7a75}
+  .badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+  .badge{font-size:12px;font-weight:800;padding:8px 14px;border-radius:99px;background:#f1f5f9;color:#64748b}
+  .badge.on{background:#d1fae5;color:#065f46}
+  .badge.danger.on{background:#fee2e2;color:#b91c1c}
+  .ctrls{display:flex;flex-direction:column;gap:12px;margin-top:12px}
+  .ctrl{background:#fff;border-radius:18px;padding:16px;box-shadow:0 4px 14px rgba(18,59,53,.08)}
+  .clabel{font-size:12.5px;font-weight:800;margin-bottom:10px;display:flex;justify-content:space-between;gap:10px}
+  .cval{font-weight:800;color:#34d399}
+  input[type=range]{width:100%;accent-color:#34d399;height:28px}
+  input[type=color]{width:100%;height:46px;border:none;border-radius:12px;cursor:pointer;background:none}
+  .note{margin-top:16px;font-size:11.5px;color:#5b7a75;line-height:1.6}
+  @media (max-width:380px){h1{font-size:15px}.grid{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo">⚡</div>
+    <div>
+      <h1>@@TITLE@@</h1>
+      <div class="sub">Dashboard Realtime - Firebase Realtime Database</div>
+    </div>
+    <div id="status" class="status st-wait">Menghubungkan</div>
+  </header>
+  <div class="grid" id="cards"></div>
+  <div class="badges" id="badges"></div>
+  <div class="ctrls" id="ctrls"></div>
+  <div class="note" id="note"></div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"><\/script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"><\/script>
+<script>
+// ============================================================
+//  KONFIGURASI FIREBASE - isi 4 nilai di bawah ini
+// ============================================================
+// 1. Buka console.firebase.google.com -> Project settings -> General
+// 2. Gulir ke "Your apps" -> klik ikon Web (</>) -> daftarkan aplikasi "dashboard"
+// 3. Salin apiKey, authDomain, databaseURL, projectId ke bawah ini
+// 4. PENTING: databaseURL harus SAMA dengan FIREBASE_HOST di kode ESP32
+// 5. Rules Realtime Database mode demo:
+//    { "rules": { ".read": true, ".write": true } }
+// ============================================================
+var FIREBASE_CONFIG = {
+  apiKey: "ISI_API_KEY",
+  authDomain: "ISI_PROJECT.firebaseapp.com",
+  databaseURL: "https://ISI_PROJECT-default-rtdb.firebaseio.com",
+  projectId: "ISI_PROJECT"
+};
+
+// Konfigurasi tampilan (di-generate ElektroDict, jangan diubah)
+var DASHBOARD_CONFIG = @@CONFIG@@;
+<\/script>
+<script>
+(function () {
+  var cfg = DASHBOARD_CONFIG;
+  var statusEl = document.getElementById('status');
+  function setStatus(kind, msg) {
+    statusEl.className = 'status st-' + kind;
+    statusEl.textContent = msg;
+  }
+  function fmt(v) {
+    if (v === null || v === undefined) return '-';
+    if (typeof v === 'number') return String(Math.round(v * 100) / 100);
+    return String(v);
+  }
+  if (!FIREBASE_CONFIG.databaseURL || FIREBASE_CONFIG.databaseURL.indexOf('ISI_') !== -1) {
+    setStatus('err', 'Isi FIREBASE_CONFIG dulu');
+    return;
+  }
+  firebase.initializeApp(FIREBASE_CONFIG);
+  var db = firebase.database();
+  db.ref('.info/connected').on('value', function (s) {
+    setStatus(s.val() ? 'conn' : 'wait', s.val() ? 'Terhubung' : 'Menghubungkan');
+  }, function (err) { setStatus('err', err.message); });
+
+  var cardsEl = document.getElementById('cards');
+  (cfg.cards || []).forEach(function (c, i) {
+    var el = document.createElement('div');
+    el.className = 'card' + (i % 2 ? ' blue' : '');
+    el.innerHTML = '<div class="icon">' + (c.icon || '📟') + '</div><div class="label">' + c.label + '</div><div class="val">-</div><div class="unit">' + (c.unit || '') + '</div>';
+    cardsEl.appendChild(el);
+    var valEl = el.querySelector('.val');
+    db.ref(c.path).on('value', function (s) { valEl.textContent = fmt(s.val()); }, function (err) { setStatus('err', err.message); });
+  });
+
+  var badgesEl = document.getElementById('badges');
+  (cfg.badges || []).forEach(function (b) {
+    var el = document.createElement('div');
+    el.className = 'badge' + (b.danger ? ' danger' : '');
+    el.textContent = '• ' + (b.off_text || b.off || '-');
+    badgesEl.appendChild(el);
+    db.ref(b.path).on('value', function (s) {
+      var on = String(s.val()) === String(b.on);
+      el.classList.toggle('on', on);
+      el.textContent = '• ' + (on ? (b.on_text || b.on) : (b.off_text || b.off)) + (b.danger && on ? ' ⚠️' : '');
+    }, function (err) { setStatus('err', err.message); });
+  });
+
+  var ctrlsEl = document.getElementById('ctrls');
+  (cfg.controls || []).forEach(function (ct) {
+    var box = document.createElement('div');
+    box.className = 'ctrl';
+    var lab = document.createElement('div');
+    lab.className = 'clabel';
+    var t1 = document.createElement('span'); t1.textContent = ct.label;
+    var t2 = document.createElement('span'); t2.className = 'cval'; t2.textContent = '-';
+    lab.appendChild(t1); lab.appendChild(t2);
+    box.appendChild(lab);
+    if (ct.type === 'slider') {
+      var inp = document.createElement('input');
+      inp.type = 'range';
+      inp.min = ct.min; inp.max = ct.max; inp.step = ct.step || 1;
+      inp.value = ct.min;
+      box.appendChild(inp);
+      inp.addEventListener('input', function () {
+        t2.textContent = inp.value + (ct.unit || '');
+        db.ref(ct.path).set(parseFloat(inp.value));
+      });
+      db.ref(ct.path).once('value', function (s) {
+        if (s.exists() && !isNaN(s.val())) { inp.value = s.val(); t2.textContent = inp.value + (ct.unit || ''); }
+      });
+    }
+    if (ct.type === 'color') {
+      var pick = document.createElement('input');
+      pick.type = 'color';
+      pick.value = '#34d399';
+      box.appendChild(pick);
+      pick.addEventListener('input', function () {
+        var hex = pick.value.replace('#', '');
+        t2.textContent = '#' + hex.toUpperCase();
+        db.ref(ct.paths[0]).set(parseInt(hex.substring(0, 2), 16));
+        db.ref(ct.paths[1]).set(parseInt(hex.substring(2, 4), 16));
+        db.ref(ct.paths[2]).set(parseInt(hex.substring(4, 6), 16));
+      });
+      db.ref(ct.paths[0]).once('value', function (s0) {
+        db.ref(ct.paths[1]).once('value', function (s1) {
+          db.ref(ct.paths[2]).once('value', function (s2) {
+            function cn(v, d) { var x = v; if (x === null || x === undefined || isNaN(x)) x = d; return Math.max(0, Math.min(255, Math.round(x))); }
+            var hex = [cn(s0.val(), 255), cn(s1.val(), 128), cn(s2.val(), 0)].map(function (x) { return ('0' + x.toString(16)).slice(-2); }).join('');
+            pick.value = '#' + hex;
+            t2.textContent = '#' + hex.toUpperCase();
+          });
+        });
+      });
+    }
+    ctrlsEl.appendChild(box);
+  });
+
+  var noteEl = document.getElementById('note');
+  if (cfg.note) noteEl.textContent = cfg.note;
+})();
+<\/script>
+</body>
+</html>`;
+
+function buildDashboardSource(prj) {
+  return WOKWI_DASHBOARD_TEMPLATE
+    .replace(/@@TITLE@@/g, prj.title || 'Dashboard IoT')
+    .replace(/@@CONFIG@@/g, JSON.stringify(prj.dashboard, null, 2));
+}
+
+function downloadDashboardFile() {
+  const content = document.getElementById('project-detail-content');
+  const html = content?.dataset.dashboard;
+  if (!html) return;
+  const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'dashboard.html';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 2000);
 }
 
 function renderProjectDetail(prj) {
@@ -2906,6 +3156,31 @@ function renderProjectDetail(prj) {
         ${fbSteps.map(s => `<li>${s}</li>`).join('')}
       </ol>
       <button class="fb-btn fb-btn-primary" style="margin-top:12px;" onclick="switchTab('dashboard')">📊 Buka Dashboard IoT</button>
+    </div>` : '';
+
+  // === Dashboard HTML (field baru: dashboard — template ESP32 Firebase) ===
+  const dashCfg = prj.dashboard || null;
+  const dashboardSource = dashCfg ? buildDashboardSource(prj) : '';
+  const dashboardHtml = dashCfg ? `
+    <div class="pd-section" style="border:1px solid rgba(52,211,153,.35); background:rgba(52,211,153,.05);">
+      <h3 class="pd-section-h">🌐 Dashboard HTML (dashboard.html)</h3>
+      <p style="color:var(--text2); font-size:13px; line-height:1.6; margin-bottom:10px;">
+        File <code style="color:#34d399;">dashboard.html</code> mandiri — buka di HP/PC, data langsung tampil realtime dari
+        Firebase tanpa server sendiri. Tinggal isi 4 nilai <code style="color:#34d399;">FIREBASE_CONFIG</code> dari
+        Firebase console (<b>Project settings → Your apps → tambah Web app</b>), pastikan
+        <code style="color:#34d399;">databaseURL</code> <b>sama dengan FIREBASE_HOST</b> di kode ESP32, lalu set Rules
+        Realtime Database mode demo: <code style="color:#34d399;">{ ".read": true, ".write": true }</code>.
+      </p>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
+        <button class="pd-code-copy" onclick="copyPrjCode(this,'dash')">📋 Salin dashboard.html</button>
+        <button class="pd-code-copy" style="background:linear-gradient(135deg,#34d399,#0ea5e9);" onclick="downloadDashboardFile()">⬇️ Download dashboard.html</button>
+      </div>
+      <div class="pd-code-wrap">
+        <div class="pd-code-header">
+          <div class="pd-code-lang">dashboard.html — Preview</div>
+        </div>
+        <pre class="pd-code-pre" style="max-height:220px;"><code id="code-content-dash"></code></pre>
+      </div>
     </div>` : '';
 
   const wokwiRaw = prj.wokwi_diagram || '';
@@ -3071,6 +3346,7 @@ function renderProjectDetail(prj) {
     ${disclaimerHtml}
     ${wiringHtml}
     ${firebaseHtml}
+    ${dashboardHtml}
     ${codeHtml}
     ${wokwiSectionHtml}
     ${stepsHtml}
@@ -3080,6 +3356,11 @@ function renderProjectDetail(prj) {
   if(wokwiPretty) content.dataset.wokwi = wokwiPretty;
   if(rawCode)    content.dataset.cppCode = rawCode;
   if(libsList)   content.dataset.libraries = libsList.join('\n');
+  if(dashboardSource) {
+    content.dataset.dashboard = dashboardSource;
+    const dashEl = document.getElementById('code-content-dash');
+    if (dashEl) dashEl.textContent = dashboardSource;
+  }
   currentPrjLaunchCode = rawCode || '';
   currentPrjLaunchDiagram = wokwiPretty || '';
   currentPrjLaunchBoard = prj.board || (wokwiPretty.includes('esp32') ? 'board-esp32-devkit-c-v4' : 'wokwi-arduino-uno');
@@ -3096,6 +3377,8 @@ function copyPrjCode(btn, type) {
     text = content?.dataset.wokwi || document.getElementById('code-content-wokwi')?.textContent || '';
   } else if (type === 'libs') {
     text = content?.dataset.libraries || '';
+  } else if (type === 'dash') {
+    text = content?.dataset.dashboard || '';
   } else {
     text = content?.dataset.cppCode || document.getElementById('code-content-cpp')?.textContent || document.getElementById('code-content')?.textContent || '';
   }

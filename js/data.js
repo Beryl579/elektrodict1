@@ -1627,6 +1627,17 @@ const WOKWI_TEMPLATES = [
     "Project settings -†’ Service accounts -†’ Database secrets -†’ salin secret -†’ isi FIREBASE_AUTH.",
     "Ganti WIFI_SSID & WIFI_PASSWORD dengan WiFi kamu (di simulator Wokwi: SSID 'Wokwi-GUEST', password kosong)."
   ],
+  "dashboard": {
+    "title": "Dashboard IoT Suhu & Kelembaban",
+    "cards": [
+      { "label": "Suhu", "path": "/sensor/suhu", "unit": "°C", "icon": "🌡️" },
+      { "label": "Kelembaban", "path": "/sensor/kelembaban", "unit": "%", "icon": "💧" }
+    ],
+    "badges": [
+      { "label": "Status", "path": "/sensor/status", "on": "online", "off": "offline" }
+    ],
+    "note": "ESP32 mengirim data tiap 5 detik — nilai di bawah ter-update otomatis."
+  },
   "wiring_guide": [
     {
       "komponen": "DHT22",
@@ -1691,6 +1702,16 @@ const WOKWI_TEMPLATES = [
     "Database secrets -†’ isi FIREBASE_AUTH.",
     "Ganti WiFi sesuai jaringan kamu (simulator: 'Wokwi-GUEST')."
   ],
+  "dashboard": {
+    "title": "Monitor Jarak + Alarm",
+    "cards": [
+      { "label": "Jarak", "path": "/jarak/cm", "unit": "cm", "icon": "📏" }
+    ],
+    "badges": [
+      { "label": "Bahaya", "path": "/jarak/bahaya", "on": "true", "on_text": "BAHAYA", "off": "Aman", "danger": true }
+    ],
+    "note": "Jarak < 30 cm → badge merah (BAHAYA) dan buzzer di ESP32 berbunyi."
+  },
   "wiring_guide": [
     {
       "komponen": "HC-SR04",
@@ -1770,6 +1791,16 @@ const WOKWI_TEMPLATES = [
     "Isi FIREBASE_HOST & FIREBASE_AUTH di kode.",
     "Ganti WiFi sesuai jaringan kamu (simulator: 'Wokwi-GUEST')."
   ],
+  "dashboard": {
+    "title": "Dashboard Keamanan Rumah",
+    "cards": [
+      { "label": "Waktu Terakhir", "path": "/keamanan/waktu_terakhir", "icon": "🕐" }
+    ],
+    "badges": [
+      { "label": "Gerakan", "path": "/keamanan/gerakan", "on": "true", "on_text": "GERAKAN TERDETEKSI", "off": "Aman", "danger": true }
+    ],
+    "note": "Saat PIR mendeteksi gerakan, badge berubah merah dan waktu terakhir ter-update."
+  },
   "wiring_guide": [
     {
       "komponen": "PIR",
@@ -1844,6 +1875,16 @@ const WOKWI_TEMPLATES = [
     "Isi FIREBASE_HOST & FIREBASE_AUTH di kode.",
     "Ganti WiFi sesuai jaringan kamu (simulator: 'Wokwi-GUEST')."
   ],
+  "dashboard": {
+    "title": "Lampu Otomatis Sensor Cahaya",
+    "cards": [
+      { "label": "Nilai ADC", "path": "/cahaya/nilai_adc", "icon": "🔆" }
+    ],
+    "badges": [
+      { "label": "Lampu", "path": "/cahaya/lampu_nyala", "on": "true", "on_text": "Lampu NYALA", "off": "Mati" }
+    ],
+    "note": "Nilai ADC kecil = ruangan gelap → lampu menyala otomatis."
+  },
   "wiring_guide": [
     {
       "komponen": "Modul LDR",
@@ -1918,6 +1959,16 @@ const WOKWI_TEMPLATES = [
     "Isi FIREBASE_HOST & FIREBASE_AUTH di kode.",
     "Ganti WiFi sesuai jaringan kamu (simulator: 'Wokwi-GUEST')."
   ],
+  "dashboard": {
+    "title": "Termostat + Relay",
+    "cards": [
+      { "label": "Suhu", "path": "/termostat/suhu", "unit": "°C", "icon": "🌡️" }
+    ],
+    "badges": [
+      { "label": "Beban", "path": "/termostat/beban_nyala", "on": "true", "on_text": "Beban NYALA", "off": "Mati" }
+    ],
+    "note": "Suhu di atas 30°C → beban (relay) menyala otomatis."
+  },
   "wiring_guide": [
     {
       "komponen": "NTC",
@@ -1996,6 +2047,13 @@ const WOKWI_TEMPLATES = [
     "Ganti WiFi sesuai jaringan kamu (simulator: 'Wokwi-GUEST').",
     "Dashboard: tulis angka 0-180 di node /servo/sudut untuk menggerakkan servo."
   ],
+  "dashboard": {
+    "title": "Kendali Servo dari Web",
+    "controls": [
+      { "type": "slider", "label": "Sudut Servo", "path": "/servo/sudut", "min": 0, "max": 180, "unit": "°" }
+    ],
+    "note": "Geser slider → nilai ditulis ke /servo/sudut, ESP32 langsung menggerakkan servo."
+  },
   "wiring_guide": [
     {
       "komponen": "Servo",
@@ -2060,6 +2118,13 @@ const WOKWI_TEMPLATES = [
     "Ganti WiFi sesuai jaringan kamu (simulator: 'Wokwi-GUEST').",
     "Dashboard: tulis nilai 0-255 di /rgb/merah, /rgb/hijau, /rgb/biru."
   ],
+  "dashboard": {
+    "title": "Lampu RGB dari Web",
+    "controls": [
+      { "type": "color", "label": "Warna LED RGB", "paths": ["/rgb/merah", "/rgb/hijau", "/rgb/biru"] }
+    ],
+    "note": "Pilih warna → nilai RGB ditulis ke Firebase, LED langsung berubah."
+  },
   "wiring_guide": [
     {
       "komponen": "LED RGB",
@@ -2129,6 +2194,16 @@ const WOKWI_TEMPLATES = [
     "Isi FIREBASE_HOST & FIREBASE_AUTH di kode.",
     "Ganti WiFi sesuai jaringan kamu (simulator: 'Wokwi-GUEST')."
   ],
+  "dashboard": {
+    "title": "Deteksi Gas Bocor",
+    "cards": [
+      { "label": "Nilai ADC", "path": "/gas/nilai_adc", "icon": "💨" }
+    ],
+    "badges": [
+      { "label": "Bahaya", "path": "/gas/bahaya", "on": "true", "on_text": "BAHAYA!", "off": "Aman", "danger": true }
+    ],
+    "note": "Nilai ADC di atas 2500 = kebocoran gas → badge merah + buzzer & LED menyala."
+  },
   "wiring_guide": [
     {
       "komponen": "MQ2",
@@ -2208,6 +2283,14 @@ const WOKWI_TEMPLATES = [
     "Isi FIREBASE_HOST & FIREBASE_AUTH di kode.",
     "Ganti WiFi sesuai jaringan kamu (simulator: 'Wokwi-GUEST')."
   ],
+  "dashboard": {
+    "title": "Cuaca Lokal (OLED + Firebase)",
+    "cards": [
+      { "label": "Suhu", "path": "/cuaca/suhu", "unit": "°C", "icon": "🌡️" },
+      { "label": "Kelembaban", "path": "/cuaca/kelembaban", "unit": "%", "icon": "💧" }
+    ],
+    "note": "Data DHT22 dikirim tiap 4 detik dan tampil di OLED ESP32 + dashboard ini."
+  },
   "wiring_guide": [
     {
       "komponen": "DHT22",
@@ -2293,6 +2376,16 @@ const WOKWI_TEMPLATES = [
     "Isi FIREBASE_HOST & FIREBASE_AUTH di kode.",
     "Ganti WiFi sesuai jaringan kamu (simulator: 'Wokwi-GUEST')."
   ],
+  "dashboard": {
+    "title": "Bel Pintu Smart",
+    "cards": [
+      { "label": "Waktu (ms)", "path": "/bel/waktu_ms", "icon": "🕐" }
+    ],
+    "badges": [
+      { "label": "Bel", "path": "/bel/ditekan", "on": "true", "on_text": "BEL BERBUNYI", "off": "Diam", "danger": true }
+    ],
+    "note": "Saat tombol bel ditekan, badge berubah merah dan buzzer berbunyi ±1 detik."
+  },
   "wiring_guide": [
     {
       "komponen": "Pushbutton",
