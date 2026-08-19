@@ -2503,6 +2503,7 @@ window.onload=()=>{
   initProjects();
   initOnboarding();
   loadChatHistory();
+  if (typeof ElektroChips !== 'undefined') ElektroChips.init();
   // #22: set initial page as visible after paint
   requestAnimationFrame(()=>requestAnimationFrame(()=>{
     document.getElementById('page-kamus').classList.add('visible');
