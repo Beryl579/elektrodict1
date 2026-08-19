@@ -1,16 +1,17 @@
-// v54: Bank template Wokwi +51 (batch 3: RFID, OLED I2C, SD logger, WS2812 strip/matrix, LCD 2004, Nokia 5110, 3x web ESP32).
+// v57: Dashboard HTML mandiri (dashboard.html) untuk 10 template ESP32 Firebase.
+// v56: Wikipedia di kamus: pesan inline lembut (tanpa alert), cache localStorage 7 hari, tombol cari EN.
 // Aset diberi query ?v= agar precache selalu ambil file terbaru (mencegah
 // cache.addAll melewati SW lama yang menyajikan salinan basi).
-const CACHE_NAME = 'elektrodict-v55';
+const CACHE_NAME = 'elektrodict-v57';
 const ASSETS = [
   '/',
-  '/index.html?v=54',
-  '/css/style.css?v=54',
-  '/js/data.js?v=54',
-  '/js/data-materi.js?v=54',
-  '/js/api.js?v=54',
-  '/js/app.js?v=54',
-  '/js/modules/firebase-dashboard.js?v=54',
+  '/index.html?v=56',
+  '/css/style.css?v=56',
+  '/js/data.js?v=56',
+  '/js/data-materi.js?v=56',
+  '/js/api.js?v=56',
+  '/js/app.js?v=56',
+  '/js/modules/firebase-dashboard.js?v=56',
   '/manifest.json',
   'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css',
   'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js',

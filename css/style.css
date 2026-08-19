@@ -2827,6 +2827,22 @@ body.fade-out {
   font-family: var(--mono);
 }
 .wiki-link:hover { text-decoration: underline; }
+.wiki-retry {
+  align-self: flex-start;
+  cursor: pointer;
+  background: var(--accent);
+  color: var(--bg) !important;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 7px;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 700;
+  text-decoration: none !important;
+  box-shadow: 0 2px 8px rgba(79,156,249,.25);
+}
+.wiki-retry:hover { filter: brightness(1.1); }
+.wiki-retry:disabled { opacity: .5; cursor: wait; }
 
 /* -- TECH NEWS PAGE -- */
 #page-news { padding-top: 10px; }
