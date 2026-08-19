@@ -35,7 +35,7 @@ const KAMUS = [
   {en:"Resonance",id:"Resonansi",kat:"rangkaian",desc:"Kondisi saat XL = XC dalam rangkaian RLC.",detail:"Pada resonansi, impedansi minimal (seri) atau maksimal (paralel). Arus maksimum mengalir. Frekuensi resonansi tergantung L dan C.",formula:"f_r = \\frac{1}{2\\pi\\sqrt{LC}}",tags:["RLC","frekuensi resonansi","bandpass","filter"]},
   {en:"Voltage Divider",id:"Pembagi Tegangan",kat:"rangkaian",desc:"Rangkaian resistor untuk mendapatkan tegangan yang lebih kecil.",detail:"Dua resistor seri membagi tegangan input proporsional. Digunakan untuk bias transistor dan referensi tegangan.",formula:"V_{out} = V_{in} \\cdot \\frac{R_2}{R_1+R_2}",tags:["pembagi","bias","resistor","referensi"]},
   {en:"Current Divider",id:"Pembagi Arus",kat:"rangkaian",desc:"Rangkaian resistor paralel untuk membagi arus.",detail:"Arus terbagi proporsional terbalik dengan hambatan. Resistansi lebih kecil mendapat arus lebih besar.",formula:"I_1 = I_{total} \\cdot \\frac{R_2}{R_1+R_2}",tags:["paralel","pembagi arus","rangkaian"]},
-  {en:"Superposition Theorem",id:"Teorema Superposisi",kat:"rangkaian",desc:"Respons total = jumlah respons dari tiap sumber secara independen.",detail:"Berlaku untuk rangkaian linear. Matikan sumber lain (tegangan -†’ short, arus -†’ open) saat menganalisis satu sumber.",formula:"V_{total} = V_1 + V_2 + \\cdots + V_n",tags:["analisis","linear","superposisi","teorema"]},
+  {en:"Superposition Theorem",id:"Teorema Superposisi",kat:"rangkaian",desc:"Respons total = jumlah respons dari tiap sumber secara independen.",detail:"Berlaku untuk rangkaian linear. Matikan sumber lain (tegangan → short, arus → open) saat menganalisis satu sumber.",formula:"V_{total} = V_1 + V_2 + \\cdots + V_n",tags:["analisis","linear","superposisi","teorema"]},
   {en:"Thevenin's Theorem",id:"Teorema Thevenin",kat:"rangkaian",desc:"Rangkaian dua terminal disederhanakan menjadi Vth dan Rth.",detail:"Memudahkan analisis beban yang berubah. Vth = tegangan open-circuit, Rth = hambatan ekuivalen dari terminal.",formula:"V_{th} = V_{oc} \\;\\; R_{th} = R_{ekivalen}",tags:["ekivalen","penyederhanaan","teorema","dua terminal"]},
   {en:"Norton's Theorem",id:"Teorema Norton",kat:"rangkaian",desc:"Rangkaian dua terminal sebagai sumber arus Norton dengan Rn paralel.",detail:"Dual dari Teorema Thevenin. In = arus short-circuit, Rn = Rth. Bisa saling dikonversi.",formula:"I_N = I_{sc} \\;\\; R_N = R_{th}",tags:["sumber arus","ekivalen","norton","teorema"]},
   {en:"Maximum Power Transfer",id:"Transfer Daya Maksimum",kat:"rangkaian",desc:"Daya ke beban maksimum saat Rbeban = Rth.",detail:"Teorema penting untuk menentukan nilai beban optimal agar daya yang diterima beban paling besar.",formula:"P_{max} \\text{ saat } R_L = R_{th}",tags:["daya maksimum","matching","impedansi","efisiensi"]},
@@ -45,7 +45,7 @@ const KAMUS = [
   {en:"Active Power",id:"Daya Aktif",kat:"daya",desc:"Daya nyata yang digunakan oleh beban resistif.",detail:"Daya yang benar-benar dikonsumsi dan diubah menjadi panas, cahaya, atau kerja mekanik.",formula:"P = VI\\cos\\varphi \\;\\; (\\text{Watt})",tags:["watt","daya nyata","cos phi","efisiensi"]},
   {en:"Reactive Power",id:"Daya Reaktif",kat:"daya",desc:"Daya yang disimpan dan dikembalikan oleh elemen reaktif.",detail:"Tidak menghasilkan kerja nyata, tapi membebani sistem distribusi. Disebabkan oleh induktor dan kapasitor.",formula:"Q = VI\\sin\\varphi \\;\\; (\\text{VAR})",tags:["VAR","induktif","kapasitif","kompensasi"]},
   {en:"Apparent Power",id:"Daya Semu",kat:"daya",desc:"Daya total yang di-supply oleh sumber dalam sistem AC.",detail:"Kombinasi daya aktif dan reaktif. Merupakan kapasitas yang harus disediakan generator dan kabel distribusi.",formula:"S = VI = \\sqrt{P^2+Q^2} \\;\\; (\\text{VA})",tags:["VA","generator","kapasitas","rating"]},
-  {en:"Power Factor",id:"Faktor Daya",kat:"daya",desc:"Rasio daya aktif terhadap daya semu.",detail:"Nilai 1 = ideal. Beban induktif -†’ lagging, beban kapasitif -†’ leading. Perbaikan PF dengan bank kapasitor.",formula:"PF = \\cos\\varphi = \\frac{P}{S}",tags:["cos phi","efisiensi","lagging","leading","koreksi"]},
+  {en:"Power Factor",id:"Faktor Daya",kat:"daya",desc:"Rasio daya aktif terhadap daya semu.",detail:"Nilai 1 = ideal. Beban induktif → lagging, beban kapasitif → leading. Perbaikan PF dengan bank kapasitor.",formula:"PF = \\cos\\varphi = \\frac{P}{S}",tags:["cos phi","efisiensi","lagging","leading","koreksi"]},
   {en:"Energy",id:"Energi Listrik",kat:"daya",desc:"Total daya yang dikonsumsi selama selang waktu tertentu.",detail:"Diukur dalam kWh oleh PLN untuk tagihan listrik. 1 kWh = 1000 Watt Ã— 1 jam = 3,6 MJ.",formula:"W = P \\cdot t \\;\\; (\\text{kWh atau Joule})",tags:["kWh","tagihan","konsumsi","joule"]},
   {en:"Efficiency",id:"Efisiensi",kat:"daya",desc:"Perbandingan daya output dengan daya input.",detail:"Selisih daya input dan output adalah rugi-rugi (panas, gesekan). Transformator ideal Î· mendekati 99%.",formula:"\\eta = \\frac{P_{out}}{P_{in}} \\times 100\\%",tags:["rugi-rugi","transformator","motor","efisiensi"]},
   {en:"Three-Phase Power",id:"Daya Tiga Fasa",kat:"daya",desc:"Sistem distribusi AC tiga fasa bergeser 120-°.",detail:"Lebih efisien dari single-phase untuk transmisi daya. Digunakan di industri dan PLN distribusi.",formula:"P_{3\\phi} = \\sqrt{3}\\cdot V_L \\cdot I_L \\cdot \\cos\\varphi",tags:["tiga fasa","industri","PLN","transmisi","star","delta"]},
@@ -95,7 +95,7 @@ const KAMUS = [
   {en:"Hysteresis",id:"Histeresis",kat:"komponen",desc:"Sifat material magnetik yang menyimpan sejarah magnetisasi.",detail:"Kurva BH menunjukkan hysteresis loop. Luas area = rugi-rugi hysteresis. Material inti transformator dipilih yang loopnya sempit.",formula:"W_h = k_h \\cdot f \\cdot B_{max}^n",tags:["inti besi","transformator","rugi-rugi","magnetik","BH curve"]},
   {en:"Earthing / Grounding System",id:"Sistem Pembumian",kat:"dasar",desc:"Sistem yang menghubungkan instalasi listrik ke tanah untuk keselamatan.",detail:"Mencegah tegangan sentuh berbahaya saat terjadi gangguan. Jenis: TN-S, TN-C, TT, IT. Resistansi pentanahan harus rendah.",formula:"V_{touch} = I_f \\times R_{earth}",tags:["keselamatan","pentanahan","PUIL","ground","instalasi"]},
   {en:"Circuit Breaker",id:"Pemutus Tenaga (CB)",kat:"komponen",desc:"Sakelar proteksi otomatis yang bisa di-reset.",detail:"Membuka rangkaian saat arus berlebih atau hubung singkat. Berbeda dari sekering: bisa di-reset tanpa ganti komponen.",formula:"I_{trip} > I_{rated} \\Rightarrow \\text{trip otomatis}",tags:["MCB","MCCB","proteksi","overload","reset"]},
-  {en:"Power Supply",id:"Catu Daya",kat:"elektronika",desc:"Rangkaian mengubah tegangan AC menjadi DC yang stabil.",detail:"Terdiri dari: transformator -†’ penyearah -†’ filter kapasitor -†’ regulator. Output stabil meski input atau beban berubah.",formula:"V_{dc} = V_{rms}\\sqrt{2} - V_f",tags:["DC supply","regulasi","transformator","filter","regulator"]},
+  {en:"Power Supply",id:"Catu Daya",kat:"elektronika",desc:"Rangkaian mengubah tegangan AC menjadi DC yang stabil.",detail:"Terdiri dari: transformator → penyearah → filter kapasitor → regulator. Output stabil meski input atau beban berubah.",formula:"V_{dc} = V_{rms}\\sqrt{2} - V_f",tags:["DC supply","regulasi","transformator","filter","regulator"]},
   {en:"Harmonic Distortion",id:"Distorsi Harmonik",kat:"sinyal",desc:"Komponen frekuensi kelipatan dari frekuensi fundamental.",detail:"THD (Total Harmonic Distortion) mengukur kualitas sinyal. Beban nonlinier seperti inverter menghasilkan harmonik.",formula:"THD = \\frac{\\sqrt{V_2^2+V_3^2+\\cdots}}{V_1}\\times 100\\%",tags:["THD","kualitas daya","nonlinier","inverter","harmonik"]},
   {en:"Electromagnetic Interference",id:"Interferensi Elektromagnetik (EMI)",kat:"sinyal",desc:"Gangguan sinyal dari sumber elektromagnetik.",detail:"Sumber: motor, switching PSU, RF. Diatasi dengan shielding, filtering, grounding, dan tata letak PCB yang baik.",formula:"\\text{EMI} \\propto \\frac{dI}{dt} \\cdot L",tags:["EMI","EMC","shielding","noise","PCB"]},
   {en:"Galvanometer",id:"Galvanometer",kat:"pengukuran",desc:"Alat ukur arus sangat kecil (mikroampere).",detail:"Menggunakan kumparan dalam medan magnet permanen. Dasar dari amperemeter, voltmeter, dan ohmmeter analog.",formula:"F = nBIA \\;\\; (\\text{gaya pada kumparan})",tags:["analog","amperemeter","arus kecil","kumparan","defleksi"]},
@@ -1621,10 +1621,10 @@ const WOKWI_TEMPLATES = [
     "Kabel jumper"
   ],
   "firebase_setup": [
-    "Buka console.firebase.google.com -†’ buat project baru (gratis).",
-    "Build -†’ Realtime Database -†’ Create Database (mode test agar mudah dicoba).",
-    "Salin URL database (mis. https://xyz-default-rtdb.firebaseio.com) -†’ isi FIREBASE_HOST.",
-    "Project settings -†’ Service accounts -†’ Database secrets -†’ salin secret -†’ isi FIREBASE_AUTH.",
+    "Buka console.firebase.google.com → buat project baru (gratis).",
+    "Build → Realtime Database → Create Database (mode test agar mudah dicoba).",
+    "Salin URL database (mis. https://xyz-default-rtdb.firebaseio.com) → isi FIREBASE_HOST.",
+    "Project settings → Service accounts → Database secrets → salin secret → isi FIREBASE_AUTH.",
     "Ganti WIFI_SSID & WIFI_PASSWORD dengan WiFi kamu (di simulator Wokwi: SSID 'Wokwi-GUEST', password kosong)."
   ],
   "dashboard": {
@@ -1655,7 +1655,7 @@ const WOKWI_TEMPLATES = [
       "koneksi_arduino": "GND"
     }
   ],
-  "cpp_code": "// ===== IoT Suhu & Kelembaban -†’ Firebase =====\n// ESP32 DevKitC V4 + DHT22 + Firebase Realtime Database\n// INSTALL: Library Manager -> Firebase ESP32 Client by Mobizt (v4.3.x)\n// Isi 4 bagian bertanda TODO di bawah ini.\n\n#include <WiFi.h>\n#include <FirebaseESP32.h>\n#include <DHT.h>\n\n// ===== TODO 1: WiFi kamu =====\n// Di simulator Wokwi: SSID \"Wokwi-GUEST\", password \"\" (kosong)\n#define WIFI_SSID     \"Wokwi-GUEST\"\n#define WIFI_PASSWORD \"\"\n\n// ===== TODO 2: Firebase =====\n#define FIREBASE_HOST \"..alamat-database-firebase..\"   // mis. https://proyekmu-default-rtdb.firebaseio.com\n#define FIREBASE_AUTH \"..secret-database-firebase..\"   // Database secrets (Project settings)\n\n#define DHTPIN 4\n#define DHTTYPE DHT22\nDHT dht(DHTPIN, DHTTYPE);\n\nFirebaseData fbdo;\nFirebaseAuth auth;\nFirebaseConfig config;\n\nvoid setup() {\n  Serial.begin(115200);\n  dht.begin();\n\n  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);\n  Serial.print(\"Menghubungkan WiFi\");\n  while (WiFi.status() != WL_CONNECTED) { delay(300); Serial.print(\".\"); }\n  Serial.println(\"\\nWiFi OK - IP: \" + WiFi.localIP().toString());\n\n  config.host = FIREBASE_HOST;\n  config.signer.tokens.legacy_token = FIREBASE_AUTH;\n  Firebase.begin(&config, &auth);\n  Firebase.reconnectWiFi(true);\n}\n\nvoid loop() {\n  float h = dht.readHumidity();\n  float t = dht.readTemperature();\n  if (isnan(h) || isnan(t)) { Serial.println(\"Gagal baca DHT22\"); delay(2000); return; }\n\n  // Kirim ke Firebase (dashboard membaca path ini)\n  Firebase.setFloat(fbdo, \"/sensor/suhu\", t);\n  Firebase.setFloat(fbdo, \"/sensor/kelembaban\", h);\n  Firebase.setString(fbdo, \"/sensor/status\", \"online\");\n\n  Serial.printf(\"Suhu: %.1f C | Kelembaban: %.1f %%\\n\", t, h);\n  delay(5000);\n}\n",
+  "cpp_code": "// ===== IoT Suhu & Kelembaban → Firebase =====\n// ESP32 DevKitC V4 + DHT22 + Firebase Realtime Database\n// INSTALL: Library Manager -> Firebase ESP32 Client by Mobizt (v4.3.x)\n// Isi 4 bagian bertanda TODO di bawah ini.\n\n#include <WiFi.h>\n#include <FirebaseESP32.h>\n#include <DHT.h>\n\n// ===== TODO 1: WiFi kamu =====\n// Di simulator Wokwi: SSID \"Wokwi-GUEST\", password \"\" (kosong)\n#define WIFI_SSID     \"Wokwi-GUEST\"\n#define WIFI_PASSWORD \"\"\n\n// ===== TODO 2: Firebase =====\n#define FIREBASE_HOST \"..alamat-database-firebase..\"   // mis. https://proyekmu-default-rtdb.firebaseio.com\n#define FIREBASE_AUTH \"..secret-database-firebase..\"   // Database secrets (Project settings)\n\n#define DHTPIN 4\n#define DHTTYPE DHT22\nDHT dht(DHTPIN, DHTTYPE);\n\nFirebaseData fbdo;\nFirebaseAuth auth;\nFirebaseConfig config;\n\nvoid setup() {\n  Serial.begin(115200);\n  dht.begin();\n\n  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);\n  Serial.print(\"Menghubungkan WiFi\");\n  while (WiFi.status() != WL_CONNECTED) { delay(300); Serial.print(\".\"); }\n  Serial.println(\"\\nWiFi OK - IP: \" + WiFi.localIP().toString());\n\n  config.host = FIREBASE_HOST;\n  config.signer.tokens.legacy_token = FIREBASE_AUTH;\n  Firebase.begin(&config, &auth);\n  Firebase.reconnectWiFi(true);\n}\n\nvoid loop() {\n  float h = dht.readHumidity();\n  float t = dht.readTemperature();\n  if (isnan(h) || isnan(t)) { Serial.println(\"Gagal baca DHT22\"); delay(2000); return; }\n\n  // Kirim ke Firebase (dashboard membaca path ini)\n  Firebase.setFloat(fbdo, \"/sensor/suhu\", t);\n  Firebase.setFloat(fbdo, \"/sensor/kelembaban\", h);\n  Firebase.setString(fbdo, \"/sensor/status\", \"online\");\n\n  Serial.printf(\"Suhu: %.1f C | Kelembaban: %.1f %%\\n\", t, h);\n  delay(5000);\n}\n",
   "wokwi_diagram": "{\"version\":1,\"author\":\"ElektroDict\",\"editor\":\"wokwi\",\"parts\":[{\"type\":\"board-esp32-devkit-c-v4\",\"id\":\"esp\",\"top\":0,\"left\":0,\"attrs\":{}},{\"type\":\"wokwi-dht22\",\"id\":\"dht\",\"top\":-130,\"left\":340,\"attrs\":{}},{\"type\":\"wokwi-wifi-ap\",\"id\":\"ap\",\"top\":-260,\"left\":0,\"attrs\":{\"ssid\":\"Wokwi-GUEST\",\"password\":\"\"}}],\"connections\":[[\"dht:VCC\",\"esp:3V3\",\"red\",[\"v0\"]],[\"dht:SDA\",\"esp:4\",\"green\",[\"v0\"]],[\"dht:GND\",\"esp:GND.1\",\"black\",[\"v0\"]]]}",
   "steps": [
     {
@@ -1672,7 +1672,7 @@ const WOKWI_TEMPLATES = [
     },
     {
       "nama_komponen": "Uji coba",
-      "alur_perakitan": "Buka Realtime Database -†’ path /sensor — suhu & kelembaban ter-update tiap 5 detik."
+      "alur_perakitan": "Buka Realtime Database → path /sensor — suhu & kelembaban ter-update tiap 5 detik."
     }
   ]
 },
@@ -1697,9 +1697,9 @@ const WOKWI_TEMPLATES = [
     "Kabel jumper"
   ],
   "firebase_setup": [
-    "Buat project Firebase gratis -†’ Realtime Database mode test.",
-    "Salin URL database -†’ isi FIREBASE_HOST.",
-    "Database secrets -†’ isi FIREBASE_AUTH.",
+    "Buat project Firebase gratis → Realtime Database mode test.",
+    "Salin URL database → isi FIREBASE_HOST.",
+    "Database secrets → isi FIREBASE_AUTH.",
     "Ganti WiFi sesuai jaringan kamu (simulator: 'Wokwi-GUEST')."
   ],
   "dashboard": {
@@ -1744,7 +1744,7 @@ const WOKWI_TEMPLATES = [
       "koneksi_arduino": "GND"
     }
   ],
-  "cpp_code": "// ===== Monitor Jarak + Alarm -†’ Firebase =====\n// ESP32 + HC-SR04 + Buzzer + Firebase Realtime Database\n// INSTALL: Firebase ESP32 Client by Mobizt\n\n#include <WiFi.h>\n#include <FirebaseESP32.h>\n\n#define WIFI_SSID     \"Wokwi-GUEST\"   // TODO: ganti WiFi kamu\n#define WIFI_PASSWORD \"\"\n#define FIREBASE_HOST \"..alamat-database-firebase..\"  // TODO\n#define FIREBASE_AUTH \"..secret-database-firebase..\"  // TODO\n\n#define TRIG 5\n#define ECHO 18\n#define BUZZ 19\n#define BATAS_BAHAYA 30  // cm\n\nFirebaseData fbdo;\nFirebaseAuth auth;\nFirebaseConfig config;\n\nfloat bacaJarak() {\n  digitalWrite(TRIG, LOW); delayMicroseconds(2);\n  digitalWrite(TRIG, HIGH); delayMicroseconds(10);\n  digitalWrite(TRIG, LOW);\n  long durasi = pulseIn(ECHO, HIGH);\n  return durasi * 0.034 / 2;\n}\n\nvoid setup() {\n  Serial.begin(115200);\n  pinMode(TRIG, OUTPUT); pinMode(ECHO, INPUT); pinMode(BUZZ, OUTPUT);\n\n  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);\n  while (WiFi.status() != WL_CONNECTED) { delay(300); Serial.print(\".\"); }\n  Serial.println(\"\\nWiFi OK\");\n\n  config.host = FIREBASE_HOST;\n  config.signer.tokens.legacy_token = FIREBASE_AUTH;\n  Firebase.begin(&config, &auth);\n  Firebase.reconnectWiFi(true);\n}\n\nvoid loop() {\n  float cm = bacaJarak();\n  bool bahaya = (cm > 0 && cm < BATAS_BAHAYA);\n  digitalWrite(BUZZ, bahaya ? HIGH : LOW);\n\n  Firebase.setFloat(fbdo, \"/jarak/cm\", cm);\n  Firebase.setBool(fbdo, \"/jarak/bahaya\", bahaya);\n\n  Serial.printf(\"Jarak: %.1f cm | Bahaya: %s\\n\", cm, bahaya ? \"YA\" : \"tidak\");\n  delay(1000);\n}\n",
+  "cpp_code": "// ===== Monitor Jarak + Alarm → Firebase =====\n// ESP32 + HC-SR04 + Buzzer + Firebase Realtime Database\n// INSTALL: Firebase ESP32 Client by Mobizt\n\n#include <WiFi.h>\n#include <FirebaseESP32.h>\n\n#define WIFI_SSID     \"Wokwi-GUEST\"   // TODO: ganti WiFi kamu\n#define WIFI_PASSWORD \"\"\n#define FIREBASE_HOST \"..alamat-database-firebase..\"  // TODO\n#define FIREBASE_AUTH \"..secret-database-firebase..\"  // TODO\n\n#define TRIG 5\n#define ECHO 18\n#define BUZZ 19\n#define BATAS_BAHAYA 30  // cm\n\nFirebaseData fbdo;\nFirebaseAuth auth;\nFirebaseConfig config;\n\nfloat bacaJarak() {\n  digitalWrite(TRIG, LOW); delayMicroseconds(2);\n  digitalWrite(TRIG, HIGH); delayMicroseconds(10);\n  digitalWrite(TRIG, LOW);\n  long durasi = pulseIn(ECHO, HIGH);\n  return durasi * 0.034 / 2;\n}\n\nvoid setup() {\n  Serial.begin(115200);\n  pinMode(TRIG, OUTPUT); pinMode(ECHO, INPUT); pinMode(BUZZ, OUTPUT);\n\n  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);\n  while (WiFi.status() != WL_CONNECTED) { delay(300); Serial.print(\".\"); }\n  Serial.println(\"\\nWiFi OK\");\n\n  config.host = FIREBASE_HOST;\n  config.signer.tokens.legacy_token = FIREBASE_AUTH;\n  Firebase.begin(&config, &auth);\n  Firebase.reconnectWiFi(true);\n}\n\nvoid loop() {\n  float cm = bacaJarak();\n  bool bahaya = (cm > 0 && cm < BATAS_BAHAYA);\n  digitalWrite(BUZZ, bahaya ? HIGH : LOW);\n\n  Firebase.setFloat(fbdo, \"/jarak/cm\", cm);\n  Firebase.setBool(fbdo, \"/jarak/bahaya\", bahaya);\n\n  Serial.printf(\"Jarak: %.1f cm | Bahaya: %s\\n\", cm, bahaya ? \"YA\" : \"tidak\");\n  delay(1000);\n}\n",
   "wokwi_diagram": "{\"version\":1,\"author\":\"ElektroDict\",\"editor\":\"wokwi\",\"parts\":[{\"type\":\"board-esp32-devkit-c-v4\",\"id\":\"esp\",\"top\":0,\"left\":0,\"attrs\":{}},{\"type\":\"wokwi-hc-sr04\",\"id\":\"ultra\",\"top\":-130,\"left\":340,\"attrs\":{}},{\"type\":\"wokwi-buzzer\",\"id\":\"buz\",\"top\":-260,\"left\":340,\"attrs\":{}},{\"type\":\"wokwi-wifi-ap\",\"id\":\"ap\",\"top\":-260,\"left\":0,\"attrs\":{\"ssid\":\"Wokwi-GUEST\",\"password\":\"\"}}],\"connections\":[[\"ultra:VCC\",\"esp:5V\",\"red\",[\"v0\"]],[\"ultra:TRIG\",\"esp:5\",\"green\",[\"v0\"]],[\"ultra:ECHO\",\"esp:18\",\"yellow\",[\"v0\"]],[\"ultra:GND\",\"esp:GND.1\",\"black\",[\"v0\"]],[\"buz:2\",\"esp:19\",\"blue\",[\"v0\"]],[\"buz:1\",\"esp:GND.2\",\"black\",[\"v0\"]]]}",
   "steps": [
     {
@@ -1787,7 +1787,7 @@ const WOKWI_TEMPLATES = [
     "Kabel jumper"
   ],
   "firebase_setup": [
-    "Buat project Firebase gratis -†’ Realtime Database mode test.",
+    "Buat project Firebase gratis → Realtime Database mode test.",
     "Isi FIREBASE_HOST & FIREBASE_AUTH di kode.",
     "Ganti WiFi sesuai jaringan kamu (simulator: 'Wokwi-GUEST')."
   ],
@@ -1828,7 +1828,7 @@ const WOKWI_TEMPLATES = [
       "koneksi_arduino": "GND"
     }
   ],
-  "cpp_code": "// ===== Deteksi Gerakan -†’ Firebase =====\n// ESP32 + PIR + LED + Firebase Realtime Database\n// INSTALL: Firebase ESP32 Client by Mobizt\n\n#include <WiFi.h>\n#include <FirebaseESP32.h>\n\n#define WIFI_SSID     \"Wokwi-GUEST\"   // TODO: ganti WiFi kamu\n#define WIFI_PASSWORD \"\"\n#define FIREBASE_HOST \"..alamat-database-firebase..\"  // TODO\n#define FIREBASE_AUTH \"..secret-database-firebase..\"  // TODO\n\n#define PIR_PIN 26\n#define LED_PIN 13\n\nFirebaseData fbdo;\nFirebaseAuth auth;\nFirebaseConfig config;\n\nvoid setup() {\n  Serial.begin(115200);\n  pinMode(PIR_PIN, INPUT); pinMode(LED_PIN, OUTPUT);\n\n  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);\n  while (WiFi.status() != WL_CONNECTED) { delay(300); Serial.print(\".\"); }\n  Serial.println(\"\\nWiFi OK\");\n\n  config.host = FIREBASE_HOST;\n  config.signer.tokens.legacy_token = FIREBASE_AUTH;\n  Firebase.begin(&config, &auth);\n  Firebase.reconnectWiFi(true);\n\n  Firebase.setString(fbdo, \"/keamanan/status\", \"siap\");\n}\n\nvoid loop() {\n  int gerakan = digitalRead(PIR_PIN);\n  digitalWrite(LED_PIN, gerakan ? HIGH : LOW);\n\n  if (gerakan) {\n    Firebase.setBool(fbdo, \"/keamanan/gerakan\", true);\n    Firebase.setString(fbdo, \"/keamanan/waktu_terakhir\", \"ada gerakan\");\n    Serial.println(\"Gerakan terdeteksi!\");\n  } else {\n    Firebase.setBool(fbdo, \"/keamanan/gerakan\", false);\n  }\n  delay(500);\n}\n",
+  "cpp_code": "// ===== Deteksi Gerakan → Firebase =====\n// ESP32 + PIR + LED + Firebase Realtime Database\n// INSTALL: Firebase ESP32 Client by Mobizt\n\n#include <WiFi.h>\n#include <FirebaseESP32.h>\n\n#define WIFI_SSID     \"Wokwi-GUEST\"   // TODO: ganti WiFi kamu\n#define WIFI_PASSWORD \"\"\n#define FIREBASE_HOST \"..alamat-database-firebase..\"  // TODO\n#define FIREBASE_AUTH \"..secret-database-firebase..\"  // TODO\n\n#define PIR_PIN 26\n#define LED_PIN 13\n\nFirebaseData fbdo;\nFirebaseAuth auth;\nFirebaseConfig config;\n\nvoid setup() {\n  Serial.begin(115200);\n  pinMode(PIR_PIN, INPUT); pinMode(LED_PIN, OUTPUT);\n\n  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);\n  while (WiFi.status() != WL_CONNECTED) { delay(300); Serial.print(\".\"); }\n  Serial.println(\"\\nWiFi OK\");\n\n  config.host = FIREBASE_HOST;\n  config.signer.tokens.legacy_token = FIREBASE_AUTH;\n  Firebase.begin(&config, &auth);\n  Firebase.reconnectWiFi(true);\n\n  Firebase.setString(fbdo, \"/keamanan/status\", \"siap\");\n}\n\nvoid loop() {\n  int gerakan = digitalRead(PIR_PIN);\n  digitalWrite(LED_PIN, gerakan ? HIGH : LOW);\n\n  if (gerakan) {\n    Firebase.setBool(fbdo, \"/keamanan/gerakan\", true);\n    Firebase.setString(fbdo, \"/keamanan/waktu_terakhir\", \"ada gerakan\");\n    Serial.println(\"Gerakan terdeteksi!\");\n  } else {\n    Firebase.setBool(fbdo, \"/keamanan/gerakan\", false);\n  }\n  delay(500);\n}\n",
   "wokwi_diagram": "{\"version\":1,\"author\":\"ElektroDict\",\"editor\":\"wokwi\",\"parts\":[{\"type\":\"board-esp32-devkit-c-v4\",\"id\":\"esp\",\"top\":0,\"left\":0,\"attrs\":{}},{\"type\":\"wokwi-pir-motion-sensor\",\"id\":\"pir\",\"top\":-130,\"left\":340,\"attrs\":{}},{\"type\":\"wokwi-led\",\"id\":\"led\",\"top\":-130,\"left\":520,\"attrs\":{\"color\":\"red\"}},{\"type\":\"wokwi-resistor\",\"id\":\"r1\",\"top\":-50,\"left\":520,\"attrs\":{\"value\":\"220\"}},{\"type\":\"wokwi-wifi-ap\",\"id\":\"ap\",\"top\":-260,\"left\":0,\"attrs\":{\"ssid\":\"Wokwi-GUEST\",\"password\":\"\"}}],\"connections\":[[\"pir:VCC\",\"esp:3V3\",\"red\",[\"v0\"]],[\"pir:OUT\",\"esp:26\",\"green\",[\"v0\"]],[\"pir:GND\",\"esp:GND.1\",\"black\",[\"v0\"]],[\"esp:13\",\"r1:1\",\"yellow\",[\"v0\"]],[\"r1:2\",\"led:A\",\"yellow\",[\"v0\"]],[\"led:C\",\"esp:GND.2\",\"black\",[\"v0\"]]]}",
   "steps": [
     {
@@ -1871,7 +1871,7 @@ const WOKWI_TEMPLATES = [
     "Kabel jumper"
   ],
   "firebase_setup": [
-    "Buat project Firebase gratis -†’ Realtime Database mode test.",
+    "Buat project Firebase gratis → Realtime Database mode test.",
     "Isi FIREBASE_HOST & FIREBASE_AUTH di kode.",
     "Ganti WiFi sesuai jaringan kamu (simulator: 'Wokwi-GUEST')."
   ],
@@ -1912,7 +1912,7 @@ const WOKWI_TEMPLATES = [
       "koneksi_arduino": "GND"
     }
   ],
-  "cpp_code": "// ===== Lampu Otomatis Sensor Cahaya -†’ Firebase =====\n// ESP32 + modul LDR + LED + Firebase Realtime Database\n// INSTALL: Firebase ESP32 Client by Mobizt\n\n#include <WiFi.h>\n#include <FirebaseESP32.h>\n\n#define WIFI_SSID     \"Wokwi-GUEST\"   // TODO: ganti WiFi kamu\n#define WIFI_PASSWORD \"\"\n#define FIREBASE_HOST \"..alamat-database-firebase..\"  // TODO\n#define FIREBASE_AUTH \"..secret-database-firebase..\"  // TODO\n\n#define LDR_PIN 34   // GPIO 34 = ADC (input saja)\n#define LED_PIN 25\n#define AMBANG_GELAP 2000  // nilai ADC di bawah ini = gelap\n\nFirebaseData fbdo;\nFirebaseAuth auth;\nFirebaseConfig config;\n\nvoid setup() {\n  Serial.begin(115200);\n  pinMode(LED_PIN, OUTPUT);\n\n  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);\n  while (WiFi.status() != WL_CONNECTED) { delay(300); Serial.print(\".\"); }\n  Serial.println(\"\\nWiFi OK\");\n\n  config.host = FIREBASE_HOST;\n  config.signer.tokens.legacy_token = FIREBASE_AUTH;\n  Firebase.begin(&config, &auth);\n  Firebase.reconnectWiFi(true);\n}\n\nvoid loop() {\n  int cahaya = analogRead(LDR_PIN);  // kecil = gelap\n  bool lampu = (cahaya < AMBANG_GELAP);\n  digitalWrite(LED_PIN, lampu ? HIGH : LOW);\n\n  Firebase.setInt(fbdo, \"/cahaya/nilai_adc\", cahaya);\n  Firebase.setBool(fbdo, \"/cahaya/lampu_nyala\", lampu);\n\n  Serial.printf(\"Cahaya: %d | Lampu: %s\\n\", cahaya, lampu ? \"NYALA\" : \"mati\");\n  delay(1000);\n}\n",
+  "cpp_code": "// ===== Lampu Otomatis Sensor Cahaya → Firebase =====\n// ESP32 + modul LDR + LED + Firebase Realtime Database\n// INSTALL: Firebase ESP32 Client by Mobizt\n\n#include <WiFi.h>\n#include <FirebaseESP32.h>\n\n#define WIFI_SSID     \"Wokwi-GUEST\"   // TODO: ganti WiFi kamu\n#define WIFI_PASSWORD \"\"\n#define FIREBASE_HOST \"..alamat-database-firebase..\"  // TODO\n#define FIREBASE_AUTH \"..secret-database-firebase..\"  // TODO\n\n#define LDR_PIN 34   // GPIO 34 = ADC (input saja)\n#define LED_PIN 25\n#define AMBANG_GELAP 2000  // nilai ADC di bawah ini = gelap\n\nFirebaseData fbdo;\nFirebaseAuth auth;\nFirebaseConfig config;\n\nvoid setup() {\n  Serial.begin(115200);\n  pinMode(LED_PIN, OUTPUT);\n\n  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);\n  while (WiFi.status() != WL_CONNECTED) { delay(300); Serial.print(\".\"); }\n  Serial.println(\"\\nWiFi OK\");\n\n  config.host = FIREBASE_HOST;\n  config.signer.tokens.legacy_token = FIREBASE_AUTH;\n  Firebase.begin(&config, &auth);\n  Firebase.reconnectWiFi(true);\n}\n\nvoid loop() {\n  int cahaya = analogRead(LDR_PIN);  // kecil = gelap\n  bool lampu = (cahaya < AMBANG_GELAP);\n  digitalWrite(LED_PIN, lampu ? HIGH : LOW);\n\n  Firebase.setInt(fbdo, \"/cahaya/nilai_adc\", cahaya);\n  Firebase.setBool(fbdo, \"/cahaya/lampu_nyala\", lampu);\n\n  Serial.printf(\"Cahaya: %d | Lampu: %s\\n\", cahaya, lampu ? \"NYALA\" : \"mati\");\n  delay(1000);\n}\n",
   "wokwi_diagram": "{\"version\":1,\"author\":\"ElektroDict\",\"editor\":\"wokwi\",\"parts\":[{\"type\":\"board-esp32-devkit-c-v4\",\"id\":\"esp\",\"top\":0,\"left\":0,\"attrs\":{}},{\"type\":\"wokwi-photoresistor-sensor\",\"id\":\"ldr\",\"top\":-130,\"left\":340,\"attrs\":{}},{\"type\":\"wokwi-led\",\"id\":\"led\",\"top\":-130,\"left\":520,\"attrs\":{\"color\":\"white\"}},{\"type\":\"wokwi-resistor\",\"id\":\"r1\",\"top\":-50,\"left\":520,\"attrs\":{\"value\":\"220\"}},{\"type\":\"wokwi-wifi-ap\",\"id\":\"ap\",\"top\":-260,\"left\":0,\"attrs\":{\"ssid\":\"Wokwi-GUEST\",\"password\":\"\"}}],\"connections\":[[\"ldr:VCC\",\"esp:3V3\",\"red\",[\"v0\"]],[\"ldr:AO\",\"esp:34\",\"green\",[\"v0\"]],[\"ldr:GND\",\"esp:GND.1\",\"black\",[\"v0\"]],[\"esp:25\",\"r1:1\",\"yellow\",[\"v0\"]],[\"r1:2\",\"led:A\",\"yellow\",[\"v0\"]],[\"led:C\",\"esp:GND.2\",\"black\",[\"v0\"]]]}",
   "steps": [
     {
@@ -1955,7 +1955,7 @@ const WOKWI_TEMPLATES = [
     "Kabel jumper"
   ],
   "firebase_setup": [
-    "Buat project Firebase gratis -†’ Realtime Database mode test.",
+    "Buat project Firebase gratis → Realtime Database mode test.",
     "Isi FIREBASE_HOST & FIREBASE_AUTH di kode.",
     "Ganti WiFi sesuai jaringan kamu (simulator: 'Wokwi-GUEST')."
   ],
@@ -2001,7 +2001,7 @@ const WOKWI_TEMPLATES = [
       "koneksi_arduino": "GND"
     }
   ],
-  "cpp_code": "// ===== Termostat + Relay -†’ Firebase =====\n// ESP32 + NTC + relay + Firebase Realtime Database\n// INSTALL: Firebase ESP32 Client by Mobizt\n// Kalibrasi: nilai ADC NTC -> suhu perkiraan (sesuaikan dengan datasheet NTC kamu)\n\n#include <WiFi.h>\n#include <FirebaseESP32.h>\n\n#define WIFI_SSID     \"Wokwi-GUEST\"   // TODO: ganti WiFi kamu\n#define WIFI_PASSWORD \"\"\n#define FIREBASE_HOST \"..alamat-database-firebase..\"  // TODO\n#define FIREBASE_AUTH \"..secret-database-firebase..\"  // TODO\n\n#define NTC_PIN 35\n#define RELAY_PIN 25\n#define SUHU_TARGET 30.0  // nyalakan beban di atas 30 C\n\nFirebaseData fbdo;\nFirebaseAuth auth;\nFirebaseConfig config;\n\nfloat bacaSuhu() {\n  int adc = analogRead(NTC_PIN);\n  // Konversi sederhana ADC -> suhu (kalibrasi opsional di sini)\n  return map(adc, 0, 4095, 0, 100);\n}\n\nvoid setup() {\n  Serial.begin(115200);\n  pinMode(RELAY_PIN, OUTPUT);\n  digitalWrite(RELAY_PIN, LOW);\n\n  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);\n  while (WiFi.status() != WL_CONNECTED) { delay(300); Serial.print(\".\"); }\n  Serial.println(\"\\nWiFi OK\");\n\n  config.host = FIREBASE_HOST;\n  config.signer.tokens.legacy_token = FIREBASE_AUTH;\n  Firebase.begin(&config, &auth);\n  Firebase.reconnectWiFi(true);\n}\n\nvoid loop() {\n  float suhu = bacaSuhu();\n  bool nyala = (suhu > SUHU_TARGET);\n  digitalWrite(RELAY_PIN, nyala ? HIGH : LOW);\n\n  Firebase.setFloat(fbdo, \"/termostat/suhu\", suhu);\n  Firebase.setBool(fbdo, \"/termostat/beban_nyala\", nyala);\n\n  Serial.printf(\"Suhu: %.1f C | Beban: %s\\n\", suhu, nyala ? \"NYALA\" : \"mati\");\n  delay(2000);\n}\n",
+  "cpp_code": "// ===== Termostat + Relay → Firebase =====\n// ESP32 + NTC + relay + Firebase Realtime Database\n// INSTALL: Firebase ESP32 Client by Mobizt\n// Kalibrasi: nilai ADC NTC -> suhu perkiraan (sesuaikan dengan datasheet NTC kamu)\n\n#include <WiFi.h>\n#include <FirebaseESP32.h>\n\n#define WIFI_SSID     \"Wokwi-GUEST\"   // TODO: ganti WiFi kamu\n#define WIFI_PASSWORD \"\"\n#define FIREBASE_HOST \"..alamat-database-firebase..\"  // TODO\n#define FIREBASE_AUTH \"..secret-database-firebase..\"  // TODO\n\n#define NTC_PIN 35\n#define RELAY_PIN 25\n#define SUHU_TARGET 30.0  // nyalakan beban di atas 30 C\n\nFirebaseData fbdo;\nFirebaseAuth auth;\nFirebaseConfig config;\n\nfloat bacaSuhu() {\n  int adc = analogRead(NTC_PIN);\n  // Konversi sederhana ADC -> suhu (kalibrasi opsional di sini)\n  return map(adc, 0, 4095, 0, 100);\n}\n\nvoid setup() {\n  Serial.begin(115200);\n  pinMode(RELAY_PIN, OUTPUT);\n  digitalWrite(RELAY_PIN, LOW);\n\n  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);\n  while (WiFi.status() != WL_CONNECTED) { delay(300); Serial.print(\".\"); }\n  Serial.println(\"\\nWiFi OK\");\n\n  config.host = FIREBASE_HOST;\n  config.signer.tokens.legacy_token = FIREBASE_AUTH;\n  Firebase.begin(&config, &auth);\n  Firebase.reconnectWiFi(true);\n}\n\nvoid loop() {\n  float suhu = bacaSuhu();\n  bool nyala = (suhu > SUHU_TARGET);\n  digitalWrite(RELAY_PIN, nyala ? HIGH : LOW);\n\n  Firebase.setFloat(fbdo, \"/termostat/suhu\", suhu);\n  Firebase.setBool(fbdo, \"/termostat/beban_nyala\", nyala);\n\n  Serial.printf(\"Suhu: %.1f C | Beban: %s\\n\", suhu, nyala ? \"NYALA\" : \"mati\");\n  delay(2000);\n}\n",
   "wokwi_diagram": "{\"version\":1,\"author\":\"ElektroDict\",\"editor\":\"wokwi\",\"parts\":[{\"type\":\"board-esp32-devkit-c-v4\",\"id\":\"esp\",\"top\":0,\"left\":0,\"attrs\":{}},{\"type\":\"wokwi-ntc-temperature-sensor\",\"id\":\"ntc\",\"top\":-130,\"left\":340,\"attrs\":{}},{\"type\":\"wokwi-relay-module\",\"id\":\"rel\",\"top\":-130,\"left\":520,\"attrs\":{}},{\"type\":\"wokwi-wifi-ap\",\"id\":\"ap\",\"top\":-260,\"left\":0,\"attrs\":{\"ssid\":\"Wokwi-GUEST\",\"password\":\"\"}}],\"connections\":[[\"ntc:VCC\",\"esp:3V3\",\"red\",[\"v0\"]],[\"ntc:OUT\",\"esp:35\",\"green\",[\"v0\"]],[\"ntc:GND\",\"esp:GND.1\",\"black\",[\"v0\"]],[\"rel:VCC\",\"esp:5V\",\"red\",[\"v0\"]],[\"rel:IN\",\"esp:25\",\"yellow\",[\"v0\"]],[\"rel:GND\",\"esp:GND.2\",\"black\",[\"v0\"]]]}",
   "steps": [
     {
@@ -2042,7 +2042,7 @@ const WOKWI_TEMPLATES = [
     "Kabel jumper"
   ],
   "firebase_setup": [
-    "Buat project Firebase gratis -†’ Realtime Database mode test.",
+    "Buat project Firebase gratis → Realtime Database mode test.",
     "Isi FIREBASE_HOST & FIREBASE_AUTH di kode.",
     "Ganti WiFi sesuai jaringan kamu (simulator: 'Wokwi-GUEST').",
     "Dashboard: tulis angka 0-180 di node /servo/sudut untuk menggerakkan servo."
@@ -2084,7 +2084,7 @@ const WOKWI_TEMPLATES = [
     },
     {
       "nama_komponen": "Dashboard",
-      "alur_perakitan": "Buka Realtime Database -†’ ubah /servo/sudut menjadi angka 0-180."
+      "alur_perakitan": "Buka Realtime Database → ubah /servo/sudut menjadi angka 0-180."
     },
     {
       "nama_komponen": "Uji coba",
@@ -2113,7 +2113,7 @@ const WOKWI_TEMPLATES = [
     "Kabel jumper"
   ],
   "firebase_setup": [
-    "Buat project Firebase gratis -†’ Realtime Database mode test.",
+    "Buat project Firebase gratis → Realtime Database mode test.",
     "Isi FIREBASE_HOST & FIREBASE_AUTH di kode.",
     "Ganti WiFi sesuai jaringan kamu (simulator: 'Wokwi-GUEST').",
     "Dashboard: tulis nilai 0-255 di /rgb/merah, /rgb/hijau, /rgb/biru."
@@ -2190,7 +2190,7 @@ const WOKWI_TEMPLATES = [
     "Kabel jumper"
   ],
   "firebase_setup": [
-    "Buat project Firebase gratis -†’ Realtime Database mode test.",
+    "Buat project Firebase gratis → Realtime Database mode test.",
     "Isi FIREBASE_HOST & FIREBASE_AUTH di kode.",
     "Ganti WiFi sesuai jaringan kamu (simulator: 'Wokwi-GUEST')."
   ],
@@ -2236,7 +2236,7 @@ const WOKWI_TEMPLATES = [
       "koneksi_arduino": "GND"
     }
   ],
-  "cpp_code": "// ===== Deteksi Gas Bocor -†’ Firebase =====\n// ESP32 + MQ2 + buzzer + LED + Firebase Realtime Database\n// INSTALL: Firebase ESP32 Client by Mobizt\n\n#include <WiFi.h>\n#include <FirebaseESP32.h>\n\n#define WIFI_SSID     \"Wokwi-GUEST\"   // TODO: ganti WiFi kamu\n#define WIFI_PASSWORD \"\"\n#define FIREBASE_HOST \"..alamat-database-firebase..\"  // TODO\n#define FIREBASE_AUTH \"..secret-database-firebase..\"  // TODO\n\n#define GAS_PIN 35   // AO (analog)\n#define BUZZ_PIN 19\n#define LED_PIN 13\n#define AMBANG_BAHAYA 2500  // kalibrasi sesuai lingkungan\n\nFirebaseData fbdo;\nFirebaseAuth auth;\nFirebaseConfig config;\n\nvoid setup() {\n  Serial.begin(115200);\n  pinMode(BUZZ_PIN, OUTPUT); pinMode(LED_PIN, OUTPUT);\n\n  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);\n  while (WiFi.status() != WL_CONNECTED) { delay(300); Serial.print(\".\"); }\n  Serial.println(\"\\nWiFi OK\");\n\n  config.host = FIREBASE_HOST;\n  config.signer.tokens.legacy_token = FIREBASE_AUTH;\n  Firebase.begin(&config, &auth);\n  Firebase.reconnectWiFi(true);\n}\n\nvoid loop() {\n  int gas = analogRead(GAS_PIN);\n  bool bahaya = (gas > AMBANG_BAHAYA);\n  digitalWrite(BUZZ_PIN, bahaya ? HIGH : LOW);\n  digitalWrite(LED_PIN, bahaya ? HIGH : LOW);\n\n  Firebase.setInt(fbdo, \"/gas/nilai_adc\", gas);\n  Firebase.setBool(fbdo, \"/gas/bahaya\", bahaya);\n\n  Serial.printf(\"Gas: %d | Bahaya: %s\\n\", gas, bahaya ? \"YA!!\" : \"aman\");\n  delay(1000);\n}\n",
+  "cpp_code": "// ===== Deteksi Gas Bocor → Firebase =====\n// ESP32 + MQ2 + buzzer + LED + Firebase Realtime Database\n// INSTALL: Firebase ESP32 Client by Mobizt\n\n#include <WiFi.h>\n#include <FirebaseESP32.h>\n\n#define WIFI_SSID     \"Wokwi-GUEST\"   // TODO: ganti WiFi kamu\n#define WIFI_PASSWORD \"\"\n#define FIREBASE_HOST \"..alamat-database-firebase..\"  // TODO\n#define FIREBASE_AUTH \"..secret-database-firebase..\"  // TODO\n\n#define GAS_PIN 35   // AO (analog)\n#define BUZZ_PIN 19\n#define LED_PIN 13\n#define AMBANG_BAHAYA 2500  // kalibrasi sesuai lingkungan\n\nFirebaseData fbdo;\nFirebaseAuth auth;\nFirebaseConfig config;\n\nvoid setup() {\n  Serial.begin(115200);\n  pinMode(BUZZ_PIN, OUTPUT); pinMode(LED_PIN, OUTPUT);\n\n  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);\n  while (WiFi.status() != WL_CONNECTED) { delay(300); Serial.print(\".\"); }\n  Serial.println(\"\\nWiFi OK\");\n\n  config.host = FIREBASE_HOST;\n  config.signer.tokens.legacy_token = FIREBASE_AUTH;\n  Firebase.begin(&config, &auth);\n  Firebase.reconnectWiFi(true);\n}\n\nvoid loop() {\n  int gas = analogRead(GAS_PIN);\n  bool bahaya = (gas > AMBANG_BAHAYA);\n  digitalWrite(BUZZ_PIN, bahaya ? HIGH : LOW);\n  digitalWrite(LED_PIN, bahaya ? HIGH : LOW);\n\n  Firebase.setInt(fbdo, \"/gas/nilai_adc\", gas);\n  Firebase.setBool(fbdo, \"/gas/bahaya\", bahaya);\n\n  Serial.printf(\"Gas: %d | Bahaya: %s\\n\", gas, bahaya ? \"YA!!\" : \"aman\");\n  delay(1000);\n}\n",
   "wokwi_diagram": "{\"version\":1,\"author\":\"ElektroDict\",\"editor\":\"wokwi\",\"parts\":[{\"type\":\"board-esp32-devkit-c-v4\",\"id\":\"esp\",\"top\":0,\"left\":0,\"attrs\":{}},{\"type\":\"wokwi-gas-sensor\",\"id\":\"mq2\",\"top\":-130,\"left\":340,\"attrs\":{}},{\"type\":\"wokwi-buzzer\",\"id\":\"buz\",\"top\":-130,\"left\":540,\"attrs\":{}},{\"type\":\"wokwi-led\",\"id\":\"led\",\"top\":-260,\"left\":540,\"attrs\":{\"color\":\"red\"}},{\"type\":\"wokwi-wifi-ap\",\"id\":\"ap\",\"top\":-320,\"left\":0,\"attrs\":{\"ssid\":\"Wokwi-GUEST\",\"password\":\"\"}}],\"connections\":[[\"mq2:VCC\",\"esp:5V\",\"red\",[\"v0\"]],[\"mq2:AO\",\"esp:35\",\"green\",[\"v0\"]],[\"mq2:GND\",\"esp:GND.1\",\"black\",[\"v0\"]],[\"buz:2\",\"esp:19\",\"blue\",[\"v0\"]],[\"buz:1\",\"esp:GND.2\",\"black\",[\"v0\"]],[\"led:A\",\"esp:13\",\"yellow\",[\"v0\"]],[\"led:C\",\"esp:GND.3\",\"black\",[\"v0\"]]]}",
   "steps": [
     {
@@ -2279,7 +2279,7 @@ const WOKWI_TEMPLATES = [
     "Kabel jumper"
   ],
   "firebase_setup": [
-    "Buat project Firebase gratis -†’ Realtime Database mode test.",
+    "Buat project Firebase gratis → Realtime Database mode test.",
     "Isi FIREBASE_HOST & FIREBASE_AUTH di kode.",
     "Ganti WiFi sesuai jaringan kamu (simulator: 'Wokwi-GUEST')."
   ],
@@ -2328,7 +2328,7 @@ const WOKWI_TEMPLATES = [
       "koneksi_arduino": "GND"
     }
   ],
-  "cpp_code": "// ===== Cuaca Lokal + OLED -†’ Firebase =====\n// ESP32 + DHT22 + OLED SSD1306 (I2C) + Firebase Realtime Database\n// INSTALL: Firebase ESP32 Client by Mobizt, Adafruit SSD1306, Adafruit GFX, DHT sensor library\n\n#include <WiFi.h>\n#include <FirebaseESP32.h>\n#include <Wire.h>\n#include <Adafruit_GFX.h>\n#include <Adafruit_SSD1306.h>\n#include <DHT.h>\n\n#define WIFI_SSID     \"Wokwi-GUEST\"   // TODO: ganti WiFi kamu\n#define WIFI_PASSWORD \"\"\n#define FIREBASE_HOST \"..alamat-database-firebase..\"  // TODO\n#define FIREBASE_AUTH \"..secret-database-firebase..\"  // TODO\n\n#define DHTPIN 4\n#define DHTTYPE DHT22\nDHT dht(DHTPIN, DHTTYPE);\n\n#define OLED_W 128\n#define OLED_H 64\nAdafruit_SSD1306 oled(OLED_W, OLED_H, &Wire, -1);\n\nFirebaseData fbdo;\nFirebaseAuth auth;\nFirebaseConfig config;\n\nvoid setup() {\n  Serial.begin(115200);\n  dht.begin();\n  if (!oled.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { Serial.println(\"OLED gagal\"); }\n  oled.clearDisplay(); oled.setTextSize(1); oled.setTextColor(SSD1306_WHITE);\n\n  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);\n  while (WiFi.status() != WL_CONNECTED) { delay(300); Serial.print(\".\"); }\n  Serial.println(\"\\nWiFi OK\");\n\n  config.host = FIREBASE_HOST;\n  config.signer.tokens.legacy_token = FIREBASE_AUTH;\n  Firebase.begin(&config, &auth);\n  Firebase.reconnectWiFi(true);\n}\n\nvoid loop() {\n  float h = dht.readHumidity();\n  float t = dht.readTemperature();\n  if (!isnan(h) && !isnan(t)) {\n    // Tampil di OLED\n    oled.clearDisplay();\n    oled.setCursor(0, 0); oled.println(\"  Cuaca Lokal\");\n    oled.setCursor(0, 20); oled.printf(\"Suhu: %.1f C\", t);\n    oled.setCursor(0, 36); oled.printf(\"Lembab: %.1f%%\", h);\n    oled.display();\n\n    // Kirim ke Firebase\n    Firebase.setFloat(fbdo, \"/cuaca/suhu\", t);\n    Firebase.setFloat(fbdo, \"/cuaca/kelembaban\", h);\n    Serial.printf(\"Suhu: %.1f | Lembab: %.1f\\n\", t, h);\n  }\n  delay(4000);\n}\n",
+  "cpp_code": "// ===== Cuaca Lokal + OLED → Firebase =====\n// ESP32 + DHT22 + OLED SSD1306 (I2C) + Firebase Realtime Database\n// INSTALL: Firebase ESP32 Client by Mobizt, Adafruit SSD1306, Adafruit GFX, DHT sensor library\n\n#include <WiFi.h>\n#include <FirebaseESP32.h>\n#include <Wire.h>\n#include <Adafruit_GFX.h>\n#include <Adafruit_SSD1306.h>\n#include <DHT.h>\n\n#define WIFI_SSID     \"Wokwi-GUEST\"   // TODO: ganti WiFi kamu\n#define WIFI_PASSWORD \"\"\n#define FIREBASE_HOST \"..alamat-database-firebase..\"  // TODO\n#define FIREBASE_AUTH \"..secret-database-firebase..\"  // TODO\n\n#define DHTPIN 4\n#define DHTTYPE DHT22\nDHT dht(DHTPIN, DHTTYPE);\n\n#define OLED_W 128\n#define OLED_H 64\nAdafruit_SSD1306 oled(OLED_W, OLED_H, &Wire, -1);\n\nFirebaseData fbdo;\nFirebaseAuth auth;\nFirebaseConfig config;\n\nvoid setup() {\n  Serial.begin(115200);\n  dht.begin();\n  if (!oled.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { Serial.println(\"OLED gagal\"); }\n  oled.clearDisplay(); oled.setTextSize(1); oled.setTextColor(SSD1306_WHITE);\n\n  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);\n  while (WiFi.status() != WL_CONNECTED) { delay(300); Serial.print(\".\"); }\n  Serial.println(\"\\nWiFi OK\");\n\n  config.host = FIREBASE_HOST;\n  config.signer.tokens.legacy_token = FIREBASE_AUTH;\n  Firebase.begin(&config, &auth);\n  Firebase.reconnectWiFi(true);\n}\n\nvoid loop() {\n  float h = dht.readHumidity();\n  float t = dht.readTemperature();\n  if (!isnan(h) && !isnan(t)) {\n    // Tampil di OLED\n    oled.clearDisplay();\n    oled.setCursor(0, 0); oled.println(\"  Cuaca Lokal\");\n    oled.setCursor(0, 20); oled.printf(\"Suhu: %.1f C\", t);\n    oled.setCursor(0, 36); oled.printf(\"Lembab: %.1f%%\", h);\n    oled.display();\n\n    // Kirim ke Firebase\n    Firebase.setFloat(fbdo, \"/cuaca/suhu\", t);\n    Firebase.setFloat(fbdo, \"/cuaca/kelembaban\", h);\n    Serial.printf(\"Suhu: %.1f | Lembab: %.1f\\n\", t, h);\n  }\n  delay(4000);\n}\n",
   "wokwi_diagram": "{\"version\":1,\"author\":\"ElektroDict\",\"editor\":\"wokwi\",\"parts\":[{\"type\":\"board-esp32-devkit-c-v4\",\"id\":\"esp\",\"top\":0,\"left\":0,\"attrs\":{}},{\"type\":\"wokwi-dht22\",\"id\":\"dht\",\"top\":-130,\"left\":340,\"attrs\":{}},{\"type\":\"board-ssd1306\",\"id\":\"oled\",\"top\":-260,\"left\":340,\"attrs\":{}},{\"type\":\"wokwi-wifi-ap\",\"id\":\"ap\",\"top\":-260,\"left\":0,\"attrs\":{\"ssid\":\"Wokwi-GUEST\",\"password\":\"\"}}],\"connections\":[[\"dht:VCC\",\"esp:3V3\",\"red\",[\"v0\"]],[\"dht:SDA\",\"esp:4\",\"green\",[\"v0\"]],[\"dht:GND\",\"esp:GND.1\",\"black\",[\"v0\"]],[\"oled:VIN\",\"esp:3V3\",\"red\",[\"v0\"]],[\"oled:DATA\",\"esp:21\",\"green\",[\"v0\"]],[\"oled:CLK\",\"esp:22\",\"yellow\",[\"v0\"]],[\"oled:GND\",\"esp:GND.2\",\"black\",[\"v0\"]]]}",
   "steps": [
     {
@@ -2372,7 +2372,7 @@ const WOKWI_TEMPLATES = [
     "Kabel jumper"
   ],
   "firebase_setup": [
-    "Buat project Firebase gratis -†’ Realtime Database mode test.",
+    "Buat project Firebase gratis → Realtime Database mode test.",
     "Isi FIREBASE_HOST & FIREBASE_AUTH di kode.",
     "Ganti WiFi sesuai jaringan kamu (simulator: 'Wokwi-GUEST')."
   ],
@@ -2408,7 +2408,7 @@ const WOKWI_TEMPLATES = [
       "koneksi_arduino": "GND"
     }
   ],
-  "cpp_code": "// ===== Bel Pintu Smart -†’ Firebase =====\n// ESP32 + pushbutton + buzzer + Firebase Realtime Database\n// INSTALL: Firebase ESP32 Client by Mobizt\n\n#include <WiFi.h>\n#include <FirebaseESP32.h>\n\n#define WIFI_SSID     \"Wokwi-GUEST\"   // TODO: ganti WiFi kamu\n#define WIFI_PASSWORD \"\"\n#define FIREBASE_HOST \"..alamat-database-firebase..\"  // TODO\n#define FIREBASE_AUTH \"..secret-database-firebase..\"  // TODO\n\n#define BELL_PIN 4\n#define BUZZ_PIN 18\n\nFirebaseData fbdo;\nFirebaseAuth auth;\nFirebaseConfig config;\n\nvoid setup() {\n  Serial.begin(115200);\n  pinMode(BELL_PIN, INPUT_PULLUP);\n  pinMode(BUZZ_PIN, OUTPUT);\n\n  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);\n  while (WiFi.status() != WL_CONNECTED) { delay(300); Serial.print(\".\"); }\n  Serial.println(\"\\nWiFi OK\");\n\n  config.host = FIREBASE_HOST;\n  config.signer.tokens.legacy_token = FIREBASE_AUTH;\n  Firebase.begin(&config, &auth);\n  Firebase.reconnectWiFi(true);\n}\n\nvoid loop() {\n  if (digitalRead(BELL_PIN) == LOW) {  // tombol ditekan\n    digitalWrite(BUZZ_PIN, HIGH);\n    Serial.println(\"Bel berbunyi!\");\n\n    // Kirim notifikasi & timestamp ke Firebase\n    Firebase.setBool(fbdo, \"/bel/ditekan\", true);\n    Firebase.setInt(fbdo, \"/bel/waktu_ms\", millis());\n    delay(1000);\n    digitalWrite(BUZZ_PIN, LOW);\n    Firebase.setBool(fbdo, \"/bel/ditekan\", false);\n  }\n  delay(50);\n}\n",
+  "cpp_code": "// ===== Bel Pintu Smart → Firebase =====\n// ESP32 + pushbutton + buzzer + Firebase Realtime Database\n// INSTALL: Firebase ESP32 Client by Mobizt\n\n#include <WiFi.h>\n#include <FirebaseESP32.h>\n\n#define WIFI_SSID     \"Wokwi-GUEST\"   // TODO: ganti WiFi kamu\n#define WIFI_PASSWORD \"\"\n#define FIREBASE_HOST \"..alamat-database-firebase..\"  // TODO\n#define FIREBASE_AUTH \"..secret-database-firebase..\"  // TODO\n\n#define BELL_PIN 4\n#define BUZZ_PIN 18\n\nFirebaseData fbdo;\nFirebaseAuth auth;\nFirebaseConfig config;\n\nvoid setup() {\n  Serial.begin(115200);\n  pinMode(BELL_PIN, INPUT_PULLUP);\n  pinMode(BUZZ_PIN, OUTPUT);\n\n  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);\n  while (WiFi.status() != WL_CONNECTED) { delay(300); Serial.print(\".\"); }\n  Serial.println(\"\\nWiFi OK\");\n\n  config.host = FIREBASE_HOST;\n  config.signer.tokens.legacy_token = FIREBASE_AUTH;\n  Firebase.begin(&config, &auth);\n  Firebase.reconnectWiFi(true);\n}\n\nvoid loop() {\n  if (digitalRead(BELL_PIN) == LOW) {  // tombol ditekan\n    digitalWrite(BUZZ_PIN, HIGH);\n    Serial.println(\"Bel berbunyi!\");\n\n    // Kirim notifikasi & timestamp ke Firebase\n    Firebase.setBool(fbdo, \"/bel/ditekan\", true);\n    Firebase.setInt(fbdo, \"/bel/waktu_ms\", millis());\n    delay(1000);\n    digitalWrite(BUZZ_PIN, LOW);\n    Firebase.setBool(fbdo, \"/bel/ditekan\", false);\n  }\n  delay(50);\n}\n",
   "wokwi_diagram": "{\"version\":1,\"author\":\"ElektroDict\",\"editor\":\"wokwi\",\"parts\":[{\"type\":\"board-esp32-devkit-c-v4\",\"id\":\"esp\",\"top\":0,\"left\":0,\"attrs\":{}},{\"type\":\"wokwi-pushbutton\",\"id\":\"btn\",\"top\":-130,\"left\":340,\"attrs\":{}},{\"type\":\"wokwi-buzzer\",\"id\":\"buz\",\"top\":-260,\"left\":340,\"attrs\":{}},{\"type\":\"wokwi-wifi-ap\",\"id\":\"ap\",\"top\":-260,\"left\":0,\"attrs\":{\"ssid\":\"Wokwi-GUEST\",\"password\":\"\"}}],\"connections\":[[\"btn:1.l\",\"esp:4\",\"green\",[\"v0\"]],[\"btn:2.r\",\"esp:GND.1\",\"black\",[\"v0\"]],[\"buz:2\",\"esp:18\",\"yellow\",[\"v0\"]],[\"buz:1\",\"esp:GND.2\",\"black\",[\"v0\"]]]}",
   "steps": [
     {
@@ -2482,7 +2482,7 @@ const WOKWI_TEMPLATES = [
     },
     {
       "nama_komponen": "Uji coba",
-      "alur_perakitan": "Tekan 1-2-3-4 lalu # -†’ LCD tampil BUKA. Sandi salah -†’ TOLAK."
+      "alur_perakitan": "Tekan 1-2-3-4 lalu # → LCD tampil BUKA. Sandi salah → TOLAK."
     }
   ]
 },
@@ -2602,7 +2602,7 @@ const WOKWI_TEMPLATES = [
     },
     {
       "nama_komponen": "Uji coba",
-      "alur_perakitan": "Klik tombol di widget Remote IR (simulator) -†’ LED toggle nyala/mati, kode tombol tampil di Serial Monitor."
+      "alur_perakitan": "Klik tombol di widget Remote IR (simulator) → LED toggle nyala/mati, kode tombol tampil di Serial Monitor."
     }
   ]
 },
@@ -2920,7 +2920,7 @@ const WOKWI_TEMPLATES = [
     },
     {
       "nama_komponen": "Uji coba",
-      "alur_perakitan": "Putar knob (drag di simulator) -†’ kecerahan berubah. Tekan tombol encoder -†’ LED mati/nyala."
+      "alur_perakitan": "Putar knob (drag di simulator) → kecerahan berubah. Tekan tombol encoder → LED mati/nyala."
     }
   ]
 },
@@ -2972,7 +2972,7 @@ const WOKWI_TEMPLATES = [
     },
     {
       "nama_komponen": "Uji coba",
-      "alur_perakitan": "Klik tombol NYALA/MATI di halaman web -†’ LED ikut menyala/mati."
+      "alur_perakitan": "Klik tombol NYALA/MATI di halaman web → LED ikut menyala/mati."
     }
   ]
 },
