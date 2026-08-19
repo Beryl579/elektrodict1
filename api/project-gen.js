@@ -63,6 +63,16 @@ const CURATED_PARTS = {
     pins: ["DATA","CLK","DC","RST","CS","3V3","GND","VIN"],
     note: "OLED 128x64 I2C. DATA=SDA, CLK=SCL. VIN ke 3V3."
   },
+  "wokwi-ssd1306": {
+    pins: ["GND","VCC","SDA","SCL"],
+    attrs: 'alamat I2C 0x3C',
+    note: "OLED 128x64 I2C 4-pin (bukan SPI seperti board-ssd1306). SDA→A4, SCL→A5, VCC→5V."
+  },
+  "wokwi-lcd2004": {
+    pins: ["VSS","VDD","V0","RS","RW","E","D0","D1","D2","D3","D4","D5","D6","D7","A","K","SDA","SCL"],
+    attrs: 'pins: "full" (parallel, default) atau "i2c"',
+    note: "LCD 20x4. Mode i2c (pins=\"i2c\"): SDA→A4, SCL→A5, VSS→GND, VDD→5V."
+  },
   "wokwi-a4988": {
     pins: ["ENABLE","MS1","MS2","MS3","RESET","SLEEP","STEP","DIR","GND","VDD","1B","1A","2A","2B","VMOT"],
     note: "Driver stepper: STEP=langkah, DIR=arah. Motor: 1B/1A ke B-/B+, 2A/2B ke A+/A-."
@@ -127,6 +137,7 @@ const LIBRARY_CATALOG = {
   'RTClib.h': ['RTClib'],
   'LedControl.h': ['LedControl'],
   'MFRC522.h': ['MFRC522'],
+  'Adafruit_PCD8544.h': ['Adafruit PCD8544 Nokia 5110 LCD'],
   'SevSeg.h': ['SevSeg'],
   'SdFat.h': ['SdFat'],
   'IRMP.h': ['IRMP']
