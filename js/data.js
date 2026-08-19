@@ -1,4 +1,4 @@
-﻿const KAMUS = [
+const KAMUS = [
   // -”€-”€ DASAR -”€-”€
   {en:"Voltage",id:"Tegangan",kat:"dasar",desc:"Beda potensial listrik antara dua titik.",detail:"Tegangan adalah energi per satuan muatan untuk memindahkan muatan antar dua titik. Simbol V, satuan Volt.",formula:"V = IR",tags:["volt","potensial","EMF"]},
   {en:"Current",id:"Arus Listrik",kat:"dasar",desc:"Aliran muatan listrik per satuan waktu.",detail:"Laju aliran muatan melalui konduktor. DC mengalir satu arah, AC berubah arah periodik.",formula:"I = \\frac{Q}{t}",tags:["ampere","DC","AC","muatan"]},
@@ -8,15 +8,15 @@
   {en:"Frequency",id:"Frekuensi",kat:"dasar",desc:"Jumlah siklus gelombang per detik.",detail:"PLN Indonesia menggunakan frekuensi 50 Hz. Frekuensi berkaitan dengan periode melalui f = 1/T.",formula:"f = \\frac{1}{T} \\;\\; \\omega = 2\\pi f",tags:["Hz","periode","PLN 50Hz"]},
   {en:"Ground",id:"Ground / Arde",kat:"dasar",desc:"Titik referensi potensial nol.",detail:"Ground sinyal = referensi 0V rangkaian. Ground proteksi = terhubung ke tanah untuk keselamatan.",formula:"V_{GND} = 0\\text{ V}",tags:["arde","GND","referensi","keselamatan"]},
   {en:"Short Circuit",id:"Hubung Singkat",kat:"dasar",desc:"Koneksi langsung antar titik bertegangan berbeda.",detail:"Menyebabkan arus sangat besar karena hambatan mendekati nol. Dapat merusak komponen dan menyebabkan kebakaran.",formula:"R \\to 0 \\Rightarrow I \\to \\infty",tags:["korsleting","MCB","sekering","proteksi"]},
-  {en:"Open Circuit",id:"Rangkaian Terbuka",kat:"dasar",desc:"Jalur arus yang terputus -€” arus tidak mengalir.",detail:"Terjadi ketika konduktor putus atau sakelar terbuka. Tegangan sumber tetap ada tapi arus = 0.",formula:"I = 0 \\;\\; V_{oc} = V_s",tags:["putus","sakelar","tegangan terbuka"]},
-  {en:"Conductance",id:"Konduktansi",kat:"dasar",desc:"Kebalikan dari hambatan -€” kemampuan menghantarkan arus.",detail:"Semakin besar konduktansi, semakin mudah arus mengalir. Simbol G, satuan Siemens (S).",formula:"G = \\frac{1}{R} \\;\\; (\\text{Siemens})",tags:["siemens","konduktor","G"]},
+  {en:"Open Circuit",id:"Rangkaian Terbuka",kat:"dasar",desc:"Jalur arus yang terputus — arus tidak mengalir.",detail:"Terjadi ketika konduktor putus atau sakelar terbuka. Tegangan sumber tetap ada tapi arus = 0.",formula:"I = 0 \\;\\; V_{oc} = V_s",tags:["putus","sakelar","tegangan terbuka"]},
+  {en:"Conductance",id:"Konduktansi",kat:"dasar",desc:"Kebalikan dari hambatan — kemampuan menghantarkan arus.",detail:"Semakin besar konduktansi, semakin mudah arus mengalir. Simbol G, satuan Siemens (S).",formula:"G = \\frac{1}{R} \\;\\; (\\text{Siemens})",tags:["siemens","konduktor","G"]},
   {en:"Electromotive Force",id:"Gaya Gerak Listrik",kat:"dasar",desc:"Tegangan yang dihasilkan oleh sumber energi.",detail:"GGL adalah energi per satuan muatan yang diberikan sumber kepada rangkaian. Berbeda dengan tegangan terminal karena ada resistansi internal.",formula:"V_{terminal} = \\varepsilon - I \\cdot r",tags:["GGL","EMF","baterai","sumber"]},
   {en:"Electric Field",id:"Medan Listrik",kat:"dasar",desc:"Wilayah di sekitar muatan listrik yang memiliki gaya.",detail:"Medan listrik menunjukkan arah dan besar gaya pada muatan uji positif. Makin dekat ke sumber, makin kuat medan.",formula:"E = \\frac{F}{q} = \\frac{V}{d} \\;\\; (V/m)",tags:["medan","gaya","elektrostatik"]},
   // -”€-”€ KOMPONEN -”€-”€
   {en:"Resistor",id:"Resistor",kat:"komponen",desc:"Komponen penghambat arus listrik.",detail:"Membatasi arus, membagi tegangan, mengatur sinyal. Nilai dibaca dari kode warna atau angka.",formula:"R_{seri}=\\sum R_i \\;\\; \\frac{1}{R_{par}}=\\sum\\frac{1}{R_i}",tags:["kode warna","pembagi tegangan"]},
   {en:"Capacitor",id:"Kapasitor",kat:"komponen",desc:"Komponen penyimpan muatan listrik.",detail:"Dua pelat konduktor dipisahkan dielektrik. Digunakan untuk filter, decoupling, dan menyimpan energi.",formula:"Q = CV \\;\\; C = \\varepsilon\\frac{A}{d} \\;\\; (\\text{Farad})",tags:["farad","dielektrik","filter","coupling"]},
   {en:"Inductor",id:"Induktor",kat:"komponen",desc:"Komponen penyimpan energi dalam medan magnet.",detail:"Kumparan yang menentang perubahan arus. Digunakan dalam filter, transformator, dan osilator.",formula:"V_L = L\\frac{dI}{dt} \\;\\; (\\text{Henry})",tags:["henry","kumparan","induktansi","koil"]},
-  {en:"Transformer",id:"Transformator",kat:"komponen",desc:"Perangkat pengubah level tegangan AC.",detail:"Bekerja berdasarkan induksi elektromagnetik -€” kopling dua kumparan melalui inti besi.",formula:"\\frac{V_s}{V_p} = \\frac{N_s}{N_p} = \\frac{I_p}{I_s}",tags:["step-up","step-down","lilitan","PLN"]},
+  {en:"Transformer",id:"Transformator",kat:"komponen",desc:"Perangkat pengubah level tegangan AC.",detail:"Bekerja berdasarkan induksi elektromagnetik — kopling dua kumparan melalui inti besi.",formula:"\\frac{V_s}{V_p} = \\frac{N_s}{N_p} = \\frac{I_p}{I_s}",tags:["step-up","step-down","lilitan","PLN"]},
   {en:"Diode",id:"Dioda",kat:"komponen",desc:"Komponen semikonduktor satu arah aliran arus.",detail:"Memungkinkan arus dari anoda ke katoda (forward bias). Digunakan dalam penyearah dan proteksi.",formula:"V_f \\approx 0.7\\text{V (Si)},\\; 0.3\\text{V (Ge)}",tags:["penyearah","PN junction","LED","zener"]},
   {en:"Transistor BJT",id:"Transistor BJT",kat:"komponen",desc:"Komponen penguat dan sakelar berbasis arus.",detail:"Tiga terminal: Base (B), Collector (C), Emitter (E). Arus kecil di B mengontrol arus besar di C.",formula:"I_C = \\beta I_B \\;\\; (\\beta = hFE)",tags:["NPN","PNP","amplifier","switch"]},
   {en:"MOSFET",id:"MOSFET",kat:"komponen",desc:"Transistor efek medan yang dikontrol tegangan.",detail:"Tiga terminal: Gate (G), Drain (D), Source (S). Dikontrol oleh tegangan VGS, bukan arus. Efisiensi tinggi untuk switching.",formula:"I_D = k(V_{GS}-V_{th})^2 \\;\\; (\\text{saturasi})",tags:["FET","switching","power electronics","gate"]},
@@ -28,8 +28,8 @@
   {en:"Crystal Oscillator",id:"Osilator Kristal",kat:"komponen",desc:"Komponen pembangkit frekuensi sangat presisi.",detail:"Memanfaatkan efek piezoelektrik kristal kuarsa untuk menghasilkan frekuensi yang stabil. Digunakan di mikrokontroler dan jam.",formula:"f_{osc} = \\frac{1}{2\\pi\\sqrt{LC}}",tags:["kuarsa","clock","frekuensi","presisi"]},
   {en:"Fuse",id:"Sekering",kat:"komponen",desc:"Komponen proteksi arus lebih.",detail:"Kawat tipis yang meleleh dan memutus rangkaian jika arus melebihi nilai nominal. Sekali putus harus diganti.",formula:"I_{trip} > I_{rated} \\Rightarrow \\text{putus}",tags:["proteksi","arus lebih","MCB","circuit breaker"]},
   // -”€-”€ RANGKAIAN -”€-”€
-  {en:"Kirchhoff's Current Law",id:"KCL -€” Hukum Kirchhoff Arus",kat:"rangkaian",desc:"Jumlah arus masuk = jumlah arus keluar di node.",detail:"Berdasarkan hukum kekekalan muatan listrik. Total arus yang masuk ke suatu simpul sama dengan total arus yang keluar.",formula:"\\sum I_{masuk} = \\sum I_{keluar}",tags:["KCL","node","simpul","analisis rangkaian"]},
-  {en:"Kirchhoff's Voltage Law",id:"KVL -€” Hukum Kirchhoff Tegangan",kat:"rangkaian",desc:"Jumlah tegangan dalam satu loop tertutup = 0.",detail:"Berdasarkan hukum kekekalan energi. Tegangan naik (sumber) sama dengan tegangan jatuh (beban) dalam satu mesh.",formula:"\\sum V = 0 \\;\\; (\\text{satu loop})",tags:["KVL","loop","mesh","analisis rangkaian"]},
+  {en:"Kirchhoff's Current Law",id:"KCL — Hukum Kirchhoff Arus",kat:"rangkaian",desc:"Jumlah arus masuk = jumlah arus keluar di node.",detail:"Berdasarkan hukum kekekalan muatan listrik. Total arus yang masuk ke suatu simpul sama dengan total arus yang keluar.",formula:"\\sum I_{masuk} = \\sum I_{keluar}",tags:["KCL","node","simpul","analisis rangkaian"]},
+  {en:"Kirchhoff's Voltage Law",id:"KVL — Hukum Kirchhoff Tegangan",kat:"rangkaian",desc:"Jumlah tegangan dalam satu loop tertutup = 0.",detail:"Berdasarkan hukum kekekalan energi. Tegangan naik (sumber) sama dengan tegangan jatuh (beban) dalam satu mesh.",formula:"\\sum V = 0 \\;\\; (\\text{satu loop})",tags:["KVL","loop","mesh","analisis rangkaian"]},
   {en:"Impedance",id:"Impedansi",kat:"rangkaian",desc:"Hambatan total dalam rangkaian AC (resistif + reaktif).",detail:"Generalisasi resistansi untuk AC. Mencakup resistansi R, reaktansi induktif XL, dan reaktansi kapasitif XC.",formula:"Z = R + j(X_L-X_C) \\;\\; |Z|=\\sqrt{R^2+(X_L-X_C)^2}",tags:["reaktansi","AC","fasor","kompleks"]},
   {en:"Reactance",id:"Reaktansi",kat:"rangkaian",desc:"Oposisi terhadap arus AC dari induktor atau kapasitor.",detail:"Reaktansi induktif XL bertambah dengan frekuensi, reaktansi kapasitif XC berkurang dengan frekuensi.",formula:"X_L = \\omega L \\;\\; X_C = \\frac{1}{\\omega C}",tags:["induktif","kapasitif","frekuensi","AC"]},
   {en:"Resonance",id:"Resonansi",kat:"rangkaian",desc:"Kondisi saat XL = XC dalam rangkaian RLC.",detail:"Pada resonansi, impedansi minimal (seri) atau maksimal (paralel). Arus maksimum mengalir. Frekuensi resonansi tergantung L dan C.",formula:"f_r = \\frac{1}{2\\pi\\sqrt{LC}}",tags:["RLC","frekuensi resonansi","bandpass","filter"]},
@@ -101,19 +101,19 @@
   {en:"Galvanometer",id:"Galvanometer",kat:"pengukuran",desc:"Alat ukur arus sangat kecil (mikroampere).",detail:"Menggunakan kumparan dalam medan magnet permanen. Dasar dari amperemeter, voltmeter, dan ohmmeter analog.",formula:"F = nBIA \\;\\; (\\text{gaya pada kumparan})",tags:["analog","amperemeter","arus kecil","kumparan","defleksi"]},
   {en:"Joule Heating",id:"Pemanasan Joule",kat:"dasar",desc:"Panas yang dihasilkan ketika arus mengalir melalui hambatan.",detail:"Rugi-rugi panas pada kabel, resistor, dan konduktor. Dimanfaatkan pada elemen pemanas.",formula:"Q = I^2 R t \\;\\; (\\text{Joule})",tags:["panas","rugi-rugi","elemen pemanas","konduktor","energi"]},
   {en:"Coulomb's Law",id:"Hukum Coulomb",kat:"dasar",desc:"Gaya antara dua muatan listrik titik.",detail:"Gaya tarik-menarik (beda jenis) atau tolak-menolak (sejenis). Berbanding terbalik dengan kuadrat jarak.",formula:"F = k\\frac{q_1 q_2}{r^2} \\;\\; k=9\\times10^9",tags:["muatan","gaya elektrostatis","permitivitas","medan"]},
-  {en:"Magnetic Field",id:"Medan Magnet",kat:"dasar",desc:"Wilayah di sekitar magnet atau arus listrik yang menimbulkan gaya magnet.",detail:"Simbol B (Tesla) atau H (A/m). Arus listrik selalu dikelilingi medan magnet -€” kaidah tangan kanan.",formula:"B = \\mu_0 \\frac{I}{2\\pi r} \\;\\; (\\text{kawat lurus})",tags:["tesla","induksi","elektromagnet","kaidah tangan kanan"]},
+  {en:"Magnetic Field",id:"Medan Magnet",kat:"dasar",desc:"Wilayah di sekitar magnet atau arus listrik yang menimbulkan gaya magnet.",detail:"Simbol B (Tesla) atau H (A/m). Arus listrik selalu dikelilingi medan magnet — kaidah tangan kanan.",formula:"B = \\mu_0 \\frac{I}{2\\pi r} \\;\\; (\\text{kawat lurus})",tags:["tesla","induksi","elektromagnet","kaidah tangan kanan"]},
   {en:"Semiconductor",id:"Semikonduktor",kat:"elektronika",desc:"Material dengan konduktivitas antara konduktor dan isolator.",detail:"Silikon (Si) dan Germanium (Ge) adalah semikonduktor paling umum. Dapat di-doping tipe N (donor elektron) atau P (akseptor).",formula:"n_i = \\sqrt{n \\cdot p} \\;\\; (\\text{intrinsik})",tags:["silikon","germanium","doping","N-type","P-type","PN junction"]},
   {en:"PN Junction",id:"Sambungan PN",kat:"elektronika",desc:"Interface antara semikonduktor tipe P dan N.",detail:"Membentuk depletion region yang mencegah arus mengalir tanpa bias. Forward bias mempersempit depletion region, memungkinkan arus.",formula:"I = I_0(e^{V/V_T}-1) \\;\\; V_T=26mV",tags:["dioda","depletion","bias","dioda ideal","Shockley"]},
   {en:"Bandwidth",id:"Bandwidth",kat:"sinyal",desc:"Rentang frekuensi yang dapat dilewatkan sistem.",detail:"Bandwidth -3dB = rentang frekuensi di mana gain tidak turun lebih dari 3dB (setengah daya). Semakin lebar, semakin banyak data.",formula:"BW = f_{H} - f_{L} \\;\\; (\\text{Hz})",tags:["frekuensi","filter","komunikasi","gain","-3dB"]},
   {en:"Gain Bandwidth Product",id:"Gain-Bandwidth Product",kat:"elektronika",desc:"Konstanta tetap op-amp: gain Ã— bandwidth = konstan.",detail:"Semakin besar gain yang diinginkan, semakin sempit bandwidth yang tersedia. Penting saat memilih op-amp.",formula:"GBP = A_v \\times BW = \\text{konstan}",tags:["op-amp","bandwidth","penguatan","frekuensi","unity gain"]},
-  {en:"Common Emitter",id:"Common Emitter",kat:"elektronika",desc:"Konfigurasi transistor paling umum -€” penguatan tegangan tinggi.",detail:"Emitter di-ground, input ke Base, output dari Collector. Penguatan tegangan besar tapi ada pergeseran fasa 180-°.",formula:"A_v = -\\frac{R_C}{r_e} \\;\\; r_e=\\frac{26mV}{I_C}",tags:["transistor","BJT","penguatan","amplifier","CE"]},
+  {en:"Common Emitter",id:"Common Emitter",kat:"elektronika",desc:"Konfigurasi transistor paling umum — penguatan tegangan tinggi.",detail:"Emitter di-ground, input ke Base, output dari Collector. Penguatan tegangan besar tapi ada pergeseran fasa 180-°.",formula:"A_v = -\\frac{R_C}{r_e} \\;\\; r_e=\\frac{26mV}{I_C}",tags:["transistor","BJT","penguatan","amplifier","CE"]},
   {en:"Feedback",id:"Umpan Balik (Feedback)",kat:"elektronika",desc:"Sebagian output dikembalikan ke input untuk kontrol.",detail:"Feedback negatif: menstabilkan, mengurangi gain, memperlebar bandwidth, mengurangi distorsi. Feedback positif: osilator.",formula:"A_f = \\frac{A}{1+A\\beta}",tags:["negative feedback","positif","stabilitas","op-amp","kontrol"]},
   {en:"Charge",id:"Muatan Listrik",kat:"dasar",desc:"Sifat fundamental materi yang menimbulkan gaya elektromagnetik.",detail:"Muatan elektron: -1.6Ã—10-»-¹-¹ C. Muatan proton: +1.6Ã—10-»-¹-¹ C. Satuan: Coulomb.",formula:"Q = n \\cdot e \\;\\; e = 1.6 \\times 10^{-19} C",tags:["coulomb","elektron","proton","muatan dasar"]},
   {en:"Permeability",id:"Permeabilitas",kat:"dasar",desc:"Kemampuan material untuk mendukung medan magnet.",detail:"Permeabilitas relatif Î¼r menunjukkan seberapa mudah material dimagnetisasi. Besi: Î¼r >> 1, udara: Î¼r = 1.",formula:"B = \\mu H = \\mu_0 \\mu_r H",tags:["Î¼r","inti besi","magnetisasi","induktansi","transformator"]},
   {en:"Permittivity",id:"Permitivitas",kat:"dasar",desc:"Kemampuan material menyimpan energi medan listrik.",detail:"Permitivitas relatif Îµr (konstanta dielektrik) menentukan kapasitansi. Air: Îµr -‰ˆ 80, vakum: Îµr = 1.",formula:"C = \\varepsilon_r \\varepsilon_0 \\frac{A}{d}",tags:["dielektrik","kapasitor","konstanta","Îµr","kapasitansi"]},
   {en:"Thevenin Equivalent",id:"Ekuivalen Thevenin",kat:"rangkaian",desc:"Penyederhanaan rangkaian dua terminal menjadi sumber tegangan seri hambatan.",detail:"Berguna untuk analisis beban yang berubah-ubah. Vth = tegangan open-circuit, Rth = hambatan dari terminal saat semua sumber dimatikan.",formula:"V_{load} = V_{th} \\cdot \\frac{R_L}{R_{th}+R_L}",tags:["penyederhanaan","analisis","Vth","Rth","dua terminal"]},
   {en:"AC Generator",id:"Generator AC",kat:"daya",desc:"Mesin yang mengubah energi mekanik menjadi energi listrik AC.",detail:"Kumparan berputar dalam medan magnet menghasilkan EMF sinusoidal. Prinsip Hukum Faraday.",formula:"e(t) = NBA\\omega\\sin(\\omega t)",tags:["alternator","EMF","fluks","putaran","turbin"]},
-  {en:"DC Motor",id:"Motor DC",kat:"daya",desc:"Mengubah energi listrik DC menjadi energi mekanik rotasi.",detail:"Kumparan dalam medan magnet -€” arus menyebabkan torsi (Hukum Lorentz). Dikontrol dengan PWM.",formula:"\\tau = BINA \\;\\; V = E_b + IR",tags:["torsi","putaran","PWM","armature","back-EMF"]},
+  {en:"DC Motor",id:"Motor DC",kat:"daya",desc:"Mengubah energi listrik DC menjadi energi mekanik rotasi.",detail:"Kumparan dalam medan magnet — arus menyebabkan torsi (Hukum Lorentz). Dikontrol dengan PWM.",formula:"\\tau = BINA \\;\\; V = E_b + IR",tags:["torsi","putaran","PWM","armature","back-EMF"]},
   {en:"Induction Motor",id:"Motor Induksi",kat:"daya",desc:"Motor AC yang paling umum digunakan di industri.",detail:"Medan putar stator menginduksi arus di rotor. Rotor selalu 'tertinggal' dari medan putar (slip). Tidak butuh sikat.",formula:"s = \\frac{n_s - n_r}{n_s} \\times 100\\%",tags:["motor AC","slip","stator","rotor","industri","3 fasa"]},
   {en:"Solar Cell",id:"Sel Surya",kat:"terbarukan",desc:"Komponen pengubah cahaya matahari menjadi listrik.",detail:"Efek fotovoltaik di sambungan PN. Tegangan tiap sel -‰ˆ 0.5-0.6V. Panel surya = banyak sel seri/paralel.",formula:"I = I_L - I_0(e^{V/nV_T}-1)",tags:["fotovoltaik","PLTS","panel surya","renewable","inverter"]},
   {en:"Battery",id:"Baterai",kat:"terbarukan",desc:"Penyimpan energi kimia yang dapat dikonversi ke energi listrik.",detail:"Kapasitas dalam mAh atau Ah. Tegangan tergantung kimia: Li-ion 3.7V, Pb-acid 2V/sel, NiMH 1.2V.",formula:"E = V \\cdot Q \\;\\; (\\text{Watt-hour})",tags:["li-ion","lead acid","kapasitas","mAh","discharge"]},
@@ -147,7 +147,7 @@
   {en:"SPI",id:"SPI (Serial Peripheral Interface)",kat:"komunikasi",desc:"Lajur komunikasi ekstrim antar perangkat (Super Cepat).",detail:"Memakai 4 kabel (MOSI, MISO, SCK, CS). Sangat populer dipakai Arduino untuk membaca modul berat seperti SD Card, Layar LCD warna, atau mentransfer data masif secara instan & bersamaan.",formula:"\\text{Full-Duplex (Kirim & Trima Berbarengan)}",tags:["serial","MISO","MOSI","sangat cepat","SD Card","RFID"]},
   {en:"UART",id:"UART / USART",kat:"komunikasi",desc:"Standar komunikasi serial asinkron dua arah merdeka.",detail:"Mengirim pecahan data bit-demi-bit saling silang (TX ke RX). Tergolong asinkron alias tanpa sinyal metronom (Clock), sehingga cip pengirim dan penerima wajib sepakat menggunakan Baud Rate (kecepatan) yang identik.",formula:"\\text{TX} \\to \\text{RX}, \\; \\text{RX} \\to \\text{TX}",tags:["serial","asinkron","baud rate","bluetooth HC-05","USB TTL"]},
   // -”€-”€ DISTRIBUSI -”€-”€
-  {en:"SUTET",id:"SUTET",kat:"distribusi",desc:"Saluran Udara Tegangan Ekstra Tinggi menara PLN.",detail:"Jaringan kabel listrik naga terbang antar provinsi dengan tegangan brutal 500.000 Volt (500 kV). Tujuan digenjotnya Voltase begini adalah agar nilai 'Arusnya' menciut-€”sehingga meminimalkan triliunan rupiah rugi-rugi terbakarnya kawat.",formula:"P_{\\text{loss}} = I^2 \\cdot R",tags:["transmisi","PLN","tegangan tinggi","menara","tower","rugi daya"]},
+  {en:"SUTET",id:"SUTET",kat:"distribusi",desc:"Saluran Udara Tegangan Ekstra Tinggi menara PLN.",detail:"Jaringan kabel listrik naga terbang antar provinsi dengan tegangan brutal 500.000 Volt (500 kV). Tujuan digenjotnya Voltase begini adalah agar nilai 'Arusnya' menciut—sehingga meminimalkan triliunan rupiah rugi-rugi terbakarnya kawat.",formula:"P_{\\text{loss}} = I^2 \\cdot R",tags:["transmisi","PLN","tegangan tinggi","menara","tower","rugi daya"]},
   {en:"Substation",id:"Gardu Induk",kat:"distribusi",desc:"Markas sentral pembagi atau pengatur tekanan listrik.",detail:"Fasilitas raksasa lapang tempat bertemunya berbagai kabel transmisi antar kota. Berisi Trafo-Trafo monstrous yang bertugas mencekik turun Voltase (Step-Down) SUTET tadi agar ukurannya lebih normal sebelum masuk ke wilayah padat penduduk.",formula:"V_{\\text{primer}} \\gg V_{\\text{sekunder}}",tags:["trafo daya","switchyard","jaringan","pusat PLN","step-down"]},
   {en:"Busbar",id:"Busbar (Rel Tembaga)",kat:"distribusi",desc:"Tulang punggung pembagi arus di dalam lemari panel listrik.",detail:"Sebagai ganti kebel, digubran batangan logam murni masif (tembaga/aluminium) tanpa insulasi yang melintang guna menyalurkan suplai Arus raksasa ratusan Ampere menuju berbagai MCB anak bangunan secara aman tidak terbakar.",formula:"I_{\\text{Max}} = \\text{Kalkulasi Luas Penampang Batang}",tags:["rel tembaga","MDP","panel listrik","distribusi","konduktor arus tinggi", "panel switchgear"]},
   // -”€-”€ KOMPONEN TAMBAHAN -”€-”€
@@ -194,11 +194,11 @@ const KAT = ['Semua','dasar','komponen','rangkaian','daya','elektronika','penguk
 
 const TIMELINE = [
   // ERA KUNO
-  {year:1600,title:"De Magnete -€” Dasar Elektrostatik",person:"William Gilbert",era:"kuno",
+  {year:1600,title:"De Magnete — Dasar Elektrostatik",person:"William Gilbert",era:"kuno",
    desc:"Gilbert menerbitkan karya monumental 'De Magnete', memperkenalkan istilah 'electricus' dari bahasa Latin 'electrum' (amber). Ia membedakan magnet dari listrik statik, menjadi orang pertama yang mempelajari listrik secara sistematis.",
    impact:"Fondasi ilmu kelistrikan modern"},
-  {year:1745,title:"Penemuan Kondensator -€” Leyden Jar",person:"Pieter van Musschenbroek",era:"kuno",
-   desc:"Fisikawan Belanda menemukan Leyden Jar, kapasitor pertama dalam sejarah. Dapat menyimpan muatan listrik statik dalam jumlah besar -€” menjadi awal mula teori kapasitor.",
+  {year:1745,title:"Penemuan Kondensator — Leyden Jar",person:"Pieter van Musschenbroek",era:"kuno",
+   desc:"Fisikawan Belanda menemukan Leyden Jar, kapasitor pertama dalam sejarah. Dapat menyimpan muatan listrik statik dalam jumlah besar — menjadi awal mula teori kapasitor.",
    impact:"Cikal bakal komponen kapasitor"},
   {year:1752,title:"Eksperimen Layang-layang & Petir",person:"Benjamin Franklin",era:"kuno",
    desc:"Franklin membuktikan petir adalah fenomena listrik melalui eksperimen layang-layang terkenalnya. Ia menemukan bahwa petir dapat dialirkan ke tanah melalui konduktor, menciptakan penangkal petir pertama.",
@@ -207,10 +207,10 @@ const TIMELINE = [
    desc:"Coulomb memformulasikan hukum gaya elektrostatik antara dua muatan titik. Gaya berbanding lurus dengan hasil kali muatan dan berbanding terbalik dengan kuadrat jaraknya.",
    impact:"Hukum dasar elektrostatika"},
   // ERA MODERN
-  {year:1800,title:"Baterai Pertama -€” Voltaic Pile",person:"Alessandro Volta",era:"modern",
+  {year:1800,title:"Baterai Pertama — Voltaic Pile",person:"Alessandro Volta",era:"modern",
    desc:"Volta menciptakan sumber arus listrik kontinu pertama menggunakan tumpukan piringan tembaga dan seng yang dipisahkan kain basah. Satuan tegangan Volt dinamai dari namanya.",
    impact:"Sumber energi listrik pertama di dunia"},
-  {year:1820,title:"Hukum Oersted -€” Elektromagnetisme",person:"Hans Christian Oersted",era:"modern",
+  {year:1820,title:"Hukum Oersted — Elektromagnetisme",person:"Hans Christian Oersted",era:"modern",
    desc:"Oersted menemukan secara tidak sengaja bahwa arus listrik dapat membelokkan jarum kompas, membuktikan hubungan antara listrik dan magnetisme untuk pertama kalinya.",
    impact:"Dasar elektromagnetisme & motor listrik"},
   {year:1827,title:"Hukum Ohm",person:"Georg Simon Ohm",era:"modern",
@@ -233,29 +233,29 @@ const TIMELINE = [
    impact:"Cikal bakal komunikasi nirkabel"},
   // ERA DIGITAL
   {year:1947,title:"Transistor Pertama",person:"Shockley, Bardeen & Brattain",era:"digital",
-   desc:"Tim Bell Labs menemukan transistor point-contact -€” komponen semikonduktor yang bisa menguatkan sinyal dan berfungsi sebagai saklar. Transistor menggantikan tabung vakum yang besar dan boros daya.",
+   desc:"Tim Bell Labs menemukan transistor point-contact — komponen semikonduktor yang bisa menguatkan sinyal dan berfungsi sebagai saklar. Transistor menggantikan tabung vakum yang besar dan boros daya.",
    impact:"Revolusi elektronika modern"},
   {year:1958,title:"Integrated Circuit (IC) Pertama",person:"Jack Kilby & Robert Noyce",era:"digital",
-   desc:"Kilby (Texas Instruments) dan Noyce (Fairchild) secara independen menciptakan IC pertama -€” menempatkan banyak transistor dalam satu chip silikon. Ini memulai era miniaturisasi elektronika.",
+   desc:"Kilby (Texas Instruments) dan Noyce (Fairchild) secara independen menciptakan IC pertama — menempatkan banyak transistor dalam satu chip silikon. Ini memulai era miniaturisasi elektronika.",
    impact:"Dasar semua chip komputer modern"},
   {year:1965,title:"Hukum Moore",person:"Gordon Moore",era:"digital",
    desc:"Moore memprediksi jumlah transistor dalam IC akan berlipat ganda setiap ~2 tahun dengan biaya tetap. Prediksi ini terbukti akurat selama 50+ tahun dan menjadi panduan industri semikonduktor.",
    impact:"Roadmap industri semikonduktor global"},
-  {year:1971,title:"Mikroprosesor Pertama -€” Intel 4004",person:"Federico Faggin / Intel",era:"digital",
+  {year:1971,title:"Mikroprosesor Pertama — Intel 4004",person:"Federico Faggin / Intel",era:"digital",
    desc:"Intel meluncurkan 4004, mikroprosesor komersial pertama di dunia dengan 2.300 transistor dalam satu chip. Ini adalah komputer lengkap dalam sekeping silikon berukuran 12mm-².",
    impact:"Lahirnya era komputer personal"},
   // ERA KONTEMPORER
   {year:1991,title:"Baterai Lithium-Ion Komersial",person:"John Goodenough / Sony",era:"kontemporer",
-   desc:"Sony mengkomersialisasi baterai Li-ion berbasis riset Goodenough. Baterai ini lebih ringan, lebih padat energi, dan bisa diisi ulang ribuan kali -€” merevolusi perangkat portabel.",
+   desc:"Sony mengkomersialisasi baterai Li-ion berbasis riset Goodenough. Baterai ini lebih ringan, lebih padat energi, dan bisa diisi ulang ribuan kali — merevolusi perangkat portabel.",
    impact:"Dasar smartphone, EV, dan drone modern"},
   {year:1999,title:"WiFi Standar 802.11b",person:"IEEE / Vic Hayes",era:"kontemporer",
    desc:"Standar WiFi 802.11b dirilis, memungkinkan koneksi internet nirkabel 11 Mbps. Vic Hayes dijuluki 'Father of WiFi' karena kontribusinya dalam IEEE 802.11 working group.",
    impact:"Konektivitas nirkabel universal"},
   {year:2012,title:"Raspberry Pi & Era Maker",person:"Eben Upton",era:"kontemporer",
-   desc:"Raspberry Pi diluncurkan dengan harga $35 -€” komputer lengkap seukuran kartu kredit. Bersama Arduino, ini melahirkan gerakan Maker/DIY elektronik global yang mendemokratisasi hardware.",
+   desc:"Raspberry Pi diluncurkan dengan harga $35 — komputer lengkap seukuran kartu kredit. Bersama Arduino, ini melahirkan gerakan Maker/DIY elektronik global yang mendemokratisasi hardware.",
    impact:"Demokratisasi hardware & IoT"},
   {year:2022,title:"ChatGPT & AI dalam Elektronika",person:"OpenAI",era:"kontemporer",
-   desc:"AI generatif mulai merevolusi desain elektronika -€” dari generasi kode HDL otomatis, optimasi layout PCB, hingga debugging rangkaian. Engineer elektro kini berkolaborasi dengan AI.",
+   desc:"AI generatif mulai merevolusi desain elektronika — dari generasi kode HDL otomatis, optimasi layout PCB, hingga debugging rangkaian. Engineer elektro kini berkolaborasi dengan AI.",
    impact:"Era baru AI-assisted engineering"},
 ];
 
@@ -393,95 +393,95 @@ const PROJECTS = [
   }
 ];
 
-// -•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•
-// VIDEO PEMBELAJARAN -€” Channel YouTube Indonesia (elektronika)
+// ---- TENTANG ----
+// VIDEO PEMBELAJARAN — Channel YouTube Indonesia (elektronika)
 // Sumber: channel edukasi berbahasa Indonesia, diverifikasi via
 // YouTube oEmbed. Thumbnail diambil dari i.ytimg.com.
-// -•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•
+// ---- TENTANG ----
 const VIDEO_TOPICS = ['Semua','Dasar Listrik','Elektronika & Komponen','Motor Listrik','Energi Terbarukan','Instalasi & Panel','Digital & Kontrol','Arduino & IoT','PLC, HMI & SCADA'];
 
 const VIDEOS = [
   // -”€-”€ DASAR LISTRIK -”€-”€
   { id:'YrziIT8kRmQ', title:'Seorang Teknisi Harus Faham Rumus Dasar Ini', channel:'TEKNIK LISTRIK', channelUrl:'https://www.youtube.com/@TEKNIKLISTRIK29', topic:'Dasar Listrik', desc:'Kumpulan rumus dasar kelistrikan (tegangan, arus, daya) yang wajib dikuasai teknisi & mahasiswa teknik elektro.' },
-  { id:'nVD1jczzR-I', title:'Teori Dasar Listrik -€” Mencari Arus / Ampere', channel:'TEKNIK LISTRIK', channelUrl:'https://www.youtube.com/@TEKNIKLISTRIK29', topic:'Dasar Listrik', desc:'Cara menghitung arus listrik (ampere) dari tegangan dan hambatan, dijelaskan langkah demi langkah.' },
+  { id:'nVD1jczzR-I', title:'Teori Dasar Listrik — Mencari Arus / Ampere', channel:'TEKNIK LISTRIK', channelUrl:'https://www.youtube.com/@TEKNIKLISTRIK29', topic:'Dasar Listrik', desc:'Cara menghitung arus listrik (ampere) dari tegangan dan hambatan, dijelaskan langkah demi langkah.' },
   { id:'aptOXSNpDp4', title:'Darimana Datangnya Listrik? (Animasi Edukasi)', channel:'museumlistrikpln', channelUrl:'https://www.youtube.com/@museumlistrikpln', topic:'Dasar Listrik', desc:'Animasi edukasi Museum Listrik PLN: sumber listrik dari tenaga uap, air, surya, diesel, dan gas.' },
-  { id:'nWOdETgdytQ', title:'Listrik Dinamis -€” Rangkaian Hambatan Seri Paralel (Fisika SMP)', channel:'Le GuruLes', channelUrl:'https://www.youtube.com/@legurules', topic:'Dasar Listrik', desc:'Materi fisika SMP: hambatan pengganti, rangkaian seri dan paralel, lengkap dengan contoh soal.' },
+  { id:'nWOdETgdytQ', title:'Listrik Dinamis — Rangkaian Hambatan Seri Paralel (Fisika SMP)', channel:'Le GuruLes', channelUrl:'https://www.youtube.com/@legurules', topic:'Dasar Listrik', desc:'Materi fisika SMP: hambatan pengganti, rangkaian seri dan paralel, lengkap dengan contoh soal.' },
   { id:'-e6m3WHeRZg', title:'30 Soal & Pembahasan Arus Searah (Hukum Ohm, Kirchhoff)', channel:'Justin Leonardo', channelUrl:'https://www.youtube.com/@JustinSLST57', topic:'Dasar Listrik', desc:'Latihan 30 soal arus searah kelas 12: rangkaian resistor seri/paralel, hukum Ohm, dan Kirchhoff untuk UTBK.' },
-  { id:'4HnIp-_Ml1A', title:'Fisika Kelas 12 -€” Konsep Hukum Kirchoff 1 Loop', channel:'Rizu san study', channelUrl:'https://www.youtube.com/@rizusanstudy5844', topic:'Dasar Listrik', desc:'Konsep dasar Hukum Kirchoff untuk analisis loop rangkaian listrik, cocok untuk pemula.' },
-  { id:'v13nuOWjuZo', title:'Fisika Kelas 9 -€” Hambatan Listrik & Hukum Ohm', channel:'Ganesha Operation', channelUrl:'https://www.youtube.com/@GaneshaOperationOfficial', topic:'Dasar Listrik', desc:'Hambatan pada kawat penghantar dan penerapan Hukum Ohm, dijelaskan dengan cara yang mudah dipahami.' },
+  { id:'4HnIp-_Ml1A', title:'Fisika Kelas 12 — Konsep Hukum Kirchoff 1 Loop', channel:'Rizu san study', channelUrl:'https://www.youtube.com/@rizusanstudy5844', topic:'Dasar Listrik', desc:'Konsep dasar Hukum Kirchoff untuk analisis loop rangkaian listrik, cocok untuk pemula.' },
+  { id:'v13nuOWjuZo', title:'Fisika Kelas 9 — Hambatan Listrik & Hukum Ohm', channel:'Ganesha Operation', channelUrl:'https://www.youtube.com/@GaneshaOperationOfficial', topic:'Dasar Listrik', desc:'Hambatan pada kawat penghantar dan penerapan Hukum Ohm, dijelaskan dengan cara yang mudah dipahami.' },
 
   // -”€-”€ ELEKTRONIKA & KOMPONEN -”€-”€
-  { id:'eJchTrTKLAo', title:'Apa Itu Elektronika? -€” Ayo Belajar Elektronika EP 01', channel:'Bang Leo Elektro', channelUrl:'https://www.youtube.com/@bangleoelektro', topic:'Elektronika & Komponen', desc:'Pengantar dunia elektronika: apa itu komponen, arus, dan cara mulai belajar elektronika dari nol.' },
-  { id:'CZVYxynjDlI', title:'Tutorial Elektronika Dasar untuk Pemula', channel:'BISA AI Academy', channelUrl:'https://www.youtube.com/@BISAAI', topic:'Elektronika & Komponen', desc:'Panduan elektronika dasar oleh staf IoT BISA AI -€” dari komponen hingga cara merangkai.' },
+  { id:'eJchTrTKLAo', title:'Apa Itu Elektronika? — Ayo Belajar Elektronika EP 01', channel:'Bang Leo Elektro', channelUrl:'https://www.youtube.com/@bangleoelektro', topic:'Elektronika & Komponen', desc:'Pengantar dunia elektronika: apa itu komponen, arus, dan cara mulai belajar elektronika dari nol.' },
+  { id:'CZVYxynjDlI', title:'Tutorial Elektronika Dasar untuk Pemula', channel:'BISA AI Academy', channelUrl:'https://www.youtube.com/@BISAAI', topic:'Elektronika & Komponen', desc:'Panduan elektronika dasar oleh staf IoT BISA AI — dari komponen hingga cara merangkai.' },
   { id:'BXn0LaU_iY8', title:'Belajar Elektronika Paket Komplit: Skema, Resistor, SMD', channel:'Asan Elektronika', channelUrl:'https://www.youtube.com/@asanelektronika', topic:'Elektronika & Komponen', desc:'Paket komplit belajar elektronika: membaca skema, kode resistor, jenis komponen Through-Hole & SMD.' },
-  { id:'Px5ma3U3U1k', title:'Resistor -€” Mengenal Komponen Elektronika Part 1', channel:'Asan Elektronika', channelUrl:'https://www.youtube.com/@asanelektronika', topic:'Elektronika & Komponen', desc:'Mengenal resistor: fungsi, jenis, dan cara menghitung nilai lewat kode warna, dijelaskan sederhana.' },
+  { id:'Px5ma3U3U1k', title:'Resistor — Mengenal Komponen Elektronika Part 1', channel:'Asan Elektronika', channelUrl:'https://www.youtube.com/@asanelektronika', topic:'Elektronika & Komponen', desc:'Mengenal resistor: fungsi, jenis, dan cara menghitung nilai lewat kode warna, dijelaskan sederhana.' },
   { id:'EOqXndDRSho', title:'Cara Cepat Membaca Resistor 5 Gelang Tanpa Tabel', channel:'Guru Elektronika', channelUrl:'https://www.youtube.com/@guruelektronika', topic:'Elektronika & Komponen', desc:'Trik membaca kode warna resistor 5 gelang dengan cepat tanpa menghafal tabel.' },
   { id:'kZLi5BXvCWY', title:'Penjelasan Transistor NPN & Cara Membaca Rangkaiannya', channel:'Guru Elektronika', channelUrl:'https://www.youtube.com/@guruelektronika', topic:'Elektronika & Komponen', desc:'Cara kerja transistor NPN dan teknik membaca rangkaian yang memakai transistor.' },
   { id:'m_tUE_dqi6g', title:'Membaca & Mengidentifikasi Komponen Elektronika Aktif', channel:'Direktorat SMK - Kemdikdasmen', channelUrl:'https://www.youtube.com/@DirektoratSMKKemendikdasmen', topic:'Elektronika & Komponen', desc:'Video pembelajaran SMK: mengenali komponen aktif seperti dioda, transistor, dan IC.' },
   { id:'K3RkHJnAqrE', title:'Cara Menghitung Nilai Resistor dengan Kode Warna', channel:'IT channEL', channelUrl:'https://www.youtube.com/@itchannel_indonesia', topic:'Elektronika & Komponen', desc:'Langkah praktis menghitung nilai resistor 4 gelang warna beserta contoh soal.' },
-  { id:'PaLa97hOTp4', title:'Cara Membaca Nilai Resistor 5 Gelang Warna -€” Part 2', channel:'ODHE AL Channel', channelUrl:'https://www.youtube.com/@odhealchannel330', topic:'Elektronika & Komponen', desc:'Lanjutan membaca resistor 5 gelang warna: dari tabel kode hingga contoh nyata.' },
+  { id:'PaLa97hOTp4', title:'Cara Membaca Nilai Resistor 5 Gelang Warna — Part 2', channel:'ODHE AL Channel', channelUrl:'https://www.youtube.com/@odhealchannel330', topic:'Elektronika & Komponen', desc:'Lanjutan membaca resistor 5 gelang warna: dari tabel kode hingga contoh nyata.' },
   { id:'cYKK4Qd_k-A', title:'Cara Mudah Memahami Kode Resistor SMD', channel:'WIMA PROJECT', channelUrl:'https://www.youtube.com/@wimaproject', topic:'Elektronika & Komponen', desc:'Cara membaca kode resistor SMD (misal 102, 473, R47) yang umum dipakai di PCB modern.' },
   { id:'AxvqQrGHZXA', title:'Cara Menghitung Warna Resistor (Colour Code)', channel:'MI channel88', channelUrl:'https://www.youtube.com/@MIchannel88Ns', topic:'Elektronika & Komponen', desc:'Metode cepat menghafal urutan warna resistor dan menghitung nilainya.' },
 
   // -”€-”€ MOTOR LISTRIK -”€-”€
   { id:'Mt6hCs-IGH8', title:'Cara Mudah Memahami Karakteristik Motor Induksi', channel:'Muhal Media Creation', channelUrl:'https://www.youtube.com/@muhal-Creation', topic:'Motor Listrik', desc:'Rekaman pelatihan aplikasi motor listrik di industri: konsep & karakteristik motor induksi.' },
   { id:'5vVExtcuk80', title:'Apa itu VFD (Variable Frequency Drive)? Part 1', channel:'JAGO LISTRIK', channelUrl:'https://www.youtube.com/@JAGOLISTRIK', topic:'Motor Listrik', desc:'VFD/Inverter pengatur kecepatan motor 3 phase: prinsip kerja dan aplikasinya di industri.' },
-  { id:'0YSXEDgCyXg', title:'Cara Kerja Motor Listrik DC', channel:'Autoexpose', channelUrl:'https://www.youtube.com/@Autoexposeid', topic:'Motor Listrik', desc:'Prinsip kerja motor listrik DC -€” mengubah energi listrik menjadi gerak, dengan animasi yang jelas.' },
+  { id:'0YSXEDgCyXg', title:'Cara Kerja Motor Listrik DC', channel:'Autoexpose', channelUrl:'https://www.youtube.com/@Autoexposeid', topic:'Motor Listrik', desc:'Prinsip kerja motor listrik DC — mengubah energi listrik menjadi gerak, dengan animasi yang jelas.' },
 
   // -”€-”€ ENERGI TERBARUKAN -”€-”€
   { id:'FHsnvcvYp5U', title:'Fakta Menarik Sumber Energi Terbarukan', channel:'Majalah Bobo', channelUrl:'https://www.youtube.com/@MajalahBobo', topic:'Energi Terbarukan', desc:'Fakta seru seputar energi terbarukan dan contohnya dalam kehidupan sehari-hari.' },
-  { id:'JzZGD7UXRyM', title:'IPA -€” Energi Terbarukan dan Tak Terbarukan', channel:'GIA Academy', channelUrl:'https://www.youtube.com/@GIAAcademy', topic:'Energi Terbarukan', desc:'Konsep energi terbarukan vs tak terbarukan: matahari, angin, air, dan lainnya.' },
+  { id:'JzZGD7UXRyM', title:'IPA — Energi Terbarukan dan Tak Terbarukan', channel:'GIA Academy', channelUrl:'https://www.youtube.com/@GIAAcademy', topic:'Energi Terbarukan', desc:'Konsep energi terbarukan vs tak terbarukan: matahari, angin, air, dan lainnya.' },
   { id:'QWaqWD-brKs', title:'Energi Biomassa (Animasi Edukasi)', channel:'museumlistrikpln', channelUrl:'https://www.youtube.com/@museumlistrikpln', topic:'Energi Terbarukan', desc:'Animasi produksi MLEB: mengubah limbah biomassa menjadi energi listrik dan bahan bakar.' },
-  { id:'x-NPJYcrt84', title:'Energi Air -€” PLTA Cirata', channel:'museumlistrikpln', channelUrl:'https://www.youtube.com/@museumlistrikpln', topic:'Energi Terbarukan', desc:'Cara PLTA memanfaatkan aliran air untuk memutar turbin dan membangkitkan listrik.' },
+  { id:'x-NPJYcrt84', title:'Energi Air — PLTA Cirata', channel:'museumlistrikpln', channelUrl:'https://www.youtube.com/@museumlistrikpln', topic:'Energi Terbarukan', desc:'Cara PLTA memanfaatkan aliran air untuk memutar turbin dan membangkitkan listrik.' },
   { id:'f-4y05MYpu4', title:'Yuk, Mengenal Cara Kerja Panel Surya!', channel:'SUN Energy', channelUrl:'https://www.youtube.com/@sunenergyid', topic:'Energi Terbarukan', desc:'Penjelasan cara kerja panel surya mengubah energi matahari menjadi listrik (PLTS).' },
   { id:'hG3km2fGgrM', title:'Energi Terbarukan: Pengertian, Jenis & Dampak', channel:'Halo Edukasi', channelUrl:'https://www.youtube.com/@HaloEdukasi', topic:'Energi Terbarukan', desc:'Materi lengkap energi terbarukan: pengertian, jenis, dampak positif, dan contohnya.' },
 
   // -”€-”€ INSTALASI & PANEL -”€-”€
-  { id:'SqQOkcKxOgA', title:'Belajar Instalasi Listrik Dasar -€” Pemula Langsung Paham', channel:'Guru Elektronika', channelUrl:'https://www.youtube.com/@guruelektronika', topic:'Instalasi & Panel', desc:'Instalasi listrik dasar untuk pemula: saklar, stop kontak, dan jalur kabel yang aman.' },
+  { id:'SqQOkcKxOgA', title:'Belajar Instalasi Listrik Dasar — Pemula Langsung Paham', channel:'Guru Elektronika', channelUrl:'https://www.youtube.com/@guruelektronika', topic:'Instalasi & Panel', desc:'Instalasi listrik dasar untuk pemula: saklar, stop kontak, dan jalur kabel yang aman.' },
   { id:'yblVhc1nGt4', title:'Desain Gambar Teknik Instalasi Listrik dengan ProfiCAD', channel:'ArduMeka', channelUrl:'https://www.youtube.com/@ArduMeka', topic:'Instalasi & Panel', desc:'Membuat gambar teknik instalasi listrik memakai ProfiCAD untuk kebutuhan pembelajaran vokasional.' },
   { id:'JU08ywG2R4g', title:'Mengoperasikan Instalasi Listrik Bangunan Gedung', channel:'Direktorat SMK - Kemdikdasmen', channelUrl:'https://www.youtube.com/@DirektoratSMKKemendikdasmen', topic:'Instalasi & Panel', desc:'Video pembelajaran SMK: komponen dan proses wiring instalasi listrik bangunan gedung.' },
 
   // -”€-”€ DIGITAL & KONTROL -”€-”€
-  { id:'xovWttK1IIM', title:'Belajar Bareng Komunitas Teknik Listrik -€” Gerbang Logika', channel:'TEKNIK LISTRIK', channelUrl:'https://www.youtube.com/@TEKNIKLISTRIK29', topic:'Digital & Kontrol', desc:'Pengenalan gerbang logika (AND, OR, NOT) untuk dasar sistem kontrol dan elektronika digital.' },
+  { id:'xovWttK1IIM', title:'Belajar Bareng Komunitas Teknik Listrik — Gerbang Logika', channel:'TEKNIK LISTRIK', channelUrl:'https://www.youtube.com/@TEKNIKLISTRIK29', topic:'Digital & Kontrol', desc:'Pengenalan gerbang logika (AND, OR, NOT) untuk dasar sistem kontrol dan elektronika digital.' },
   { id:'VT5cg2nQIDg', title:'Cara Tercepat Belajar Wiring Kontrol', channel:'TEKNIK LISTRIK', channelUrl:'https://www.youtube.com/@TEKNIKLISTRIK29', topic:'Digital & Kontrol', desc:'Teknik membaca & merakit wiring kontrol industri (kontaktor, relay, timer) dengan cepat.' },
-  { id:'4c9GwhuXpVc', title:'Memasang Instalasi PLC -€” Teknik Instalasi Tenaga Listrik', channel:'Direktorat SMK - Kemdikdasmen', channelUrl:'https://www.youtube.com/@DirektoratSMKKemendikdasmen', topic:'Digital & Kontrol', desc:'Praktik memasang instalasi PLC untuk otomasi industri, materi SMK Teknik Instalasi Tenaga Listrik.' },
+  { id:'4c9GwhuXpVc', title:'Memasang Instalasi PLC — Teknik Instalasi Tenaga Listrik', channel:'Direktorat SMK - Kemdikdasmen', channelUrl:'https://www.youtube.com/@DirektoratSMKKemendikdasmen', topic:'Digital & Kontrol', desc:'Praktik memasang instalasi PLC untuk otomasi industri, materi SMK Teknik Instalasi Tenaga Listrik.' },
 
   // -”€-”€ ARDUINO & IoT -”€-”€
-  { id:'EN0Et74bBrU', title:'Tutorial Arduino 2024 -€” Dari 0 untuk Pemula', channel:'Dea Afrizal', channelUrl:'https://www.youtube.com/@deaafrizal', topic:'Arduino & IoT', desc:'Panduan dasar mikrokontroler Arduino Uno dari nol sampai bisa, langsung praktik.' },
+  { id:'EN0Et74bBrU', title:'Tutorial Arduino 2024 — Dari 0 untuk Pemula', channel:'Dea Afrizal', channelUrl:'https://www.youtube.com/@deaafrizal', topic:'Arduino & IoT', desc:'Panduan dasar mikrokontroler Arduino Uno dari nol sampai bisa, langsung praktik.' },
   { id:'gJ-qd7U_Lw8', title:'Arduino Crash Course Bahasa Indonesia [2022]', channel:'Gus Nando', channelUrl:'https://www.youtube.com/@GusNando', topic:'Arduino & IoT', desc:'Belajar Arduino dari pemula: install IDE, setup & loop, hingga proyek pertama.' },
-  { id:'9dHfT9M0DYU', title:'#1 Pengenalan -€” Tutorial Arduino Indonesia', channel:'Sigit Indriyanto', channelUrl:'https://www.youtube.com/@neosigitindriyanto', topic:'Arduino & IoT', desc:'Seri tutorial Arduino Indonesia: pengenalan hardware dan komponen pendukung.' },
-  { id:'mBdWGOKFWIc', title:'Arduino Uno Pin -€” Tutorial untuk Pemula', channel:'Siapa Tahu Penemuan', channelUrl:'https://www.youtube.com/@SiapaTahuPenemuan', topic:'Arduino & IoT', desc:'Mengenal nama dan fungsi setiap pin Arduino Uno beserta kegunaannya.' },
-  { id:'NUZx5TLe4uo', title:'Tutorial Arduino Bahasa Indonesia -€” Data Type (3)', channel:'Coders Indonesia', channelUrl:'https://www.youtube.com/@codersindonesia', topic:'Arduino & IoT', desc:'Belajar tipe data pemrograman Arduino: integer, float, dan boolean.' },
+  { id:'9dHfT9M0DYU', title:'#1 Pengenalan — Tutorial Arduino Indonesia', channel:'Sigit Indriyanto', channelUrl:'https://www.youtube.com/@neosigitindriyanto', topic:'Arduino & IoT', desc:'Seri tutorial Arduino Indonesia: pengenalan hardware dan komponen pendukung.' },
+  { id:'mBdWGOKFWIc', title:'Arduino Uno Pin — Tutorial untuk Pemula', channel:'Siapa Tahu Penemuan', channelUrl:'https://www.youtube.com/@SiapaTahuPenemuan', topic:'Arduino & IoT', desc:'Mengenal nama dan fungsi setiap pin Arduino Uno beserta kegunaannya.' },
+  { id:'NUZx5TLe4uo', title:'Tutorial Arduino Bahasa Indonesia — Data Type (3)', channel:'Coders Indonesia', channelUrl:'https://www.youtube.com/@codersindonesia', topic:'Arduino & IoT', desc:'Belajar tipe data pemrograman Arduino: integer, float, dan boolean.' },
 
   // -”€-”€ PLC, HMI & SCADA (dari dasar hingga kompleks) -”€-”€
   // DASAR
   { id:'df7sxxhGKvw', title:'Pengenalan Dasar PLC | Apa itu PLC?', channel:'Anak Elektro', channelUrl:'https://www.youtube.com/@anakelektro3459', topic:'PLC, HMI & SCADA', desc:'Pengenalan PLC: apa itu Programmable Logic Controller, komponen penyusunnya, dan perannya dalam otomasi industri.' },
-  { id:'59aLF8bxPoQ', title:'DASAR PLC -€” Komunitas Teknik Listrik', channel:'TEKNIK LISTRIK', channelUrl:'https://www.youtube.com/@TEKNIKLISTRIK29', topic:'PLC, HMI & SCADA', desc:'Materi dasar PLC dari komunitas Teknik Listrik -€” cocok untuk pemula dari SMK hingga otodidak.' },
+  { id:'59aLF8bxPoQ', title:'DASAR PLC — Komunitas Teknik Listrik', channel:'TEKNIK LISTRIK', channelUrl:'https://www.youtube.com/@TEKNIKLISTRIK29', topic:'PLC, HMI & SCADA', desc:'Materi dasar PLC dari komunitas Teknik Listrik — cocok untuk pemula dari SMK hingga otodidak.' },
   { id:'DU27_ece_50', title:'FUNGSI PLC (Programmable Logic Controller)', channel:'TEKNIK LISTRIK', channelUrl:'https://www.youtube.com/@TEKNIKLISTRIK29', topic:'PLC, HMI & SCADA', desc:'Fungsi-fungsi utama PLC dalam sistem kontrol industri: logika, timing, counting, hingga komunikasi antar device.' },
-  { id:'2tneV_ZeUSA', title:'Belajar Ladder Program PLC dari NOL | Episode 1 | Gerbang Logika AND', channel:'JAGO LISTRIK', channelUrl:'https://www.youtube.com/@JAGOLISTRIK', topic:'PLC, HMI & SCADA', desc:'Memahami cara kerja PLC dan ladder diagram dari nol -€” episode 1 membahas gerbang logika AND.' },
+  { id:'2tneV_ZeUSA', title:'Belajar Ladder Program PLC dari NOL | Episode 1 | Gerbang Logika AND', channel:'JAGO LISTRIK', channelUrl:'https://www.youtube.com/@JAGOLISTRIK', topic:'PLC, HMI & SCADA', desc:'Memahami cara kerja PLC dan ladder diagram dari nol — episode 1 membahas gerbang logika AND.' },
   // MENENGAH
   { id:'-2AvewJbOZU', title:'Belajar Ladder Program PLC dari NOL | Episode 2 | Gerbang Logika OR dan NOT', channel:'JAGO LISTRIK', channelUrl:'https://www.youtube.com/@JAGOLISTRIK', topic:'PLC, HMI & SCADA', desc:'Lanjutan ladder diagram: kombinasi gerbang logika OR dan NOT untuk menyusun program kontrol nyata.' },
-  { id:'MhIb4JGlhvU', title:'Mengoperasikan PLC -€” Teknik Otomasi Industri', channel:'Direktorat SMK - Kemdikdasmen', channelUrl:'https://www.youtube.com/@DirektoratSMKKemendikdasmen', topic:'PLC, HMI & SCADA', desc:'Video pembelajaran SMK Teknik Otomasi Industri: mengoperasikan PLC mulai dari wiring hingga menjalankan program.' },
+  { id:'MhIb4JGlhvU', title:'Mengoperasikan PLC — Teknik Otomasi Industri', channel:'Direktorat SMK - Kemdikdasmen', channelUrl:'https://www.youtube.com/@DirektoratSMKKemendikdasmen', topic:'PLC, HMI & SCADA', desc:'Video pembelajaran SMK Teknik Otomasi Industri: mengoperasikan PLC mulai dari wiring hingga menjalankan program.' },
   { id:'p--wbxOj7jE', title:'Belajar PLC Zelio: Rangkaian Program, Pengkabelan & Ladder Diagram', channel:'AMK2 Channel', channelUrl:'https://www.youtube.com/@amk2channel996', topic:'PLC, HMI & SCADA', desc:'Tutorial PLC Zelio Soft: membuat rangkaian program, pengkabelan PLC, ladder diagram, dan transfer program.' },
   { id:'XYon1CVK47c', title:'KEKURANGAN PLC (Programmable Logic Controller)', channel:'TEKNIK LISTRIK', channelUrl:'https://www.youtube.com/@TEKNIKLISTRIK29', topic:'PLC, HMI & SCADA', desc:'Sisi lain PLC: keterbatasan dan hal yang perlu dipertimbangkan saat memilih PLC untuk sistem kontrol.' },
-  { id:'OA1WcpH3Orw', title:'Wecon HMI -€” Modbus RS-485 dari Inverter ke HMI Levi Series', channel:'Wecon Indonesia', channelUrl:'https://www.youtube.com/@weconindonesia', topic:'PLC, HMI & SCADA', desc:'Dasar komunikasi HMI: menghubungkan inverter ke HMI Wecon Levi Series via protokol Modbus RTU (RS-485).' },
+  { id:'OA1WcpH3Orw', title:'Wecon HMI — Modbus RS-485 dari Inverter ke HMI Levi Series', channel:'Wecon Indonesia', channelUrl:'https://www.youtube.com/@weconindonesia', topic:'PLC, HMI & SCADA', desc:'Dasar komunikasi HMI: menghubungkan inverter ke HMI Wecon Levi Series via protokol Modbus RTU (RS-485).' },
   // KOMPLEKS
   { id:'Kz7nquKf3CQ', title:'Inverter Wecon ke HMI Wecon via Modbus 485', channel:'Wecon Indonesia', channelUrl:'https://www.youtube.com/@weconindonesia', topic:'PLC, HMI & SCADA', desc:'Konfigurasi komunikasi Modbus 485 antara inverter dan HMI Wecon untuk monitoring dan kontrol parameter motor.' },
   { id:'Hxf3B-neJ88', title:'Komunikasi Wecon HMI dengan Mitsubishi FX3U (RS-422)', channel:'Wecon Indonesia', channelUrl:'https://www.youtube.com/@weconindonesia', topic:'PLC, HMI & SCADA', desc:'Cara menghubungkan HMI Wecon ke PLC Mitsubishi FX3U menggunakan protokol RS-422, lengkap dengan setting address.' },
-  { id:'DP41lE_hyAA', title:'Wecon HMI -€” Komunikasi Modbus dengan Servo Wecon', channel:'Wecon Indonesia', channelUrl:'https://www.youtube.com/@weconindonesia', topic:'PLC, HMI & SCADA', desc:'Integrasi HMI dengan servo drive Wecon via Modbus: setting parameter, display, dan kontrol posisi/kecepatan.' },
+  { id:'DP41lE_hyAA', title:'Wecon HMI — Komunikasi Modbus dengan Servo Wecon', channel:'Wecon Indonesia', channelUrl:'https://www.youtube.com/@weconindonesia', topic:'PLC, HMI & SCADA', desc:'Integrasi HMI dengan servo drive Wecon via Modbus: setting parameter, display, dan kontrol posisi/kecepatan.' },
   { id:'TmTyxr_D_n8', title:'Pengenalan SCADA (Supervisory Control And Data Acquisition)', channel:'Anak Elektro 09', channelUrl:'https://www.youtube.com/@AnakElektro09', topic:'PLC, HMI & SCADA', desc:'Apa itu SCADA: kumpulan software & hardware untuk memantau dan mengendalikan proses industri secara real-time.' },
   { id:'32qBzn3Wk2s', title:'Implementasi SCADA Pompa Sunter Selatan Jakarta Utara', channel:'Dinas Sumber Daya Air Provinsi DKI Jakarta', channelUrl:'https://www.youtube.com/@dinassdajakarta', topic:'PLC, HMI & SCADA', desc:'Contoh nyata penerapan SCADA di lapangan: monitoring dan kontrol pompa air secara terpusat dan real-time.' },
 ];
 
 // -”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€
-// BANK PROYEK SIAP PAKAI (Terverifikasi) -€” Wokwi
+// BANK PROYEK SIAP PAKAI (Terverifikasi) — Wokwi
 // diagram & kode sudah divalidasi manual; langsung bisa disimulasikan
 // -”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€-”€
 const WOKWI_TEMPLATES = [
   {
     id: "tpl-led-blink",
     title: "LED Blink (Hello World)",
-    desc: "Kedipkan LED tiap 1 detik -€” proyek paling dasar untuk memahami struktur setup() dan loop() di Arduino.",
+    desc: "Kedipkan LED tiap 1 detik — proyek paling dasar untuk memahami struktur setup() dan loop() di Arduino.",
     difficulty: "Mudah",
     tags: ["LED", "Dasar"],
     verified: true,
@@ -629,7 +629,7 @@ const WOKWI_TEMPLATES = [
   {
     id: "tpl-lcd1602",
     title: "Tampilan LCD 16x2",
-    desc: "Tampilkan teks 'ElektroDict!' pada LCD 16x2 mode parallel 4-bit -€” dasar untuk proyek display.",
+    desc: "Tampilkan teks 'ElektroDict!' pada LCD 16x2 mode parallel 4-bit — dasar untuk proyek display.",
     difficulty: "Menengah",
     tags: ["LCD", "Display"],
     verified: true,
@@ -709,7 +709,7 @@ const WOKWI_TEMPLATES = [
   {
     id: "tpl-servo",
     title: "Servo Sweep 0-180-°",
-    desc: "Gerakkan servo maju-mundur dari 0-° ke 180-° dan kembali -€” dasar kontrol posisi.",
+    desc: "Gerakkan servo maju-mundur dari 0-° ke 180-° dan kembali — dasar kontrol posisi.",
     difficulty: "Mudah",
     tags: ["Servo", "Motor"],
     verified: true,
@@ -741,7 +741,7 @@ const WOKWI_TEMPLATES = [
   {
     id: "tpl-pushbutton-led",
     title: "LED Dikontrol Tombol",
-    desc: "Tekan tombol untuk menyalakan LED. Memakai INPUT_PULLUP internal Arduino -€” tanpa resistor pull-up.",
+    desc: "Tekan tombol untuk menyalakan LED. Memakai INPUT_PULLUP internal Arduino — tanpa resistor pull-up.",
     difficulty: "Mudah",
     tags: ["Tombol", "Input"],
     verified: true,
@@ -779,7 +779,7 @@ const WOKWI_TEMPLATES = [
   {
   "id": "tpl-rgb-led",
   "title": "LED RGB Warna Berganti",
-  "desc": "LED RGB menyala bergantian merah, hijau, biru, dan campurannya -€” latihan dasar PWM 3 kanal.",
+  "desc": "LED RGB menyala bergantian merah, hijau, biru, dan campurannya — latihan dasar PWM 3 kanal.",
   "difficulty": "Mudah",
   "tags": [
     "LED",
@@ -903,7 +903,7 @@ const WOKWI_TEMPLATES = [
   {
   "id": "tpl-ldr-night-light",
   "title": "Lampu Otomatis (LDR)",
-  "desc": "Modul sensor cahaya LDR menyalakan LED otomatis saat ruangan gelap -€” simulasi lampu jalan hemat energi.",
+  "desc": "Modul sensor cahaya LDR menyalakan LED otomatis saat ruangan gelap — simulasi lampu jalan hemat energi.",
   "difficulty": "Mudah",
   "tags": [
     "Sensor",
@@ -958,14 +958,14 @@ const WOKWI_TEMPLATES = [
     },
     {
       "nama_komponen": "Uji coba",
-      "alur_perakitan": "Tutup sensor (gelapkan) -€” LED menyala otomatis."
+      "alur_perakitan": "Tutup sensor (gelapkan) — LED menyala otomatis."
     }
   ]
 },
   {
   "id": "tpl-servo-knob",
   "title": "Servo Knob",
-  "desc": "Putar potensiometer untuk menggerakkan sudut servo 0-180 derajat -€” dasar kontrol posisi analog.",
+  "desc": "Putar potensiometer untuk menggerakkan sudut servo 0-180 derajat — dasar kontrol posisi analog.",
   "difficulty": "Mudah",
   "tags": [
     "Servo",
@@ -1024,14 +1024,14 @@ const WOKWI_TEMPLATES = [
     },
     {
       "nama_komponen": "Uji coba",
-      "alur_perakitan": "Putar knob -€” servo bergerak mengikuti posisi potensiometer."
+      "alur_perakitan": "Putar knob — servo bergerak mengikuti posisi potensiometer."
     }
   ]
 },
   {
   "id": "tpl-joystick-servo",
   "title": "Servo Kendali Joystick",
-  "desc": "Joystick analog menggerakkan servo secara halus -€” sumbu X mengontrol posisi, sumbu Y mengontrol kecepatan.",
+  "desc": "Joystick analog menggerakkan servo secara halus — sumbu X mengontrol posisi, sumbu Y mengontrol kecepatan.",
   "difficulty": "Menengah",
   "tags": [
     "Joystick",
@@ -1095,14 +1095,14 @@ const WOKWI_TEMPLATES = [
     },
     {
       "nama_komponen": "Uji coba",
-      "alur_perakitan": "Geser joystick kiri-kanan -€” servo mengikuti."
+      "alur_perakitan": "Geser joystick kiri-kanan — servo mengikuti."
     }
   ]
 },
   {
   "id": "tpl-7segment-counter",
   "title": "Counter 7-Segmen 0-9",
-  "desc": "Tampilkan angka 0-9 bergantian di display 7-segmen setiap detik -€” belajar decode BCD ke segmen.",
+  "desc": "Tampilkan angka 0-9 bergantian di display 7-segmen setiap detik — belajar decode BCD ke segmen.",
   "difficulty": "Menengah",
   "tags": [
     "Display",
@@ -1153,7 +1153,7 @@ const WOKWI_TEMPLATES = [
   {
   "id": "tpl-stepper-motor",
   "title": "Motor Stepper Berputar",
-  "desc": "Motor stepper bipolar berputar satu arah lalu berbalik -€” dasar kontrol presisi untuk printer/CNC mini.",
+  "desc": "Motor stepper bipolar berputar satu arah lalu berbalik — dasar kontrol presisi untuk printer/CNC mini.",
   "difficulty": "Menengah",
   "tags": [
     "Motor",
@@ -1208,7 +1208,7 @@ const WOKWI_TEMPLATES = [
   {
   "id": "tpl-ultrasonic-buzzer",
   "title": "Alarm Jarak Ultrasonik",
-  "desc": "HC-SR04 mengukur jarak; buzzer berbunyi semakin cepat saat objek semakin dekat -€” simulasi sensor parkir.",
+  "desc": "HC-SR04 mengukur jarak; buzzer berbunyi semakin cepat saat objek semakin dekat — simulasi sensor parkir.",
   "difficulty": "Menengah",
   "tags": [
     "Sensor",
@@ -1267,14 +1267,14 @@ const WOKWI_TEMPLATES = [
     },
     {
       "nama_komponen": "Uji coba",
-      "alur_perakitan": "Dekatkan objek -€” bunyi buzzer semakin cepat."
+      "alur_perakitan": "Dekatkan objek — bunyi buzzer semakin cepat."
     }
   ]
 },
   {
   "id": "tpl-dht22-lcd",
   "title": "Termometer LCD (DHT22)",
-  "desc": "Suhu & kelembaban dari DHT22 ditampilkan di LCD 1602 -€” kombinasi sensor dan display populer.",
+  "desc": "Suhu & kelembaban dari DHT22 ditampilkan di LCD 1602 — kombinasi sensor dan display populer.",
   "difficulty": "Menengah",
   "tags": [
     "Sensor",
@@ -1461,7 +1461,7 @@ const WOKWI_TEMPLATES = [
   {
   "id": "tpl-hx711-scale",
   "title": "Timbangan Digital HX711",
-  "desc": "Modul HX711 + load cell menimbang beban dan menampilkan berat gram di Serial Monitor -€” dasar timbangan digital.",
+  "desc": "Modul HX711 + load cell menimbang beban dan menampilkan berat gram di Serial Monitor — dasar timbangan digital.",
   "difficulty": "Sulit",
   "tags": [
     "Sensor",
@@ -1523,7 +1523,7 @@ const WOKWI_TEMPLATES = [
   {
   "id": "tpl-mpu6050-tilt",
   "title": "Servo Pengikut Kemiringan",
-  "desc": "MPU6050 mendeteksi kemiringan sumbu dan menggerakkan servo agar selalu tegak -€” dasar stabilisasi gimbal.",
+  "desc": "MPU6050 mendeteksi kemiringan sumbu dan menggerakkan servo agar selalu tegak — dasar stabilisasi gimbal.",
   "difficulty": "Sulit",
   "tags": [
     "Sensor",
@@ -1604,7 +1604,7 @@ const WOKWI_TEMPLATES = [
   {
   "id": "tpl-esp32-firebase-dht",
   "title": "IoT Suhu & Kelembaban Firebase",
-  "desc": "ESP32 membaca DHT22 lalu mengirim suhu & kelembaban ke Firebase Realtime Database -€” pantau dari dashboard web kapan saja.",
+  "desc": "ESP32 membaca DHT22 lalu mengirim suhu & kelembaban ke Firebase Realtime Database — pantau dari dashboard web kapan saja.",
   "difficulty": "Menengah",
   "tags": [
     "ESP32",
@@ -1672,7 +1672,7 @@ const WOKWI_TEMPLATES = [
     },
     {
       "nama_komponen": "Uji coba",
-      "alur_perakitan": "Buka Realtime Database -†’ path /sensor -€” suhu & kelembaban ter-update tiap 5 detik."
+      "alur_perakitan": "Buka Realtime Database -†’ path /sensor — suhu & kelembaban ter-update tiap 5 detik."
     }
   ]
 },
@@ -1761,7 +1761,7 @@ const WOKWI_TEMPLATES = [
     },
     {
       "nama_komponen": "Uji coba",
-      "alur_perakitan": "Dekatkan objek ke sensor -€” buzzer berbunyi < 30 cm dan /jarak/bahaya jadi true di Firebase."
+      "alur_perakitan": "Dekatkan objek ke sensor — buzzer berbunyi < 30 cm dan /jarak/bahaya jadi true di Firebase."
     }
   ]
 },
@@ -1845,7 +1845,7 @@ const WOKWI_TEMPLATES = [
     },
     {
       "nama_komponen": "Uji coba",
-      "alur_perakitan": "Lewat di depan sensor -€” LED menyala dan /keamanan/gerakan jadi true di dashboard."
+      "alur_perakitan": "Lewat di depan sensor — LED menyala dan /keamanan/gerakan jadi true di dashboard."
     }
   ]
 },
@@ -1929,7 +1929,7 @@ const WOKWI_TEMPLATES = [
     },
     {
       "nama_komponen": "Uji coba",
-      "alur_perakitan": "Tutup sensor LDR (gelapkan) -€” LED menyala dan /cahaya/lampu_nyala jadi true."
+      "alur_perakitan": "Tutup sensor LDR (gelapkan) — LED menyala dan /cahaya/lampu_nyala jadi true."
     }
   ]
 },
@@ -2018,14 +2018,14 @@ const WOKWI_TEMPLATES = [
     },
     {
       "nama_komponen": "Uji coba",
-      "alur_perakitan": "Naikkan suhu di atas target -€” relay aktif dan /termostat/beban_nyala jadi true."
+      "alur_perakitan": "Naikkan suhu di atas target — relay aktif dan /termostat/beban_nyala jadi true."
     }
   ]
 },
   {
   "id": "tpl-esp32-firebase-servo",
   "title": "Servo Kendali Jarak Jauh",
-  "desc": "Kontrol posisi servo dari dashboard Firebase -€” tulis nilai 0-180 di path /servo/sudut, dan ESP32 langsung menggerakkan servo.",
+  "desc": "Kontrol posisi servo dari dashboard Firebase — tulis nilai 0-180 di path /servo/sudut, dan ESP32 langsung menggerakkan servo.",
   "difficulty": "Menengah",
   "tags": [
     "ESP32",
@@ -2095,7 +2095,7 @@ const WOKWI_TEMPLATES = [
   {
   "id": "tpl-esp32-firebase-rgb",
   "title": "Lampu RGB Kendali Web",
-  "desc": "Atur warna LED RGB dari dashboard Firebase -€” tulis nilai R, G, B (0-255) di database dan ESP32 menampilkannya via PWM.",
+  "desc": "Atur warna LED RGB dari dashboard Firebase — tulis nilai R, G, B (0-255) di database dan ESP32 menampilkannya via PWM.",
   "difficulty": "Menengah",
   "tags": [
     "ESP32",
@@ -2253,7 +2253,7 @@ const WOKWI_TEMPLATES = [
     },
     {
       "nama_komponen": "Uji coba",
-      "alur_perakitan": "Dekatkan asap/gas -€” buzzer dan LED menyala, /gas/bahaya jadi true."
+      "alur_perakitan": "Dekatkan asap/gas — buzzer dan LED menyala, /gas/bahaya jadi true."
     }
   ]
 },
@@ -2352,7 +2352,7 @@ const WOKWI_TEMPLATES = [
   {
   "id": "tpl-esp32-firebase-bell",
   "title": "Bel Pintu Smart + Notifikasi",
-  "desc": "Tombol bel mengaktifkan buzzer dan mengirim notifikasi ke Firebase -€” dashboard mencatat waktu bel ditekan.",
+  "desc": "Tombol bel mengaktifkan buzzer dan mengirim notifikasi ke Firebase — dashboard mencatat waktu bel ditekan.",
   "difficulty": "Mudah",
   "tags": [
     "ESP32",
@@ -2425,13 +2425,13 @@ const WOKWI_TEMPLATES = [
     },
     {
       "nama_komponen": "Uji coba",
-      "alur_perakitan": "Tekan tombol -€” buzzer berbunyi dan /bel/ditekan jadi true di Firebase."
+      "alur_perakitan": "Tekan tombol — buzzer berbunyi dan /bel/ditekan jadi true di Firebase."
     }
   ]
 }, {
   "id": "tpl-keypad-lock",
   "title": "Kunci Pintu Keypad 4x4 + LCD",
-  "desc": "Keypad 4x4 jadi password lock: masukkan sandi 4 digit, LCD I2C menampilkan status BUKA/TOLAK -€” latihan input & logika kondisi.",
+  "desc": "Keypad 4x4 jadi password lock: masukkan sandi 4 digit, LCD I2C menampilkan status BUKA/TOLAK — latihan input & logika kondisi.",
   "difficulty": "Sulit",
   "tags": [
     "Keypad",
@@ -2489,7 +2489,7 @@ const WOKWI_TEMPLATES = [
 {
   "id": "tpl-tm1637-stopwatch",
   "title": "Stopwatch 4-Digit TM1637",
-  "desc": "Modul display 4 digit TM1637 menghitung detik menit (stopwatch) dengan titik dua berkedip -€” latihan display 7-segmen modern.",
+  "desc": "Modul display 4 digit TM1637 menghitung detik menit (stopwatch) dengan titik dua berkedip — latihan display 7-segmen modern.",
   "difficulty": "Menengah",
   "tags": [
     "Display",
@@ -2545,7 +2545,7 @@ const WOKWI_TEMPLATES = [
 {
   "id": "tpl-ir-remote-led",
   "title": "Lampu Kendali Remote IR",
-  "desc": "Remote infrared (38 kHz) menyalakan/mematikan LED -€” pelajari protokol NEC dan cara membaca sinyal IR dengan Arduino.",
+  "desc": "Remote infrared (38 kHz) menyalakan/mematikan LED — pelajari protokol NEC dan cara membaca sinyal IR dengan Arduino.",
   "difficulty": "Sulit",
   "tags": [
     "IR",
@@ -2609,7 +2609,7 @@ const WOKWI_TEMPLATES = [
 {
   "id": "tpl-neopixel-ring",
   "title": "Cincin Cahaya NeoPixel",
-  "desc": "Ring LED NeoPixel 16 pixel menampilkan efek pelangi berjalan -€” pengenalan LED addressable WS2812 dan perpustakaan Adafruit NeoPixel.",
+  "desc": "Ring LED NeoPixel 16 pixel menampilkan efek pelangi berjalan — pengenalan LED addressable WS2812 dan perpustakaan Adafruit NeoPixel.",
   "difficulty": "Menengah",
   "tags": [
     "LED",
@@ -2661,7 +2661,7 @@ const WOKWI_TEMPLATES = [
 {
   "id": "tpl-rtc-clock",
   "title": "Jam Digital RTC + LCD",
-  "desc": "Modul RTC DS1307 menjaga waktu real (jam:menit:detik & tanggal) meski board mati -€” ditampilkan di LCD 16x2.",
+  "desc": "Modul RTC DS1307 menjaga waktu real (jam:menit:detik & tanggal) meski board mati — ditampilkan di LCD 16x2.",
   "difficulty": "Menengah",
   "tags": [
     "RTC",
@@ -2724,7 +2724,7 @@ const WOKWI_TEMPLATES = [
 {
   "id": "tpl-shift-register",
   "title": "LED Chaser 74HC595",
-  "desc": "Satu IC shift register 74HC595 mengendalikan 4 (atau lebih) LED hanya dengan 3 pin Arduino -€” dasar ekspansi output digital.",
+  "desc": "Satu IC shift register 74HC595 mengendalikan 4 (atau lebih) LED hanya dengan 3 pin Arduino — dasar ekspansi output digital.",
   "difficulty": "Menengah",
   "tags": [
     "Shift Register",
@@ -2800,7 +2800,7 @@ const WOKWI_TEMPLATES = [
 {
   "id": "tpl-max7219-matrix",
   "title": "Matrix LED MAX7219",
-  "desc": "Dot matrix 8x8 MAX7219 menampilkan pixel berjalan -€” belajar driver display dengan protokol SPI dan library LedControl.",
+  "desc": "Dot matrix 8x8 MAX7219 menampilkan pixel berjalan — belajar driver display dengan protokol SPI dan library LedControl.",
   "difficulty": "Sulit",
   "tags": [
     "MAX7219",
@@ -2856,7 +2856,7 @@ const WOKWI_TEMPLATES = [
 {
   "id": "tpl-rotary-dimmer",
   "title": "Dimmer Rotary Encoder",
-  "desc": "Encoder rotary KY-040 mengatur kecerahan LED PWM (dimmer) dan tombolnya sebagai saklar on/off -€” latihan input rotary & PWM.",
+  "desc": "Encoder rotary KY-040 mengatur kecerahan LED PWM (dimmer) dan tombolnya sebagai saklar on/off — latihan input rotary & PWM.",
   "difficulty": "Menengah",
   "tags": [
     "Encoder",
@@ -2927,7 +2927,7 @@ const WOKWI_TEMPLATES = [
 {
   "id": "tpl-esp32-web-led",
   "title": "Web Server LED ESP32",
-  "desc": "ESP32 membuat web server WiFi -€” buka alamat IP-nya di browser, klik tombol untuk menyalakan/mematikan LED. Tanpa library tambahan!",
+  "desc": "ESP32 membuat web server WiFi — buka alamat IP-nya di browser, klik tombol untuk menyalakan/mematikan LED. Tanpa library tambahan!",
   "difficulty": "Menengah",
   "tags": [
     "ESP32",
@@ -2968,7 +2968,7 @@ const WOKWI_TEMPLATES = [
     },
     {
       "nama_komponen": "Jalankan",
-      "alur_perakitan": "Mulai simulasi -€” buka tab serial untuk melihat alamat IP, lalu buka URL tersebut di browser."
+      "alur_perakitan": "Mulai simulasi — buka tab serial untuk melihat alamat IP, lalu buka URL tersebut di browser."
     },
     {
       "nama_komponen": "Uji coba",
@@ -2979,7 +2979,7 @@ const WOKWI_TEMPLATES = [
 {
   "id": "tpl-esp32-oled-weather",
   "title": "Stasiun Cuaca OLED ESP32",
-  "desc": "ESP32 membaca DHT22 lalu menampilkan suhu & kelembaban di layar OLED SSD1306 (I2C) -€” tanpa cloud, data langsung di layar.",
+  "desc": "ESP32 membaca DHT22 lalu menampilkan suhu & kelembaban di layar OLED SSD1306 (I2C) — tanpa cloud, data langsung di layar.",
   "difficulty": "Menengah",
   "tags": [
     "ESP32",
@@ -3646,22 +3646,21 @@ const WOKWI_TEMPLATES = [
 }
 ];;
 
-// -•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•
-// TENTANG -€” konten About di-embed langsung (tidak fetch README.md)
+// ---- TENTANG ----
+// TENTANG — konten About di-embed langsung (tidak fetch README.md)
 // agar selalu tampil: offline, Vercel, GitHub Pages, dll.
-// -•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•-•
-const ABOUT_MD = `# -š¡ ElektroDict
+const ABOUT_MD = `# ⚡ ElektroDict
 
-> **Kamus teknik elektro lengkap -€” buat mahasiswa, oleh mahasiswa.**
+> **Kamus teknik elektro lengkap — buat mahasiswa, oleh mahasiswa.**
 
 ElektroDict adalah aplikasi web (PWA) pembelajaran teknik elektro berbahasa Indonesia.
 Mulai dari istilah & rumus dasar, kalkulator, konversi satuan, kode warna resistor,
 timeline sejarah kelistrikan, sampai latihan soal berbasis AI dan video pembelajaran
-dari channel YouTube Indonesia -€” semua dalam satu tempat.
+dari channel YouTube Indonesia — semua dalam satu tempat.
 
 ---
 
-## -œ¨ Fitur Utama
+## 📖 Fitur Utama
 
 | Fitur | Deskripsi |
 |---|---|
@@ -3687,18 +3686,18 @@ dari channel YouTube Indonesia -€” semua dalam satu tempat.
 
 ---
 
-## ðŸ§‘-€ðŸ’» Kredit & Kontak
+## 👨‍💻 Kredit & Kontak
 
 **Beryl Nathaniel Sinaga**
 
-ðŸŒ [berylnathaniel.my.id](https://berylnathaniel.my.id/)
+🌐 [berylnathaniel.my.id](https://berylnathaniel.my.id/)
 
 ---
 
-## ðŸ“„ Lisensi & Catatan
+## 📄 Lisensi & Catatan
 
 - Konten edukasi (istilah, materi, video) bersumber dari referensi umum & channel
-  YouTube edukasi Indonesia -€” hak cipta masing-masing tetap pada pemiliknya.
+  YouTube edukasi Indonesia — hak cipta masing-masing tetap pada pemiliknya.
 - Respon AI bersifat generatif dan bisa saja kurang akurat; gunakan sebagai
   bantuan belajar, bukan satu-satunya sumber kebenaran.
 `;
