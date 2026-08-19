@@ -174,20 +174,20 @@
 ];
 
 const QUIZ_CATS = {
-  dasar:      { label:'Dasar',       emoji:'-š¡', desc:'Tegangan, arus, hambatan, hukum dasar' },
-  komponen:   { label:'Komponen',    emoji:'ðŸ”§', desc:'Resistor, kapasitor, induktor, dioda, transistor' },
-  rangkaian:  { label:'Rangkaian',   emoji:'ðŸ”', desc:'Seri, paralel, Kirchhoff, Thevenin, Norton' },
-  daya:       { label:'Daya',        emoji:'ðŸ’¡', desc:'Daya aktif, reaktif, faktor daya, efisiensi' },
-  elektronika:{ label:'Elektronika', emoji:'ðŸ–¥ï¸', desc:'Op-amp, transistor, penyearah, PWM' },
-  digital:    { label:'Digital',     emoji:'ðŸ’¾', desc:'Gerbang logika, ADC, DAC, flip-flop, mikrokontroler' },
-  sinyal:     { label:'Sinyal',      emoji:'ðŸ“¡', desc:'Filter, modulasi, FFT, bandwidth, dB' },
-  pengukuran: { label:'Pengukuran',  emoji:'ðŸ“', desc:'Multimeter, osiloskop, LCR meter' },
-  terbarukan: { label:'EBT',         emoji:'-˜€ï¸', desc:'Panel surya, turbin angin, inverter, MPPT, baterai' },
-  instalasi:  { label:'Instalasi',   emoji:'ðŸ§¤', desc:'PUIL, grounding, kabel, MCB, safety K3' },
-  mesin:      { label:'Mesin',       emoji:'-š™ï¸', desc:'Motor DC/AC, generator, trafo, mesin industri' },
-  kontrol:    { label:'Kontrol',     emoji:'ðŸ•¹ï¸', desc:'PLC, PID, feedback loop, robotik, otomasi' },
-  komunikasi: { label:'Komunikasi',  emoji:'ðŸ“¶', desc:'I2C, SPI, UART, RS485, protokol IoT' },
-  distribusi: { label:'Distribusi',  emoji:'ðŸ—¼', desc:'Gardu induk, transmisi SUTET, isolator, jaringan' },
+  dasar:      { label:'Dasar',       emoji:'', desc:'Tegangan, arus, hambatan, hukum dasar' },
+  komponen:   { label:'Komponen',    emoji:'', desc:'Resistor, kapasitor, induktor, dioda, transistor' },
+  rangkaian:  { label:'Rangkaian',   emoji:'', desc:'Seri, paralel, Kirchhoff, Thevenin, Norton' },
+  daya:       { label:'Daya',        emoji:'', desc:'Daya aktif, reaktif, faktor daya, efisiensi' },
+  elektronika:{ label:'Elektronika', emoji:'', desc:'Op-amp, transistor, penyearah, PWM' },
+  digital:    { label:'Digital',     emoji:'', desc:'Gerbang logika, ADC, DAC, flip-flop, mikrokontroler' },
+  sinyal:     { label:'Sinyal',      emoji:'', desc:'Filter, modulasi, FFT, bandwidth, dB' },
+  pengukuran: { label:'Pengukuran',  emoji:'', desc:'Multimeter, osiloskop, LCR meter' },
+  terbarukan: { label:'EBT',         emoji:'', desc:'Panel surya, turbin angin, inverter, MPPT, baterai' },
+  instalasi:  { label:'Instalasi',   emoji:'', desc:'PUIL, grounding, kabel, MCB, safety K3' },
+  mesin:      { label:'Mesin',       emoji:'', desc:'Motor DC/AC, generator, trafo, mesin industri' },
+  kontrol:    { label:'Kontrol',     emoji:'', desc:'PLC, PID, feedback loop, robotik, otomasi' },
+  komunikasi: { label:'Komunikasi',  emoji:'', desc:'I2C, SPI, UART, RS485, protokol IoT' },
+  distribusi: { label:'Distribusi',  emoji:'', desc:'Gardu induk, transmisi SUTET, isolator, jaringan' },
 };
 
 const KAT = ['Semua','dasar','komponen','rangkaian','daya','elektronika','pengukuran','digital','sinyal','terbarukan','instalasi','mesin','kontrol','komunikasi','distribusi'];
