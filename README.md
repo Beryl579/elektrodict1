@@ -1,15 +1,15 @@
-# ⚡ ElektroDict
+﻿# âš¡ ElektroDict
 
-> **Kamus teknik elektro lengkap — buat mahasiswa, oleh mahasiswa.**
+> **Kamus teknik elektro lengkap â€” buat mahasiswa, oleh mahasiswa.**
 
 ElektroDict adalah aplikasi web (PWA) pembelajaran teknik elektro berbahasa Indonesia.
 Mulai dari istilah & rumus dasar, kalkulator, konversi satuan, kode warna resistor,
 timeline sejarah kelistrikan, sampai latihan soal berbasis AI dan video pembelajaran
-dari channel YouTube Indonesia — semua dalam satu tempat.
+dari channel YouTube Indonesia â€” semua dalam satu tempat.
 
 ---
 
-## ✨ Fitur Utama
+## âœ¨ Fitur Utama
 
 | Fitur | Deskripsi |
 |---|---|
@@ -24,7 +24,7 @@ dari channel YouTube Indonesia — semua dalam satu tempat.
 | **Latihan Soal AI** | Soal random di-generate tiap sesi oleh AI |
 | **ElektroBot AI** | Chatbot tanya-jawab materi elektro, jawab gaul & akurat |
 | **AI Vision** | Analisis foto rangkaian/komponen dengan AI |
-| **Lab Proyek (AI)** | Rancang proyek mikrokontroler (Arduino Uno / ESP32) secara instan + 41 template siap pakai |
+| **Lab Proyek (AI)** | Rancang proyek mikrokontroler (Arduino Uno / ESP32) secara instan + 51 template siap pakai |
 | **Dashboard IoT Firebase** | Pantau sensor ESP32 real-time dengan grafik & kontrol servo/RGB via Firebase |
 | **Video Pembelajaran** | Kumpulan video edukasi elektronika dari channel YouTube Indonesia, bisa diputar langsung di dalam app |
 | **Synth** | Eksperimen sintesis suara & sinyal |
@@ -35,17 +35,17 @@ dari channel YouTube Indonesia — semua dalam satu tempat.
 
 ---
 
-## 🧑‍💻 Kredit & Kontak
+## ðŸ§‘â€ðŸ’» Kredit & Kontak
 
 **Beryl Nathaniel Sinaga**
 
-🌐 [berylnathaniel.my.id](https://berylnathaniel.my.id/)
+ðŸŒ [berylnathaniel.my.id](https://berylnathaniel.my.id/)
 
 ---
 
-## 📄 Lisensi & Catatan
+## ðŸ“„ Lisensi & Catatan
 
 - Konten edukasi (istilah, materi, video) bersumber dari referensi umum & channel
-  YouTube edukasi Indonesia — hak cipta masing-masing tetap pada pemiliknya.
+  YouTube edukasi Indonesia â€” hak cipta masing-masing tetap pada pemiliknya.
 - Respon AI bersifat generatif dan bisa saja kurang akurat; gunakan sebagai
   bantuan belajar, bukan satu-satunya sumber kebenaran.
