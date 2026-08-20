@@ -2,17 +2,17 @@
 // v60: Fix SW offline — match cache by path tanpa ?v= (asset diprecache ?v=58 tapi HTML load tanpa query).
 // Aset diberi query ?v= agar precache selalu ambil file terbaru (mencegah
 // cache.addAll melewati SW lama yang menyajikan salinan basi).
-const CACHE_NAME = 'elektrodict-v68';
+const CACHE_NAME = 'elektrodict-v69';
 const ASSETS = [
   '/',
-  '/index.html?v=67',
-  '/css/style.css?v=66',
-  '/js/data.js?v=66',
-  '/js/data-materi.js?v=66',
-  '/js/api.js?v=66',
-  '/js/app.js?v=66',
-  '/js/modules/firebase-dashboard.js?v=66',
-  '/js/modules/chips.js?v=66',
+  '/index.html?v=68',
+  '/css/style.css?v=67',
+  '/js/data.js?v=67',
+  '/js/data-materi.js?v=67',
+  '/js/api.js?v=67',
+  '/js/app.js?v=67',
+  '/js/modules/firebase-dashboard.js?v=67',
+  '/js/modules/chips.js?v=67',
   '/manifest.json',
   'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css',
   'https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js',

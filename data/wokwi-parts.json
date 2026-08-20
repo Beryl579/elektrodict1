@@ -1286,5 +1286,161 @@
       "CLK"
     ],
     "attrs": {}
+  },
+  "wokwi-gate-and-2": {
+    "title": "wokwi-gate-and-2",
+    "desc": "2-input AND gate (digital logic)",
+    "pins": [
+      "A",
+      "B",
+      "OUT"
+    ],
+    "attrs": {}
+  },
+  "wokwi-gate-or-2": {
+    "title": "wokwi-gate-or-2",
+    "desc": "2-input OR gate (digital logic)",
+    "pins": [
+      "A",
+      "B",
+      "OUT"
+    ],
+    "attrs": {}
+  },
+  "wokwi-gate-nand-2": {
+    "title": "wokwi-gate-nand-2",
+    "desc": "2-input NAND gate (digital logic)",
+    "pins": [
+      "A",
+      "B",
+      "OUT"
+    ],
+    "attrs": {}
+  },
+  "wokwi-gate-nor-2": {
+    "title": "wokwi-gate-nor-2",
+    "desc": "2-input NOR gate (digital logic)",
+    "pins": [
+      "A",
+      "B",
+      "OUT"
+    ],
+    "attrs": {}
+  },
+  "wokwi-gate-xor-2": {
+    "title": "wokwi-gate-xor-2",
+    "desc": "2-input XOR gate (digital logic)",
+    "pins": [
+      "A",
+      "B",
+      "OUT"
+    ],
+    "attrs": {}
+  },
+  "wokwi-gate-xnor-2": {
+    "title": "wokwi-gate-xnor-2",
+    "desc": "2-input XNOR gate (digital logic)",
+    "pins": [
+      "A",
+      "B",
+      "OUT"
+    ],
+    "attrs": {}
+  },
+  "wokwi-gate-not": {
+    "title": "wokwi-gate-not",
+    "desc": "NOT gate / inverter (digital logic)",
+    "pins": [
+      "IN",
+      "OUT"
+    ],
+    "attrs": {}
+  },
+  "wokwi-gate-buffer": {
+    "title": "wokwi-gate-buffer",
+    "desc": "Buffer gate (digital logic)",
+    "pins": [
+      "IN",
+      "OUT"
+    ],
+    "attrs": {}
+  },
+  "wokwi-mux-2": {
+    "title": "wokwi-mux-2",
+    "desc": "2-to-1 multiplexer (A/B data, SEL select)",
+    "pins": [
+      "A",
+      "B",
+      "SEL",
+      "OUT"
+    ],
+    "attrs": {}
+  },
+  "wokwi-flip-flop-d": {
+    "title": "wokwi-flip-flop-d",
+    "desc": "D flip-flop",
+    "pins": [
+      "D",
+      "CLK",
+      "Q",
+      "NOTQ",
+      "S",
+      "R"
+    ],
+    "attrs": {}
+  },
+  "wokwi-flip-flop-dr": {
+    "title": "wokwi-flip-flop-dr",
+    "desc": "D flip-flop with reset",
+    "pins": [
+      "D",
+      "CLK",
+      "Q",
+      "NOTQ",
+      "S",
+      "R"
+    ],
+    "attrs": {}
+  },
+  "wokwi-flip-flop-dsr": {
+    "title": "wokwi-flip-flop-dsr",
+    "desc": "D flip-flop with set & reset",
+    "pins": [
+      "D",
+      "CLK",
+      "Q",
+      "NOTQ",
+      "S",
+      "R"
+    ],
+    "attrs": {}
+  },
+  "wokwi-flip-flop-sr": {
+    "title": "wokwi-flip-flop-sr",
+    "desc": "SR flip-flop",
+    "pins": [
+      "S",
+      "CLK",
+      "R",
+      "Q",
+      "NOTQ"
+    ],
+    "attrs": {}
+  },
+  "wokwi-vcc": {
+    "title": "wokwi-vcc",
+    "desc": "5V power rail (VCC block)",
+    "pins": [
+      "VCC"
+    ],
+    "attrs": {}
+  },
+  "wokwi-gnd": {
+    "title": "wokwi-gnd",
+    "desc": "Ground rail (GND block)",
+    "pins": [
+      "GND"
+    ],
+    "attrs": {}
   }
 }

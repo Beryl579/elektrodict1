@@ -1529,4 +1529,21 @@ $$R = \\rho \\cdot \\frac{L}{A} \\qquad \\Rightarrow \\qquad \\Delta V = 2 \\cdo
       { q: 'Turbin yang cocok untuk PLTA dengan head rendah (&lt;30m) dan debit besar adalah…', opts: ['Pelton', 'Francis', 'Kaplan', 'Steam turbine'], ans: 2, exp: 'Turbin Kaplan dirancang untuk head rendah dan debit tinggi.' }
     ]
   }
+,
+    {
+      id: 'praktik-gerbang',
+      emoji: '🔬',
+      title: 'Praktik Langsung di Lab Proyek',
+body: "<p>Semua konsep di atas bisa kamu coba langsung secara gratis di simulator <b>Wokwi</b> — tanpa mikrokontroler, murni rangkaian gerbang logika dengan saklar input dan LED output. Buka <b>Lab Proyek → Proyek Wokwi</b> lalu pilih:</p>" +
+        "<div class=\"vtpl-chip\" onclick=\"goToTemplate('tpl-gate-not')\">NOT — inverter</div>" +
+        "<div class=\"vtpl-chip\" onclick=\"goToTemplate('tpl-gate-and')\">AND (7408)</div>" +
+        "<div class=\"vtpl-chip\" onclick=\"goToTemplate('tpl-gate-or')\">OR (7432)</div>" +
+        "<div class=\"vtpl-chip\" onclick=\"goToTemplate('tpl-gate-nand')\">NAND (7400)</div>" +
+        "<div class=\"vtpl-chip\" onclick=\"goToTemplate('tpl-gate-nor')\">NOR (7402)</div>" +
+        "<div class=\"vtpl-chip\" onclick=\"goToTemplate('tpl-gate-xor')\">XOR (7486)</div>" +
+        "<div class=\"vtpl-chip\" onclick=\"goToTemplate('tpl-gate-xnor')\">XNOR (74266)</div>" +
+        "<div class=\"vtpl-chip\" onclick=\"goToTemplate('tpl-gate-mux')\">Multiplexer 2-ke-1</div>" +
+        "<div class=\"vtpl-chip\" onclick=\"goToTemplate('tpl-gate-half-adder')\">Half Adder 1-bit</div>" +
+        "<p style=\"margin-top:10px;\">Setiap proyek menyertakan <b>tabel kebenaran</b> dan panduan perakitan langkah demi langkah. Geser saklar input ke semua kombinasi, lalu cocokkan nyala LED dengan tabel kebenaran yang kamu pelajari di bab ini.</p>"
+    }
 ];
