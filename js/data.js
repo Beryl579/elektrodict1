@@ -471,6 +471,41 @@ const VIDEOS = [
   { id:'DP41lE_hyAA', title:'Wecon HMI — Komunikasi Modbus dengan Servo Wecon', channel:'Wecon Indonesia', channelUrl:'https://www.youtube.com/@weconindonesia', topic:'PLC, HMI & SCADA', desc:'Integrasi HMI dengan servo drive Wecon via Modbus: setting parameter, display, dan kontrol posisi/kecepatan.' },
   { id:'TmTyxr_D_n8', title:'Pengenalan SCADA (Supervisory Control And Data Acquisition)', channel:'Anak Elektro 09', channelUrl:'https://www.youtube.com/@AnakElektro09', topic:'PLC, HMI & SCADA', desc:'Apa itu SCADA: kumpulan software & hardware untuk memantau dan mengendalikan proses industri secara real-time.' },
   { id:'32qBzn3Wk2s', title:'Implementasi SCADA Pompa Sunter Selatan Jakarta Utara', channel:'Dinas Sumber Daya Air Provinsi DKI Jakarta', channelUrl:'https://www.youtube.com/@dinassdajakarta', topic:'PLC, HMI & SCADA', desc:'Contoh nyata penerapan SCADA di lapangan: monitoring dan kontrol pompa air secara terpusat dan real-time.' },
+
+  // ==== DASAR LISTRIK (The Engineering Mindset & RealPars) ====
+  { id:'mc979OhitAg', title:'Cara Kerja Listrik — Prinsip Dasar', channel:'The Engineering Mindset', channelUrl:'https://www.youtube.com/@EngineeringMindset', topic:'Dasar Listrik', desc:'Video paling populer The Engineering Mindset: atom & elektron, konduktor, tegangan, arus, hambatan, induktor, kapasitor, hingga beda AC dan DC.' },
+  { id:'HsLLq6Rm5tU', title:'Hukum Ohm Dijelaskan — Teori Rangkaian Dasar', channel:'The Engineering Mindset', channelUrl:'https://www.youtube.com/@EngineeringMindset', topic:'Dasar Listrik', desc:'Hubungan tegangan, arus, dan hambatan; segitiga Ohm serta contoh perhitungan untuk pemula.' },
+  { id:'UchitHGF4n8', title:'Cara Kerja Transformator', channel:'The Engineering Mindset', channelUrl:'https://www.youtube.com/@EngineeringMindset', topic:'Dasar Listrik', desc:'Prinsip kerja trafo: induksi elektromagnetik, rasio lilitan, step-up & step-down, dengan animasi.' },
+  { id:'OUcKJuMSSW4', title:'Dasar AC: Belajar Semua Tentang Arus Bolak-Balik', channel:'The Engineering Mindset', channelUrl:'https://www.youtube.com/@EngineeringMindset', topic:'Dasar Listrik', desc:'Konsep lengkap arus bolak-balik: gelombang sinus, frekuensi, nilai RMS, dan bedanya dengan arus searah.' },
+
+  // ==== ELEKTRONIKA & KOMPONEN (The Engineering Mindset & RealPars) ====
+  { id:'J4oO7PT_nzQ', title:'Transistor Dijelaskan — Cara Kerja Transistor', channel:'The Engineering Mindset', channelUrl:'https://www.youtube.com/@EngineeringMindset', topic:'Elektronika & Komponen', desc:'Video transistor paling banyak ditonton: cara kerja NPN/PNP sebagai saklar dan penguat, lengkap dengan animasi.' },
+  { id:'Fwj_d3uO5g8', title:'Dioda Dijelaskan — Prinsip Kerja Sambungan PN', channel:'The Engineering Mindset', channelUrl:'https://www.youtube.com/@EngineeringMindset', topic:'Elektronika & Komponen', desc:'Cara kerja dioda: sambungan PN, bias maju/mundur, dan aplikasinya pada penyearah.' },
+  { id:'n594CkrP6xE', title:'Cara Kerja Relay', channel:'The Engineering Mindset', channelUrl:'https://www.youtube.com/@EngineeringMindset', topic:'Elektronika & Komponen', desc:'Prinsip kerja relay: kumparan elektromagnetik, kontak NO/NC, dan aplikasi switching beban.' },
+
+  // ==== MOTOR LISTRIK (The Engineering Mindset & RealPars) ====
+  { id:'59HBoIXzX_c', title:'Cara Kerja Motor Listrik — Motor Induksi 3 Fasa', channel:'The Engineering Mindset', channelUrl:'https://www.youtube.com/@EngineeringMindset', topic:'Motor Listrik', desc:'Prinsip medan magnet berputar pada motor induksi AC 3 fasa — motor paling umum dipakai di industri.' },
+  { id:'GQatiB-JHdI', title:'Cara Kerja Motor Listrik DC', channel:'The Engineering Mindset', channelUrl:'https://www.youtube.com/@EngineeringMindset', topic:'Motor Listrik', desc:'Motor DC: komutator, sikat, medan magnet, dan konversi energi listrik menjadi gerak.' },
+  { id:'yEPe7RDtkgo', title:'VFD Dijelaskan — Dasar Variable Frequency Drive', channel:'The Engineering Mindset', channelUrl:'https://www.youtube.com/@EngineeringMindset', topic:'Motor Listrik', desc:'Cara VFD/inverter mengatur kecepatan motor induksi dengan mengubah frekuensi (IGBT).' },
+  { id:'wEwX2PRebVU', title:'Motor Starter Dijelaskan | Jenis-Jenis Starter Motor', channel:'RealPars', channelUrl:'https://www.youtube.com/@RealPars', topic:'Motor Listrik', desc:'RealPars: starter DOL, star-delta, dan soft starter untuk mengatasi arus start motor induksi yang besar.' },
+
+  // ==== INSTALASI & PANEL (The Engineering Mindset & RealPars) ====
+  { id:'P-W42tk-fWc', title:'Kabel Ground, Netral, dan Fasa Dijelaskan', channel:'The Engineering Mindset', channelUrl:'https://www.youtube.com/@EngineeringMindset', topic:'Instalasi & Panel', desc:'Fungsi kabel ground, netral, dan hot (fasa) serta mengapa grounding penting untuk instalasi yang aman.' },
+  { id:'UBERduCp3Wo', title:'Panel Listrik Utama Dijelaskan', channel:'The Engineering Mindset', channelUrl:'https://www.youtube.com/@EngineeringMindset', topic:'Instalasi & Panel', desc:'Anatomi panel listrik rumah: MCB, busbar, jalur ground, dan alur distribusi ke seluruh ruangan.' },
+
+  // ==== DIGITAL & KONTROL (The Engineering Mindset & RealPars) ====
+  { id:'G5VGUGFzGj0', title:'Kenapa Input PLC Gagal: Sinking vs Sourcing', channel:'RealPars', channelUrl:'https://www.youtube.com/@RealPars', topic:'Digital & Kontrol', desc:'RealPars: perbedaan wiring input PLC sinking dan sourcing serta penyebab umum kegagalan input.' },
+  { id:'S97rhReEnbo', title:'Apa itu AS-Interface?', channel:'RealPars', channelUrl:'https://www.youtube.com/@RealPars', topic:'Digital & Kontrol', desc:'RealPars: protokol AS-i menghubungkan sensor/aktuator level field ke PLC hanya dengan satu kabel.' },
+
+  // ==== ARDUINO & IOT (The Engineering Mindset & RealPars) ====
+  { id:'UPTU6nYSaMo', title:'Tutorial Pengendali Kecepatan Motor — PWM', channel:'The Engineering Mindset', channelUrl:'https://www.youtube.com/@EngineeringMindset', topic:'Arduino & IoT', desc:'Membangun pengendali kecepatan motor DC dengan sinyal PWM dan potensiometer — dasar untuk proyek Arduino/ESP32.' },
+
+  // ==== PLC, HMI & SCADA (The Engineering Mindset & RealPars) ====
+  { id:'PbAGl_mv5XI', title:'Dasar PLC | Programmable Logic Controller', channel:'RealPars', channelUrl:'https://www.youtube.com/@RealPars', topic:'PLC, HMI & SCADA', desc:'RealPars: apa itu PLC, komponen penyusunnya, dan cara kerjanya mengendalikan proses industri.' },
+  { id:'qaI48NCUvkA', title:'Apa itu Ladder Logic?', channel:'RealPars', channelUrl:'https://www.youtube.com/@RealPars', topic:'PLC, HMI & SCADA', desc:'RealPars: membaca dan menyusun diagram ladder — bahasa pemrograman PLC yang paling umum.' },
+  { id:'B3YVpgs9RY4', title:'Apa Perbedaan DCS dan SCADA?', channel:'RealPars', channelUrl:'https://www.youtube.com/@RealPars', topic:'PLC, HMI & SCADA', desc:'RealPars: arsitektur dan fungsi DCS vs SCADA, serta kapan masing-masing digunakan di industri.' },
+  { id:'BHbOXDt5O3o', title:'Pemrograman Timer PLC untuk Pemula', channel:'RealPars', channelUrl:'https://www.youtube.com/@RealPars', topic:'PLC, HMI & SCADA', desc:'RealPars: timer ON-delay, OFF-delay, dan pulse pada program PLC beserta contoh ladder.' },
+  { id:'uOtdWHMKhnw', title:'Dasar PLC Dijelaskan — Otomasi Industri', channel:'The Engineering Mindset', channelUrl:'https://www.youtube.com/@EngineeringMindset', topic:'PLC, HMI & SCADA', desc:'Penjelasan visual PLC dari The Engineering Mindset: CPU, modul I/O, ladder diagram, dan perannya menggantikan panel relay.' },
 ];
 
 // ========================================================================================================================-”€
