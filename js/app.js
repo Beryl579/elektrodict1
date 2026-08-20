@@ -2904,20 +2904,16 @@ const WOKWI_DASHBOARD_TEMPLATE = `<!DOCTYPE html>
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"><\/script>
 <script>
 // ============================================================
-//  KONFIGURASI FIREBASE - isi 4 nilai di bawah ini
+//  KONFIGURASI FIREBASE - isi 1 nilai di bawah ini
 // ============================================================
-// 1. Buka console.firebase.google.com -> Project settings -> General
-// 2. Gulir ke "Your apps" -> klik ikon Web (</>) -> daftarkan aplikasi "dashboard"
-// 3. Salin apiKey, authDomain, databaseURL, projectId ke bawah ini
-// 4. PENTING: databaseURL harus SAMA dengan FIREBASE_HOST di kode ESP32
-// 5. Rules Realtime Database mode demo:
-//    { "rules": { ".read": true, ".write": true } }
+// 1. Buka console.firebase.google.com -> Build -> Realtime Database
+// 2. Pilih mode test (rules public: .read/.write true)
+// 3. Salin URL database (mis. https://proyekmu-default-rtdb.firebaseio.com)
+//    lalu isikan ke databaseURL di bawah ini
+// 4. PENTING: databaseURL harus SAMA dengan DATABASE_URL di kode ESP32
 // ============================================================
 var FIREBASE_CONFIG = {
-  apiKey: "ISI_API_KEY",
-  authDomain: "ISI_PROJECT.firebaseapp.com",
-  databaseURL: "https://ISI_PROJECT-default-rtdb.firebaseio.com",
-  projectId: "ISI_PROJECT"
+  databaseURL: "https://ISI_PROJECT-default-rtdb.firebaseio.com"
 };
 
 // Konfigurasi tampilan (di-generate ElektroDict, jangan diubah)
@@ -3153,9 +3149,8 @@ function renderProjectDetail(prj) {
     <div class="pd-section" style="border:1px solid rgba(255,152,0,.35); background:rgba(255,152,0,.06);">
       <h3 class="pd-section-h">🔥 Setup Firebase (wajib diisi sendiri)</h3>
       <p style="color:var(--text2); font-size:13px; line-height:1.6; margin-bottom:10px;">
-        Kode memakai placeholder <code style="color:#fbbf24;">..alamat-database-firebase..</code> dan
-        <code style="color:#fbbf24;">..secret-database-firebase..</code> — ganti dengan data Firebase milikmu
-        (host &amp; secret) sebelum dijalankan.
+        Kode memakai placeholder <code style="color:#fbbf24;">..alamat-database-firebase..</code> —
+        ganti dengan URL database milikmu (cukup URL saja, rules mode test) sebelum dijalankan.
       </p>
       <ol style="margin:0; padding-left:20px; color:var(--text2); font-size:13px; line-height:1.9;">
         ${fbSteps.map(s => `<li>${s}</li>`).join('')}
@@ -3171,10 +3166,10 @@ function renderProjectDetail(prj) {
       <h3 class="pd-section-h">🌐 Dashboard HTML (dashboard.html)</h3>
       <p style="color:var(--text2); font-size:13px; line-height:1.6; margin-bottom:10px;">
         File <code style="color:#34d399;">dashboard.html</code> mandiri — buka di HP/PC, data langsung tampil realtime dari
-        Firebase tanpa server sendiri. Tinggal isi 4 nilai <code style="color:#34d399;">FIREBASE_CONFIG</code> dari
-        Firebase console (<b>Project settings → Your apps → tambah Web app</b>), pastikan
-        <code style="color:#34d399;">databaseURL</code> <b>sama dengan FIREBASE_HOST</b> di kode ESP32, lalu set Rules
-        Realtime Database mode demo: <code style="color:#34d399;">{ ".read": true, ".write": true }</code>.
+        Firebase tanpa server sendiri. Tinggal isi 1 nilai <code style="color:#34d399;">databaseURL</code> pada
+        <code style="color:#34d399;">FIREBASE_CONFIG</code> — cukup salin URL database dari Firebase console
+        (<b>Build → Realtime Database → tab Data</b>), pastikan sama dengan <b>DATABASE_URL</b> di kode ESP32.
+        Rules Realtime Database mode test: <code style="color:#34d399;">{ ".read": true, ".write": true }</code>.
       </p>
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;">
         <button class="pd-code-copy" onclick="copyPrjCode(this,'dash')">📋 Salin dashboard.html</button>

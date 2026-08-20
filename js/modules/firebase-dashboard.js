@@ -11,7 +11,7 @@
   const CHART_MAX = 40; // jumlah titik pada grafik riwayat
 
   // ── state ──
-  let cfg = { host: '', secret: '' };
+  let cfg = { host: '' };
   let timer = null;
   let charts = {};
   let history = {};   // path -> array titik {t, v}
@@ -21,7 +21,7 @@
   function apiUrl(path) {
     const base = String(cfg.host || '').trim().replace(/\/+$/, '');
     const p = String(path || '/').replace(/^\/+/, '');
-    return base + '/' + p + '.json' + (cfg.secret ? '?auth=' + encodeURIComponent(cfg.secret) : '');
+    return base + '/' + p + '.json';
   }
 
   async function fbRead(path) {
@@ -57,15 +57,13 @@
   }
 
   function loadCfg() {
-    try { cfg = JSON.parse(localStorage.getItem(DB_KEY) || '{"host":"","secret":""}'); }
-    catch (e) { cfg = { host: '', secret: '' }; }
+    try { cfg = JSON.parse(localStorage.getItem(DB_KEY) || '{"host":""}'); }
+    catch (e) { cfg = { host: '' }; }
     if (el('fb-host')) el('fb-host').value = cfg.host;
-    if (el('fb-secret')) el('fb-secret').value = cfg.secret;
   }
 
   function saveCfg() {
     cfg.host = (el('fb-host') && el('fb-host').value.trim()) || '';
-    cfg.secret = (el('fb-secret') && el('fb-secret').value.trim()) || '';
     localStorage.setItem(DB_KEY, JSON.stringify(cfg));
   }
 
@@ -123,7 +121,7 @@
       el('fb-json').textContent = JSON.stringify(data, null, 2) || '(database kosong)';
       return true;
     } catch (e) {
-      setStatus('❌ Gagal: ' + e.message + ' — cek host & secret, atau atur database ke mode test.', 'err');
+      setStatus('❌ Gagal: ' + e.message + ' — cek URL database, atau atur database ke mode test.', 'err');
       return false;
     }
   }
@@ -131,7 +129,7 @@
   async function start() {
     saveCfg();
     if (!cfg.host) {
-      setStatus('⚠️ Isi dulu URL database Firebase (host) di panel konfigurasi.', 'warn');
+      setStatus('⚠️ Isi dulu URL database Firebase di panel konfigurasi.', 'warn');
       return;
     }
     const ok = await testConnection();
@@ -368,7 +366,7 @@
       // panel mulai selalu tampil; panel live disembunyikan sampai start
       el('fb-start-cta') && el('fb-start-cta').classList.remove('hide');
       el('fb-live-panel') && el('fb-live-panel').classList.add('hide');
-      setStatus('Masukkan host & secret Firebase lalu klik "Mulai Pantau".', '');
+      setStatus('Masukkan URL database Firebase lalu klik "Mulai Pantau".', '');
       history = {};
     }
   };
