@@ -3643,6 +3643,448 @@ const WOKWI_TEMPLATES = [
       "alur_perakitan": "Pilih warna di color picker; strip langsung berubah warna."
     }
   ]
+},
+{
+  "id": "tpl-neopixel-rainbow",
+  "title": "Lampu RGB Animasi NeoPixel (WS2812)",
+  "desc": "Strip LED WS2812 (NeoPixel) menampilkan animasi pelangi dan chase dengan library Adafruit NeoPixel - pelajaran dasar LED addressable: satu pin data mengendalikan banyak LED.",
+  "difficulty": "Mudah",
+  "tags": ["LED", "RGB", "Animasi", "WS2812"],
+  "verified": true,
+  "libraries": ["Adafruit NeoPixel"],
+  "bom": [
+    "1x Arduino Uno",
+    "1x NeoPixel Strip WS2812 (8 LED)",
+    "1x Kapasitor 1000uF (opsional, di real hardware)",
+    "Kabel jumper"
+  ],
+  "wiring_guide": [
+    {
+      "komponen": "NeoPixel",
+      "pin_komponen": "VDD (5V)",
+      "koneksi_arduino": "5V"
+    },
+    {
+      "komponen": "NeoPixel",
+      "pin_komponen": "VSS (GND)",
+      "koneksi_arduino": "GND"
+    },
+    {
+      "komponen": "NeoPixel",
+      "pin_komponen": "DIN (data)",
+      "koneksi_arduino": "Pin 6"
+    }
+  ],
+  "cpp_code": "// Proyek: Lampu RGB Animasi NeoPixel (WS2812)\n// Logika: animasi pelangi & chase LED addressable\n// Platform: Uno\n#include <Adafruit_NeoPixel.h>\n\n#define JUMLAH_LED 8\n#define PIN_DATA 6\n\nAdafruit_NeoPixel strip(JUMLAH_LED, PIN_DATA, NEO_GRB + NEO_KHZ800);\n\nvoid setup() {\n  strip.begin();\n  strip.setBrightness(40);\n  strip.show();\n}\n\nvoid loop() {\n  pelangi(5);\n  chase(40);\n}\n\n// Animasi pelangi bergulir\nvoid pelangi(int tunggu) {\n  for (long siklus = 0; siklus < 256 * 5; siklus++) {\n    for (int i = 0; i < JUMLAH_LED; i++) {\n      strip.setPixelColor(i, rodaWarna((i * 256 / JUMLAH_LED + siklus) & 255));\n    }\n    strip.show();\n    delay(tunggu);\n  }\n}\n\n// Efek chase (LED menyala bergantian)\nvoid chase(int tunggu) {\n  for (int i = 0; i < JUMLAH_LED; i++) {\n    strip.setPixelColor(i, strip.Color(0, 150, 255));\n    strip.show();\n    delay(tunggu);\n  }\n  for (int i = JUMLAH_LED - 1; i >= 0; i--) {\n    strip.setPixelColor(i, 0);\n    strip.show();\n    delay(tunggu);\n  }\n}\n\n// Konversi posisi (0-255) ke warna RGB\nuint32_t rodaWarna(byte posisi) {\n  if (posisi < 85) return strip.Color(posisi * 3, 255 - posisi * 3, 0);\n  if (posisi < 170) {\n    posisi -= 85;\n    return strip.Color(255 - posisi * 3, 0, posisi * 3);\n  }\n  posisi -= 170;\n  return strip.Color(0, posisi * 3, 255 - posisi * 3);\n}",
+  "wokwi_diagram": "{\"version\":1,\"author\":\"ElektroDict\",\"editor\":\"wokwi\",\"parts\":[{\"type\":\"wokwi-arduino-uno\",\"id\":\"uno\",\"top\":0,\"left\":0,\"attrs\":{}},{\"type\":\"wokwi-neopixel\",\"id\":\"np\",\"top\":-120,\"left\":340,\"attrs\":{}}],\"connections\":[[\"np:VDD\",\"uno:5V\",\"red\",[\"v0\"]],[\"np:VSS\",\"uno:GND.1\",\"black\",[\"v0\"]],[\"np:DIN\",\"uno:6\",\"green\",[\"v0\"]]]}",
+  "steps": [
+    {
+      "nama_komponen": "NeoPixel",
+      "alur_perakitan": "VDD ke 5V, VSS ke GND, DIN ke pin 6."
+    },
+    {
+      "nama_komponen": "Library",
+      "alur_perakitan": "Pasang library Adafruit NeoPixel via libraries.txt (Wokwi) atau Library Manager (IDE)."
+    },
+    {
+      "nama_komponen": "Uji coba",
+      "alur_perakitan": "Upload kode; strip menampilkan animasi pelangi lalu chase. Coba ubah JUMLAH_LED sesuai strip kamu."
+    }
+  ]
+},
+{
+  "id": "tpl-vu-meter",
+  "title": "VU Meter LED Bar Graph",
+  "desc": "Potensiometer mengatur level yang ditampilkan pada bar graph 10 LED - latihan analogRead, map(), dan output digital sekaligus.",
+  "difficulty": "Mudah",
+  "tags": ["LED", "Potensiometer", "Analog", "Display"],
+  "verified": true,
+  "libraries": [],
+  "bom": [
+    "1x Arduino Uno",
+    "1x Potensiometer 10k",
+    "1x LED Bar Graph 10 segmen",
+    "10x Resistor 220 Ohm (real hardware)",
+    "Kabel jumper"
+  ],
+  "wiring_guide": [
+    {
+      "komponen": "Potensiometer",
+      "pin_komponen": "SIG / VCC / GND",
+      "koneksi_arduino": "A0 / 5V / GND"
+    },
+    {
+      "komponen": "Bar Graph",
+      "pin_komponen": "A1 - A10 (anoda)",
+      "koneksi_arduino": "Pin 2 - Pin 11"
+    },
+    {
+      "komponen": "Bar Graph",
+      "pin_komponen": "C1 - C10 (katoda)",
+      "koneksi_arduino": "GND (via resistor 220 di real hardware)"
+    }
+  ],
+  "cpp_code": "// Proyek: VU Meter LED Bar Graph\n// Logika: potensio -> analogRead -> nyalakan 1..10 LED\n// Platform: Uno\nconst int pinPot = A0;\nconst int pinLedAwal = 2; // LED pertama di pin 2, terakhir di pin 11\n\nvoid setup() {\n  for (int i = 0; i < 10; i++) {\n    pinMode(pinLedAwal + i, OUTPUT);\n  }\n  Serial.begin(9600);\n}\n\nvoid loop() {\n  int nilai = analogRead(pinPot);\n  int level = map(nilai, 0, 1023, 0, 10);\n\n  for (int i = 0; i < 10; i++) {\n    digitalWrite(pinLedAwal + i, i < level ? HIGH : LOW);\n  }\n\n  Serial.print(\"ADC: \");\n  Serial.print(nilai);\n  Serial.print(\" | Level: \");\n  Serial.println(level);\n  delay(50);\n}",
+  "wokwi_diagram": "{\"version\":1,\"author\":\"ElektroDict\",\"editor\":\"wokwi\",\"parts\":[{\"type\":\"wokwi-arduino-uno\",\"id\":\"uno\",\"top\":0,\"left\":0,\"attrs\":{}},{\"type\":\"wokwi-potentiometer\",\"id\":\"pot\",\"top\":-140,\"left\":340,\"attrs\":{}},{\"type\":\"wokwi-led-bar-graph\",\"id\":\"bg\",\"top\":-140,\"left\":540,\"attrs\":{}}],\"connections\":[[\"pot:VCC\",\"uno:5V\",\"red\",[\"v0\"]],[\"pot:SIG\",\"uno:A0\",\"blue\",[\"v0\"]],[\"pot:GND\",\"uno:GND.1\",\"black\",[\"v0\"]],[\"bg:A1\",\"uno:2\",\"green\",[\"v0\"]],[\"bg:A2\",\"uno:3\",\"green\",[\"v0\"]],[\"bg:A3\",\"uno:4\",\"green\",[\"v0\"]],[\"bg:A4\",\"uno:5\",\"green\",[\"v0\"]],[\"bg:A5\",\"uno:6\",\"green\",[\"v0\"]],[\"bg:A6\",\"uno:7\",\"green\",[\"v0\"]],[\"bg:A7\",\"uno:8\",\"green\",[\"v0\"]],[\"bg:A8\",\"uno:9\",\"green\",[\"v0\"]],[\"bg:A9\",\"uno:10\",\"green\",[\"v0\"]],[\"bg:A10\",\"uno:11\",\"green\",[\"v0\"]],[\"bg:C1\",\"uno:GND.2\",\"black\",[\"v0\"]],[\"bg:C2\",\"uno:GND.2\",\"black\",[\"v0\"]],[\"bg:C3\",\"uno:GND.2\",\"black\",[\"v0\"]],[\"bg:C4\",\"uno:GND.2\",\"black\",[\"v0\"]],[\"bg:C5\",\"uno:GND.2\",\"black\",[\"v0\"]],[\"bg:C6\",\"uno:GND.2\",\"black\",[\"v0\"]],[\"bg:C7\",\"uno:GND.2\",\"black\",[\"v0\"]],[\"bg:C8\",\"uno:GND.2\",\"black\",[\"v0\"]],[\"bg:C9\",\"uno:GND.2\",\"black\",[\"v0\"]],[\"bg:C10\",\"uno:GND.2\",\"black\",[\"v0\"]]]}",
+  "steps": [
+    {
+      "nama_komponen": "Potensiometer",
+      "alur_perakitan": "Kaki tengah (SIG) ke A0, kaki kanan ke 5V, kaki kiri ke GND."
+    },
+    {
+      "nama_komponen": "Bar Graph",
+      "alur_perakitan": "Anoda A1-A10 ke pin 2-11, semua katoda C1-C10 ke GND."
+    },
+    {
+      "nama_komponen": "Uji coba",
+      "alur_perakitan": "Putar potensiometer; jumlah LED menyala mengikuti level ADC. Serial monitor menampilkan nilai ADC & level."
+    }
+  ]
+},
+{
+  "id": "tpl-shift-in-8button",
+  "title": "Baca 8 Tombol dengan Shift Register 74HC165",
+  "desc": "8 tombol dibaca hanya dengan 3 pin Arduino menggunakan shift register PISO 74HC165 - kebalikan dari 74HC595 yang sudah dipakai untuk output.",
+  "difficulty": "Menengah",
+  "tags": ["Shift Register", "74HC165", "Tombol", "Input"],
+  "verified": true,
+  "libraries": [],
+  "bom": [
+    "1x Arduino Uno",
+    "1x Shift Register 74HC165",
+    "8x Pushbutton",
+    "Kabel jumper"
+  ],
+  "wiring_guide": [
+    {
+      "komponen": "74HC165",
+      "pin_komponen": "VCC / GND",
+      "koneksi_arduino": "5V / GND"
+    },
+    {
+      "komponen": "74HC165",
+      "pin_komponen": "PL (parallel load)",
+      "koneksi_arduino": "Pin 9"
+    },
+    {
+      "komponen": "74HC165",
+      "pin_komponen": "CP (clock)",
+      "koneksi_arduino": "Pin 10"
+    },
+    {
+      "komponen": "74HC165",
+      "pin_komponen": "CE (clock enable)",
+      "koneksi_arduino": "GND (aktif low)"
+    },
+    {
+      "komponen": "74HC165",
+      "pin_komponen": "Q7 (serial out)",
+      "koneksi_arduino": "Pin 11"
+    },
+    {
+      "komponen": "Tombol 1-8",
+      "pin_komponen": "2.l",
+      "koneksi_arduino": "D0-D7 (kaki paralel 74HC165)"
+    },
+    {
+      "komponen": "Tombol 1-8",
+      "pin_komponen": "1.l",
+      "koneksi_arduino": "5V (aktif high)"
+    }
+  ],
+  "cpp_code": "// Proyek: Baca 8 Tombol dengan Shift Register 74HC165\n// Logika: 8 tombol -> 74HC165 (PISO) -> baca 3 pin saja\n// Platform: Uno\nconst int pinPL = 9;   // Parallel Load (aktif low)\nconst int pinCP = 10;  // Clock\nconst int pinQ7 = 11;  // Serial out\n\nbyte bacaTombol() {\n  digitalWrite(pinPL, LOW);   // kunci data paralel\n  delayMicroseconds(2);\n  digitalWrite(pinPL, HIGH);\n\n  byte nilai = 0;\n  for (int i = 0; i < 8; i++) {\n    digitalWrite(pinCP, LOW);\n    nilai |= (digitalRead(pinQ7) << (7 - i));\n    digitalWrite(pinCP, HIGH);\n  }\n  return nilai;\n}\n\nvoid setup() {\n  pinMode(pinPL, OUTPUT);\n  pinMode(pinCP, OUTPUT);\n  pinMode(pinQ7, INPUT);\n  Serial.begin(9600);\n}\n\nvoid loop() {\n  byte tombol = bacaTombol();\n  Serial.print(\"Tombol (bit 7-0): \");\n  for (int i = 7; i >= 0; i--) {\n    Serial.print(bitRead(tombol, i) ? \"1\" : \"0\");\n  }\n  Serial.println();\n  delay(200);\n}",
+  "wokwi_diagram": "{\"version\":1,\"author\":\"ElektroDict\",\"editor\":\"wokwi\",\"parts\":[{\"type\":\"wokwi-arduino-uno\",\"id\":\"uno\",\"top\":0,\"left\":0,\"attrs\":{}},{\"type\":\"wokwi-74hc165\",\"id\":\"reg\",\"top\":-150,\"left\":340,\"attrs\":{}},{\"type\":\"wokwi-pushbutton-6mm\",\"id\":\"btn1\",\"top\":60,\"left\":340,\"attrs\":{}},{\"type\":\"wokwi-pushbutton-6mm\",\"id\":\"btn2\",\"top\":60,\"left\":420,\"attrs\":{}},{\"type\":\"wokwi-pushbutton-6mm\",\"id\":\"btn3\",\"top\":60,\"left\":500,\"attrs\":{}},{\"type\":\"wokwi-pushbutton-6mm\",\"id\":\"btn4\",\"top\":60,\"left\":580,\"attrs\":{}},{\"type\":\"wokwi-pushbutton-6mm\",\"id\":\"btn5\",\"top\":140,\"left\":340,\"attrs\":{}},{\"type\":\"wokwi-pushbutton-6mm\",\"id\":\"btn6\",\"top\":140,\"left\":420,\"attrs\":{}},{\"type\":\"wokwi-pushbutton-6mm\",\"id\":\"btn7\",\"top\":140,\"left\":500,\"attrs\":{}},{\"type\":\"wokwi-pushbutton-6mm\",\"id\":\"btn8\",\"top\":140,\"left\":580,\"attrs\":{}}],\"connections\":[[\"reg:VCC\",\"uno:5V\",\"red\",[\"v0\"]],[\"reg:GND\",\"uno:GND.1\",\"black\",[\"v0\"]],[\"reg:PL\",\"uno:9\",\"green\",[\"v0\"]],[\"reg:CP\",\"uno:10\",\"yellow\",[\"v0\"]],[\"reg:CE\",\"uno:GND.2\",\"black\",[\"v0\"]],[\"reg:Q7\",\"uno:11\",\"green\",[\"v0\"]],[\"btn1:2.l\",\"reg:D0\",\"green\",[\"v0\"]],[\"btn2:2.l\",\"reg:D1\",\"green\",[\"v0\"]],[\"btn3:2.l\",\"reg:D2\",\"green\",[\"v0\"]],[\"btn4:2.l\",\"reg:D3\",\"green\",[\"v0\"]],[\"btn5:2.l\",\"reg:D4\",\"green\",[\"v0\"]],[\"btn6:2.l\",\"reg:D5\",\"green\",[\"v0\"]],[\"btn7:2.l\",\"reg:D6\",\"green\",[\"v0\"]],[\"btn8:2.l\",\"reg:D7\",\"green\",[\"v0\"]],[\"btn1:1.l\",\"uno:5V\",\"red\",[\"v0\"]],[\"btn2:1.l\",\"uno:5V\",\"red\",[\"v0\"]],[\"btn3:1.l\",\"uno:5V\",\"red\",[\"v0\"]],[\"btn4:1.l\",\"uno:5V\",\"red\",[\"v0\"]],[\"btn5:1.l\",\"uno:5V\",\"red\",[\"v0\"]],[\"btn6:1.l\",\"uno:5V\",\"red\",[\"v0\"]],[\"btn7:1.l\",\"uno:5V\",\"red\",[\"v0\"]],[\"btn8:1.l\",\"uno:5V\",\"red\",[\"v0\"]]]}",
+  "steps": [
+    {
+      "nama_komponen": "74HC165",
+      "alur_perakitan": "VCC ke 5V, GND ke GND, PL ke pin 9, CP ke pin 10, CE ke GND, Q7 ke pin 11."
+    },
+    {
+      "nama_komponen": "Tombol",
+      "alur_perakitan": "Kaki 2.l tiap tombol ke D0-D7 74HC165, kaki 1.l ke 5V (aktif high)."
+    },
+    {
+      "nama_komponen": "Uji coba",
+      "alur_perakitan": "Tekan tombol; serial monitor menampilkan pola bit 8 tombol. Perhatikan urutan bit MSB di kiri."
+    }
+  ]
+},
+{
+  "id": "tpl-bmp180-barometer",
+  "title": "Barometer & Altimeter BMP180",
+  "desc": "Sensor tekanan BMP180 mengukur tekanan udara, suhu, dan estimasi ketinggian - hasilnya ditampilkan di OLED SSD1306.",
+  "difficulty": "Menengah",
+  "tags": ["ESP32", "BMP180", "Sensor", "Tekanan", "OLED"],
+  "verified": true,
+  "libraries": ["Adafruit BMP085 Library", "Adafruit SSD1306", "Adafruit GFX Library"],
+  "board": "board-esp32-devkit-c-v4",
+  "bom": [
+    "1x ESP32 DevKitC V4",
+    "1x Sensor BMP180",
+    "1x OLED SSD1306 128x64 (I2C)",
+    "Kabel jumper"
+  ],
+  "wiring_guide": [
+    {
+      "komponen": "BMP180",
+      "pin_komponen": "VCC / GND",
+      "koneksi_arduino": "3V3 / GND"
+    },
+    {
+      "komponen": "BMP180",
+      "pin_komponen": "SCL / SDA",
+      "koneksi_arduino": "GPIO 22 / GPIO 21"
+    },
+    {
+      "komponen": "OLED",
+      "pin_komponen": "VCC / GND",
+      "koneksi_arduino": "3V3 / GND"
+    },
+    {
+      "komponen": "OLED",
+      "pin_komponen": "SCL / SDA",
+      "koneksi_arduino": "GPIO 22 / GPIO 21 (paralel dengan BMP180)"
+    }
+  ],
+  "cpp_code": "// Proyek: Barometer & Altimeter BMP180\n// Logika: tekanan & suhu udara -> OLED SSD1306\n// Platform: ESP32\n#include <Wire.h>\n#include <Adafruit_GFX.h>\n#include <Adafruit_SSD1306.h>\n#include <Adafruit_BMP085.h>\n\n#define OLED_W 128\n#define OLED_H 64\nAdafruit_SSD1306 oled(OLED_W, OLED_H, &Wire, -1);\n\nAdafruit_BMP085 bmp;\n\nvoid setup() {\n  Serial.begin(115200);\n  if (!bmp.begin()) {\n    Serial.println(\"BMP180 tidak ditemukan!\");\n    for (;;);\n  }\n  if (!oled.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {\n    Serial.println(\"OLED gagal\");\n  }\n  oled.clearDisplay();\n  oled.setTextSize(1);\n  oled.setTextColor(SSD1306_WHITE);\n}\n\nvoid loop() {\n  float suhu = bmp.readTemperature();\n  long tekanan = bmp.readPressure();\n  float ketinggian = bmp.readAltitude();\n\n  oled.clearDisplay();\n  oled.setCursor(0, 0); oled.println(\"  BAROMETER\");\n  oled.setCursor(0, 18); oled.printf(\"Suhu: %.1f C\", suhu);\n  oled.setCursor(0, 32); oled.printf(\"Tek: %ld Pa\", tekanan);\n  oled.setCursor(0, 46); oled.printf(\"Tinggi: %.0f m\", ketinggian);\n  oled.display();\n\n  Serial.printf(\"Suhu: %.1f C | Tekanan: %ld Pa | Ketinggian: %.1f m\\n\", suhu, tekanan, ketinggian);\n  delay(2000);\n}",
+  "wokwi_diagram": "{\"version\":1,\"author\":\"ElektroDict\",\"editor\":\"wokwi\",\"parts\":[{\"type\":\"board-esp32-devkit-c-v4\",\"id\":\"esp\",\"top\":0,\"left\":0,\"attrs\":{}},{\"type\":\"board-bmp180\",\"id\":\"bmp\",\"top\":-120,\"left\":340,\"attrs\":{}},{\"type\":\"board-ssd1306\",\"id\":\"oled\",\"top\":-120,\"left\":540,\"attrs\":{}}],\"connections\":[[\"bmp:VCC\",\"esp:3V3\",\"red\",[\"v0\"]],[\"bmp:GND\",\"esp:GND.1\",\"black\",[\"v0\"]],[\"bmp:SCL\",\"esp:22\",\"yellow\",[\"v0\"]],[\"bmp:SDA\",\"esp:21\",\"green\",[\"v0\"]],[\"oled:VCC\",\"esp:3V3\",\"red\",[\"v0\"]],[\"oled:GND\",\"esp:GND.2\",\"black\",[\"v0\"]],[\"oled:SCL\",\"esp:22\",\"yellow\",[\"v0\"]],[\"oled:SDA\",\"esp:21\",\"green\",[\"v0\"]]]}",
+  "steps": [
+    {
+      "nama_komponen": "BMP180",
+      "alur_perakitan": "VCC ke 3V3, GND ke GND, SCL ke GPIO 22, SDA ke GPIO 21 (I2C)."
+    },
+    {
+      "nama_komponen": "OLED",
+      "alur_perakitan": "VCC ke 3V3, GND ke GND, SCL/SDA paralel ke GPIO 22/21."
+    },
+    {
+      "nama_komponen": "Library",
+      "alur_perakitan": "Pasang Adafruit BMP085 Library (kompatibel BMP180), Adafruit SSD1306, dan Adafruit GFX via libraries.txt."
+    },
+    {
+      "nama_komponen": "Uji coba",
+      "alur_perakitan": "OLED menampilkan suhu, tekanan (Pa), dan estimasi ketinggian (m). Baca juga di serial monitor."
+    }
+  ]
+},
+{
+  "id": "tpl-tft-thermograph",
+  "title": "Termometer Grafik TFT ILI9341",
+  "desc": "Suhu dari DS18B20 digambar sebagai grafik bergulir real-time di layar TFT 240x320 (ILI9341, SPI) - latihan OneWire, DallasTemperature, dan grafik dengan Adafruit GFX.",
+  "difficulty": "Sulit",
+  "tags": ["ESP32", "TFT", "ILI9341", "DS18B20", "Grafik"],
+  "verified": true,
+  "libraries": ["Adafruit ILI9341", "Adafruit GFX Library", "OneWire", "DallasTemperature"],
+  "board": "board-esp32-devkit-c-v4",
+  "bom": [
+    "1x ESP32 DevKitC V4",
+    "1x TFT ILI9341 240x320 (SPI)",
+    "1x Sensor DS18B20",
+    "1x Resistor 4.7k Ohm (pull-up DQ, real hardware)",
+    "Kabel jumper"
+  ],
+  "wiring_guide": [
+    {
+      "komponen": "TFT ILI9341",
+      "pin_komponen": "VCC / GND",
+      "koneksi_arduino": "5V / GND"
+    },
+    {
+      "komponen": "TFT ILI9341",
+      "pin_komponen": "CS / D/C",
+      "koneksi_arduino": "GPIO 5 / GPIO 17"
+    },
+    {
+      "komponen": "TFT ILI9341",
+      "pin_komponen": "MOSI / SCK / MISO",
+      "koneksi_arduino": "GPIO 23 / GPIO 18 / GPIO 19"
+    },
+    {
+      "komponen": "DS18B20",
+      "pin_komponen": "VCC / DQ / GND",
+      "koneksi_arduino": "3V3 / GPIO 4 / GND"
+    }
+  ],
+  "cpp_code": "// Proyek: Termometer Grafik TFT ILI9341\n// Logika: DS18B20 -> grafik suhu bergulir di TFT 240x320\n// Platform: ESP32\n#include <SPI.h>\n#include <Adafruit_GFX.h>\n#include <Adafruit_ILI9341.h>\n#include <OneWire.h>\n#include <DallasTemperature.h>\n\n#define TFT_CS 5\n#define TFT_DC 17\nAdafruit_ILI9341 tft(TFT_CS, TFT_DC);\n\n#define PIN_DS18B20 4\nOneWire oneWire(PIN_DS18B20);\nDallasTemperature sensor(&oneWire);\n\nfloat riwayat[320];\nint posisi = 0;\n\nvoid setup() {\n  Serial.begin(115200);\n  sensor.begin();\n  tft.begin();\n  tft.fillScreen(ILI9341_BLACK);\n  tft.setTextColor(ILI9341_WHITE);\n  tft.setTextSize(2);\n  tft.setCursor(20, 10);\n  tft.print(\"Termometer TFT\");\n}\n\nvoid loop() {\n  sensor.requestTemperatures();\n  float suhu = sensor.getTempCByIndex(0);\n  if (suhu <= -100) return;\n\n  riwayat[posisi] = suhu;\n  posisi = (posisi + 1) % 320;\n\n  tft.fillScreen(ILI9341_BLACK);\n  tft.setTextSize(2);\n  tft.setCursor(10, 10);\n  tft.printf(\"Suhu: %.1f C\", suhu);\n  tft.drawFastHLine(0, 40, 320, ILI9341_WHITE);\n\n  for (int x = 1; x < 320; x++) {\n    int i1 = (posisi + x - 1) % 320;\n    int i2 = (posisi + x) % 320;\n    float s1 = riwayat[i1];\n    float s2 = riwayat[i2];\n    if (s1 == 0 && s2 == 0) continue;\n    int y1 = 220 - map((int)(s1 * 10), 0, 500, 0, 200);\n    int y2 = 220 - map((int)(s2 * 10), 0, 500, 0, 200);\n    tft.drawLine(x - 1, y1, x, y2, ILI9341_CYAN);\n  }\n  delay(1000);\n}",
+  "wokwi_diagram": "{\"version\":1,\"author\":\"ElektroDict\",\"editor\":\"wokwi\",\"parts\":[{\"type\":\"board-esp32-devkit-c-v4\",\"id\":\"esp\",\"top\":0,\"left\":0,\"attrs\":{}},{\"type\":\"wokwi-ili9341\",\"id\":\"tft\",\"top\":-160,\"left\":340,\"attrs\":{}},{\"type\":\"wokwi-ds18b20\",\"id\":\"ds\",\"top\":-160,\"left\":620,\"attrs\":{}}],\"connections\":[[\"tft:VCC\",\"esp:5V\",\"red\",[\"v0\"]],[\"tft:GND\",\"esp:GND.1\",\"black\",[\"v0\"]],[\"tft:CS\",\"esp:5\",\"green\",[\"v0\"]],[\"tft:D/C\",\"esp:17\",\"green\",[\"v0\"]],[\"tft:MOSI\",\"esp:23\",\"green\",[\"v0\"]],[\"tft:SCK\",\"esp:18\",\"yellow\",[\"v0\"]],[\"tft:MISO\",\"esp:19\",\"blue\",[\"v0\"]],[\"ds:VCC\",\"esp:3V3\",\"red\",[\"v0\"]],[\"ds:DQ\",\"esp:4\",\"green\",[\"v0\"]],[\"ds:GND\",\"esp:GND.2\",\"black\",[\"v0\"]]]}",
+  "steps": [
+    {
+      "nama_komponen": "TFT ILI9341",
+      "alur_perakitan": "VCC ke 5V, GND ke GND, CS ke GPIO 5, D/C ke GPIO 17, MOSI ke 23, SCK ke 18, MISO ke 19. Pin RST & LED tidak disimulasikan."
+    },
+    {
+      "nama_komponen": "DS18B20",
+      "alur_perakitan": "VCC ke 3V3, DQ ke GPIO 4, GND ke GND."
+    },
+    {
+      "nama_komponen": "Library",
+      "alur_perakitan": "Pasang Adafruit ILI9341, Adafruit GFX, OneWire, dan DallasTemperature via libraries.txt."
+    },
+    {
+      "nama_komponen": "Uji coba",
+      "alur_perakitan": "Grafik suhu bergulir dari kiri ke kanan. Ubah suhu DS18B20 di simulator (klik sensor) untuk melihat respons grafik."
+    }
+  ]
+},
+{
+  "id": "tpl-attiny85-nightlight",
+  "title": "Lampu Malam Otomatis ATtiny85",
+  "desc": "Photoresistor membaca cahaya sekitar; saat gelap LED menyala otomatis. Belajar MCU 8-pin ATtiny85, ADC, dan hemat daya.",
+  "difficulty": "Mudah",
+  "tags": ["ATtiny85", "Photoresistor", "Otomatis", "ADC"],
+  "verified": true,
+  "libraries": [],
+  "bom": [
+    "1x ATtiny85 (8MHz)",
+    "1x Photoresistor (LDR)",
+    "1x LED",
+    "1x Resistor 220 Ohm",
+    "Kabel jumper"
+  ],
+  "wiring_guide": [
+    {
+      "komponen": "Photoresistor",
+      "pin_komponen": "VCC / GND",
+      "koneksi_arduino": "VCC / GND (ATtiny85)"
+    },
+    {
+      "komponen": "Photoresistor",
+      "pin_komponen": "AO (analog)",
+      "koneksi_arduino": "PB2 (A1)"
+    },
+    {
+      "komponen": "LED",
+      "pin_komponen": "Anoda via Resistor 220",
+      "koneksi_arduino": "PB0 (pin 0)"
+    },
+    {
+      "komponen": "LED",
+      "pin_komponen": "Katoda",
+      "koneksi_arduino": "GND"
+    }
+  ],
+  "cpp_code": "// Proyek: Lampu Malam Otomatis ATtiny85\n// Logika: cahaya redup -> LED menyala (photoresistor)\n// Platform: ATtiny85 (8 MHz)\n// Pin: LED di PB0 (pin 0), LDR analog di PB2/A1 (pin 7)\n#define PIN_LED 0\n#define PIN_LDR A1\n\nconst int batasGelap = 500;\n\nvoid setup() {\n  pinMode(PIN_LED, OUTPUT);\n}\n\nvoid loop() {\n  int cahaya = analogRead(PIN_LDR);\n  if (cahaya < batasGelap) {\n    digitalWrite(PIN_LED, HIGH); // gelap -> nyala\n  } else {\n    digitalWrite(PIN_LED, LOW);  // terang -> mati\n  }\n  delay(200);\n}",
+  "wokwi_diagram": "{\"version\":1,\"author\":\"ElektroDict\",\"editor\":\"wokwi\",\"parts\":[{\"type\":\"wokwi-attiny85\",\"id\":\"attiny\",\"top\":0,\"left\":0,\"attrs\":{}},{\"type\":\"wokwi-photoresistor-sensor\",\"id\":\"ldr\",\"top\":-120,\"left\":300,\"attrs\":{}},{\"type\":\"wokwi-led\",\"id\":\"led\",\"top\":80,\"left\":300,\"attrs\":{}},{\"type\":\"wokwi-resistor\",\"id\":\"r1\",\"top\":80,\"left\":420,\"attrs\":{\"value\":\"220\"}}],\"connections\":[[\"ldr:VCC\",\"attiny:VCC\",\"red\",[\"v0\"]],[\"ldr:GND\",\"attiny:GND\",\"black\",[\"v0\"]],[\"ldr:AO\",\"attiny:PB2\",\"blue\",[\"v0\"]],[\"led:A\",\"r1:1\",\"green\",[\"v0\"]],[\"r1:2\",\"attiny:PB0\",\"green\",[\"v0\"]],[\"led:C\",\"attiny:GND\",\"black\",[\"v0\"]]]}",
+  "steps": [
+    {
+      "nama_komponen": "Photoresistor",
+      "alur_perakitan": "VCC ke VCC, GND ke GND, output analog (AO) ke PB2 (A1)."
+    },
+    {
+      "nama_komponen": "LED",
+      "alur_perakitan": "Anoda via resistor 220 ohm ke PB0 (pin 0), katoda ke GND."
+    },
+    {
+      "nama_komponen": "Uji coba",
+      "alur_perakitan": "Geser slider cahaya di simulator (klik LDR): saat gelap LED menyala, saat terang LED mati. Ubah batasGelap untuk sensitivitas."
+    }
+  ]
+},
+{
+  "id": "tpl-grove-oled-dashboard",
+  "title": "Dashboard Cuaca Mini OLED 128x128",
+  "desc": "DHT22 mengukur suhu & kelembaban, ditampilkan rapi di OLED Grove SH1107 128x128 dengan library U8g2 - layar besar cocok untuk dashboard mini.",
+  "difficulty": "Menengah",
+  "tags": ["ESP32", "OLED", "SH1107", "DHT22", "U8g2"],
+  "verified": true,
+  "libraries": ["U8g2", "DHT sensor library for ESPx"],
+  "board": "board-esp32-devkit-c-v4",
+  "bom": [
+    "1x ESP32 DevKitC V4",
+    "1x OLED Grove 128x128 (SH1107)",
+    "1x Sensor DHT22",
+    "Kabel jumper"
+  ],
+  "wiring_guide": [
+    {
+      "komponen": "OLED SH1107",
+      "pin_komponen": "SCL / SDA",
+      "koneksi_arduino": "GPIO 22 / GPIO 21"
+    },
+    {
+      "komponen": "OLED SH1107",
+      "pin_komponen": "VCC / GND",
+      "koneksi_arduino": "3V3 / GND"
+    },
+    {
+      "komponen": "DHT22",
+      "pin_komponen": "VCC / SDA (data) / GND",
+      "koneksi_arduino": "3V3 / GPIO 4 / GND"
+    }
+  ],
+  "cpp_code": "// Proyek: Dashboard Cuaca Mini OLED 128x128 (Grove SH1107)\n// Logika: DHT22 -> suhu & kelembaban di OLED U8g2\n// Platform: ESP32\n#include <U8g2lib.h>\n#include <Wire.h>\n#include <DHT.h>\n\n#define DHTPIN 4\n#define DHTTYPE DHT22\nDHT dht(DHTPIN, DHTTYPE);\n\n// I2C: SCL=22, SDA=21\nU8G2_SH1107_128X128_F_HW_I2C u8g2(U8G2_R0, /* clock=*/ 22, /* data=*/ 21, /* reset=*/ U8X8_PIN_NONE);\n\nvoid setup() {\n  Serial.begin(115200);\n  dht.begin();\n  u8g2.begin();\n  u8g2.setFont(u8g2_font_6x10_tf);\n}\n\nvoid loop() {\n  float h = dht.readHumidity();\n  float t = dht.readTemperature();\n\n  if (!isnan(h) && !isnan(t)) {\n    u8g2.clearBuffer();\n    u8g2.drawFrame(0, 0, 128, 128);\n    u8g2.setFont(u8g2_font_10x20_tf);\n    u8g2.drawStr(28, 24, \"Cuaca\");\n    u8g2.setFont(u8g2_font_6x10_tf);\n    u8g2.drawStr(8, 48, \"Suhu:\");\n    u8g2.drawStr(8, 64, \"Lembab:\");\n    u8g2.setFont(u8g2_font_10x20_tf);\n    u8g2.setCursor(8, 90);\n    u8g2.print(t, 1);\n    u8g2.drawStr(76, 90, \"C\");\n    u8g2.setCursor(8, 116);\n    u8g2.print(h, 1);\n    u8g2.drawStr(76, 116, \"%\");\n    u8g2.sendBuffer();\n  }\n  delay(2000);\n}",
+  "wokwi_diagram": "{\"version\":1,\"author\":\"ElektroDict\",\"editor\":\"wokwi\",\"parts\":[{\"type\":\"board-esp32-devkit-c-v4\",\"id\":\"esp\",\"top\":0,\"left\":0,\"attrs\":{}},{\"type\":\"board-grove-oled-sh1107\",\"id\":\"oled\",\"top\":-120,\"left\":340,\"attrs\":{}},{\"type\":\"wokwi-dht22\",\"id\":\"dht\",\"top\":-120,\"left\":540,\"attrs\":{}}],\"connections\":[[\"oled:SCL\",\"esp:22\",\"yellow\",[\"v0\"]],[\"oled:SDA\",\"esp:21\",\"green\",[\"v0\"]],[\"oled:VCC\",\"esp:3V3\",\"red\",[\"v0\"]],[\"oled:GND\",\"esp:GND.1\",\"black\",[\"v0\"]],[\"dht:VCC\",\"esp:3V3\",\"red\",[\"v0\"]],[\"dht:SDA\",\"esp:4\",\"green\",[\"v0\"]],[\"dht:GND\",\"esp:GND.2\",\"black\",[\"v0\"]]]}",
+  "steps": [
+    {
+      "nama_komponen": "OLED SH1107",
+      "alur_perakitan": "SCL ke GPIO 22, SDA ke GPIO 21, VCC ke 3V3, GND ke GND."
+    },
+    {
+      "nama_komponen": "DHT22",
+      "alur_perakitan": "VCC ke 3V3, data (SDA) ke GPIO 4, GND ke GND."
+    },
+    {
+      "nama_komponen": "Library",
+      "alur_perakitan": "Pasang U8g2 dan DHT sensor library for ESPx via libraries.txt."
+    },
+    {
+      "nama_komponen": "Uji coba",
+      "alur_perakitan": "OLED 128x128 menampilkan suhu & kelembaban di dalam bingkai. Geser suhu DHT22 di simulator untuk melihat perubahan."
+    }
+  ]
+},
+{
+  "id": "tpl-dpdt-power-switch",
+  "title": "Alih Sumber Daya dengan Relay DPDT",
+  "desc": "Relay DPDT (KS2E-M-DC5) mengalihkan beban antara kontak NO dan NC - memahami prinsip normally-open, normally-closed, dan kontrol coil dengan pin digital.",
+  "difficulty": "Menengah",
+  "tags": ["Relay", "DPDT", "Kontak", "Sakelar"],
+  "verified": true,
+  "libraries": [],
+  "bom": [
+    "1x Arduino Uno",
+    "1x Relay DPDT KS2E-M-DC5",
+    "2x LED (merah & hijau)",
+    "2x Resistor 220 Ohm",
+    "Kabel jumper"
+  ],
+  "wiring_guide": [
+    {
+      "komponen": "Relay DPDT",
+      "pin_komponen": "COIL1 / COIL2",
+      "koneksi_arduino": "Pin 7 / GND"
+    },
+    {
+      "komponen": "Relay DPDT",
+      "pin_komponen": "P1 (pole)",
+      "koneksi_arduino": "5V"
+    },
+    {
+      "komponen": "Relay DPDT",
+      "pin_komponen": "NC1 / NO1",
+      "koneksi_arduino": "LED merah / LED hijau (via resistor 220)"
+    }
+  ],
+  "cpp_code": "// Proyek: Alih Sumber Daya Otomatis dengan Relay DPDT\n// Logika: relay DPDT mengalihkan beban antara kontak NC dan NO\n// Platform: Uno\nconst int pinCoil = 7;\n\nvoid setup() {\n  pinMode(pinCoil, OUTPUT);\n  Serial.begin(9600);\n}\n\nvoid loop() {\n  digitalWrite(pinCoil, LOW);   // coil OFF -> kontak NC aktif (LED merah)\n  Serial.println(\"Relay OFF -> lampu merah (NC)\");\n  delay(2000);\n\n  digitalWrite(pinCoil, HIGH);  // coil ON -> kontak NO aktif (LED hijau)\n  Serial.println(\"Relay ON -> lampu hijau (NO)\");\n  delay(2000);\n}",
+  "wokwi_diagram": "{\"version\":1,\"author\":\"ElektroDict\",\"editor\":\"wokwi\",\"parts\":[{\"type\":\"wokwi-arduino-uno\",\"id\":\"uno\",\"top\":0,\"left\":0,\"attrs\":{}},{\"type\":\"wokwi-ks2e-m-dc5\",\"id\":\"rel\",\"top\":-140,\"left\":340,\"attrs\":{}},{\"type\":\"wokwi-led\",\"id\":\"led1\",\"top\":40,\"left\":340,\"attrs\":{}},{\"type\":\"wokwi-resistor\",\"id\":\"r1\",\"top\":40,\"left\":440,\"attrs\":{\"value\":\"220\"}},{\"type\":\"wokwi-led\",\"id\":\"led2\",\"top\":120,\"left\":340,\"attrs\":{}},{\"type\":\"wokwi-resistor\",\"id\":\"r2\",\"top\":120,\"left\":440,\"attrs\":{\"value\":\"220\"}}],\"connections\":[[\"rel:COIL1\",\"uno:7\",\"green\",[\"v0\"]],[\"rel:COIL2\",\"uno:GND.1\",\"black\",[\"v0\"]],[\"rel:P1\",\"uno:5V\",\"red\",[\"v0\"]],[\"rel:NC1\",\"r1:1\",\"green\",[\"v0\"]],[\"r1:2\",\"led1:A\",\"green\",[\"v0\"]],[\"led1:C\",\"uno:GND.2\",\"black\",[\"v0\"]],[\"rel:NO1\",\"r2:1\",\"green\",[\"v0\"]],[\"r2:2\",\"led2:A\",\"green\",[\"v0\"]],[\"led2:C\",\"uno:GND.2\",\"black\",[\"v0\"]]]}",
+  "steps": [
+    {
+      "nama_komponen": "Relay DPDT",
+      "alur_perakitan": "COIL1 ke pin 7, COIL2 ke GND, P1 (pole) ke 5V."
+    },
+    {
+      "nama_komponen": "Kontak NC",
+      "alur_perakitan": "NC1 ke LED merah via resistor 220, katoda ke GND."
+    },
+    {
+      "nama_komponen": "Kontak NO",
+      "alur_perakitan": "NO1 ke LED hijau via resistor 220, katoda ke GND."
+    },
+    {
+      "nama_komponen": "Uji coba",
+      "alur_perakitan": "LED menyala bergantian tiap 2 detik: merah saat coil OFF (NC), hijau saat coil ON (NO)."
+    }
+  ]
 }
 ];;
 
