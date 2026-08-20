@@ -29,7 +29,12 @@
   "board-grove-oled-sh1107": {
     "title": "board-grove-oled-sh1107",
     "desc": "Monochrome display with 128128 resolution",
-    "pins": [],
+    "pins": [
+      "SCL",
+      "SDA",
+      "VCC",
+      "GND"
+    ],
     "attrs": {}
   },
   "board-mfrc522": {
@@ -89,7 +94,24 @@
   "wokwi-74hc165": {
     "title": "wokwi-74hc165",
     "desc": "8-bit Parallel-In Serial-Out (PISO) Shift Register (Input)",
-    "pins": [],
+    "pins": [
+      "D0",
+      "D1",
+      "D2",
+      "D3",
+      "D4",
+      "D5",
+      "D6",
+      "D7",
+      "PL",
+      "CP",
+      "CE",
+      "Q7",
+      "Q7_N",
+      "DS",
+      "GND",
+      "VCC"
+    ],
     "attrs": {}
   },
   "wokwi-74hc595": {
@@ -227,7 +249,16 @@
   "wokwi-attiny85": {
     "title": "wokwi-attiny85",
     "desc": "The ATtiny85 is a small 8-bit AVR microcontroller. It has 8KB of Flash program memory, 512 bytes of SRAM, and 512 bytes of EEPROM.",
-    "pins": [],
+    "pins": [
+      "PB5",
+      "PB3",
+      "PB4",
+      "GND",
+      "PB0",
+      "PB1",
+      "PB2",
+      "VCC"
+    ],
     "attrs": {
       "frequency": {
         "desc": "MCU clock frequency, in hertz. Common values: \"1m\", \"8m\", \"16m\", and \"20m\"",
@@ -334,7 +365,16 @@
       "1b",
       "2a",
       "2b",
-      "…",
+      "3a",
+      "3b",
+      "4a",
+      "4b",
+      "5a",
+      "5b",
+      "6a",
+      "6b",
+      "7a",
+      "7b",
       "8a",
       "8b"
     ],
@@ -441,7 +481,17 @@
   "wokwi-ili9341": {
     "title": "wokwi-ili9341",
     "desc": "Full color 240x320 2.8\" LCD-TFT display with SPI interface",
-    "pins": [],
+    "pins": [
+      "VCC",
+      "GND",
+      "CS",
+      "RST",
+      "D/C",
+      "MOSI",
+      "SCK",
+      "LED",
+      "MISO"
+    ],
     "attrs": {
       "flipHorizontal": {
         "desc": "Set to \"1\" to flip the display horizontally",
@@ -556,8 +606,26 @@
     "title": "wokwi-led-bar-graph",
     "desc": "10-segment LED Bar Graph.",
     "pins": [
-      "An",
-      "Cn"
+      "A1",
+      "A2",
+      "A3",
+      "A4",
+      "A5",
+      "A6",
+      "A7",
+      "A8",
+      "A9",
+      "A10",
+      "C1",
+      "C2",
+      "C3",
+      "C4",
+      "C5",
+      "C6",
+      "C7",
+      "C8",
+      "C9",
+      "C10"
     ],
     "attrs": {
       "color": {
