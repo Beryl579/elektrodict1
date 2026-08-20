@@ -4084,6 +4084,290 @@ const WOKWI_TEMPLATES = [
     }
   ]
 }
+,
+  {
+    "id": "tpl-esp32-rtc-clock",
+    "title": "Jam Digital RTC + OLED",
+    "desc": "RTC DS1307 (I2C) menjaga waktu real walau listrik mati — ESP32 membaca register BCD dan menampilkan jam digital di OLED SSD1306.",
+    "difficulty": "Menengah",
+    "tags": [
+      "ESP32",
+      "RTC",
+      "DS1307",
+      "OLED",
+      "Waktu"
+    ],
+    "verified": true,
+    "libraries": [
+      "Adafruit SSD1306",
+      "Adafruit GFX Library"
+    ],
+    "board": "board-esp32-devkit-c-v4",
+    "bom": [
+      "1x ESP32 DevKitC V4",
+      "1x Modul RTC DS1307",
+      "1x OLED SSD1306 128x64 (I2C)",
+      "Kabel jumper"
+    ],
+    "wiring_guide": [
+      {
+        "komponen": "DS1307",
+        "pin_komponen": "5V / GND",
+        "koneksi_arduino": "5V / GND"
+      },
+      {
+        "komponen": "DS1307",
+        "pin_komponen": "SDA / SCL",
+        "koneksi_arduino": "GPIO 21 / GPIO 22 (I2C)"
+      },
+      {
+        "komponen": "OLED",
+        "pin_komponen": "VCC / GND",
+        "koneksi_arduino": "3V3 / GND"
+      },
+      {
+        "komponen": "OLED",
+        "pin_komponen": "SDA / SCL",
+        "koneksi_arduino": "GPIO 21 / GPIO 22 (paralel dengan DS1307)"
+      }
+    ],
+    "cpp_code": "// ===== Jam Digital RTC + OLED =====\n// ESP32 + DS1307 (RTC I2C) + OLED SSD1306\n// Baca waktu real-time dari register BCD DS1307 lalu tampilkan di OLED.\n\n#include <Wire.h>\n#include <Adafruit_GFX.h>\n#include <Adafruit_SSD1306.h>\n\n#define OLED_W 128\n#define OLED_H 64\nAdafruit_SSD1306 oled(OLED_W, OLED_H, &Wire, -1);\n\n#define DS1307_ADDR 0x68\n\nint bcdKeDesimal(int bcd) { return (bcd >> 4) * 10 + (bcd & 0x0F); }\n\nvoid bacaWaktu(int& jam, int& menit, int& detik) {\n  Wire.beginTransmission(DS1307_ADDR);\n  Wire.write(0x00);                 // mulai dari register detik\n  Wire.endTransmission();\n  Wire.requestFrom(DS1307_ADDR, 3);\n  detik = bcdKeDesimal(Wire.read() & 0x7F);\n  menit = bcdKeDesimal(Wire.read());\n  jam   = bcdKeDesimal(Wire.read() & 0x3F);\n}\n\nvoid setup() {\n  Serial.begin(115200);\n  Wire.begin();                    // SDA=21, SCL=22 (default ESP32)\n  if (!oled.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { Serial.println(\"OLED gagal\"); }\n  oled.clearDisplay();\n  oled.setTextSize(2);\n  oled.setTextColor(SSD1306_WHITE);\n  oled.setCursor(30, 22);\n  oled.println(\"RTC OK\");\n  oled.display();\n  delay(1200);\n}\n\nvoid loop() {\n  int jam, menit, detik;\n  bacaWaktu(jam, menit, detik);\n\n  char buf[9];\n  sprintf(buf, \"%02d:%02d:%02d\", jam, menit, detik);\n\n  oled.clearDisplay();\n  oled.setTextSize(2);\n  oled.setCursor(16, 10); oled.print(buf);\n  oled.setTextSize(1);\n  oled.setCursor(30, 44); oled.print(\"DS1307 | 0x68\");\n  oled.display();\n\n  Serial.println(buf);\n  delay(1000);\n}",
+    "wokwi_diagram": "{\"version\":1,\"author\":\"ElektroDict\",\"editor\":\"wokwi\",\"parts\":[{\"type\":\"board-esp32-devkit-c-v4\",\"id\":\"esp\",\"top\":0,\"left\":0,\"attrs\":{}},{\"type\":\"wokwi-ds1307\",\"id\":\"ds\",\"top\":-120,\"left\":340,\"attrs\":{\"initTime\":\"now\"}},{\"type\":\"board-ssd1306\",\"id\":\"oled\",\"top\":-120,\"left\":540,\"attrs\":{}}],\"connections\":[[\"ds:5V\",\"esp:5V\",\"red\",[\"v0\"]],[\"ds:GND\",\"esp:GND.1\",\"black\",[\"v0\"]],[\"ds:SCL\",\"esp:22\",\"yellow\",[\"v0\"]],[\"ds:SDA\",\"esp:21\",\"green\",[\"v0\"]],[\"oled:VCC\",\"esp:3V3\",\"red\",[\"v0\"]],[\"oled:GND\",\"esp:GND.2\",\"black\",[\"v0\"]],[\"oled:SCL\",\"esp:22\",\"yellow\",[\"v0\"]],[\"oled:SDA\",\"esp:21\",\"green\",[\"v0\"]]]}",
+    "steps": [
+      {
+        "nama_komponen": "DS1307",
+        "alur_perakitan": "5V ke 5V, GND ke GND, SDA ke GPIO 21, SCL ke GPIO 22 (I2C)."
+      },
+      {
+        "nama_komponen": "OLED",
+        "alur_perakitan": "VCC ke 3V3, GND ke GND, SDA/SCL paralel ke GPIO 21/22."
+      },
+      {
+        "nama_komponen": "Library",
+        "alur_perakitan": "Pasang Adafruit SSD1306 + Adafruit GFX via libraries.txt (Wire bawaan)."
+      },
+      {
+        "nama_komponen": "Uji coba",
+        "alur_perakitan": "OLED menampilkan jam HH:MM:SS real-time. Di Wokwi, DS1307 otomatis mulai dari waktu sistem saat simulasi dijalankan."
+      }
+    ]
+  },
+  {
+    "id": "tpl-esp32-i2c-scanner",
+    "title": "Peta Alamat I2C",
+    "desc": "ESP32 memindai bus I2C (alamat 0x01-0x7F) dan menampilkan alamat device yang ditemukan di OLED — latihan protokol I2C & notasi heksadesimal.",
+    "difficulty": "Mudah",
+    "tags": [
+      "ESP32",
+      "I2C",
+      "Sensor",
+      "OLED"
+    ],
+    "verified": true,
+    "libraries": [
+      "Adafruit SSD1306",
+      "Adafruit GFX Library"
+    ],
+    "board": "board-esp32-devkit-c-v4",
+    "bom": [
+      "1x ESP32 DevKitC V4",
+      "1x Modul RTC DS1307 (target I2C)",
+      "1x OLED SSD1306 128x64 (I2C)",
+      "Kabel jumper"
+    ],
+    "wiring_guide": [
+      {
+        "komponen": "DS1307",
+        "pin_komponen": "5V / GND",
+        "koneksi_arduino": "5V / GND"
+      },
+      {
+        "komponen": "DS1307",
+        "pin_komponen": "SDA / SCL",
+        "koneksi_arduino": "GPIO 21 / GPIO 22"
+      },
+      {
+        "komponen": "OLED",
+        "pin_komponen": "VCC / GND",
+        "koneksi_arduino": "3V3 / GND"
+      },
+      {
+        "komponen": "OLED",
+        "pin_komponen": "SDA / SCL",
+        "koneksi_arduino": "GPIO 21 / GPIO 22"
+      }
+    ],
+    "cpp_code": "// ===== Peta Alamat I2C =====\n// ESP32 + OLED SSD1306 + DS1307 (device target di alamat 0x68)\n// Scan bus I2C 0x01-0x7F: device yang membalas = terhubung.\n\n#include <Wire.h>\n#include <Adafruit_GFX.h>\n#include <Adafruit_SSD1306.h>\n\n#define OLED_W 128\n#define OLED_H 64\nAdafruit_SSD1306 oled(OLED_W, OLED_H, &Wire, -1);\n\nvoid setup() {\n  Serial.begin(115200);\n  Wire.begin();                  // SDA=21, SCL=22\n  if (!oled.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { Serial.println(\"OLED gagal\"); }\n  oled.clearDisplay();\n}\n\nvoid loop() {\n  int ditemukan = 0;\n  int alamatPertama = 0;\n  Serial.println(\"--- Scan I2C ---\");\n  for (int a = 0x01; a <= 0x7F; a++) {\n    Wire.beginTransmission(a);\n    if (Wire.endTransmission() == 0) {\n      if (ditemukan == 0) alamatPertama = a;\n      ditemukan++;\n      Serial.printf(\"Ditemukan: 0x%02X\\n\", a);\n    }\n  }\n  Serial.printf(\"Total: %d device\\n\", ditemukan);\n\n  oled.clearDisplay();\n  oled.setTextSize(1);\n  oled.setTextColor(SSD1306_WHITE);\n  oled.setCursor(0, 0); oled.println(\"PETA ALAMAT I2C\");\n  oled.drawLine(0, 10, 127, 10, SSD1306_WHITE);\n  oled.setTextSize(2);\n  if (ditemukan > 0) {\n    oled.setCursor(24, 20); oled.print(\"0x\");\n    char b[3]; sprintf(b, \"%02X\", alamatPertama);\n    oled.print(b);\n  } else {\n    oled.setCursor(20, 22); oled.print(\"KOSONG\");\n  }\n  oled.setTextSize(1);\n  oled.setCursor(0, 48); oled.printf(\"Total: %d device\", ditemukan);\n  oled.display();\n  delay(2000);\n}",
+    "wokwi_diagram": "{\"version\":1,\"author\":\"ElektroDict\",\"editor\":\"wokwi\",\"parts\":[{\"type\":\"board-esp32-devkit-c-v4\",\"id\":\"esp\",\"top\":0,\"left\":0,\"attrs\":{}},{\"type\":\"wokwi-ds1307\",\"id\":\"ds\",\"top\":-120,\"left\":340,\"attrs\":{\"initTime\":\"now\"}},{\"type\":\"board-ssd1306\",\"id\":\"oled\",\"top\":-120,\"left\":540,\"attrs\":{}}],\"connections\":[[\"ds:5V\",\"esp:5V\",\"red\",[\"v0\"]],[\"ds:GND\",\"esp:GND.1\",\"black\",[\"v0\"]],[\"ds:SCL\",\"esp:22\",\"yellow\",[\"v0\"]],[\"ds:SDA\",\"esp:21\",\"green\",[\"v0\"]],[\"oled:VCC\",\"esp:3V3\",\"red\",[\"v0\"]],[\"oled:GND\",\"esp:GND.2\",\"black\",[\"v0\"]],[\"oled:SCL\",\"esp:22\",\"yellow\",[\"v0\"]],[\"oled:SDA\",\"esp:21\",\"green\",[\"v0\"]]]}",
+    "steps": [
+      {
+        "nama_komponen": "DS1307",
+        "alur_perakitan": "5V ke 5V, GND ke GND, SDA ke GPIO 21, SCL ke GPIO 22."
+      },
+      {
+        "nama_komponen": "OLED",
+        "alur_perakitan": "VCC ke 3V3, GND ke GND, SDA/SCL paralel ke GPIO 21/22."
+      },
+      {
+        "nama_komponen": "Library",
+        "alur_perakitan": "Pasang Adafruit SSD1306 + Adafruit GFX via libraries.txt."
+      },
+      {
+        "nama_komponen": "Uji coba",
+        "alur_perakitan": "OLED menampilkan 0x68 (alamat DS1307) dan total device. Serial monitor mencetak daftar lengkap scan."
+      }
+    ]
+  },
+  {
+    "id": "tpl-esp32-serial-plotter",
+    "title": "Gelombang Sinus Serial Plotter",
+    "desc": "Tanpa sensor apa pun: ESP32 mengirim gelombang sin & cos ke Serial Plotter Wokwi. Putar potensiometer untuk mengubah frekuensi — latihan visualisasi data & matematika.",
+    "difficulty": "Mudah",
+    "tags": [
+      "ESP32",
+      "Serial Plotter",
+      "Matematika",
+      "Potensiometer"
+    ],
+    "verified": true,
+    "libraries": [],
+    "board": "board-esp32-devkit-c-v4",
+    "bom": [
+      "1x ESP32 DevKitC V4",
+      "1x Potensiometer",
+      "Kabel jumper"
+    ],
+    "wiring_guide": [
+      {
+        "komponen": "Potensiometer",
+        "pin_komponen": "VCC / GND",
+        "koneksi_arduino": "3V3 / GND"
+      },
+      {
+        "komponen": "Potensiometer",
+        "pin_komponen": "SIG (wiper)",
+        "koneksi_arduino": "GPIO 34 (ADC1, aman saat WiFi)"
+      }
+    ],
+    "cpp_code": "// ===== Gelombang Sinus di Serial Plotter =====\n// ESP32 + potensiometer (atur frekuensi)\n// Buka Serial Monitor Wokwi lalu pilih tampilan grafik (Plot).\n\n#include <math.h>\n\n#define POT_PIN 34\n\nvoid setup() {\n  Serial.begin(115200);\n  Serial.println(\"Putar potensiometer untuk mengubah frekuensi gelombang.\");\n}\n\nvoid loop() {\n  int baca = analogRead(POT_PIN);           // 0-4095 (ADC 12-bit)\n  float frekuensi = 1.0 + map(baca, 0, 4095, 0, 400) / 100.0;  // 1-5 Hz\n\n  float t = millis() / 1000.0;\n  float sinVal = (sin(2 * PI * frekuensi * t) + 1) * 10;\n  float cosVal = (cos(2 * PI * frekuensi * t) + 1) * 10;\n\n  Serial.print(\"sin:\");\n  Serial.print(sinVal);\n  Serial.print(\",\");\n  Serial.print(\"cos:\");\n  Serial.println(cosVal);\n  delay(20);\n}",
+    "wokwi_diagram": "{\"version\":1,\"author\":\"ElektroDict\",\"editor\":\"wokwi\",\"parts\":[{\"type\":\"board-esp32-devkit-c-v4\",\"id\":\"esp\",\"top\":0,\"left\":0,\"attrs\":{}},{\"type\":\"wokwi-potentiometer\",\"id\":\"pot\",\"top\":-130,\"left\":340,\"attrs\":{}}],\"connections\":[[\"pot:VCC\",\"esp:3V3\",\"red\",[\"v0\"]],[\"pot:SIG\",\"esp:34\",\"green\",[\"v0\"]],[\"pot:GND\",\"esp:GND.1\",\"black\",[\"v0\"]]]}",
+    "steps": [
+      {
+        "nama_komponen": "Potensiometer",
+        "alur_perakitan": "VCC ke 3V3, SIG ke GPIO 34, GND ke GND."
+      },
+      {
+        "nama_komponen": "Uji coba",
+        "alur_perakitan": "Buka Serial Monitor Wokwi → tab Plot/grafik: dua gelombang sin & cos tampil. Putar potensiometer → frekuensi berubah."
+      }
+    ]
+  },
+  {
+    "id": "tpl-esp32-ntp-clock",
+    "title": "Jam Internet NTP",
+    "desc": "ESP32 sinkron waktu dari server NTP via WiFi (tanpa library tambahan) lalu menampilkan jam & tanggal WIB di OLED — konsep IoT time sync.",
+    "difficulty": "Menengah",
+    "tags": [
+      "ESP32",
+      "WiFi",
+      "NTP",
+      "OLED",
+      "Waktu"
+    ],
+    "verified": true,
+    "libraries": [
+      "Adafruit SSD1306",
+      "Adafruit GFX Library"
+    ],
+    "board": "board-esp32-devkit-c-v4",
+    "bom": [
+      "1x ESP32 DevKitC V4",
+      "1x OLED SSD1306 128x64 (I2C)",
+      "Kabel jumper"
+    ],
+    "wiring_guide": [
+      {
+        "komponen": "OLED",
+        "pin_komponen": "VCC / GND",
+        "koneksi_arduino": "3V3 / GND"
+      },
+      {
+        "komponen": "OLED",
+        "pin_komponen": "SDA / SCL",
+        "koneksi_arduino": "GPIO 21 / GPIO 22 (I2C)"
+      }
+    ],
+    "cpp_code": "// ===== Jam Internet NTP =====\n// ESP32 + WiFi (Wokwi-GUEST) + OLED SSD1306\n// Sinkronkan waktu via NTP (configTime) lalu tampilkan jam & tanggal WIB.\n\n#include <WiFi.h>\n#include <time.h>\n#include <Wire.h>\n#include <Adafruit_GFX.h>\n#include <Adafruit_SSD1306.h>\n\n#define WIFI_SSID     \"Wokwi-GUEST\"\n#define WIFI_PASSWORD \"\"\n\n#define OLED_W 128\n#define OLED_H 64\nAdafruit_SSD1306 oled(OLED_W, OLED_H, &Wire, -1);\n\nvoid setup() {\n  Serial.begin(115200);\n  Wire.begin();\n  if (!oled.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { Serial.println(\"OLED gagal\"); }\n\n  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);\n  Serial.print(\"Menghubungkan WiFi\");\n  while (WiFi.status() != WL_CONNECTED) { delay(300); Serial.print(\".\"); }\n  Serial.println(\"\\nWiFi OK - IP: \" + WiFi.localIP().toString());\n\n  configTime(7 * 3600, 0, \"pool.ntp.org\");   // UTC+7 (WIB)\n  Serial.print(\"Sinkronisasi NTP\");\n  while (time(nullptr) < 100000) { delay(500); Serial.print(\".\"); }\n  Serial.println(\"\\nNTP OK!\");\n}\n\nvoid loop() {\n  time_t now = time(nullptr);\n  struct tm* t = localtime(&now);\n\n  char jam[9], tgl[12];\n  sprintf(jam, \"%02d:%02d:%02d\", t->tm_hour, t->tm_min, t->tm_sec);\n  sprintf(tgl, \"%02d-%02d-%04d\", t->tm_mday, t->tm_mon + 1, t->tm_year + 1900);\n\n  oled.clearDisplay();\n  oled.setTextSize(2); oled.setTextColor(SSD1306_WHITE);\n  oled.setCursor(16, 8);  oled.print(jam);\n  oled.setTextSize(1);\n  oled.setCursor(24, 38); oled.print(tgl);\n  oled.setCursor(24, 50); oled.print(\"WIB (NTP)\");\n  oled.display();\n\n  Serial.println(jam);\n  delay(1000);\n}",
+    "wokwi_diagram": "{\"version\":1,\"author\":\"ElektroDict\",\"editor\":\"wokwi\",\"parts\":[{\"type\":\"board-esp32-devkit-c-v4\",\"id\":\"esp\",\"top\":0,\"left\":0,\"attrs\":{}},{\"type\":\"wokwi-wifi-ap\",\"id\":\"ap\",\"top\":-260,\"left\":0,\"attrs\":{\"ssid\":\"Wokwi-GUEST\",\"password\":\"\"}},{\"type\":\"board-ssd1306\",\"id\":\"oled\",\"top\":-120,\"left\":540,\"attrs\":{}}],\"connections\":[[\"oled:VCC\",\"esp:3V3\",\"red\",[\"v0\"]],[\"oled:GND\",\"esp:GND.2\",\"black\",[\"v0\"]],[\"oled:SCL\",\"esp:22\",\"yellow\",[\"v0\"]],[\"oled:SDA\",\"esp:21\",\"green\",[\"v0\"]]]}",
+    "steps": [
+      {
+        "nama_komponen": "OLED",
+        "alur_perakitan": "VCC ke 3V3, GND ke GND, SDA ke GPIO 21, SCL ke GPIO 22."
+      },
+      {
+        "nama_komponen": "WiFi (simulator)",
+        "alur_perakitan": "Part wokwi-wifi-ap menyediakan jaringan Wokwi-GUEST. Untuk hardware asli, ganti WIFI_SSID/PASSWORD."
+      },
+      {
+        "nama_komponen": "Library",
+        "alur_perakitan": "Pasang Adafruit SSD1306 + Adafruit GFX via libraries.txt."
+      },
+      {
+        "nama_komponen": "Uji coba",
+        "alur_perakitan": "OLED menampilkan jam & tanggal WIB yang disinkronkan dari pool.ntp.org."
+      }
+    ]
+  },
+  {
+    "id": "tpl-esp32-web-server",
+    "title": "Web Server Kendali LED",
+    "desc": "ESP32 menjadi server web mini: buka alamat IP-nya di browser, klik tombol untuk menyalakan/mematikan LED — IoT tanpa cloud dan tanpa Firebase.",
+    "difficulty": "Menengah",
+    "tags": [
+      "ESP32",
+      "WiFi",
+      "Web Server",
+      "IoT",
+      "LED"
+    ],
+    "verified": true,
+    "libraries": [],
+    "board": "board-esp32-devkit-c-v4",
+    "bom": [
+      "1x ESP32 DevKitC V4",
+      "1x LED",
+      "1x Resistor 220 Ohm",
+      "Kabel jumper"
+    ],
+    "wiring_guide": [
+      {
+        "komponen": "LED (via 220 Ohm)",
+        "pin_komponen": "A (anoda)",
+        "koneksi_arduino": "GPIO 13"
+      },
+      {
+        "komponen": "LED",
+        "pin_komponen": "C (katoda)",
+        "koneksi_arduino": "GND"
+      }
+    ],
+    "cpp_code": "// ===== Web Server Kendali LED =====\n// ESP32 + WiFi + LED — ESP32 jadi server web mini (tanpa cloud).\n// Buka alamat IP yang tampil di serial. Di Wokwi: klik link port 80\n// yang muncul di panel Serial Monitor.\n\n#include <WiFi.h>\n#include <WebServer.h>\n\n#define WIFI_SSID     \"Wokwi-GUEST\"\n#define WIFI_PASSWORD \"\"\n\n#define LED_PIN 13\n\nWebServer server(80);\n\nconst char* HTML = \"<!DOCTYPE html><html><head><meta charset='UTF-8'>\"\n  \"<title>Kendali LED ESP32</title></head>\"\n  \"<body style='font-family:sans-serif;text-align:center;margin-top:60px;'>\"\n  \"<h1>ESP32 Web Server</h1>\"\n  \"<p>Klik tombol untuk mengontrol LED di GPIO 13:</p>\"\n  \"<p><a href='/on' style='padding:12px 24px;background:#22c55e;color:#fff;text-decoration:none;border-radius:8px;'>NYALAKAN</a> &nbsp; \"\n  \"<a href='/off' style='padding:12px 24px;background:#ef4444;color:#fff;text-decoration:none;border-radius:8px;'>MATIKAN</a></p>\"\n  \"</body></html>\";\n\nvoid setup() {\n  Serial.begin(115200);\n  pinMode(LED_PIN, OUTPUT);\n  digitalWrite(LED_PIN, LOW);\n\n  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);\n  Serial.print(\"Menghubungkan WiFi\");\n  while (WiFi.status() != WL_CONNECTED) { delay(300); Serial.print(\".\"); }\n  Serial.println(\"\\nWiFi OK!\");\n  Serial.print(\"Buka browser: http://\");\n  Serial.println(WiFi.localIP());\n\n  server.on(\"/\", []() { server.send(200, \"text/html\", HTML); });\n  server.on(\"/on\", []() { digitalWrite(LED_PIN, HIGH); server.send(200, \"text/html\", \"LED NYALA\"); });\n  server.on(\"/off\", []() { digitalWrite(LED_PIN, LOW); server.send(200, \"text/html\", \"LED MATI\"); });\n  server.begin();\n  Serial.println(\"Server HTTP siap.\");\n}\n\nvoid loop() {\n  server.handleClient();\n}",
+    "wokwi_diagram": "{\"version\":1,\"author\":\"ElektroDict\",\"editor\":\"wokwi\",\"parts\":[{\"type\":\"board-esp32-devkit-c-v4\",\"id\":\"esp\",\"top\":0,\"left\":0,\"attrs\":{}},{\"type\":\"wokwi-wifi-ap\",\"id\":\"ap\",\"top\":-260,\"left\":0,\"attrs\":{\"ssid\":\"Wokwi-GUEST\",\"password\":\"\"}},{\"type\":\"wokwi-led\",\"id\":\"led1\",\"top\":-130,\"left\":340,\"attrs\":{\"color\":\"red\"}},{\"type\":\"wokwi-resistor\",\"id\":\"r1\",\"top\":-50,\"left\":340,\"attrs\":{\"value\":\"220\"}}],\"connections\":[[\"esp:13\",\"r1:1\",\"yellow\",[\"v0\"]],[\"r1:2\",\"led1:A\",\"yellow\",[\"v0\"]],[\"led1:C\",\"esp:GND.2\",\"black\",[\"v0\"]]]}",
+    "steps": [
+      {
+        "nama_komponen": "LED (via 220 Ohm)",
+        "alur_perakitan": "Anoda via resistor 220 Ohm ke GPIO 13, katoda ke GND."
+      },
+      {
+        "nama_komponen": "WiFi (simulator)",
+        "alur_perakitan": "Part wokwi-wifi-ap menyediakan jaringan Wokwi-GUEST."
+      },
+      {
+        "nama_komponen": "Uji coba",
+        "alur_perakitan": "Jalankan simulasi → buka alamat IP ESP32 di browser (di Wokwi, klik link port 80 di Serial Monitor) → tekan NYALAKAN/MATIKAN."
+      }
+    ]
+  }
 ];;
 
 // ---- TENTANG ----
