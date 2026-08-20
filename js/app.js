@@ -3326,8 +3326,34 @@ function renderProjectDetail(prj) {
   const diffLabel = prj.difficulty || 'AI Generated';
   const diffClass = diffLabel.toLowerCase().replace(/\s+/g, '-');
 
+  // Video pembelajaran terkait (cross-link dari VIDEO_TEMPLATE_LINKS)
+  let videoLinksHtml = '';
+  try {
+    const related = (typeof VIDEO_TEMPLATE_LINKS !== 'undefined')
+      ? Object.entries(VIDEO_TEMPLATE_LINKS)
+          .filter(([, ids]) => ids.includes(prj.id))
+          .map(([vid]) => (typeof VIDEOS !== 'undefined') ? VIDEOS.find(v => v.id === vid) : null)
+          .filter(Boolean)
+      : [];
+    if (related.length) {
+      videoLinksHtml = `
+    <div class="pd-section" style="border:1px solid rgba(239,68,68,.25); background:rgba(239,68,68,.05);">
+      <h3 class="pd-section-h">📺 Video Pembelajaran Terkait</h3>
+      ${related.map(v => `
+      <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px dashed rgba(255,255,255,.08);cursor:pointer;" onclick="openVideoById('${v.id}')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'){openVideoById('${v.id}');}">
+        <img src="https://i.ytimg.com/vi/${v.id}/default.jpg" alt="" style="width:72px;height:44px;border-radius:6px;object-fit:cover;flex-shrink:0;background:#000;" onerror="this.style.visibility='hidden';">
+        <div style="min-width:0">
+          <div style="font-size:13px;font-weight:700;color:var(--text1);line-height:1.35;">${v.title}</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:2px;">▶ ${v.channel} · ${v.topic}</div>
+        </div>
+      </div>`).join('')}
+    </div>`;
+    }
+  } catch (e) { videoLinksHtml = ''; }
+
   content.innerHTML = `
     <div class="pd-header">
+
       <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:16px; margin-bottom:12px;">
         <h1 class="pd-title" style="margin:0">${prj.title}</h1>
         <button class="pdf-btn" onclick="exportProjectToPdf()" style="background:var(--accent); color:var(--bg); border:none; padding:8px 16px; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:6px; flex-shrink:0; box-shadow:0 4px 12px rgba(79,156,249,0.3)">📄 Export PDF</button>
@@ -3343,6 +3369,7 @@ function renderProjectDetail(prj) {
       <p style="color:var(--text2); font-size:14px; line-height:1.6;">${prj.description || prj.desc || ''}</p>
     </div>
 
+    ${videoLinksHtml}
     ${bomHtml}
     ${libsHtml}
     ${disclaimerHtml}
@@ -4066,6 +4093,22 @@ function renderVideos(shuffle = false) {
   grid.innerHTML = list.map(v => {
     const thumb = `https://i.ytimg.com/vi/${v.id}/mqdefault.jpg`;
     const ch = String(v.channel || 'Video').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    let relTpls = [];
+    try {
+      relTpls = (typeof VIDEO_TEMPLATE_LINKS !== 'undefined' && typeof WOKWI_TEMPLATES !== 'undefined')
+        ? (VIDEO_TEMPLATE_LINKS[v.id] || [])
+            .map(id => WOKWI_TEMPLATES.find(t => t.id === id))
+            .filter(Boolean)
+        : [];
+    } catch (e) { relTpls = []; }
+    const relTplHtml = relTpls.length ? `
+      <div style="margin:8px 0 12px;display:flex;flex-wrap:wrap;align-items:center;gap:6px;">
+        <span style="font-size:10px;font-weight:700;color:var(--text3);letter-spacing:.3px;">🔗 PRAKTIK LANGSUNG:</span>
+        ${relTpls.map(t => `
+          <button class="vtpl-chip" onclick="event.stopPropagation();goToTemplate('${t.id}')" title="Buka template: ${t.title}">
+            🧰 ${t.title}
+          </button>`).join('')}
+      </div>` : '';
     const fallback = `data:image/svg+xml;utf8,${encodeURIComponent(
       `<svg xmlns="http://www.w3.org/2000/svg" width="480" height="360"><rect width="100%" height="100%" fill="%2312141a"/><g fill="%234f9cf9" text-anchor="middle" font-family="Arial, sans-serif" font-size="26" font-weight="bold"><text x="240" y="165">Video</text><text x="240" y="205" font-size="18" fill="%23888">${ch}</text></g></svg>`
     )}`;
@@ -4086,6 +4129,7 @@ function renderVideos(shuffle = false) {
           <div class="news-source"><a href="${v.channelUrl}" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;">▶ ${v.channel}</a></div>
           <h3 class="news-title" style="cursor:pointer;" onclick="openVideoById('${v.id}')">${v.title}</h3>
           <p class="news-desc">${v.desc}</p>
+          ${relTplHtml}
           <div class="news-actions">
             <button class="news-btn primary" style="border:none;cursor:pointer;" onclick="openVideoById('${v.id}')">▶ Putar di App</button>
             <a href="https://www.youtube.com/watch?v=${v.id}" target="_blank" rel="noopener" class="news-btn g-trans">
@@ -4103,6 +4147,10 @@ function renderVideos(shuffle = false) {
 }
 
 // ── Video player modal (play inline, tanpa keluar ke YouTube) ──
+function goToTemplate(id) {
+  openProject(id);
+}
+
 function openVideoById(id) {
   if (typeof VIDEOS === 'undefined') return;
   const v = VIDEOS.find(x => x.id === id);
