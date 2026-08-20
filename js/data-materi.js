@@ -1318,7 +1318,7 @@ $$R = \\rho \\cdot \\frac{L}{A} \\qquad \\Rightarrow \\qquad \\Delta V = 2 \\cdo
   }
 }</pre>
 <div class="mt-warn">⚠️ Firebase Realtime Database memiliki bandwidth read/write limit pada plan gratis — pastikan tidak query terlalu sering dari banyak client.</div>`,
-        referensi: 'Firebase RTDB documentation dari Firebase Google (firebase.google.com). ESP32 Firebase library: Firebase-ESP-Client by mobizt (GitHub).'
+        referensi: 'Firebase RTDB documentation dari Firebase Google (firebase.google.com). ESP32 kirim/membaca data via HTTP REST API ke URL .../path.json (tanpa library Firebase, cukup HTTPClient bawaan).'
       },
       {
         id: 'dashboard-iot-monitoring',
@@ -1349,10 +1349,10 @@ $$R = \\rho \\cdot \\frac{L}{A} \\qquad \\Rightarrow \\qquad \\Delta V = 2 \\cdo
         judul: 'Membaca Sensor DHT22 & Kirim ke Firebase',
         soal: 'Koneksi: DHT22 DATA pin → GPIO4 (ESP32), dengan pull-up 10kΩ',
         langkah: [
-          'Install library: DHT sensor library (Adafruit) + Firebase-ESP-Client (mobizt)',
-          'Inisialisasi: WiFi.begin(ssid, pass); Firebase.begin(databaseURL, apiToken);',
-          'Loop: float t = dht.readTemperature(); Firebase.setFloat(fb, "/sensors/node1/temp", t);',
-          'Cek status: if (Firebase.ready()) Serial.println("Sent OK");'
+          'Install library: DHT sensor library (Adafruit). Kirim data via HTTP REST (HTTPClient bawaan ESP32, tanpa library Firebase).',
+          'Inisialisasi: WiFi.begin(ssid, pass); lalu PUT JSON ke "URL_DATABASE + /path.json" (rules mode test).',
+          'Loop: float t = dht.readTemperature(); http.PUT(String(DATABASE_URL) + "/sensor/suhu.json", String(t));',
+          'Cek status: if (httpResponseCode > 0) Serial.println("Sent OK");'
         ]
       },
       {
