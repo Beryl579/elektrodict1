@@ -3200,7 +3200,8 @@ function renderProjectDetail(prj) {
   // wokwi_diagram bisa berupa string ATAU objek — jangan panggil .includes() pada objek
   const wokwiStr = typeof wokwiRaw === 'string' ? wokwiRaw : JSON.stringify(wokwiRaw || '');
   const boardLabel = (prj.board || (wokwiStr.includes('esp32') ? 'board-esp32-devkit-c-v4' : 'wokwi-arduino-uno'));
-  const boardName  = boardLabel.includes('esp32') ? 'ESP32' : 'Arduino Uno';
+  const isNoCode = prj.noCode === true;
+  const boardName = isNoCode ? 'Rangkaian Digital (tanpa MCU)' : (boardLabel.includes('esp32') ? 'ESP32' : 'Arduino Uno');
 
   // Step 3 kondisional: pasang library (hanya jika template butuh library pihak ketiga)
   const libsStepHtml = (libsList && libsList.length) ? `
@@ -3215,7 +3216,9 @@ function renderProjectDetail(prj) {
             </div>
           </div>` : '';
   const sketchStepNum = (libsList && libsList.length) ? 4 : 3;
-  const stepIntroText = (libsList && libsList.length)
+  const stepIntroText = isNoCode
+    ? '2 langkah: buka Wokwi, tempel <b>diagram.json</b>. Proyek ini <b>TANPA KODE</b> — murni rangkaian gerbang logika: geser saklar input lalu amati LED output. Wokwi tidak lagi menerima impor otomatis via URL.'
+    : (libsList && libsList.length)
     ? '4 langkah: buka Wokwi, tempel <b>diagram.json</b>, tempel <b>libraries.txt</b>, tempel <b>sketch.ino</b>. Wokwi tidak lagi menerima impor otomatis via URL.'
     : '3 langkah: buka Wokwi, tempel <b>diagram.json</b>, tempel <b>sketch.ino</b>. Wokwi tidak lagi menerima impor otomatis via URL.';
 
@@ -3264,6 +3267,18 @@ function renderProjectDetail(prj) {
 
           ${libsStepHtml ? '<div style="height:1px;background:var(--line2);opacity:.5;"></div>' : ''}
 
+          ${isNoCode ? `
+          <div style="display:flex;gap:14px;align-items:flex-start;">
+            <div style="background:var(--accent);color:var(--bg);font-weight:700;font-size:13px;min-width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">3</div>
+            <div style="flex:1;">
+              <div style="font-weight:700;font-size:13px;color:var(--text);margin-bottom:6px;">Jalankan Simulasi</div>
+              <p style="font-size:11px;color:var(--text3);margin-top:7px;line-height:1.5;">Proyek gerbang logika <b>tidak memerlukan kode</b> — diagram.json sudah lengkap. Cukup tekan <b>Start Simulation</b> lalu geser saklar input.</p>
+            </div>
+          </div>
+
+          <div style="background:rgba(22,163,74,.08);border:1px solid rgba(22,163,74,.25);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--text2);line-height:1.6;margin-top:2px;">
+            ℹ️ <b>Tips:</b> Saklar kiri = logika 1 (VCC), saklar kanan = logika 0 (GND). Isi tabel kebenaran dengan menggeser saklar ke semua kombinasi.
+          </div>` : `
           <div style="display:flex;gap:14px;align-items:flex-start;">
             <div style="background:var(--accent);color:var(--bg);font-weight:700;font-size:13px;min-width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">${sketchStepNum}</div>
             <div style="flex:1;">
@@ -3276,7 +3291,7 @@ function renderProjectDetail(prj) {
           <div style="background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.2);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--text2);line-height:1.6;margin-top:2px;">
             ⚠️ <b>Penting:</b> Pastikan menghapus kode bawaan Wokwi sebelum mem-paste data dari ElektroDict.
             Jika komponen asli tidak tersedia, AI menggunakan <b>Potensiometer</b> sebagai pengganti input sensor analog.
-          </div>
+          </div>`}
 
         </div>
       </details>

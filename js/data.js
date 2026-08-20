@@ -4667,6 +4667,576 @@ const WOKWI_TEMPLATES = [
       }
     ]
   }
+,
+  {
+    "id": "tpl-gate-and",
+    "title": "Gerbang AND (7408)",
+    "desc": "Dua saklar masukan dihubungkan ke gerbang AND: LED hanya menyala jika KEDUA saklar dalam keadaan 1 (HIDUP). Cocok untuk memahami logika 'semua syarat harus terpenuhi'.",
+    "difficulty": "Mudah",
+    "tags": [
+      "Gerbang Logika",
+      "AND",
+      "Digital",
+      "Tabel Kebenaran"
+    ],
+    "verified": true,
+    "noCode": true,
+    "board": "tanpa-mikrokontroler",
+    "libraries": [],
+    "bom": [
+      "1x Slide Switch (SPDT)",
+      "1x Rail 5V (wokwi-vcc)",
+      "1x Rail GND (wokwi-gnd)",
+      "1x Gerbang AND (wokwi-gate-and-2)",
+      "1x LED",
+      "1x Resistor 220 Ohm"
+    ],
+    "wiring_guide": [
+      {
+        "komponen": "Saklar A & B",
+        "pin_komponen": "Kaki 2 (common)",
+        "koneksi_arduino": "Gate: A dan B"
+      },
+      {
+        "komponen": "Saklar A & B",
+        "pin_komponen": "Kaki 1",
+        "koneksi_arduino": "VCC (5V)"
+      },
+      {
+        "komponen": "Saklar A & B",
+        "pin_komponen": "Kaki 3",
+        "koneksi_arduino": "GND"
+      },
+      {
+        "komponen": "Gate AND",
+        "pin_komponen": "OUT",
+        "koneksi_arduino": "Resistor 220 → LED → GND"
+      }
+    ],
+    "cpp_code": "// ===== Gerbang AND (7408) =====\n// Proyek ini TANPA KODE — murni rangkaian gerbang logika di Wokwi.\n// Cukup tempel diagram.json ke proyek baru Wokwi, lalu geser saklar input.\n// Catatan belajar:\n//   OUT = A DAN B  →  LED nyala HANYA jika A=1 dan B=1\n//   | A | B | OUT |\n//   | 0 | 0 |  0  |\n//   | 0 | 1 |  0  |\n//   | 1 | 0 |  0  |\n//   | 1 | 1 |  1  |\n//   Geser saklar A & B, cocokkan dengan tabel di atas.",
+    "wokwi_diagram": "{\"version\":1,\"author\":\"ElektroDict\",\"editor\":\"wokwi\",\"parts\":[{\"type\":\"wokwi-vcc\",\"id\":\"vcc\",\"top\":-320,\"left\":0,\"attrs\":{}},{\"type\":\"wokwi-gnd\",\"id\":\"gnd\",\"top\":-320,\"left\":190,\"attrs\":{}},{\"type\":\"wokwi-slide-switch\",\"id\":\"swA\",\"top\":-120,\"left\":0,\"attrs\":{\"label\":\"A\",\"bounce\":\"0\"}},{\"type\":\"wokwi-slide-switch\",\"id\":\"swB\",\"top\":-20,\"left\":0,\"attrs\":{\"label\":\"B\",\"bounce\":\"0\"}},{\"type\":\"wokwi-gate-and-2\",\"id\":\"gate\",\"top\":-120,\"left\":330,\"attrs\":{}},{\"type\":\"wokwi-resistor\",\"id\":\"r1\",\"top\":-120,\"left\":620,\"attrs\":{\"value\":\"220\"}},{\"type\":\"wokwi-led\",\"id\":\"led1\",\"top\":-120,\"left\":700,\"attrs\":{\"label\":\"OUT\",\"color\":\"red\",\"lightColor\":\"red\"}}],\"connections\":[[\"vcc:VCC\",\"swA:1\",\"red\",[\"v0\"]],[\"vcc:VCC\",\"swB:1\",\"red\",[\"v0\"]],[\"swA:2\",\"gate:A\",\"green\",[\"v0\"]],[\"swB:2\",\"gate:B\",\"green\",[\"v0\"]],[\"swA:3\",\"gnd:GND\",\"black\",[\"v0\"]],[\"swB:3\",\"gnd:GND\",\"black\",[\"v0\"]],[\"gate:OUT\",\"r1:1\",\"yellow\",[\"v0\"]],[\"r1:2\",\"led1:A\",\"yellow\",[\"v0\"]],[\"led1:C\",\"gnd:GND\",\"black\",[\"v0\"]]]}",
+    "steps": [
+      {
+        "nama_komponen": "Saklar",
+        "alur_perakitan": "Posisi kiri (default) = input 1 (kaki 1 ke VCC), posisi kanan = input 0 (kaki 3 ke GND)."
+      },
+      {
+        "nama_komponen": "Gerbang AND",
+        "alur_perakitan": "Hubungkan saklar A ke pin A dan saklar B ke pin B. Outputnya ke LED (via resistor 220 Ohm) lalu ke GND."
+      },
+      {
+        "nama_komponen": "Uji coba",
+        "alur_perakitan": "Isi tabel kebenaran: geser saklar ke semua kombinasi A×B dan catat nyala LED. LED nyala hanya saat A=1 DAN B=1."
+      }
+    ]
+  },
+  {
+    "id": "tpl-gate-or",
+    "title": "Gerbang OR (7432)",
+    "desc": "Dua saklar masukan ke gerbang OR: LED menyala jika setidaknya SATU saklar dalam keadaan 1 (HIDUP). Logika 'salah satu syarat cukup'.",
+    "difficulty": "Mudah",
+    "tags": [
+      "Gerbang Logika",
+      "OR",
+      "Digital",
+      "Tabel Kebenaran"
+    ],
+    "verified": true,
+    "noCode": true,
+    "board": "tanpa-mikrokontroler",
+    "libraries": [],
+    "bom": [
+      "1x Slide Switch (SPDT)",
+      "1x Rail 5V (wokwi-vcc)",
+      "1x Rail GND (wokwi-gnd)",
+      "1x Gerbang OR (wokwi-gate-or-2)",
+      "1x LED",
+      "1x Resistor 220 Ohm"
+    ],
+    "wiring_guide": [
+      {
+        "komponen": "Saklar A & B",
+        "pin_komponen": "Kaki 2 (common)",
+        "koneksi_arduino": "Gate: A dan B"
+      },
+      {
+        "komponen": "Saklar A & B",
+        "pin_komponen": "Kaki 1",
+        "koneksi_arduino": "VCC (5V)"
+      },
+      {
+        "komponen": "Saklar A & B",
+        "pin_komponen": "Kaki 3",
+        "koneksi_arduino": "GND"
+      },
+      {
+        "komponen": "Gate OR",
+        "pin_komponen": "OUT",
+        "koneksi_arduino": "Resistor 220 → LED → GND"
+      }
+    ],
+    "cpp_code": "// ===== Gerbang OR (7432) =====\n// Proyek ini TANPA KODE — murni rangkaian gerbang logika di Wokwi.\n// Cukup tempel diagram.json ke proyek baru Wokwi, lalu geser saklar input.\n// Catatan belajar:\n//   OUT = A ATAU B  →  LED nyala jika A=1 ATAU B=1\n//   | A | B | OUT |\n//   | 0 | 0 |  0  |\n//   | 0 | 1 |  1  |\n//   | 1 | 0 |  1  |\n//   | 1 | 1 |  1  |\n//   Khusus 2 gerbang: OR menyerupai saklar paralel.",
+    "wokwi_diagram": "{\"version\":1,\"author\":\"ElektroDict\",\"editor\":\"wokwi\",\"parts\":[{\"type\":\"wokwi-vcc\",\"id\":\"vcc\",\"top\":-320,\"left\":0,\"attrs\":{}},{\"type\":\"wokwi-gnd\",\"id\":\"gnd\",\"top\":-320,\"left\":190,\"attrs\":{}},{\"type\":\"wokwi-slide-switch\",\"id\":\"swA\",\"top\":-120,\"left\":0,\"attrs\":{\"label\":\"A\",\"bounce\":\"0\"}},{\"type\":\"wokwi-slide-switch\",\"id\":\"swB\",\"top\":-20,\"left\":0,\"attrs\":{\"label\":\"B\",\"bounce\":\"0\"}},{\"type\":\"wokwi-gate-or-2\",\"id\":\"gate\",\"top\":-120,\"left\":330,\"attrs\":{}},{\"type\":\"wokwi-resistor\",\"id\":\"r1\",\"top\":-120,\"left\":620,\"attrs\":{\"value\":\"220\"}},{\"type\":\"wokwi-led\",\"id\":\"led1\",\"top\":-120,\"left\":700,\"attrs\":{\"label\":\"OUT\",\"color\":\"red\",\"lightColor\":\"red\"}}],\"connections\":[[\"vcc:VCC\",\"swA:1\",\"red\",[\"v0\"]],[\"vcc:VCC\",\"swB:1\",\"red\",[\"v0\"]],[\"swA:2\",\"gate:A\",\"green\",[\"v0\"]],[\"swB:2\",\"gate:B\",\"green\",[\"v0\"]],[\"swA:3\",\"gnd:GND\",\"black\",[\"v0\"]],[\"swB:3\",\"gnd:GND\",\"black\",[\"v0\"]],[\"gate:OUT\",\"r1:1\",\"yellow\",[\"v0\"]],[\"r1:2\",\"led1:A\",\"yellow\",[\"v0\"]],[\"led1:C\",\"gnd:GND\",\"black\",[\"v0\"]]]}",
+    "steps": [
+      {
+        "nama_komponen": "Saklar",
+        "alur_perakitan": "Posisi kiri = input 1, posisi kanan = input 0."
+      },
+      {
+        "nama_komponen": "Gerbang OR",
+        "alur_perakitan": "Saklar A ke pin A, saklar B ke pin B. Output ke LED (via resistor 220 Ohm) lalu GND."
+      },
+      {
+        "nama_komponen": "Uji coba",
+        "alur_perakitan": "Isi tabel kebenaran. LED menyala selama ada satu saklar di posisi 1 (HIDUP)."
+      }
+    ]
+  },
+  {
+    "id": "tpl-gate-not",
+    "title": "Gerbang NOT / Inverter (7404)",
+    "desc": "Satu saklar masukan di-inverter: LED menyala SAAT saklar OFF (0), dan mati SAAT saklar ON (1). Gerbang paling dasar — membalik logika.",
+    "difficulty": "Mudah",
+    "tags": [
+      "Gerbang Logika",
+      "NOT",
+      "Inverter",
+      "Digital"
+    ],
+    "verified": true,
+    "noCode": true,
+    "board": "tanpa-mikrokontroler",
+    "libraries": [],
+    "bom": [
+      "1x Slide Switch (SPDT)",
+      "1x Rail 5V (wokwi-vcc)",
+      "1x Rail GND (wokwi-gnd)",
+      "1x Gerbang NOT (wokwi-gate-not)",
+      "1x LED",
+      "1x Resistor 220 Ohm"
+    ],
+    "wiring_guide": [
+      {
+        "komponen": "Saklar A",
+        "pin_komponen": "Kaki 2 (common)",
+        "koneksi_arduino": "Gate: IN"
+      },
+      {
+        "komponen": "Saklar A",
+        "pin_komponen": "Kaki 1",
+        "koneksi_arduino": "VCC (5V)"
+      },
+      {
+        "komponen": "Saklar A",
+        "pin_komponen": "Kaki 3",
+        "koneksi_arduino": "GND"
+      },
+      {
+        "komponen": "Gate NOT",
+        "pin_komponen": "OUT",
+        "koneksi_arduino": "Resistor 220 → LED → GND"
+      }
+    ],
+    "cpp_code": "// ===== Gerbang NOT / Inverter (7404) =====\n// Proyek ini TANPA KODE — murni rangkaian gerbang logika di Wokwi.\n// Cukup tempel diagram.json ke proyek baru Wokwi, lalu geser saklar input.\n// Catatan belajar:\n//   OUT = BUKAN A  →  LED menyala jika A=0 (saklar kanan)\n//   | A | OUT |\n//   | 0 |  1  |\n//   | 1 |  0  |\n//   Terapkan: indikator \"sistem mati\" — LED nyala justru saat tombol/saklar nonaktif.",
+    "wokwi_diagram": "{\"version\":1,\"author\":\"ElektroDict\",\"editor\":\"wokwi\",\"parts\":[{\"type\":\"wokwi-vcc\",\"id\":\"vcc\",\"top\":-320,\"left\":0,\"attrs\":{}},{\"type\":\"wokwi-gnd\",\"id\":\"gnd\",\"top\":-320,\"left\":190,\"attrs\":{}},{\"type\":\"wokwi-slide-switch\",\"id\":\"swA\",\"top\":-70,\"left\":0,\"attrs\":{\"label\":\"A\",\"bounce\":\"0\"}},{\"type\":\"wokwi-gate-not\",\"id\":\"gate\",\"top\":-70,\"left\":330,\"attrs\":{}},{\"type\":\"wokwi-resistor\",\"id\":\"r1\",\"top\":-70,\"left\":620,\"attrs\":{\"value\":\"220\"}},{\"type\":\"wokwi-led\",\"id\":\"led1\",\"top\":-70,\"left\":700,\"attrs\":{\"label\":\"OUT\",\"color\":\"red\",\"lightColor\":\"red\"}}],\"connections\":[[\"vcc:VCC\",\"swA:1\",\"red\",[\"v0\"]],[\"swA:2\",\"gate:IN\",\"green\",[\"v0\"]],[\"swA:3\",\"gnd:GND\",\"black\",[\"v0\"]],[\"gate:OUT\",\"r1:1\",\"yellow\",[\"v0\"]],[\"r1:2\",\"led1:A\",\"yellow\",[\"v0\"]],[\"led1:C\",\"gnd:GND\",\"black\",[\"v0\"]]]}",
+    "steps": [
+      {
+        "nama_komponen": "Saklar",
+        "alur_perakitan": "Posisi kiri = input 1, posisi kanan = input 0."
+      },
+      {
+        "nama_komponen": "Gerbang NOT",
+        "alur_perakitan": "Saklar A ke pin IN. Output ke LED (via resistor 220 Ohm) lalu GND."
+      },
+      {
+        "nama_komponen": "Uji coba",
+        "alur_perakitan": "Geser saklar: perhatikan LED menyala saat saklar di kanan (A=0) dan mati saat di kiri (A=1) — terbalik!"
+      }
+    ]
+  },
+  {
+    "id": "tpl-gate-nand",
+    "title": "Gerbang NAND (7400)",
+    "desc": "Kebalikan AND: LED menyala kecuali KEDUA saklar 1. NAND adalah gerbang universal — semua gerbang lain bisa dibangun dari NAND.",
+    "difficulty": "Mudah",
+    "tags": [
+      "Gerbang Logika",
+      "NAND",
+      "Digital",
+      "Universal Gate"
+    ],
+    "verified": true,
+    "noCode": true,
+    "board": "tanpa-mikrokontroler",
+    "libraries": [],
+    "bom": [
+      "1x Slide Switch (SPDT)",
+      "1x Rail 5V (wokwi-vcc)",
+      "1x Rail GND (wokwi-gnd)",
+      "1x Gerbang NAND (wokwi-gate-nand-2)",
+      "1x LED",
+      "1x Resistor 220 Ohm"
+    ],
+    "wiring_guide": [
+      {
+        "komponen": "Saklar A & B",
+        "pin_komponen": "Kaki 2 (common)",
+        "koneksi_arduino": "Gate: A dan B"
+      },
+      {
+        "komponen": "Saklar A & B",
+        "pin_komponen": "Kaki 1",
+        "koneksi_arduino": "VCC (5V)"
+      },
+      {
+        "komponen": "Saklar A & B",
+        "pin_komponen": "Kaki 3",
+        "koneksi_arduino": "GND"
+      },
+      {
+        "komponen": "Gate NAND",
+        "pin_komponen": "OUT",
+        "koneksi_arduino": "Resistor 220 → LED → GND"
+      }
+    ],
+    "cpp_code": "// ===== Gerbang NAND (7400) =====\n// Proyek ini TANPA KODE — murni rangkaian gerbang logika di Wokwi.\n// Cukup tempel diagram.json ke proyek baru Wokwi, lalu geser saklar input.\n// Catatan belajar:\n//   OUT = NOT (A DAN B)  →  LED mati HANYA jika A=1 dan B=1\n//   | A | B | OUT |\n//   | 0 | 0 |  1  |\n//   | 0 | 1 |  1  |\n//   | 1 | 0 |  1  |\n//   | 1 | 1 |  0  |\n//   Coba: jadikan gerbang NOT hanya dengan menghubungkan kaki A dan B sekaligus!",
+    "wokwi_diagram": "{\"version\":1,\"author\":\"ElektroDict\",\"editor\":\"wokwi\",\"parts\":[{\"type\":\"wokwi-vcc\",\"id\":\"vcc\",\"top\":-320,\"left\":0,\"attrs\":{}},{\"type\":\"wokwi-gnd\",\"id\":\"gnd\",\"top\":-320,\"left\":190,\"attrs\":{}},{\"type\":\"wokwi-slide-switch\",\"id\":\"swA\",\"top\":-120,\"left\":0,\"attrs\":{\"label\":\"A\",\"bounce\":\"0\"}},{\"type\":\"wokwi-slide-switch\",\"id\":\"swB\",\"top\":-20,\"left\":0,\"attrs\":{\"label\":\"B\",\"bounce\":\"0\"}},{\"type\":\"wokwi-gate-nand-2\",\"id\":\"gate\",\"top\":-120,\"left\":330,\"attrs\":{}},{\"type\":\"wokwi-resistor\",\"id\":\"r1\",\"top\":-120,\"left\":620,\"attrs\":{\"value\":\"220\"}},{\"type\":\"wokwi-led\",\"id\":\"led1\",\"top\":-120,\"left\":700,\"attrs\":{\"label\":\"OUT\",\"color\":\"red\",\"lightColor\":\"red\"}}],\"connections\":[[\"vcc:VCC\",\"swA:1\",\"red\",[\"v0\"]],[\"vcc:VCC\",\"swB:1\",\"red\",[\"v0\"]],[\"swA:2\",\"gate:A\",\"green\",[\"v0\"]],[\"swB:2\",\"gate:B\",\"green\",[\"v0\"]],[\"swA:3\",\"gnd:GND\",\"black\",[\"v0\"]],[\"swB:3\",\"gnd:GND\",\"black\",[\"v0\"]],[\"gate:OUT\",\"r1:1\",\"yellow\",[\"v0\"]],[\"r1:2\",\"led1:A\",\"yellow\",[\"v0\"]],[\"led1:C\",\"gnd:GND\",\"black\",[\"v0\"]]]}",
+    "steps": [
+      {
+        "nama_komponen": "Saklar",
+        "alur_perakitan": "Posisi kiri = input 1, posisi kanan = input 0."
+      },
+      {
+        "nama_komponen": "Gerbang NAND",
+        "alur_perakitan": "Saklar A ke pin A, saklar B ke pin B. Output ke LED (via resistor 220 Ohm) lalu GND."
+      },
+      {
+        "nama_komponen": "Uji coba",
+        "alur_perakitan": "Isi tabel kebenaran: LED mati hanya saat A=1 DAN B=1. Hubungkan A dan B jadi satu untuk membuat inverter."
+      }
+    ]
+  },
+  {
+    "id": "tpl-gate-nor",
+    "title": "Gerbang NOR (7402)",
+    "desc": "Kebalikan OR: LED menyala HANYA saat semua saklar 0. NOR juga gerbang universal — basis komputer Apollo (AGC) dibangun dari NOR saja.",
+    "difficulty": "Mudah",
+    "tags": [
+      "Gerbang Logika",
+      "NOR",
+      "Digital",
+      "Universal Gate"
+    ],
+    "verified": true,
+    "noCode": true,
+    "board": "tanpa-mikrokontroler",
+    "libraries": [],
+    "bom": [
+      "1x Slide Switch (SPDT)",
+      "1x Rail 5V (wokwi-vcc)",
+      "1x Rail GND (wokwi-gnd)",
+      "1x Gerbang NOR (wokwi-gate-nor-2)",
+      "1x LED",
+      "1x Resistor 220 Ohm"
+    ],
+    "wiring_guide": [
+      {
+        "komponen": "Saklar A & B",
+        "pin_komponen": "Kaki 2 (common)",
+        "koneksi_arduino": "Gate: A dan B"
+      },
+      {
+        "komponen": "Saklar A & B",
+        "pin_komponen": "Kaki 1",
+        "koneksi_arduino": "VCC (5V)"
+      },
+      {
+        "komponen": "Saklar A & B",
+        "pin_komponen": "Kaki 3",
+        "koneksi_arduino": "GND"
+      },
+      {
+        "komponen": "Gate NOR",
+        "pin_komponen": "OUT",
+        "koneksi_arduino": "Resistor 220 → LED → GND"
+      }
+    ],
+    "cpp_code": "// ===== Gerbang NOR (7402) =====\n// Proyek ini TANPA KODE — murni rangkaian gerbang logika di Wokwi.\n// Cukup tempel diagram.json ke proyek baru Wokwi, lalu geser saklar input.\n// Catatan belajar:\n//   OUT = NOT (A ATAU B)  →  LED nyala HANYA jika A=0 dan B=0\n//   | A | B | OUT |\n//   | 0 | 0 |  1  |\n//   | 0 | 1 |  0  |\n//   | 1 | 0 |  0  |\n//   | 1 | 1 |  0  |\n//   NOR = NOT di belakang OR.",
+    "wokwi_diagram": "{\"version\":1,\"author\":\"ElektroDict\",\"editor\":\"wokwi\",\"parts\":[{\"type\":\"wokwi-vcc\",\"id\":\"vcc\",\"top\":-320,\"left\":0,\"attrs\":{}},{\"type\":\"wokwi-gnd\",\"id\":\"gnd\",\"top\":-320,\"left\":190,\"attrs\":{}},{\"type\":\"wokwi-slide-switch\",\"id\":\"swA\",\"top\":-120,\"left\":0,\"attrs\":{\"label\":\"A\",\"bounce\":\"0\"}},{\"type\":\"wokwi-slide-switch\",\"id\":\"swB\",\"top\":-20,\"left\":0,\"attrs\":{\"label\":\"B\",\"bounce\":\"0\"}},{\"type\":\"wokwi-gate-nor-2\",\"id\":\"gate\",\"top\":-120,\"left\":330,\"attrs\":{}},{\"type\":\"wokwi-resistor\",\"id\":\"r1\",\"top\":-120,\"left\":620,\"attrs\":{\"value\":\"220\"}},{\"type\":\"wokwi-led\",\"id\":\"led1\",\"top\":-120,\"left\":700,\"attrs\":{\"label\":\"OUT\",\"color\":\"red\",\"lightColor\":\"red\"}}],\"connections\":[[\"vcc:VCC\",\"swA:1\",\"red\",[\"v0\"]],[\"vcc:VCC\",\"swB:1\",\"red\",[\"v0\"]],[\"swA:2\",\"gate:A\",\"green\",[\"v0\"]],[\"swB:2\",\"gate:B\",\"green\",[\"v0\"]],[\"swA:3\",\"gnd:GND\",\"black\",[\"v0\"]],[\"swB:3\",\"gnd:GND\",\"black\",[\"v0\"]],[\"gate:OUT\",\"r1:1\",\"yellow\",[\"v0\"]],[\"r1:2\",\"led1:A\",\"yellow\",[\"v0\"]],[\"led1:C\",\"gnd:GND\",\"black\",[\"v0\"]]]}",
+    "steps": [
+      {
+        "nama_komponen": "Saklar",
+        "alur_perakitan": "Posisi kiri = input 1, posisi kanan = input 0."
+      },
+      {
+        "nama_komponen": "Gerbang NOR",
+        "alur_perakitan": "Saklar A ke pin A, saklar B ke pin B. Output ke LED (via resistor 220 Ohm) lalu GND."
+      },
+      {
+        "nama_komponen": "Uji coba",
+        "alur_perakitan": "LED nyala hanya saat kedua saklar di posisi 0 (kanan)."
+      }
+    ]
+  },
+  {
+    "id": "tpl-gate-xor",
+    "title": "Gerbang XOR (7486)",
+    "desc": "Dua saklar ke gerbang XOR: LED menyala jika jumlah input 1 berjumlah GANJIL (berbeda). XOR = dasar penjumlahan biner dan pengecekan paritas.",
+    "difficulty": "Mudah",
+    "tags": [
+      "Gerbang Logika",
+      "XOR",
+      "Digital",
+      "Paritas"
+    ],
+    "verified": true,
+    "noCode": true,
+    "board": "tanpa-mikrokontroler",
+    "libraries": [],
+    "bom": [
+      "1x Slide Switch (SPDT)",
+      "1x Rail 5V (wokwi-vcc)",
+      "1x Rail GND (wokwi-gnd)",
+      "1x Gerbang XOR (wokwi-gate-xor-2)",
+      "1x LED",
+      "1x Resistor 220 Ohm"
+    ],
+    "wiring_guide": [
+      {
+        "komponen": "Saklar A & B",
+        "pin_komponen": "Kaki 2 (common)",
+        "koneksi_arduino": "Gate: A dan B"
+      },
+      {
+        "komponen": "Saklar A & B",
+        "pin_komponen": "Kaki 1",
+        "koneksi_arduino": "VCC (5V)"
+      },
+      {
+        "komponen": "Saklar A & B",
+        "pin_komponen": "Kaki 3",
+        "koneksi_arduino": "GND"
+      },
+      {
+        "komponen": "Gate XOR",
+        "pin_komponen": "OUT",
+        "koneksi_arduino": "Resistor 220 → LED → GND"
+      }
+    ],
+    "cpp_code": "// ===== Gerbang XOR (7486) =====\n// Proyek ini TANPA KODE — murni rangkaian gerbang logika di Wokwi.\n// Cukup tempel diagram.json ke proyek baru Wokwi, lalu geser saklar input.\n// Catatan belajar:\n//   OUT = A ≠ B  →  LED nyala jika A dan B BERBEDA\n//   | A | B | OUT |\n//   | 0 | 0 |  0  |\n//   | 0 | 1 |  1  |\n//   | 1 | 0 |  1  |\n//   | 1 | 1 |  0  |\n//   XOR = \"jumlah 1-nya ganjil\" — dasar bit sum penjumlahan biner.",
+    "wokwi_diagram": "{\"version\":1,\"author\":\"ElektroDict\",\"editor\":\"wokwi\",\"parts\":[{\"type\":\"wokwi-vcc\",\"id\":\"vcc\",\"top\":-320,\"left\":0,\"attrs\":{}},{\"type\":\"wokwi-gnd\",\"id\":\"gnd\",\"top\":-320,\"left\":190,\"attrs\":{}},{\"type\":\"wokwi-slide-switch\",\"id\":\"swA\",\"top\":-120,\"left\":0,\"attrs\":{\"label\":\"A\",\"bounce\":\"0\"}},{\"type\":\"wokwi-slide-switch\",\"id\":\"swB\",\"top\":-20,\"left\":0,\"attrs\":{\"label\":\"B\",\"bounce\":\"0\"}},{\"type\":\"wokwi-gate-xor-2\",\"id\":\"gate\",\"top\":-120,\"left\":330,\"attrs\":{}},{\"type\":\"wokwi-resistor\",\"id\":\"r1\",\"top\":-120,\"left\":620,\"attrs\":{\"value\":\"220\"}},{\"type\":\"wokwi-led\",\"id\":\"led1\",\"top\":-120,\"left\":700,\"attrs\":{\"label\":\"OUT\",\"color\":\"red\",\"lightColor\":\"red\"}}],\"connections\":[[\"vcc:VCC\",\"swA:1\",\"red\",[\"v0\"]],[\"vcc:VCC\",\"swB:1\",\"red\",[\"v0\"]],[\"swA:2\",\"gate:A\",\"green\",[\"v0\"]],[\"swB:2\",\"gate:B\",\"green\",[\"v0\"]],[\"swA:3\",\"gnd:GND\",\"black\",[\"v0\"]],[\"swB:3\",\"gnd:GND\",\"black\",[\"v0\"]],[\"gate:OUT\",\"r1:1\",\"yellow\",[\"v0\"]],[\"r1:2\",\"led1:A\",\"yellow\",[\"v0\"]],[\"led1:C\",\"gnd:GND\",\"black\",[\"v0\"]]]}",
+    "steps": [
+      {
+        "nama_komponen": "Saklar",
+        "alur_perakitan": "Posisi kiri = input 1, posisi kanan = input 0."
+      },
+      {
+        "nama_komponen": "Gerbang XOR",
+        "alur_perakitan": "Saklar A ke pin A, saklar B ke pin B. Output ke LED (via resistor 220 Ohm) lalu GND."
+      },
+      {
+        "nama_komponen": "Uji coba",
+        "alur_perakitan": "Isi tabel kebenaran: LED menyala hanya saat A dan B berbeda. Inilah bit \"jumlah\" (sum) pada penjumlahan biner 1 bit."
+      }
+    ]
+  },
+  {
+    "id": "tpl-gate-xnor",
+    "title": "Gerbang XNOR (74266)",
+    "desc": "Kebalikan XOR: LED menyala jika kedua input SAMA. XNOR = 1-bit equality check (pembanding kesamaan).",
+    "difficulty": "Mudah",
+    "tags": [
+      "Gerbang Logika",
+      "XNOR",
+      "Digital",
+      "Comparator"
+    ],
+    "verified": true,
+    "noCode": true,
+    "board": "tanpa-mikrokontroler",
+    "libraries": [],
+    "bom": [
+      "1x Slide Switch (SPDT)",
+      "1x Rail 5V (wokwi-vcc)",
+      "1x Rail GND (wokwi-gnd)",
+      "1x Gerbang XNOR (wokwi-gate-xnor-2)",
+      "1x LED",
+      "1x Resistor 220 Ohm"
+    ],
+    "wiring_guide": [
+      {
+        "komponen": "Saklar A & B",
+        "pin_komponen": "Kaki 2 (common)",
+        "koneksi_arduino": "Gate: A dan B"
+      },
+      {
+        "komponen": "Saklar A & B",
+        "pin_komponen": "Kaki 1",
+        "koneksi_arduino": "VCC (5V)"
+      },
+      {
+        "komponen": "Saklar A & B",
+        "pin_komponen": "Kaki 3",
+        "koneksi_arduino": "GND"
+      },
+      {
+        "komponen": "Gate XNOR",
+        "pin_komponen": "OUT",
+        "koneksi_arduino": "Resistor 220 → LED → GND"
+      }
+    ],
+    "cpp_code": "// ===== Gerbang XNOR (74266) =====\n// Proyek ini TANPA KODE — murni rangkaian gerbang logika di Wokwi.\n// Cukup tempel diagram.json ke proyek baru Wokwi, lalu geser saklar input.\n// Catatan belajar:\n//   OUT = NOT (A ≠ B)  →  LED nyala jika A dan B SAMA\n//   | A | B | OUT |\n//   | 0 | 0 |  1  |\n//   | 0 | 1 |  0  |\n//   | 1 | 0 |  0  |\n//   | 1 | 1 |  1  |\n//   XNOR dipakai sebagai pembanding: output 1 = kedua input identik.",
+    "wokwi_diagram": "{\"version\":1,\"author\":\"ElektroDict\",\"editor\":\"wokwi\",\"parts\":[{\"type\":\"wokwi-vcc\",\"id\":\"vcc\",\"top\":-320,\"left\":0,\"attrs\":{}},{\"type\":\"wokwi-gnd\",\"id\":\"gnd\",\"top\":-320,\"left\":190,\"attrs\":{}},{\"type\":\"wokwi-slide-switch\",\"id\":\"swA\",\"top\":-120,\"left\":0,\"attrs\":{\"label\":\"A\",\"bounce\":\"0\"}},{\"type\":\"wokwi-slide-switch\",\"id\":\"swB\",\"top\":-20,\"left\":0,\"attrs\":{\"label\":\"B\",\"bounce\":\"0\"}},{\"type\":\"wokwi-gate-xnor-2\",\"id\":\"gate\",\"top\":-120,\"left\":330,\"attrs\":{}},{\"type\":\"wokwi-resistor\",\"id\":\"r1\",\"top\":-120,\"left\":620,\"attrs\":{\"value\":\"220\"}},{\"type\":\"wokwi-led\",\"id\":\"led1\",\"top\":-120,\"left\":700,\"attrs\":{\"label\":\"OUT\",\"color\":\"red\",\"lightColor\":\"red\"}}],\"connections\":[[\"vcc:VCC\",\"swA:1\",\"red\",[\"v0\"]],[\"vcc:VCC\",\"swB:1\",\"red\",[\"v0\"]],[\"swA:2\",\"gate:A\",\"green\",[\"v0\"]],[\"swB:2\",\"gate:B\",\"green\",[\"v0\"]],[\"swA:3\",\"gnd:GND\",\"black\",[\"v0\"]],[\"swB:3\",\"gnd:GND\",\"black\",[\"v0\"]],[\"gate:OUT\",\"r1:1\",\"yellow\",[\"v0\"]],[\"r1:2\",\"led1:A\",\"yellow\",[\"v0\"]],[\"led1:C\",\"gnd:GND\",\"black\",[\"v0\"]]]}",
+    "steps": [
+      {
+        "nama_komponen": "Saklar",
+        "alur_perakitan": "Posisi kiri = input 1, posisi kanan = input 0."
+      },
+      {
+        "nama_komponen": "Gerbang XNOR",
+        "alur_perakitan": "Saklar A ke pin A, saklar B ke pin B. Output ke LED (via resistor 220 Ohm) lalu GND."
+      },
+      {
+        "nama_komponen": "Uji coba",
+        "alur_perakitan": "LED menyala saat A dan B pada posisi yang sama (keduanya 0 atau keduanya 1)."
+      }
+    ]
+  },
+  {
+    "id": "tpl-gate-mux",
+    "title": "Multiplexer 2-ke-1 (MUX)",
+    "desc": "Tiga saklar: A dan B adalah dua sumber data, SEL memilih mana yang diteruskan ke LED. MUX = pemilih jalur data, dipakai pada keyboard & komunikasi serial.",
+    "difficulty": "Menengah",
+    "tags": [
+      "Gerbang Logika",
+      "MUX",
+      "Multiplexer",
+      "Digital"
+    ],
+    "verified": true,
+    "noCode": true,
+    "board": "tanpa-mikrokontroler",
+    "libraries": [],
+    "bom": [
+      "1x Slide Switch (SPDT)",
+      "1x Rail 5V (wokwi-vcc)",
+      "1x Rail GND (wokwi-gnd)",
+      "1x Multiplexer (wokwi-mux-2)",
+      "1x LED",
+      "1x Resistor 220 Ohm"
+    ],
+    "wiring_guide": [
+      {
+        "komponen": "Saklar A, B, SEL",
+        "pin_komponen": "Kaki 2 (common)",
+        "koneksi_arduino": "MUX: A, B, dan SEL"
+      },
+      {
+        "komponen": "Saklar A, B, SEL",
+        "pin_komponen": "Kaki 1",
+        "koneksi_arduino": "VCC (5V)"
+      },
+      {
+        "komponen": "Saklar A, B, SEL",
+        "pin_komponen": "Kaki 3",
+        "koneksi_arduino": "GND"
+      },
+      {
+        "komponen": "MUX",
+        "pin_komponen": "OUT",
+        "koneksi_arduino": "Resistor 220 → LED → GND"
+      }
+    ],
+    "cpp_code": "// ===== Multiplexer 2-ke-1 (MUX) =====\n// Proyek ini TANPA KODE — murni rangkaian gerbang logika di Wokwi.\n// Cukup tempel diagram.json ke proyek baru Wokwi, lalu geser saklar input.\n// Catatan belajar:\n//   OUT = SEL ? B : A  →  LED mengikuti A saat SEL=0, mengikuti B saat SEL=1\n//   | SEL | OUT |\n//   |  0  | ikut A |\n//   |  1  | ikut B |\n//   Set SEL=0: geser A/B dan lihat LED mengikuti A. Set SEL=1: LED mengikuti B.",
+    "wokwi_diagram": "{\"version\":1,\"author\":\"ElektroDict\",\"editor\":\"wokwi\",\"parts\":[{\"type\":\"wokwi-vcc\",\"id\":\"vcc\",\"top\":-320,\"left\":0,\"attrs\":{}},{\"type\":\"wokwi-gnd\",\"id\":\"gnd\",\"top\":-320,\"left\":190,\"attrs\":{}},{\"type\":\"wokwi-slide-switch\",\"id\":\"swA\",\"top\":-120,\"left\":0,\"attrs\":{\"label\":\"A\",\"bounce\":\"0\"}},{\"type\":\"wokwi-slide-switch\",\"id\":\"swB\",\"top\":-20,\"left\":0,\"attrs\":{\"label\":\"B\",\"bounce\":\"0\"}},{\"type\":\"wokwi-slide-switch\",\"id\":\"swS\",\"top\":80,\"left\":0,\"attrs\":{\"label\":\"SEL\",\"bounce\":\"0\"}},{\"type\":\"wokwi-mux-2\",\"id\":\"gate\",\"top\":-20,\"left\":330,\"attrs\":{}},{\"type\":\"wokwi-resistor\",\"id\":\"r1\",\"top\":-20,\"left\":620,\"attrs\":{\"value\":\"220\"}},{\"type\":\"wokwi-led\",\"id\":\"led1\",\"top\":-20,\"left\":700,\"attrs\":{\"label\":\"OUT\",\"color\":\"red\",\"lightColor\":\"red\"}}],\"connections\":[[\"vcc:VCC\",\"swA:1\",\"red\",[\"v0\"]],[\"vcc:VCC\",\"swB:1\",\"red\",[\"v0\"]],[\"vcc:VCC\",\"swS:1\",\"red\",[\"v0\"]],[\"swA:2\",\"gate:A\",\"green\",[\"v0\"]],[\"swB:2\",\"gate:B\",\"green\",[\"v0\"]],[\"swS:2\",\"gate:SEL\",\"blue\",[\"v0\"]],[\"swA:3\",\"gnd:GND\",\"black\",[\"v0\"]],[\"swB:3\",\"gnd:GND\",\"black\",[\"v0\"]],[\"swS:3\",\"gnd:GND\",\"black\",[\"v0\"]],[\"gate:OUT\",\"r1:1\",\"yellow\",[\"v0\"]],[\"r1:2\",\"led1:A\",\"yellow\",[\"v0\"]],[\"led1:C\",\"gnd:GND\",\"black\",[\"v0\"]]]}",
+    "steps": [
+      {
+        "nama_komponen": "Saklar A, B, SEL",
+        "alur_perakitan": "Posisi kiri = input 1, posisi kanan = input 0."
+      },
+      {
+        "nama_komponen": "Multiplexer",
+        "alur_perakitan": "A ke pin A, B ke pin B, SEL ke pin SEL. Output ke LED (via resistor 220 Ohm) lalu GND."
+      },
+      {
+        "nama_komponen": "Uji coba",
+        "alur_perakitan": "Set SEL=0: LED mengikuti posisi saklar A (abaikan B). Set SEL=1: LED mengikuti B. MUX seperti \"tombol pemilih saluran\"."
+      }
+    ]
+  },
+  {
+    "id": "tpl-gate-half-adder",
+    "title": "Half Adder 1-bit (Penjumlahan Biner)",
+    "desc": "Dua saklar (A + B) dijumlahkan secara biner: LED S (Sum) = hasil bit, LED C (Carry) = sisa bawaan. Inilah unit dasar semua penjumlahan di komputer!",
+    "difficulty": "Menengah",
+    "tags": [
+      "Gerbang Logika",
+      "Half Adder",
+      "XOR",
+      "AND",
+      "Aritmatika"
+    ],
+    "verified": true,
+    "noCode": true,
+    "board": "tanpa-mikrokontroler",
+    "libraries": [],
+    "bom": [
+      "1x Slide Switch (SPDT)",
+      "1x Rail 5V (wokwi-vcc)",
+      "1x Rail GND (wokwi-gnd)",
+      "1x Gerbang XOR (wokwi-gate-xor-2)",
+      "1x Gerbang AND (wokwi-gate-and-2)",
+      "2x LED",
+      "2x Resistor 220 Ohm"
+    ],
+    "wiring_guide": [
+      {
+        "komponen": "Saklar A & B",
+        "pin_komponen": "Kaki 2 (common)",
+        "koneksi_arduino": "XOR:A/AND:A dan XOR:B/AND:B"
+      },
+      {
+        "komponen": "Saklar A & B",
+        "pin_komponen": "Kaki 1",
+        "koneksi_arduino": "VCC (5V)"
+      },
+      {
+        "komponen": "Saklar A & B",
+        "pin_komponen": "Kaki 3",
+        "koneksi_arduino": "GND"
+      },
+      {
+        "komponen": "XOR",
+        "pin_komponen": "OUT",
+        "koneksi_arduino": "Resistor 220 → LED hijau S → GND"
+      },
+      {
+        "komponen": "AND",
+        "pin_komponen": "OUT",
+        "koneksi_arduino": "Resistor 220 → LED kuning C → GND"
+      }
+    ],
+    "cpp_code": "// ===== Half Adder 1-bit (Penjumlahan Biner) =====\n// Proyek ini TANPA KODE — murni rangkaian gerbang logika di Wokwi.\n// Cukup tempel diagram.json ke proyek baru Wokwi, lalu geser saklar input.\n// Catatan belajar:\n//   S = A XOR B   (bit hasil)\n//   C = A AND B   (bit carry / sisa)\n//   | A | B | S | C |\n//   | 0 | 0 | 0 | 0 |\n//   | 0 | 1 | 1 | 0 |\n//   | 1 | 0 | 1 | 0 |\n//   | 1 | 1 | 0 | 1 |\n//   1+1 = 10 biner: S=0, C=1 (carry lanjut ke kolom berikutnya).",
+    "wokwi_diagram": "{\"version\":1,\"author\":\"ElektroDict\",\"editor\":\"wokwi\",\"parts\":[{\"type\":\"wokwi-vcc\",\"id\":\"vcc\",\"top\":-320,\"left\":0,\"attrs\":{}},{\"type\":\"wokwi-gnd\",\"id\":\"gnd\",\"top\":-320,\"left\":190,\"attrs\":{}},{\"type\":\"wokwi-slide-switch\",\"id\":\"swA\",\"top\":-120,\"left\":0,\"attrs\":{\"label\":\"A\",\"bounce\":\"0\"}},{\"type\":\"wokwi-slide-switch\",\"id\":\"swB\",\"top\":-20,\"left\":0,\"attrs\":{\"label\":\"B\",\"bounce\":\"0\"}},{\"type\":\"wokwi-gate-xor-2\",\"id\":\"xor\",\"top\":-120,\"left\":330,\"attrs\":{}},{\"type\":\"wokwi-gate-and-2\",\"id\":\"and\",\"top\":-10,\"left\":330,\"attrs\":{}},{\"type\":\"wokwi-resistor\",\"id\":\"rs\",\"top\":-120,\"left\":620,\"attrs\":{\"value\":\"220\"}},{\"type\":\"wokwi-led\",\"id\":\"ledS\",\"top\":-120,\"left\":700,\"attrs\":{\"label\":\"S\",\"color\":\"green\",\"lightColor\":\"green\"}},{\"type\":\"wokwi-resistor\",\"id\":\"rc\",\"top\":-10,\"left\":620,\"attrs\":{\"value\":\"220\"}},{\"type\":\"wokwi-led\",\"id\":\"ledC\",\"top\":-10,\"left\":700,\"attrs\":{\"label\":\"C\",\"color\":\"yellow\",\"lightColor\":\"yellow\"}}],\"connections\":[[\"vcc:VCC\",\"swA:1\",\"red\",[\"v0\"]],[\"vcc:VCC\",\"swB:1\",\"red\",[\"v0\"]],[\"swA:2\",\"xor:A\",\"green\",[\"v0\"]],[\"swA:2\",\"and:A\",\"green\",[\"v0\"]],[\"swB:2\",\"xor:B\",\"green\",[\"v0\"]],[\"swB:2\",\"and:B\",\"green\",[\"v0\"]],[\"swA:3\",\"gnd:GND\",\"black\",[\"v0\"]],[\"swB:3\",\"gnd:GND\",\"black\",[\"v0\"]],[\"xor:OUT\",\"rs:1\",\"yellow\",[\"v0\"]],[\"rs:2\",\"ledS:A\",\"yellow\",[\"v0\"]],[\"ledS:C\",\"gnd:GND\",\"black\",[\"v0\"]],[\"and:OUT\",\"rc:1\",\"yellow\",[\"v0\"]],[\"rc:2\",\"ledC:A\",\"yellow\",[\"v0\"]],[\"ledC:C\",\"gnd:GND\",\"black\",[\"v0\"]]]}",
+    "steps": [
+      {
+        "nama_komponen": "Saklar A & B",
+        "alur_perakitan": "Posisi kiri = input 1, posisi kanan = input 0."
+      },
+      {
+        "nama_komponen": "XOR & AND",
+        "alur_perakitan": "Kedua gerbang menerima input yang sama (A dan B). XOR menghasilkan bit Sum, AND menghasilkan bit Carry."
+      },
+      {
+        "nama_komponen": "LED",
+        "alur_perakitan": "LED hijau (S) dari XOR, LED kuning (C) dari AND — masing-masing via resistor 220 Ohm ke GND."
+      },
+      {
+        "nama_komponen": "Uji coba",
+        "alur_perakitan": "A=1, B=1: S mati, C nyala → hasil 10 (biner). Bandingkan dengan tabel kebenaran penjumlahan biner."
+      }
+    ]
+  }
 ];;
 
 // ---- TENTANG ----
