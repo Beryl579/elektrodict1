@@ -148,7 +148,7 @@ const BUILTIN_HEADERS = [
   'Arduino.h', 'Wire.h', 'SPI.h', 'LiquidCrystal.h', 'Servo.h', 'Stepper.h',
   'SoftwareSerial.h', 'EEPROM.h', 'SD.h', 'WiFi.h', 'WebServer.h', 'HTTPClient.h',
   'WiFiClient.h', 'WiFiServer.h', 'WiFiUdp.h', 'math.h', 'string.h', 'stdlib.h',
-  'stdio.h', 'avr/io.h', 'avr/pgmspace.h', 'util/delay.h', 'esp32-hal.h', 'HardwareSerial.h'
+  'stdio.h', 'time.h', 'avr/io.h', 'avr/pgmspace.h', 'util/delay.h', 'esp32-hal.h', 'HardwareSerial.h'
 ];
 
 const KNOWN_LIB_NAMES = [...new Set(Object.values(LIBRARY_CATALOG).flat())];
