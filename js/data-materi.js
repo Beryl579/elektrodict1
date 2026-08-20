@@ -1195,7 +1195,13 @@ $$R = \\rho \\cdot \\frac{L}{A} \\qquad \\Rightarrow \\qquad \\Delta V = 2 \\cdo
 </ul>`,
         referensi: 'Studi kasus konveyor dari aplikasi nyata otomasi industri. Konsep dasar dari Siemens S7 TIA Portal application examples.'
       }
-    ],
+    ,
+{
+        "id": "video-plc",
+        "emoji": "🎬",
+        "title": "Video Pendukung (tab Video)",
+        "body": "<p>Konsep PLC paling mudah dipahami lewat animasi. Buka tab <strong>Video</strong> (topik <em>PLC, HMI & SCADA</em> dan <em>Digital & Kontrol</em>) untuk menonton: 👇</p>\n<div class=\"mt-tip\">▶ <button class=\"vtpl-chip\" onclick=\"openVideoById('PbAGl_mv5XI')\">🎬 Dasar PLC (RealPars)</button><br>▶ <button class=\"vtpl-chip\" onclick=\"openVideoById('qaI48NCUvkA')\">🎬 Apa itu Ladder Logic? (RealPars)</button><br>▶ <button class=\"vtpl-chip\" onclick=\"openVideoById('BHbOXDt5O3o')\">🎬 Timer PLC untuk Pemula (RealPars)</button><br>▶ <button class=\"vtpl-chip\" onclick=\"openVideoById('B3YVpgs9RY4')\">🎬 DCS vs SCADA (RealPars)</button><br>▶ <button class=\"vtpl-chip\" onclick=\"openVideoById('G5VGUGFzGj0')\">🎬 Sinking vs Sourcing (RealPars)</button><br>▶ <button class=\"vtpl-chip\" onclick=\"openVideoById('S97rhReEnbo')\">🎬 Apa itu AS-Interface? (RealPars)</button></div>\n<div class=\"mt-warn\">⚠️ PLC belum bisa disimulasikan di Wokwi (belum ada part-nya). Manfaatkan video, modul ini, dan latihan soal sebagai fondasi sebelum praktik hardware asli — untuk dasar elektronik/Arduino, coba template ESP32/Arduino di Lab Proyek.</div>"
+      }],
     contoh: [
       {
         judul: 'Membuat Timer On-Delay di Ladder',
@@ -1343,7 +1349,13 @@ $$R = \\rho \\cdot \\frac{L}{A} \\qquad \\Rightarrow \\qquad \\Delta V = 2 \\cdo
 </ul>`,
         referensi: 'Platform IoT dari komparasi umum IoT ecosystem. Grafana: grafana.com. Node-RED: nodered.org. ThingSpeak: mathworks.com/products/thingspeak.'
       }
-    ],
+    ,
+{
+        "id": "latihan-esp32",
+        "emoji": "🧰",
+        "title": "Latihan Praktik di Lab Proyek",
+        "body": "<p>Semua konsep modul ini sudah ada <strong>template siap pakai</strong> di tab <strong>Lab Proyek</strong> (filter: ESP32) — tinggal buka, salin kodenya ke Wokwi, dan coba: 👇</p>\n<div class=\"mt-tip\">🔗 <button class=\"vtpl-chip\" onclick=\"goToTemplate('tpl-esp32-ntp-clock')\">🧰 Jam Internet NTP</button> — WiFi + configTime + OLED<br>🔗 <button class=\"vtpl-chip\" onclick=\"goToTemplate('tpl-esp32-web-server')\">🧰 Web Server Kendali LED</button> — WebServer.h + kontrol via browser<br>🔗 <button class=\"vtpl-chip\" onclick=\"goToTemplate('tpl-esp32-adc-averaging')\">🧰 ADC Multi-Sampling</button> — baca sensor analog + filter noise<br>🔗 <button class=\"vtpl-chip\" onclick=\"goToTemplate('tpl-esp32-pwm-dimmer')\">🧰 LED Dimmer PWM</button> — analogWrite / LEDC bawaan<br>🔗 <button class=\"vtpl-chip\" onclick=\"goToTemplate('tpl-esp32-neopixel-rainbow')\">🧰 NeoPixel Rainbow</button> — animasi strip WS2812<br>🔗 <button class=\"vtpl-chip\" onclick=\"goToTemplate('tpl-esp32-joystick-oled')\">🧰 Joystick 2 Sumbu</button> — ADC multi-channel + tombol</div>\n<div class=\"mt-warn\">⚠️ Template Firebase (sensor PIR, LDR, DHT, ultrasonik, termostat, gas, servo, RGB, OLED, lonceng) tersedia di Lab Proyek — pelajari pola REST PUT/GET-nya lalu ubah jalur data sesuai kebutuhanmu.</div>\n<p>Alur belajar: pahami kodenya → salin ke Wokwi → ubah satu hal (mis. pin, SSID, jalur data) → amati hasil di serial monitor / OLED.</p>"
+      }],
     contoh: [
       {
         judul: 'Membaca Sensor DHT22 & Kirim ke Firebase',

@@ -506,7 +506,15 @@ const VIDEOS = [
   { id:'B3YVpgs9RY4', title:'Apa Perbedaan DCS dan SCADA?', channel:'RealPars', channelUrl:'https://www.youtube.com/@RealPars', topic:'PLC, HMI & SCADA', desc:'RealPars: arsitektur dan fungsi DCS vs SCADA, serta kapan masing-masing digunakan di industri.' },
   { id:'BHbOXDt5O3o', title:'Pemrograman Timer PLC untuk Pemula', channel:'RealPars', channelUrl:'https://www.youtube.com/@RealPars', topic:'PLC, HMI & SCADA', desc:'RealPars: timer ON-delay, OFF-delay, dan pulse pada program PLC beserta contoh ladder.' },
   { id:'uOtdWHMKhnw', title:'Dasar PLC Dijelaskan — Otomasi Industri', channel:'The Engineering Mindset', channelUrl:'https://www.youtube.com/@EngineeringMindset', topic:'PLC, HMI & SCADA', desc:'Penjelasan visual PLC dari The Engineering Mindset: CPU, modul I/O, ladder diagram, dan perannya menggantikan panel relay.' },
-];
+]
+// Peta tautan video <-> template Wokwi (cross-link antar konten)
+const VIDEO_TEMPLATE_LINKS = {
+  'n594CkrP6xE': ['tpl-dpdt-power-switch'],
+  'UPTU6nYSaMo': ['tpl-servo-knob', 'tpl-rotary-dimmer', 'tpl-esp32-pwm-dimmer'],
+  'GQatiB-JHdI': ['tpl-stepper-motor'],
+  '0YSXEDgCyXg': ['tpl-stepper-motor']
+};
+;
 
 // ========================================================================================================================-”€
 // BANK PROYEK SIAP PAKAI (Terverifikasi) — Wokwi
@@ -4400,6 +4408,262 @@ const WOKWI_TEMPLATES = [
       {
         "nama_komponen": "Uji coba",
         "alur_perakitan": "Jalankan simulasi → buka alamat IP ESP32 di browser (di Wokwi, klik link port 80 di Serial Monitor) → tekan NYALAKAN/MATIKAN."
+      }
+    ]
+  }
+,
+  {
+    "id": "tpl-esp32-adc-averaging",
+    "title": "ADC Multi-Sampling — Membaca & Menyaring Noise",
+    "desc": "ESP32 membaca tegangan potensiometer lalu membandingkan nilai ADC mentah dengan rata-rata 100 sampel — teknik dasar filter noise yang dipakai di industri.",
+    "difficulty": "Menengah",
+    "tags": [
+      "ESP32",
+      "ADC",
+      "Sensor",
+      "OLED",
+      "Filter"
+    ],
+    "verified": true,
+    "libraries": [
+      "Adafruit SSD1306",
+      "Adafruit GFX Library"
+    ],
+    "board": "board-esp32-devkit-c-v4",
+    "bom": [
+      "1x ESP32 DevKitC V4",
+      "1x Potensiometer",
+      "1x OLED SSD1306 128x64 (I2C)",
+      "Kabel jumper"
+    ],
+    "wiring_guide": [
+      {
+        "komponen": "Potensiometer",
+        "pin_komponen": "VCC / GND",
+        "koneksi_arduino": "3V3 / GND"
+      },
+      {
+        "komponen": "Potensiometer",
+        "pin_komponen": "SIG (wiper)",
+        "koneksi_arduino": "GPIO 34 (ADC1, aman saat WiFi)"
+      },
+      {
+        "komponen": "OLED",
+        "pin_komponen": "VCC / GND",
+        "koneksi_arduino": "3V3 / GND"
+      },
+      {
+        "komponen": "OLED",
+        "pin_komponen": "SDA / SCL",
+        "koneksi_arduino": "GPIO 21 / GPIO 22"
+      }
+    ],
+    "cpp_code": "// ===== ADC Multi-Sampling =====\n// ESP32 + potensiometer (GPIO 34) + OLED SSD1306\n// Bandingkan nilai ADC mentah vs rata-rata 100 sampel (filter noise).\n\n#include <Wire.h>\n#include <Adafruit_GFX.h>\n#include <Adafruit_SSD1306.h>\n\n#define OLED_W 128\n#define OLED_H 64\nAdafruit_SSD1306 oled(OLED_W, OLED_H, &Wire, -1);\n\n#define POT_PIN 34\n#define JUMLAH_SAMPEL 100\n\nlong rataRataADC() {\n  long total = 0;\n  for (int i = 0; i < JUMLAH_SAMPEL; i++) {\n    total += analogRead(POT_PIN);\n  }\n  return total / JUMLAH_SAMPEL;\n}\n\nvoid setup() {\n  Serial.begin(115200);\n  Wire.begin();\n  if (!oled.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { Serial.println(\"OLED gagal\"); }\n  oled.clearDisplay();\n}\n\nvoid loop() {\n  int mentah = analogRead(POT_PIN);\n  long rata = rataRataADC();\n\n  oled.clearDisplay();\n  oled.setTextSize(1); oled.setTextColor(SSD1306_WHITE);\n  oled.setCursor(0, 0); oled.println(\"ADC MULTI-SAMPLING\");\n  oled.drawLine(0, 10, 127, 10, SSD1306_WHITE);\n  oled.setTextSize(2);\n  oled.setCursor(8, 16); oled.print(\"M:\"); oled.println(mentah);\n  oled.setCursor(8, 34); oled.print(\"R:\"); oled.println((int)rata);\n  oled.setTextSize(1);\n  oled.setCursor(0, 54); oled.printf(\"Rata %d sampel\", JUMLAH_SAMPEL);\n  oled.display();\n\n  Serial.printf(\"Mentah: %d | Rata-rata: %d\\n\", mentah, (int)rata);\n  delay(300);\n}",
+    "wokwi_diagram": "{\"version\":1,\"author\":\"ElektroDict\",\"editor\":\"wokwi\",\"parts\":[{\"type\":\"board-esp32-devkit-c-v4\",\"id\":\"esp\",\"top\":0,\"left\":0,\"attrs\":{}},{\"type\":\"wokwi-potentiometer\",\"id\":\"pot\",\"top\":-130,\"left\":340,\"attrs\":{}},{\"type\":\"board-ssd1306\",\"id\":\"oled\",\"top\":-120,\"left\":540,\"attrs\":{}}],\"connections\":[[\"pot:VCC\",\"esp:3V3\",\"red\",[\"v0\"]],[\"pot:SIG\",\"esp:34\",\"green\",[\"v0\"]],[\"pot:GND\",\"esp:GND.1\",\"black\",[\"v0\"]],[\"oled:VCC\",\"esp:3V3\",\"red\",[\"v0\"]],[\"oled:GND\",\"esp:GND.2\",\"black\",[\"v0\"]],[\"oled:SCL\",\"esp:22\",\"yellow\",[\"v0\"]],[\"oled:SDA\",\"esp:21\",\"green\",[\"v0\"]]]}",
+    "steps": [
+      {
+        "nama_komponen": "Potensiometer",
+        "alur_perakitan": "VCC ke 3V3, SIG ke GPIO 34, GND ke GND."
+      },
+      {
+        "nama_komponen": "OLED",
+        "alur_perakitan": "VCC ke 3V3, GND ke GND, SDA ke GPIO 21, SCL ke GPIO 22."
+      },
+      {
+        "nama_komponen": "Library",
+        "alur_perakitan": "Pasang Adafruit SSD1306 + Adafruit GFX via libraries.txt."
+      },
+      {
+        "nama_komponen": "Uji coba",
+        "alur_perakitan": "Putar potensiometer: baris M = nilai mentah, R = rata-rata 100 sampel. Lihat perbedaannya di serial monitor."
+      }
+    ]
+  },
+  {
+    "id": "tpl-esp32-pwm-dimmer",
+    "title": "LED Dimmer dengan PWM",
+    "desc": "Potensiometer mengatur kecerahan LED lewat sinyal PWM (LEDC bawaan ESP32) — konsep dasar pengendalian kecepatan motor & kecerahan lampu.",
+    "difficulty": "Mudah",
+    "tags": [
+      "ESP32",
+      "PWM",
+      "LED",
+      "Potensiometer"
+    ],
+    "verified": true,
+    "libraries": [],
+    "board": "board-esp32-devkit-c-v4",
+    "bom": [
+      "1x ESP32 DevKitC V4",
+      "1x Potensiometer",
+      "1x LED",
+      "1x Resistor 220 Ohm",
+      "Kabel jumper"
+    ],
+    "wiring_guide": [
+      {
+        "komponen": "Potensiometer",
+        "pin_komponen": "VCC / GND",
+        "koneksi_arduino": "3V3 / GND"
+      },
+      {
+        "komponen": "Potensiometer",
+        "pin_komponen": "SIG (wiper)",
+        "koneksi_arduino": "GPIO 34"
+      },
+      {
+        "komponen": "LED (via 220 Ohm)",
+        "pin_komponen": "A (anoda)",
+        "koneksi_arduino": "GPIO 13"
+      },
+      {
+        "komponen": "LED",
+        "pin_komponen": "C (katoda)",
+        "koneksi_arduino": "GND"
+      }
+    ],
+    "cpp_code": "// ===== LED Dimmer dengan PWM (LEDC) =====\n// ESP32 + potensiometer (GPIO 34) + LED (GPIO 13)\n// analogWrite() memakai LEDC PWM bawaan ESP32.\n\n#define POT_PIN 34\n#define LED_PIN 13\n\nvoid setup() {\n  Serial.begin(115200);\n  pinMode(LED_PIN, OUTPUT);\n}\n\nvoid loop() {\n  int baca = analogRead(POT_PIN);             // 0-4095 (ADC 12-bit)\n  int duty = map(baca, 0, 4095, 0, 255);      // 0-255 (8-bit PWM)\n  analogWrite(LED_PIN, duty);\n  Serial.printf(\"ADC: %d | Duty: %d (%.0f%%)\\n\", baca, duty, duty / 255.0 * 100);\n  delay(30);\n}",
+    "wokwi_diagram": "{\"version\":1,\"author\":\"ElektroDict\",\"editor\":\"wokwi\",\"parts\":[{\"type\":\"board-esp32-devkit-c-v4\",\"id\":\"esp\",\"top\":0,\"left\":0,\"attrs\":{}},{\"type\":\"wokwi-potentiometer\",\"id\":\"pot\",\"top\":-130,\"left\":340,\"attrs\":{}},{\"type\":\"wokwi-led\",\"id\":\"led1\",\"top\":-130,\"left\":560,\"attrs\":{\"color\":\"red\"}},{\"type\":\"wokwi-resistor\",\"id\":\"r1\",\"top\":-50,\"left\":560,\"attrs\":{\"value\":\"220\"}}],\"connections\":[[\"pot:VCC\",\"esp:3V3\",\"red\",[\"v0\"]],[\"pot:SIG\",\"esp:34\",\"green\",[\"v0\"]],[\"pot:GND\",\"esp:GND.1\",\"black\",[\"v0\"]],[\"esp:13\",\"r1:1\",\"yellow\",[\"v0\"]],[\"r1:2\",\"led1:A\",\"yellow\",[\"v0\"]],[\"led1:C\",\"esp:GND.2\",\"black\",[\"v0\"]]]}",
+    "steps": [
+      {
+        "nama_komponen": "Potensiometer",
+        "alur_perakitan": "VCC ke 3V3, SIG ke GPIO 34, GND ke GND."
+      },
+      {
+        "nama_komponen": "LED (via 220 Ohm)",
+        "alur_perakitan": "Anoda via resistor 220 Ohm ke GPIO 13, katoda ke GND."
+      },
+      {
+        "nama_komponen": "Uji coba",
+        "alur_perakitan": "Putar potensiometer: kecerahan LED berubah halus (0-100%). Serial monitor menampilkan nilai ADC dan duty PWM."
+      }
+    ]
+  },
+  {
+    "id": "tpl-esp32-neopixel-rainbow",
+    "title": "NeoPixel Rainbow — Animasi WS2812",
+    "desc": "Strip LED WS2812 menampilkan animasi pelangi bergulir dengan library Adafruit NeoPixel — ESP32 mengirim data serial 1 kawat (RMT bawaan).",
+    "difficulty": "Menengah",
+    "tags": [
+      "ESP32",
+      "NeoPixel",
+      "WS2812",
+      "LED",
+      "Animasi"
+    ],
+    "verified": true,
+    "libraries": [
+      "Adafruit NeoPixel"
+    ],
+    "board": "board-esp32-devkit-c-v4",
+    "bom": [
+      "1x ESP32 DevKitC V4",
+      "1x LED Strip WS2812 (8 LED)",
+      "Kabel jumper"
+    ],
+    "wiring_guide": [
+      {
+        "komponen": "NeoPixel",
+        "pin_komponen": "VDD (+5V)",
+        "koneksi_arduino": "5V"
+      },
+      {
+        "komponen": "NeoPixel",
+        "pin_komponen": "DIN (data in)",
+        "koneksi_arduino": "GPIO 13"
+      },
+      {
+        "komponen": "NeoPixel",
+        "pin_komponen": "VSS (GND)",
+        "koneksi_arduino": "GND"
+      }
+    ],
+    "cpp_code": "// ===== NeoPixel Rainbow =====\n// ESP32 + WS2812 NeoPixel (GPIO 13) + Adafruit NeoPixel\n// Animasi pelangi bergulir memakai ColorHSV — tidak butuh resistor.\n\n#include <Adafruit_NeoPixel.h>\n\n#define PIN_NEO 13\n#define JUMLAH_LED 8\n\nAdafruit_NeoPixel strip(JUMLAH_LED, PIN_NEO, NEO_GRB + NEO_KHZ800);\n\nvoid setup() {\n  Serial.begin(115200);\n  strip.begin();\n  strip.setBrightness(40);   // hemat daya & aman di mata\n  strip.show();\n}\n\nvoid gambarPelangi(int geser) {\n  for (int i = 0; i < strip.numPixels(); i++) {\n    int hue = (i * 256 / JUMLAH_LED + geser) & 255;\n    strip.setPixelColor(i, strip.gamma32(strip.ColorHSV(hue * 65536 / 256)));\n  }\n  strip.show();\n}\n\nvoid loop() {\n  for (int g = 0; g < 256; g++) {\n    gambarPelangi(g);\n    delay(20);\n  }\n  Serial.println(\"Satu putaran pelangi selesai.\");\n}",
+    "wokwi_diagram": "{\"version\":1,\"author\":\"ElektroDict\",\"editor\":\"wokwi\",\"parts\":[{\"type\":\"board-esp32-devkit-c-v4\",\"id\":\"esp\",\"top\":0,\"left\":0,\"attrs\":{}},{\"type\":\"wokwi-led-strip\",\"id\":\"strip\",\"top\":-130,\"left\":340,\"attrs\":{}}],\"connections\":[[\"strip:VDD\",\"esp:5V\",\"red\",[\"v0\"]],[\"strip:DIN\",\"esp:13\",\"green\",[\"v0\"]],[\"strip:VSS\",\"esp:GND.2\",\"black\",[\"v0\"]]]}",
+    "steps": [
+      {
+        "nama_komponen": "NeoPixel",
+        "alur_perakitan": "VDD ke 5V, DIN ke GPIO 13, VSS ke GND. Output DOUT dibiarkan kosong (LED terakhir)."
+      },
+      {
+        "nama_komponen": "Library",
+        "alur_perakitan": "Pasang Adafruit NeoPixel via libraries.txt."
+      },
+      {
+        "nama_komponen": "Uji coba",
+        "alur_perakitan": "Strip menampilkan pelangi bergulir. Ubah setBrightness() untuk kecerahan dan delay() untuk kecepatan animasi."
+      }
+    ]
+  },
+  {
+    "id": "tpl-esp32-joystick-oled",
+    "title": "Joystick 2 Sumbu + Tombol ke OLED",
+    "desc": "Joystick analog (2 sumbu + tombol) digambar sebagai titik 2D di OLED — latihan ADC multi-channel, mapping, dan input digital dengan pull-up.",
+    "difficulty": "Menengah",
+    "tags": [
+      "ESP32",
+      "Joystick",
+      "ADC",
+      "OLED",
+      "Input"
+    ],
+    "verified": true,
+    "libraries": [
+      "Adafruit SSD1306",
+      "Adafruit GFX Library"
+    ],
+    "board": "board-esp32-devkit-c-v4",
+    "bom": [
+      "1x ESP32 DevKitC V4",
+      "1x Joystick Analog (modul KY-023)",
+      "1x OLED SSD1306 128x64 (I2C)",
+      "Kabel jumper"
+    ],
+    "wiring_guide": [
+      {
+        "komponen": "Joystick",
+        "pin_komponen": "VCC / GND",
+        "koneksi_arduino": "3V3 / GND"
+      },
+      {
+        "komponen": "Joystick",
+        "pin_komponen": "VERT / HORZ",
+        "koneksi_arduino": "GPIO 34 / GPIO 35"
+      },
+      {
+        "komponen": "Joystick",
+        "pin_komponen": "SEL (tombol)",
+        "koneksi_arduino": "GPIO 15 (internal pull-up)"
+      },
+      {
+        "komponen": "OLED",
+        "pin_komponen": "VCC / GND",
+        "koneksi_arduino": "3V3 / GND"
+      },
+      {
+        "komponen": "OLED",
+        "pin_komponen": "SDA / SCL",
+        "koneksi_arduino": "GPIO 21 / GPIO 22"
+      }
+    ],
+    "cpp_code": "// ===== Joystick 2 Sumbu + Tombol =====\n// ESP32 + joystick analog (VERT/HORZ/SEL) + OLED SSD1306\n// Gambar posisi joystick sebagai titik 2D di layar.\n\n#include <Wire.h>\n#include <Adafruit_GFX.h>\n#include <Adafruit_SSD1306.h>\n\n#define OLED_W 128\n#define OLED_H 64\nAdafruit_SSD1306 oled(OLED_W, OLED_H, &Wire, -1);\n\n#define PIN_VRX 34\n#define PIN_VRY 35\n#define PIN_SEL 15\n\nvoid setup() {\n  Serial.begin(115200);\n  Wire.begin();\n  pinMode(PIN_SEL, INPUT_PULLUP);\n  if (!oled.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { Serial.println(\"OLED gagal\"); }\n  oled.clearDisplay();\n}\n\nvoid loop() {\n  int x = analogRead(PIN_VRX);\n  int y = analogRead(PIN_VRY);\n  bool tekan = digitalRead(PIN_SEL) == LOW;\n\n  oled.clearDisplay();\n  oled.drawRect(0, 0, 128, 64, SSD1306_WHITE);\n  oled.fillCircle(map(x, 0, 4095, 0, 127), map(y, 0, 4095, 0, 63), 3, SSD1306_WHITE);\n  if (tekan) {\n    oled.setTextSize(1); oled.setTextColor(SSD1306_WHITE);\n    oled.setCursor(40, 52);\n    oled.print(\"TOMBOL TEKAN!\");\n  }\n  oled.display();\n\n  Serial.printf(\"X: %d | Y: %d | Tombol: %s\\n\", x, y, tekan ? \"DITEKAN\" : \"lepas\");\n  delay(50);\n}",
+    "wokwi_diagram": "{\"version\":1,\"author\":\"ElektroDict\",\"editor\":\"wokwi\",\"parts\":[{\"type\":\"board-esp32-devkit-c-v4\",\"id\":\"esp\",\"top\":0,\"left\":0,\"attrs\":{}},{\"type\":\"wokwi-analog-joystick\",\"id\":\"joy\",\"top\":-130,\"left\":340,\"attrs\":{}},{\"type\":\"board-ssd1306\",\"id\":\"oled\",\"top\":-120,\"left\":540,\"attrs\":{}}],\"connections\":[[\"joy:VCC\",\"esp:3V3\",\"red\",[\"v0\"]],[\"joy:VERT\",\"esp:34\",\"green\",[\"v0\"]],[\"joy:HORZ\",\"esp:35\",\"blue\",[\"v0\"]],[\"joy:SEL\",\"esp:15\",\"yellow\",[\"v0\"]],[\"joy:GND\",\"esp:GND.1\",\"black\",[\"v0\"]],[\"oled:VCC\",\"esp:3V3\",\"red\",[\"v0\"]],[\"oled:GND\",\"esp:GND.2\",\"black\",[\"v0\"]],[\"oled:SCL\",\"esp:22\",\"yellow\",[\"v0\"]],[\"oled:SDA\",\"esp:21\",\"green\",[\"v0\"]]]}",
+    "steps": [
+      {
+        "nama_komponen": "Joystick",
+        "alur_perakitan": "VCC ke 3V3, GND ke GND, VERT ke GPIO 34, HORZ ke GPIO 35, SEL ke GPIO 15."
+      },
+      {
+        "nama_komponen": "OLED",
+        "alur_perakitan": "VCC ke 3V3, GND ke GND, SDA ke GPIO 21, SCL ke GPIO 22."
+      },
+      {
+        "nama_komponen": "Library",
+        "alur_perakitan": "Pasang Adafruit SSD1306 + Adafruit GFX via libraries.txt."
+      },
+      {
+        "nama_komponen": "Uji coba",
+        "alur_perakitan": "Geser joystick: titik putih bergerak di dalam bingkai 2D. Tekan sumbu joystick untuk menampilkan \"TOMBOL TEKAN!\"."
       }
     ]
   }
