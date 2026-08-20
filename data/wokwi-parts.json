@@ -56,14 +56,10 @@
     "title": "board-ssd1306",
     "desc": "Monochrome 128x64 OLED display with I2C interface",
     "pins": [
-      "DATA",
-      "CLK",
-      "DC",
-      "RST",
-      "CS",
-      "3V3",
       "GND",
-      "VIN"
+      "VCC",
+      "SCL",
+      "SDA"
     ],
     "attrs": {
       "i2cAddress": {
