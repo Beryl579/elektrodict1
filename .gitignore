@@ -33,8 +33,6 @@ dev-utils/
 
 # Referensi docs Wokwi (input parser saja)
 wokwi-docs-main/
-ref-repos/
 
 # Aset SVG katalog (seksi dihapus)
 assets/
-

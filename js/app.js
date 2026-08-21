@@ -3356,7 +3356,7 @@ function renderProjectDetail(prj) {
       <h3 class="pd-section-h">📺 Video Pembelajaran Terkait</h3>
       ${related.map(v => `
       <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px dashed rgba(255,255,255,.08);cursor:pointer;" onclick="openVideoById('${v.id}')" role="button" tabindex="0" onkeydown="if(event.key==='Enter'){openVideoById('${v.id}');}">
-        <img src="https://i.ytimg.com/vi/${v.id}/hqdefault.jpg" alt="${v.title}" style="width:72px;height:44px;border-radius:6px;object-fit:cover;flex-shrink:0;background:#000;" onerror="if(!this.dataset.retry){this.dataset.retry='1';this.src='https://img.youtube.com/vi/${v.id}/hqdefault.jpg';}else{this.style.visibility='hidden';}">
+        <img src="https://i.ytimg.com/vi/${v.id}/default.jpg" alt="" style="width:72px;height:44px;border-radius:6px;object-fit:cover;flex-shrink:0;background:#000;" onerror="this.style.visibility='hidden';">
         <div style="min-width:0">
           <div style="font-size:13px;font-weight:700;color:var(--text1);line-height:1.35;">${v.title}</div>
           <div style="font-size:11px;color:var(--text3);margin-top:2px;">▶ ${v.channel} · ${v.topic}</div>
@@ -4074,18 +4074,13 @@ function filterVideos(t) {
 }
 
 function loadVideoThumb(img) {
+  const sizes = ['mqdefault', 'hqdefault', 'sddefault', 'maxresdefault'];
   const id = img.dataset.ytid;
   const fb = img.dataset.fb;
-  const sources = [
-    'https://img.youtube.com/vi/' + id + '/hqdefault.jpg',
-    'https://i.ytimg.com/vi/' + id + '/mqdefault.jpg',
-    'https://img.youtube.com/vi/' + id + '/mqdefault.jpg',
-    'https://i.ytimg.com/vi/' + id + '/default.jpg'
-  ];
-  const step = parseInt(img.dataset.try || '0', 10);
-  if (step < sources.length) {
-    img.dataset.try = step + 1;
-    img.src = sources[step];
+  const n = parseInt(img.dataset.try || '1', 10) || 1;
+  if (n < sizes.length) {
+    img.dataset.try = n + 1;
+    img.src = 'https://i.ytimg.com/vi/' + id + '/' + sizes[n] + '.jpg';
   } else {
     img.onerror = null;
     img.src = fb;
@@ -4111,7 +4106,7 @@ function renderVideos(shuffle = false) {
   }
 
   grid.innerHTML = list.map(v => {
-    const thumb = `https://i.ytimg.com/vi/${v.id}/hqdefault.jpg`;
+    const thumb = `https://i.ytimg.com/vi/${v.id}/mqdefault.jpg`;
     const ch = String(v.channel || 'Video').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
     let relTpls = [];
     try {
@@ -4138,7 +4133,7 @@ function renderVideos(shuffle = false) {
              onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openVideoById('${v.id}');}"
              aria-label="Putar video: ${v.title}">
           <img src="${thumb}" class="news-img" alt="${v.title}" loading="lazy" decoding="async" fetchpriority="low"
-               crossorigin="anonymous" data-ytid="${v.id}" data-fb="${fallback}"
+               referrerpolicy="no-referrer" data-ytid="${v.id}" data-fb="${fallback}"
                onerror="loadVideoThumb(this);">
           <span class="vid-play">
             <svg viewBox="0 0 24 24" fill="currentColor" style="width:22px;height:22px;"><path d="M8 5v14l11-7z"/></svg>
