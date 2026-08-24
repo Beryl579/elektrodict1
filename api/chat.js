@@ -44,7 +44,7 @@ module.exports = async function handler(req, res) {
 
     // --- MODEL SWITCHER LOGIC ---
     let requestedModel = payload.model;
-    let targetModel = requestedModel || "openai/gpt-oss-20b"; 
+    let targetModel = requestedModel || "qwen/qwen3.6-27b"; 
     let messages = Array.isArray(payload.messages) ? [...payload.messages] : [];
     
     const latexRules = "Rumus wajib LaTeX: inline $...$, blok $$...$$. Contoh: $V = IR$. Dilarang memakai kurung biasa (...) untuk rumus.";
@@ -100,9 +100,9 @@ ATURAN:
 
     // 2. Groq fallback — model harus model Groq yang valid (bukan model OpenRouter)
     if ((!response || !response.ok) && groqKeys.length > 0) {
-      // Hormati pilihan model user jika model Groq yang valid, default gpt-oss-20b
+      // Semua model di bawah didukung oleh Groq (key yang sama)
       const GROQ_MODELS = ['openai/gpt-oss-20b', 'openai/gpt-oss-120b', 'qwen/qwen3.6-27b'];
-      const groqModel = GROQ_MODELS.includes(targetModel) ? targetModel : 'openai/gpt-oss-20b';
+      const groqModel = GROQ_MODELS.includes(targetModel) ? targetModel : 'qwen/qwen3.6-27b';
 
       const callGroq = async (model) => {
         const currentKey = groqKeys[Math.floor(Math.random() * groqKeys.length)];
@@ -133,6 +133,19 @@ ATURAN:
     }
 
     const data = await response.json();
+    // ── Strip thinking: jangan kirim reasoning ke frontend ──
+    try {
+      if (data.choices) {
+        for (const ch of data.choices) {
+          if (ch.message) {
+            if (ch.message.reasoning) delete ch.message.reasoning;
+            if (typeof ch.message.content === 'string') {
+              ch.message.content = ch.message.content.replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
+            }
+          }
+        }
+      }
+    } catch (_) {}
     return res.status(200).json(data);
 
   } catch (error) {

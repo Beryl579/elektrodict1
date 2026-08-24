@@ -2,7 +2,7 @@
  * Backend route for Vision (image analysis) — Groq proxy
  * Runtime: Node.js (Vercel default untuk /api/*.js)
  * Env: GROQ_API_KEY
- * Model: openai/gpt-oss-120b (supports vision/multimodal)
+ * Model: qwen/qwen3.6-27b (multimodal, support image + text via Groq)
  */
 
 const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
@@ -95,6 +95,21 @@ module.exports = async function handler(req, res) {
       return res.end(JSON.stringify({ error: { message: msg } }));
     }
 
+    // ── Strip thinking sebelum kirim ke frontend ──
+    try {
+      const j = JSON.parse(text);
+      if (j.choices) {
+        for (const ch of j.choices) {
+          if (ch.message) {
+            if (ch.message.reasoning) delete ch.message.reasoning;
+            if (typeof ch.message.content === 'string') ch.message.content = ch.message.content.replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
+          }
+        }
+      }
+      res.statusCode = 200;
+      res.setHeader('Content-Type', 'application/json');
+      return res.end(JSON.stringify(j));
+    } catch (_) {}
     res.statusCode = 200;
     res.setHeader('Content-Type', 'application/json');
     return res.end(text);
