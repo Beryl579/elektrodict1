@@ -3,7 +3,7 @@
 // ═══════════════════════════════════════════════════════════
 
 // Konstanta diambil dari ElektroAPI di js/api.js jika tersedia
-const API_MODEL = (window.ElektroAPI && window.ElektroAPI.MODEL_TEXT) || "openai/gpt-oss-20b";
+const API_MODEL = (window.ElektroAPI && window.ElektroAPI.MODEL_TEXT) || "qwen/qwen3.6-27b";
 const VERCEL_URL = (window.ElektroAPI && window.ElektroAPI.VERCEL_URL) || "/api/chat";
 
 /**
@@ -1949,7 +1949,7 @@ async function send(v){
   showDots('D'); showDots('M');
 
   try{
-    const mc = document.getElementById('modelChoiceD') ? document.getElementById('modelChoiceD').value : 'openai/gpt-oss-20b';
+    const mc = document.getElementById('modelChoiceD') ? document.getElementById('modelChoiceD').value : 'qwen/qwen3.6-27b';
     // Sanitize history: remove 'file', 'image', or any extra properties before API call
     const cleanHistory = chatHistory.slice(-10).map(m => ({ role: m.role, content: m.content }));
     // Suntikkan konteks materi bila chat dibuka dari tab Materi
@@ -4253,7 +4253,8 @@ function openMateriModule(id) {
     id: (s.id || String(s.title || 'bab').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')),
     emoji: s.emoji || '📘',
     title: s.title || 'Bab',
-    body: s.body ?? s.content ?? ''
+    body: s.body ?? s.content ?? '',
+    referensi: s.referensi || ''
   });
   const normContoh = c => {
     const steps = Array.isArray(c.langkah) ? c.langkah.slice() : [];

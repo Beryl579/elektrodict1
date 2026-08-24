@@ -3,7 +3,7 @@
  * Handles Image uploading, Analyzing, and AI-powered tutor responses.
  */
 
-const AIV_MODEL = 'openai/gpt-oss-120b';
+const AIV_MODEL = 'qwen/qwen3.6-27b';
 let aivMode = 'soal';
 let aivImageB64 = null;
 let aivImageType = 'image/jpeg';
