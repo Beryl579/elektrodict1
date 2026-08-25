@@ -36,3 +36,7 @@ wokwi-docs-main/
 
 # Aset SVG katalog (seksi dihapus)
 assets/
+
+# Repo referensi lokal (jangan di-push)
+ref-repos/
+api/_dlimg2.js

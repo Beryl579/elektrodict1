@@ -5,17 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
 <title>ElektroDict — Kamus Teknik Elektro</title>
 
-<!-- PWA Manifest -->
-<link rel="manifest" href="manifest.json">
-
-<!-- PWA Meta Tags -->
 <meta name="theme-color" content="#4f9cf9">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="ElektroDict">
-<meta name="application-name" content="ElektroDict">
-<meta name="description" content="Kamus teknik elektro premium dengan kalkulator, latihan soal AI, skema interaktif, dan ElektroBot.">
+<meta name="description" content="Kamus teknik elektro premium dengan kalkulator, latihan soal AI, dan ElektroBot.">
 
 <!-- Apple Touch Icons (fallback kalau belum ada file icon) -->
 <link rel="apple-touch-icon" href="icons/icon-192.png">
@@ -50,8 +41,6 @@
 
     <div class="hbadge"><b id="totalCount">0</b> istilah</div>
     <button class="theme-btn" id="themeBtn" onclick="toggleTheme()" title="Ganti tema"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg></button>
-    <!-- PWA Install Button — muncul otomatis kalau browser support -->
-    <button class="theme-btn" id="pwa-install-btn" onclick="installPWA()" title="Install App" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"></rect><path d="M12 18h.01"></path></svg></button>
     <a href="flowchart.html" target="_blank" rel="noopener" class="theme-btn" title="Lihat Arsitektur Sistem" style="display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:16px;">📄</a>
     <a href="https://berylnathaniel.my.id/" target="_blank" rel="noopener" class="nav-portfolio" title="Portfolio Beryl Sinaga">🔗</a>
   </div>
@@ -96,10 +85,6 @@
     <span class="bnav-label">Kalkulator</span>
   </button>
 
-  <button class="bnav-item desktop-only" id="bnav-skema" onclick="switchTab('skema')">
-    <span class="bnav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m13 2-10 12h9l-1 8 10-12h-9l1-8z"/></svg></span>
-    <span class="bnav-label">Skema</span>
-  </button>
 
   <button class="bnav-item mobile-visible" id="bnav-projects" onclick="switchTab('projects')">
     <div class="bnav-dot"></div>
@@ -127,20 +112,12 @@
     <span class="bnav-label">Logika</span>
   </button>
 
-  <button class="bnav-item desktop-only" id="bnav-synth" onclick="switchTab('synth')">
-    <span class="bnav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></span>
-    <span class="bnav-label">Synth</span>
-  </button>
 
   <button class="bnav-item desktop-only" id="bnav-standards" onclick="switchTab('standards')">
     <span class="bnav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></span>
     <span class="bnav-label">Standar & K3</span>
   </button>
 
-  <button class="bnav-item desktop-only" id="bnav-chips" onclick="switchTab('chips')">
-    <span class="bnav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 2v2M12 2v2M17 2v2M7 20v2M12 20v2M17 20v2M2 7h2M2 12h2M2 17h2M20 7h2M20 12h2M20 17h2M9 9h6v6H9z"/></svg></span>
-    <span class="bnav-label">Chip Lib</span>
-  </button>
 
   <button class="bnav-item desktop-only" id="bnav-news" onclick="switchTab('news')">
     <span class="bnav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/></svg></span>
@@ -394,18 +371,12 @@
       <div class="sheet-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></div>
       <div class="sheet-label">Standar & K3</div>
     </div>
-    <div class="sheet-item" onclick="switchTab('chips')">
-      <div class="sheet-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px;"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M7 2v2M12 2v2M17 2v2M7 20v2M12 20v2M17 20v2M2 7h2M2 12h2M2 17h2M20 7h2M20 12h2M20 17h2M9 9h6v6H9z"/></svg></div>
-      <div class="sheet-label">Chip Lib</div>
-    </div>
+
     <div class="sheet-item" onclick="switchTab('kalk')">
       <div class="sheet-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px;"><rect width="16" height="20" x="4" y="2" rx="2"/><line x1="8" x2="16" y1="6" y2="6"/><line x1="16" x2="16" y1="14" y2="18"/><path d="M16 10h.01"/><path d="M12 10h.01"/><path d="M8 10h.01"/><path d="M12 14h.01"/><path d="M8 14h.01"/><path d="M12 18h.01"/><path d="M8 18h.01"/></svg></div>
       <div class="sheet-label">Kalkulator</div>
     </div>
-    <div class="sheet-item" onclick="switchTab('skema')">
-      <div class="sheet-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px;"><path d="m13 2-10 12h9l-1 8 10-12h-9l1-8z"/></svg></div>
-      <div class="sheet-label">Skema</div>
-    </div>
+
 
     <div class="sheet-item" onclick="switchTab('resistor')">
       <div class="sheet-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px;"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
@@ -423,10 +394,7 @@
       <div class="sheet-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px;"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/><path d="M15 3v18"/><path d="M3 9h18"/><path d="M3 15h18"/></svg></div>
       <div class="sheet-label">Logika</div>
     </div>
-    <div class="sheet-item" onclick="switchTab('synth')">
-      <div class="sheet-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px;"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div>
-      <div class="sheet-label">Synth</div>
-    </div>
+
     <div class="sheet-item" onclick="switchTab('news')">
       <div class="sheet-icon">🎬</div>
       <div class="sheet-label">Video Pembelajaran</div>
@@ -488,46 +456,6 @@
       <a href="flowchart.html" target="_blank" class="onboard-btn" style="background:#1e293b; border:1px solid #334155; color:#f1f5f9; margin-bottom:12px; text-decoration:none; display:flex; align-items:center; justify-content:center; gap:8px; font-weight:600;"><span style="font-size:18px;">📄</span> Lihat Diagram Arsitektur (PDF)</a>
       <button class="onboard-btn" onclick="closeOnboard()">Gas Belajar! ⚡</button>
     </div>
-  </div>
-</div>
-
-<!-- ═══════ SKEMA PAGE ═══════ -->
-<div class="page" id="page-skema">
-  <div class="projects-wrap">
-    <div class="skema-header">
-      <h2>Lab Skema AI 🛠️</h2>
-      <p style="color: var(--text2);">Ketik nama rangkaian atau sistem, AI akan menggambar diagram alirnya secara instan.</p>
-    </div>
-
-    <div class="skema-input-group">
-      <textarea id="skema-prompt" class="skema-input" placeholder="Contoh: Rangkaian Seri RLC..."></textarea>
-      <button class="skema-gen-btn" id="btn-gen-skema" onclick="generateDiagram()">Generate Diagram ⚡</button>
-    </div>
-
-    <div class="prompt-chips">
-      <div class="prompt-chip" onclick="setSkemaPrompt('Rangkaian Seri RLC')">Rangkaian Seri RLC</div>
-      <div class="prompt-chip" onclick="setSkemaPrompt('Cara Kerja Relay')">Cara Kerja Relay</div>
-      <div class="prompt-chip" onclick="setSkemaPrompt('Skema Motor Star-Delta')">Skema Motor Star-Delta</div>
-    </div>
-
-    <div class="skema-output-wrap" style="position: relative; margin-top: 24px;">
-      <div id="skema-actions" class="skema-actions" style="display: none;">
-        <button class="skema-act-btn" onclick="toggleSkemaZoom()" title="Zoom In">🔍 Fullscreen</button>
-        <button class="skema-act-btn" onclick="downloadSkemaSVG()" title="Download SVG">📥 Download</button>
-      </div>
-      <div id="mermaid-diagram-output" class="mermaid-canvas" style="margin-top: 0;">
-        <span>Diagram akan muncul di sini...</span>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ═══════ SKEMA FULLSCREEN MODAL ═══════ -->
-<div id="skema-modal" class="skema-modal">
-  <div class="sm-overlay" onclick="toggleSkemaZoom()"></div>
-  <div class="sm-content">
-    <button class="sm-close" onclick="toggleSkemaZoom()">×</button>
-    <div id="skema-modal-body"></div>
   </div>
 </div>
 
@@ -866,67 +794,7 @@
   </div>
 </div>
 
-<!-- ═══════ AUDIO SYNTHESIZER PAGE ═══════ -->
-<div class="page" id="page-synth">
-  <div class="synth-wrap">
-    <div class="synth-header">
-      <h2>🎸 Logic-to-Sound Synthesizer</h2>
-      <p>Dengarkan dan visualisasikan sinyal listrik secara real-time</p>
-    </div>
 
-    <!-- Oscilloscope Screen -->
-    <div class="scope-cabinet">
-      <div class="scope-screen-wrap">
-        <canvas id="synth-canvas" width="800" height="400"></canvas>
-        <div class="scope-grid"></div>
-        <div class="scope-glow"></div>
-      </div>
-      <div class="scope-status">
-        <span id="scope-freq-display">50.0 Hz</span>
-        <span id="scope-wave-display">SINE</span>
-      </div>
-    </div>
-
-    <!-- Synth Controls -->
-    <div class="synth-controls">
-      <div class="synth-main-btn-wrap">
-        <button id="synth-play-btn" class="synth-play-btn" onclick="toggleSynth()">
-          <span class="p-ico">▶</span> Mulai Sinyal
-        </button>
-      </div>
-
-      <div class="synth-grid">
-        <div class="synth-ctrl-group">
-          <label>Bentuk Gelombang</label>
-          <select id="synth-wave-type" onchange="updateSynthSettings()">
-            <option value="sine">Sine (Sinus)</option>
-            <option value="square">Square (Kotak)</option>
-            <option value="sawtooth">Sawtooth (Gergaji)</option>
-            <option value="triangle">Triangle (Segitiga)</option>
-          </select>
-        </div>
-
-        <div class="synth-ctrl-group">
-          <label>Frekuensi: <span id="val-freq">50</span> Hz</label>
-          <input type="range" id="synth-freq" min="20" max="2000" step="1" value="50" oninput="updateSynthSettings()">
-          <div class="range-labels"><span>20Hz</span><span>2kHz</span></div>
-        </div>
-
-        <div class="synth-ctrl-group">
-          <label>Volume: <span id="val-vol">10</span>%</label>
-          <input type="range" id="synth-vol" min="0" max="1" step="0.01" value="0.1" oninput="updateSynthSettings()">
-        </div>
-      </div>
-    </div>
-
-    <div class="synth-info">
-      <div class="s-info-card">
-        <div class="s-info-title">💡 Tahukah Kamu?</div>
-        <p>Frekuensi 50Hz adalah standar listrik PLN di Indonesia. Kamu bisa mendengarnya sebagai "hum" atau dengungan rendah. Coba naikkan ke 1kHz untuk mendengar "test tone" audio standar.</p>
-      </div>
-    </div>
-  </div>
-</div>
 
 <!-- ═══════ STANDAR & K3 PAGE ═══════ -->
 <div class="page" id="page-standards">
@@ -1192,369 +1060,6 @@
   </div>
 </div>
 
-<!-- ═══════ CHIP LIBRARY PAGE ═══════ -->
-<div class="page" id="page-chips">
-  <div class="projects-wrap">
-    <div class="projects-header">
-      <h2>💾 Chip Library</h2>
-      <p>Database Datasheet & Pinout IC Populer</p>
-    </div>
-
-    <div class="chips-grid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:24px; margin-top:30px;">
-      
-      <!-- NE555 -->
-      <div class="chip-card">
-        <div class="chip-visual-wrap">
-          <div class="chip-ic-body">
-            <!-- Pins Left -->
-            <div class="chip-ic-pin p-l" style="top:15px;"></div>
-            <div class="chip-ic-pin p-l" style="top:40px;"></div>
-            <div class="chip-ic-pin p-l" style="top:65px;"></div>
-            <div class="chip-ic-pin p-l" style="top:90px;"></div>
-            <!-- Pins Right -->
-            <div class="chip-ic-pin p-r" style="top:15px;"></div>
-            <div class="chip-ic-pin p-r" style="top:40px;"></div>
-            <div class="chip-ic-pin p-r" style="top:65px;"></div>
-            <div class="chip-ic-pin p-r" style="top:90px;"></div>
-            
-            <div class="chip-ic-label">NE555</div>
-          </div>
-        </div>
-        <div class="chip-info">
-          <h3 style="font-size:16px; margin-bottom:8px;">NE555 Precision Timer</h3>
-          <p style="font-size:12px; color:var(--text2); line-height:1.5;">IC legendaris yang digunakan untuk timer, pulsa, dan osilasi.</p>
-          <div style="margin-top:12px; font-size:11px; font-family:var(--mono);">
-            <div style="color:var(--text3); margin-bottom:4px;">Pin Utama:</div>
-            <div style="display:flex; flex-wrap:wrap; gap:5px;">
-              <span style="padding:2px 6px; background:var(--bg3); border-radius:4px;">1: GND</span>
-              <span style="padding:2px 6px; background:var(--bg3); border-radius:4px;">3: OUT</span>
-              <span style="padding:2px 6px; background:var(--bg3); border-radius:4px;">8: VCC</span>
-            </div>
-          </div>
-        </div>
-        <a href="https://www.ti.com/lit/ds/symlink/ne555.pdf" target="_blank" class="chip-source">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3"/></svg>
-          Datasheet: Texas Instruments
-        </a>
-      </div>
-
-      <!-- ESP32 -->
-      <div class="chip-card">
-        <div class="chip-visual-wrap" style="height:140px;">
-          <div class="chip-ic-body" style="width:90px; height:90px; border-radius:8px;">
-            <div style="font-size:9px; color:#444; position:absolute; bottom:5px;">Espressif</div>
-            <div class="chip-ic-label">ESP32</div>
-            <!-- Pins scattered for MCU look -->
-            <div class="chip-ic-pin p-l" style="top:10px;"></div><div class="chip-ic-pin p-l" style="top:30px;"></div><div class="chip-ic-pin p-l" style="top:50px;"></div><div class="chip-ic-pin p-l" style="top:70px;"></div>
-            <div class="chip-ic-pin p-r" style="top:10px;"></div><div class="chip-ic-pin p-r" style="top:30px;"></div><div class="chip-ic-pin p-r" style="top:50px;"></div><div class="chip-ic-pin p-r" style="top:70px;"></div>
-          </div>
-        </div>
-        <div class="chip-info">
-          <h3 style="font-size:16px; margin-bottom:8px;">ESP32-WROOM-32</h3>
-          <p style="font-size:12px; color:var(--text2); line-height:1.5;">Powerful Wi-Fi + BT MCU untuk aplikasi IoT modern berspesifikasi tinggi.</p>
-          <div style="margin-top:12px; font-size:11px; font-family:var(--mono);">
-            <div style="color:var(--text3); margin-bottom:4px;">Specs:</div>
-            <div style="display:flex; flex-wrap:wrap; gap:5px;">
-              <span style="padding:2px 6px; background:var(--bg3); border-radius:4px;">Dual Core</span>
-              <span style="padding:2px 6px; background:var(--bg3); border-radius:4px;">WiFi 2.4GHz</span>
-              <span style="padding:2px 6px; background:var(--bg3); border-radius:4px;">BLE</span>
-            </div>
-          </div>
-        </div>
-        <a href="https://www.espressif.com/sites/default/files/documentation/esp32-wroom-32_datasheet_en.pdf" target="_blank" class="chip-source">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3"/></svg>
-          Datasheet: Espressif Systems
-        </a>
-      </div>
-
-      <!-- 74HC00 -->
-      <div class="chip-card">
-        <div class="chip-visual-wrap">
-          <div class="chip-ic-body" style="width:110px; height:60px;">
-            <div class="chip-ic-label" style="font-size:10px;">74HC00</div>
-            <div class="chip-ic-pin p-l" style="top:5px;"></div><div class="chip-ic-pin p-l" style="top:15px;"></div><div class="chip-ic-pin p-l" style="top:25px;"></div><div class="chip-ic-pin p-l" style="top:35px;"></div><div class="chip-ic-pin p-l" style="top:45px;"></div>
-            <div class="chip-ic-pin p-r" style="top:5px;"></div><div class="chip-ic-pin p-r" style="top:15px;"></div><div class="chip-ic-pin p-r" style="top:25px;"></div><div class="chip-ic-pin p-r" style="top:35px;"></div><div class="chip-ic-pin p-r" style="top:45px;"></div>
-          </div>
-        </div>
-        <div class="chip-info">
-          <h3 style="font-size:16px; margin-bottom:8px;">74HC00 Quad NAND</h3>
-          <p style="font-size:12px; color:var(--text2); line-height:1.5;">IC Logika CMOS dasar yang berisi 4 gerbang NAND 2-input.</p>
-          <div style="margin-top:12px; font-size:11px; font-family:var(--mono);">
-            <div style="color:var(--text3); margin-bottom:4px;">Data:</div>
-            <div style="display:flex; flex-wrap:wrap; gap:5px;">
-              <span style="padding:2px 6px; background:var(--bg3); border-radius:4px;">14-Pin</span>
-              <span style="padding:2px 6px; background:var(--bg3); border-radius:4px;">2V - 6V DC</span>
-            </div>
-          </div>
-        </div>
-        <a href="https://www.st.com/resource/en/datasheet/74hc00.pdf" target="_blank" class="chip-source">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3"/></svg>
-          Datasheet: STMicroelectronics
-        </a>
-      </div>
-
-      <!-- LM358 -->
-      <div class="chip-card">
-        <div class="chip-visual-wrap">
-          <div class="chip-ic-body">
-            <div class="chip-ic-pin p-l" style="top:15px;"></div><div class="chip-ic-pin p-l" style="top:40px;"></div><div class="chip-ic-pin p-l" style="top:65px;"></div><div class="chip-ic-pin p-l" style="top:90px;"></div>
-            <div class="chip-ic-pin p-r" style="top:15px;"></div><div class="chip-ic-pin p-r" style="top:40px;"></div><div class="chip-ic-pin p-r" style="top:65px;"></div><div class="chip-ic-pin p-r" style="top:90px;"></div>
-            <div class="chip-ic-label" style="font-size:12px;">LM358</div>
-          </div>
-        </div>
-        <div class="chip-info">
-          <h3 style="font-size:16px; margin-bottom:8px;">LM358 Dual Op-Amp</h3>
-          <p style="font-size:12px; color:var(--text2); line-height:1.5;">Penguat operasional ganda populer yang dapat beroperasi dengan single supply.</p>
-          <div style="margin-top:12px; font-size:11px; font-family:var(--mono);">
-            <div style="color:var(--text3); margin-bottom:4px;">Aplikasi:</div>
-            <div style="display:flex; flex-wrap:wrap; gap:5px;">
-              <span style="padding:2px 6px; background:var(--bg3); border-radius:4px;">Komparator</span>
-              <span style="padding:2px 6px; background:var(--bg3); border-radius:4px;">Buffer</span>
-              <span style="padding:2px 6px; background:var(--bg3); border-radius:4px;">Filter AC</span>
-            </div>
-          </div>
-        </div>
-        <a href="https://www.ti.com/lit/ds/symlink/lm358.pdf" target="_blank" class="chip-source">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3"/></svg>
-          Datasheet: Texas Instruments
-        </a>
-      </div>
-
-      <!-- L298N -->
-      <div class="chip-card">
-        <div class="chip-visual-wrap">
-          <div class="chip-ic-body" style="width:70px; height:80px; border-radius:4px; border-top:10px solid #555;">
-            <!-- It's a Multiwatt15 package -->
-            <div style="display:flex; justify-content:space-between; position:absolute; bottom:-12px; width:100%;">
-               <div style="width:2px; height:12px; background:#aaa; margin-left:2px;"></div>
-               <div style="width:2px; height:12px; background:#aaa;"></div>
-               <div style="width:2px; height:12px; background:#aaa;"></div>
-               <div style="width:2px; height:12px; background:#aaa;"></div>
-               <div style="width:2px; height:12px; background:#aaa;"></div>
-               <div style="width:2px; height:12px; background:#aaa;"></div>
-               <div style="width:2px; height:12px; background:#aaa; margin-right:2px;"></div>
-            </div>
-            <div class="chip-ic-label" style="font-size:10px; margin-top:20px;">L298N</div>
-          </div>
-        </div>
-        <div class="chip-info">
-          <h3 style="font-size:16px; margin-bottom:8px;">L298N Motor Driver</h3>
-          <p style="font-size:12px; color:var(--text2); line-height:1.5;">Dual H-Bridge motor driver untuk mengendalikan DC motor dan Stepper motor.</p>
-          <div style="margin-top:12px; font-size:11px; font-family:var(--mono);">
-            <div style="color:var(--text3); margin-bottom:4px;">Specs:</div>
-            <div style="display:flex; flex-wrap:wrap; gap:5px;">
-              <span style="padding:2px 6px; background:var(--bg3); border-radius:4px;">15-Pin (Multiwatt)</span>
-              <span style="padding:2px 6px; background:var(--bg3); border-radius:4px;">Max 2A/Bridge</span>
-            </div>
-          </div>
-        </div>
-        <a href="https://www.st.com/resource/en/datasheet/l298.pdf" target="_blank" class="chip-source">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3"/></svg>
-          Datasheet: STMicroelectronics
-        </a>
-      </div>
-
-      <!-- 74HC595 -->
-      <div class="chip-card">
-        <div class="chip-visual-wrap">
-          <div class="chip-ic-body" style="width:110px; height:60px;">
-            <div class="chip-ic-label" style="font-size:10px; text-transform:none;">74HC595</div>
-            <!-- 16 pin -->
-            <div class="chip-ic-pin p-l" style="top:4px;"></div><div class="chip-ic-pin p-l" style="top:11px;"></div><div class="chip-ic-pin p-l" style="top:18px;"></div><div class="chip-ic-pin p-l" style="top:25px;"></div><div class="chip-ic-pin p-l" style="top:32px;"></div><div class="chip-ic-pin p-l" style="top:39px;"></div><div class="chip-ic-pin p-l" style="top:46px;"></div><div class="chip-ic-pin p-l" style="top:53px;"></div>
-            <div class="chip-ic-pin p-r" style="top:4px;"></div><div class="chip-ic-pin p-r" style="top:11px;"></div><div class="chip-ic-pin p-r" style="top:18px;"></div><div class="chip-ic-pin p-r" style="top:25px;"></div><div class="chip-ic-pin p-r" style="top:32px;"></div><div class="chip-ic-pin p-r" style="top:39px;"></div><div class="chip-ic-pin p-r" style="top:46px;"></div><div class="chip-ic-pin p-r" style="top:53px;"></div>
-          </div>
-        </div>
-        <div class="chip-info">
-          <h3 style="font-size:16px; margin-bottom:8px;">74HC595 Shift Reg</h3>
-          <p style="font-size:12px; color:var(--text2); line-height:1.5;">8-bit serial-in, serial/parallel-out shift register. Biasanya untuk memperbanyak output pin Mikrokontroler.</p>
-          <div style="margin-top:12px; font-size:11px; font-family:var(--mono);">
-            <div style="color:var(--text3); margin-bottom:4px;">Pin Utama:</div>
-            <div style="display:flex; flex-wrap:wrap; gap:5px;">
-              <span style="padding:2px 6px; background:var(--bg3); border-radius:4px;">11: SHCP</span>
-              <span style="padding:2px 6px; background:var(--bg3); border-radius:4px;">12: STCP</span>
-              <span style="padding:2px 6px; background:var(--bg3); border-radius:4px;">14: DS</span>
-            </div>
-          </div>
-        </div>
-        <a href="https://assets.nexperia.com/documents/data-sheet/74HC_HCT595.pdf" target="_blank" class="chip-source">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3"/></svg>
-          Datasheet: Nexperia
-        </a>
-      </div>
-
-      <!-- LM7805 -->
-      <div class="chip-card">
-        <div class="chip-visual-wrap">
-          <div class="chip-ic-body" style="width:50px; height:60px; border-radius:0; border-top:15px solid #ccc; position:relative;">
-            <div style="width:12px; height:12px; border-radius:50%; background:#444; position:absolute; top:-12px; left:19px;"></div>
-            <div class="chip-ic-pin" style="bottom:-15px; left:5px; height:15px; width:4px; position:absolute; background:#888;"></div>
-            <div class="chip-ic-pin" style="bottom:-15px; left:23px; height:15px; width:4px; position:absolute; background:#888;"></div>
-            <div class="chip-ic-pin" style="bottom:-15px; left:41px; height:15px; width:4px; position:absolute; background:#888;"></div>
-            <div class="chip-ic-label" style="font-size:10px; margin-top:20px;">L7805CV</div>
-          </div>
-        </div>
-        <div class="chip-info">
-          <h3 style="font-size:16px; margin-bottom:8px;">L7805 Voltage Regulator</h3>
-          <p style="font-size:12px; color:var(--text2); line-height:1.5;">IC Regulator linier positif klasik. Mengubah tegangan input (7-35V) menjadi output konstan 5V.</p>
-          <div style="margin-top:12px; font-size:11px; font-family:var(--mono);">
-            <div style="color:var(--text3); margin-bottom:4px;">Pinout (Kiri-Kanan):</div>
-            <div style="display:flex; flex-wrap:wrap; gap:5px;">
-              <span style="padding:2px 6px; background:var(--bg3); border-radius:4px;">1: IN</span>
-              <span style="padding:2px 6px; background:var(--bg3); border-radius:4px;">2: GND</span>
-              <span style="padding:2px 6px; background:var(--bg3); border-radius:4px;">3: OUT</span>
-            </div>
-          </div>
-        </div>
-        <a href="https://www.st.com/resource/en/datasheet/l78.pdf" target="_blank" class="chip-source">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3"/></svg>
-          Datasheet: STMicroelectronics
-        </a>
-      </div>
-
-      <!-- ATmega328P -->
-      <div class="chip-card">
-        <div class="chip-visual-wrap">
-          <div class="chip-ic-body" style="width:130px; height:45px;">
-            <div class="chip-ic-label" style="font-size:9px;">ATmega328P-PU</div>
-            <!-- 28 pin DIP (14 per side) -->
-            <div class="chip-ic-pin p-l" style="top:2px;"></div><div class="chip-ic-pin p-l" style="top:5px;"></div><div class="chip-ic-pin p-l" style="top:8px;"></div><div class="chip-ic-pin p-l" style="top:11px;"></div><div class="chip-ic-pin p-l" style="top:14px;"></div><div class="chip-ic-pin p-l" style="top:17px;"></div><div class="chip-ic-pin p-l" style="top:20px;"></div><div class="chip-ic-pin p-l" style="top:23px;"></div><div class="chip-ic-pin p-l" style="top:26px;"></div><div class="chip-ic-pin p-l" style="top:29px;"></div><div class="chip-ic-pin p-l" style="top:32px;"></div><div class="chip-ic-pin p-l" style="top:35px;"></div><div class="chip-ic-pin p-l" style="top:38px;"></div><div class="chip-ic-pin p-l" style="top:41px;"></div>
-            <div class="chip-ic-pin p-r" style="top:2px;"></div><div class="chip-ic-pin p-r" style="top:5px;"></div><div class="chip-ic-pin p-r" style="top:8px;"></div><div class="chip-ic-pin p-r" style="top:11px;"></div><div class="chip-ic-pin p-r" style="top:14px;"></div><div class="chip-ic-pin p-r" style="top:17px;"></div><div class="chip-ic-pin p-r" style="top:20px;"></div><div class="chip-ic-pin p-r" style="top:23px;"></div><div class="chip-ic-pin p-r" style="top:26px;"></div><div class="chip-ic-pin p-r" style="top:29px;"></div><div class="chip-ic-pin p-r" style="top:32px;"></div><div class="chip-ic-pin p-r" style="top:35px;"></div><div class="chip-ic-pin p-r" style="top:38px;"></div><div class="chip-ic-pin p-r" style="top:41px;"></div>
-          </div>
-        </div>
-        <div class="chip-info">
-          <h3 style="font-size:16px; margin-bottom:8px;">ATmega328P</h3>
-          <p style="font-size:12px; color:var(--text2); line-height:1.5;">Mikrokontroler 8-bit AVR berperforma tinggi. Otak utama di balik board Arduino Uno.</p>
-          <div style="margin-top:12px; font-size:11px; font-family:var(--mono);">
-            <div style="color:var(--text3); margin-bottom:4px;">Specs:</div>
-            <div style="display:flex; flex-wrap:wrap; gap:5px;">
-              <span style="padding:2px 6px; background:var(--bg3); border-radius:4px;">32KB Flash</span>
-              <span style="padding:2px 6px; background:var(--bg3); border-radius:4px;">2KB SRAM</span>
-              <span style="padding:2px 6px; background:var(--bg3); border-radius:4px;">1KB EEPROM</span>
-            </div>
-          </div>
-        </div>
-        <a href="https://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-7810-Automotive-Microcontrollers-ATmega328P_Datasheet.pdf" target="_blank" class="chip-source">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3"/></svg>
-          Datasheet: Microchip
-        </a>
-      </div>
-
-      <!-- ULN2003 -->
-      <div class="chip-card">
-        <div class="chip-visual-wrap">
-          <div class="chip-ic-body" style="width:110px; height:60px;">
-            <div class="chip-ic-label" style="font-size:10px;">ULN2003A</div>
-            <!-- 16 pin -->
-            <div class="chip-ic-pin p-l" style="top:4px;"></div><div class="chip-ic-pin p-l" style="top:11px;"></div><div class="chip-ic-pin p-l" style="top:18px;"></div><div class="chip-ic-pin p-l" style="top:25px;"></div><div class="chip-ic-pin p-l" style="top:32px;"></div><div class="chip-ic-pin p-l" style="top:39px;"></div><div class="chip-ic-pin p-l" style="top:46px;"></div><div class="chip-ic-pin p-l" style="top:53px;"></div>
-            <div class="chip-ic-pin p-r" style="top:4px;"></div><div class="chip-ic-pin p-r" style="top:11px;"></div><div class="chip-ic-pin p-r" style="top:18px;"></div><div class="chip-ic-pin p-r" style="top:25px;"></div><div class="chip-ic-pin p-r" style="top:32px;"></div><div class="chip-ic-pin p-r" style="top:39px;"></div><div class="chip-ic-pin p-r" style="top:46px;"></div><div class="chip-ic-pin p-r" style="top:53px;"></div>
-          </div>
-        </div>
-        <div class="chip-info">
-          <h3 style="font-size:16px; margin-bottom:8px;">ULN2003A Darlington</h3>
-          <p style="font-size:12px; color:var(--text2); line-height:1.5;">Array dari 7 pasang NPN Darlington. Sangat sering dipakai untuk men-drive stepper motor, relay, atau LED beban berat.</p>
-          <div style="margin-top:12px; font-size:11px; font-family:var(--mono);">
-            <div style="color:var(--text3); margin-bottom:4px;">Specs:</div>
-            <div style="display:flex; flex-wrap:wrap; gap:5px;">
-              <span style="padding:2px 6px; background:var(--bg3); border-radius:4px;">500mA per pin</span>
-              <span style="padding:2px 6px; background:var(--bg3); border-radius:4px;">50V Max</span>
-            </div>
-          </div>
-        </div>
-        <a href="https://www.ti.com/lit/ds/symlink/uln2003a.pdf" target="_blank" class="chip-source">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14 21 3"/></svg>
-          Datasheet: Texas Instruments
-        </a>
-      </div>
-    </div>
-
-    <!-- INTERACTIVE ARDUINO ANATOMY -->
-    <div class="projects-header" style="margin-top:50px;">
-      <h2>🗺️ Anatomi Board (Interaktif)</h2>
-      <p>Klik pin pada replika board Arduino Uno di bawah untuk melihat fungsi spesifiknya!</p>
-    </div>
-
-    <div class="board-interactive-card" style="background:var(--bg2); border:1px solid var(--line); border-radius:16px; padding:24px; margin-top:20px; display:flex; flex-wrap:wrap; gap:20px;">
-      <!-- ARDUINO VISUAL -->
-      <div class="board-visual" style="flex:1; min-width:300px; display:flex; justify-content:center; align-items:center; background:var(--bg3); border-radius:12px; padding:40px 20px; position:relative; overflow:hidden;">
-        <div class="arduino-board" style="width:260px; height:180px; background:#0f475a; border-radius:10px 10px 30px 10px; position:relative; box-shadow:inset 0 0 10px rgba(0,0,0,0.5), 0 10px 20px rgba(0,0,0,0.3); border:2px solid #1a6f8c;">
-            
-            <!-- USB Port -->
-            <div style="position:absolute; top:20px; left:-5px; width:15px; height:40px; background:#e2e8f0; border-radius:2px; border:2px solid #94a3b8; z-index:2; box-shadow:2px 0 5px rgba(0,0,0,0.4);"></div>
-            <!-- Power Jack -->
-            <div style="position:absolute; bottom:15px; left:-5px; width:20px; height:35px; background:#0f172a; border-radius:2px; border:2px solid #334155; z-index:2; box-shadow:2px 0 5px rgba(0,0,0,0.4);"></div>
-            
-            <!-- Main IC DIP28 -->
-            <div style="position:absolute; bottom:55px; right:40px; width:80px; height:25px; background:#1e293b; border-radius:3px; border:1px solid #000; box-shadow:inset 0 0 5px #000, 2px 2px 5px rgba(0,0,0,0.4); display:flex; flex-direction:column; justify-content:space-between; padding:2px;">
-              <div style="display:flex; justify-content:space-between;"><div style="width:3px;height:3px;background:#64748b;border-radius:50%;"></div><div style="width:3px;height:3px;background:#64748b;border-radius:50%;"></div><div style="width:3px;height:3px;background:#64748b;border-radius:50%;"></div><div style="width:3px;height:3px;background:#64748b;border-radius:50%;"></div><div style="width:3px;height:3px;background:#64748b;border-radius:50%;"></div></div>
-              <div style="color:#475569; font-size:6px; font-family:monospace; text-align:center;">ATMEGA328P</div>
-              <div style="display:flex; justify-content:space-between;"><div style="width:3px;height:3px;background:#64748b;border-radius:50%;"></div><div style="width:3px;height:3px;background:#64748b;border-radius:50%;"></div><div style="width:3px;height:3px;background:#64748b;border-radius:50%;"></div><div style="width:3px;height:3px;background:#64748b;border-radius:50%;"></div><div style="width:3px;height:3px;background:#64748b;border-radius:50%;"></div></div>
-            </div>
-            
-            <div style="color:#38bdf8; position:absolute; top:70px; left:50px; font-weight:bold; font-size:16px; transform:rotate(-90deg); letter-spacing:2px; opacity:0.8; text-shadow:0 0 4px rgba(56,189,248,0.5);">ARDUINO UNO</div>
-            <div style="color:#fff; position:absolute; top:130px; left:25px; font-size:12px; transform:rotate(-90deg); opacity:0.3; border:1px solid #fff; border-radius:50%; width:20px; height:20px; display:flex; align-items:center; justify-content:center;">&infin;</div>
-            
-            <!-- Clickable Pins Container Top -->
-            <div style="position:absolute; top:2px; right:8px; display:flex; gap:2px; background:#1e293b; padding:2px; border-radius:2px; border:1px solid #334155;">
-              <button class="ardi-pin" onclick="showArdiPin('D13', 'Digital I/O & Built-in LED', 'Pin yang terhubung langsung dengan LED bawaan board. Sering dipakai untuk testing/blinking tanpa perlu pasang LED eksternal tambahan.')">13</button>
-              <button class="ardi-pin" onclick="showArdiPin('D11', 'PWM (Pulse Width Modulation)', 'Pin digital yang mendukung fungsi PWM (ditandai dengan ~). Bisa dipakai untuk mengendalikan kecerahan LED bertahap atau mengatur kecepatan motor DC.')">11~</button>
-              <button class="ardi-pin" onclick="showArdiPin('D9', 'PWM (Pulse Width Modulation)', 'Sama seperti pin 11, ini adalah pin PWM. Sangat sering digunakan oleh para pe-hobi untuk mengirim sinyal kendali sudut ke Motor Servo.')">9~</button>
-              <button class="ardi-pin" onclick="showArdiPin('D2', 'Digital I/O & External Interrupt', 'Selain I/O biasa, pin 2 dan 3 adalah pin spesial yang dipasangi fitur *Hardware Interrupt*. Sangat berguna untuk membaca sensor rotary encoder tanpa jeda.')">2</button>
-              <button class="ardi-pin" onclick="showArdiPin('TX', 'Serial Transmit', 'Pin D1 (TX). Berfungsi untuk mengirim data serial (UART) ke komputer atau modul luar (seperti Bluetooth HC-05). Jangan dipakai menjadi input/output biasa saat sedang meng-upload program!')">TX</button>
-              <button class="ardi-pin" onclick="showArdiPin('RX', 'Serial Receive', 'Pin D0 (RX). Menerima data serial. Sama seperti TX, hindari menghubungkan sensor ke pin ini jika ingin komunikasi terminal USB ke laptop berjalan lancar.')">RX</button>
-            </div>
-
-            <!-- Clickable Pins Container Bottom Power -->
-            <div style="position:absolute; bottom:2px; left:60px; display:flex; gap:2px; background:#1e293b; padding:2px; border-radius:2px; border:1px solid #334155;">
-              <button class="ardi-pin pwr" onclick="showArdiPin('5V', 'Power Output 5 Volt', 'Menyediakan listrik 5 Volt DC yang sudah lolos regulator internal board untuk langsung menyalakan berbagai modul / sensor 5V logik.')">5V</button>
-              <button class="ardi-pin pwr" onclick="showArdiPin('3.3V', 'Power Output 3.3 Volt', 'Output tegangan ekstra! Memberikan 3.3V untuk modul-modul yang membutuhkan tegangan rendah seperti modul memori SD Card, modul nirkabel (NRF24), atau ESP8266 ESP-01.')">3V3</button>
-              <button class="ardi-pin pwr" onclick="showArdiPin('GND', 'Ground (Negatif)', 'Titik nol / kutub negatif kelistrikan (-). Semua rangkaian elektronik dari modul/sensor apa pun WAJIB menyambung kembali jalurnya ke Ground ini agar *loop* arus bisa mengalir sempurna.')">GND</button>
-              <button class="ardi-pin pwr" onclick="showArdiPin('VIN', 'Voltage In', 'Bisa dipakai *mengeluarkan* arus paralel langsung dari *Power Jack* hitam, ATAU justru di-_supply_ arus listrik dari luar (baterai Lipo/kotak) sebesar 7V hingga 12V untuk menghidupkan Arduino.')">VIN</button>
-            </div>
-
-            <!-- Clickable Pins Container Bottom Analog -->
-            <div style="position:absolute; bottom:2px; right:30px; display:flex; gap:2px; background:#1e293b; padding:2px; border-radius:2px; border:1px solid #334155;">
-              <button class="ardi-pin ana" onclick="showArdiPin('A0-A5', 'Analog In (10-bit ADC)', 'Pin pintar yang bisa membaca variasi tegangan (0 sampai 5V) dan mengubahnya secara instan menjadi angka desimal (0-1023). Wajib dipakai untuk baca sensor analog layaknya potensio, Joystick, Modul Suhu LM35, atau sensor Cahaya (LDR).')">A0..A5</button>
-            </div>
-            
-        </div>
-      </div>
-      
-      <!-- INFORMATION PANEL -->
-      <div class="board-info" style="flex:1; min-width:260px; background:var(--bg4); border:1px solid var(--line2); border-radius:12px; padding:24px;">
-        <div style="color:var(--accent); font-weight:700; font-size:12px; margin-bottom:8px; text-transform:uppercase; letter-spacing:0.5px;">Informasi Detail Pin</div>
-        <h3 id="ardi-pin-title" style="font-size:20px; line-height:1.4; margin-bottom:12px; color:var(--text); text-shadow:0 0 10px rgba(79,156,249,0.1);">Pilih Pin Berwarna pada Board! 👈</h3>
-        <p id="ardi-pin-desc" style="font-size:14px; color:var(--text2); line-height:1.6; margin-bottom:20px;">
-          Anda bisa berinteraksi langsung dengan memencet ilustrasi pin-pin Arduino Uno berwarna di sebelah kiri, untuk melihat deskripsi, spesifikasi, serta anjuran pemakaian pada setiap kakinya.
-        </p>
-        <div class="ardi-tags" style="display:flex; flex-wrap:wrap; gap:8px;">
-          <span style="padding:4px 8px; background:rgba(79,156,249,0.1); border:1px solid rgba(79,156,249,0.3); border-radius:6px; font-size:11px; color:var(--accent); font-weight:500;">Arduino Uno Rev3</span>
-          <span style="padding:4px 8px; background:rgba(34,197,94,0.1); border:1px solid rgba(34,197,94,0.3); border-radius:6px; font-size:11px; color:var(--green); font-weight:500;">Interactive Visualizer</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Inline Styles and Script for interactive board -->
-    <style>
-      .ardi-pin {
-        width: 24px; height: 16px; background: #94a3b8; color: #fff; font-size: 8px; font-weight: 700; font-family: monospace; border: none; cursor: pointer; border-radius: 1px; display: flex; align-items: center; justify-content: center; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); padding:0; box-shadow: inset 0 2px 4px rgba(255,255,255,0.2), 0 2px 4px rgba(0,0,0,0.3); text-shadow: 0 1px 1px #000;
-      }
-      .ardi-pin:hover { background: #38bdf8; transform: translateY(-3px); box-shadow: inset 0 2px 4px rgba(255,255,255,0.4), 0 4px 8px rgba(0,0,0,0.5); z-index:10; position:relative; }
-      .ardi-pin:active { transform: translateY(0); box-shadow: inset 0 1px 2px rgba(0,0,0,0.5); }
-      .ardi-pin.pwr { background: #ef4444; }
-      .ardi-pin.pwr:hover { background: #f87171; }
-      .ardi-pin.ana { width: 44px; background: #8b5cf6; }
-      .ardi-pin.ana:hover { background: #a78bfa; }
-    </style>
-    <script>
-      function showArdiPin(pinName, type, description) {
-        document.getElementById('ardi-pin-title').innerHTML = `<span style="color:var(--accent); font-size:24px; font-weight:600;">Pin ${pinName}</span> <br><span style="display:inline-block; font-size:12px; font-weight:500; font-family:var(--mono); color:var(--text); background:var(--bg2); border:1px solid var(--line); border-radius:6px; padding:4px 8px; margin-top:8px;">${type}</span>`;
-        document.getElementById('ardi-pin-desc').innerHTML = `<strong>Kegunaan Praktis:</strong><br><span style="margin-top:4px; display:inline-block;">${description}</span>`;
-      }
-    </script>
-
-  </div>
-</div>
-
 <!-- PAGE: VIDEO PEMBELAJARAN -->
 <div class="page" id="page-news">
   <div class="page-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
@@ -1599,18 +1104,12 @@
 <script src="js/api.js"></script>
 <script src="js/app.js"></script>
 <script src="js/modules/firebase-dashboard.js"></script>
-<script src="js/modules/chips.js"></script>
 
-<!-- Service Worker Registration -->
+<!-- Service Worker dibersihkan — online only -->
 <script>
   if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      navigator.serviceWorker.register('/sw.js').then(reg => {
-        console.log('SW Registered:', reg.scope);
-      }).catch(err => {
-        console.log('SW Reg Auth Failed:', err);
-      });
-    });
+    navigator.serviceWorker.getRegistrations().then(rs => rs.forEach(r => r.unregister()));
+    if (window.caches) caches.keys().then(ks => ks.forEach(k => caches.delete(k)));
   }
 </script>
 

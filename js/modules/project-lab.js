@@ -103,7 +103,8 @@ const ElektroProject = {
     const wiringData = prj.wiring_guide || prj.wiring_table || prj.wiring || [];
     const wiringHtml = wiringData.length ? `<div class="pd-section"><h3 class="pd-section-h">🔌 Tabel Koneksi Kabel (Wiring Guide)</h3><div class="pd-table-wrap"><table class="pd-table"><thead><tr><th>Komponen</th><th>Pin Komponen</th><th>Koneksi ke Board</th></tr></thead><tbody>${wiringData.map(w => `<tr><td><b>${w.komponen}</b></td><td><code>${w.pin_komponen || w.koneksi_pin || '-'}</code></td><td><code>${w.koneksi_arduino || w.koneksi_board || '-'}</code></td></tr>`).join('')}</tbody></table></div></div>` : '';
 
-    const cppCode = prj.cpp_code || (Array.isArray(prj.code) ? prj.code.join('\n') : (typeof prj.code === 'string' ? prj.code.replace(/\\n/g, '\n') : ''));
+    const cppCode = String(prj.cpp_code || (Array.isArray(prj.code) ? prj.code.join('\n') : (typeof prj.code === 'string' ? prj.code : '')))
+      .replace(/\r\n/g, '\n').replace(/\\n/g, '\n');
     const safeCode = cppCode.replace(/</g, '&lt;').replace(/>/g, '&gt;');
     const codeHtml = `<div class="pd-section"><h3 class="pd-section-h">💻 Sketch C++ (Arduino IDE)</h3><div class="pd-code-wrap"><div class="pd-code-header"><div class="pd-code-lang">C++ / Arduino</div><button class="pd-code-copy" onclick="ElektroProject.copyCode(this, 'cpp')">📋 Copy Code</button></div><pre class="pd-code-pre"><code id="code-content-cpp">${safeCode}</code></pre></div></div>`;
 

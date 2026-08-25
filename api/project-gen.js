@@ -10,12 +10,12 @@
 const CURATED_PARTS = {
   "wokwi-arduino-uno": {
     pins: ["0","1","2","3","4","5","6","7","8","9","10","11","12","13","A0","A1","A2","A3","A4","A5","5V","VIN","GND.1","GND.2","GND.3"],
-    note: "PWM: 3,5,6,9,10,11. 3V3/IOREF/AREF/RESET tidak disimulasikan di Wokwi. Board utama proyek Uno."
+    note: "PWM: 3,5,6,9,10,11. Board utama proyek Uno."
   },
   "wokwi-led": {
     pins: ["A","C"],
     attrs: 'color: "red"|"green"|"yellow"|"blue"|"white"',
-    note: "A=anoda(+), C=katoda(-). WAJIB pakai resistor seri."
+    note: "A=anoda(+), C=katoda(-). WAJIB resistor seri."
   },
   "wokwi-resistor": {
     pins: ["1","2"],
@@ -23,11 +23,11 @@ const CURATED_PARTS = {
   },
   "wokwi-buzzer": {
     pins: ["1","2"],
-    note: "1=negatif(hitam), 2=positif(merah)"
+    note: "1=negatif, 2=positif"
   },
   "wokwi-pushbutton": {
     pins: ["1.l","1.r","2.l","2.r"],
-    note: "1.l & 1.r selalu tersambung internal; 2.l & 2.r selalu tersambung internal. Tekan = kontak 1 terhubung kontak 2."
+    note: "Tekan = kontak 1 terhubung kontak 2."
   },
   "wokwi-potentiometer": {
     pins: ["VCC","SIG","GND"],
@@ -35,52 +35,52 @@ const CURATED_PARTS = {
     note: "SIG ke pin analog A0-A5"
   },
   "wokwi-lcd1602": {
-    pins: ["VSS","VDD","V0","RS","RW","E","D0","D1","D2","D3","D4","D5","D6","D7","A","K","SDA","SCL"],
+    pins: ["VSS","VDD","V0","RS","RW","E","D0","D1","D2","D3","D4","D5","D6","D7","A","K","SDA","SCL","VCC","GND"],
     attrs: 'pins: "full" (parallel, default) atau "i2c"',
-    note: 'Parallel: VSS,VDD,V0,RS,RW,E,D4-D7,A,K. I2C (pins="i2c"): GND,VCC,SDA,SCL. JANGAN pakai "wokwi-lcd-1602" (nama salah).'
+    note: 'I2C (pins="i2c"): VCC,GND,SDA,SCL. JANGAN "wokwi-lcd-1602".'
   },
   "wokwi-dht22": {
     pins: ["VCC","SDA","NC","GND"],
-    note: "TIDAK ADA wokwi-dht11 di Wokwi — sensor suhu/kelembaban pakai wokwi-dht22. SDA = pin data."
+    note: "SDA=pin data. TIDAK ADA wokwi-dht11."
   },
   "wokwi-hc-sr04": {
     pins: ["VCC","TRIG","ECHO","GND"],
-    note: "TRIG & ECHO ke pin digital; VCC ke 5V."
+    note: "TRIG & ECHO ke digital, VCC ke 5V."
   },
   "wokwi-relay-module": {
     pins: ["VCC","GND","IN","NC","COM","NO"],
-    note: "IN = sinyal kontrol dari mikrokontroler. Beban AC/DC disambung ke COM & NO (aktif-high)."
+    note: "IN=sinyal kontrol. Beban ke COM & NO (aktif-high)."
   },
   "wokwi-servo": {
     pins: ["PWM","V+","GND"],
-    note: "PWM ke pin digital PWM (9/10), V+ ke 5V."
+    note: "PWM ke pin PWM (9/10 Uno), V+ ke 5V."
   },
   "board-esp32-devkit-c-v4": {
     pins: ["3V3","EN","VP","VN","34","35","32","33","25","26","27","14","12","GND.1","13","D2","D3","CMD","5V","GND.2","23","22","TX","RX","21","GND.3","19","18","5","17","16","4","0","2","15","D1","D0","CLK"],
-    note: "ESP32 DevKitC V4. GPIO ADC (input-only, tanpa pull-up): 34, 35. I2C default: SDA=21, SCL=22. PWM di hampir semua pin digital."
+    note: "ADC input-only (tanpa pull-up): 34,35. I2C: SDA=21, SCL=22."
   },
   "board-ssd1306": {
     pins: ["DATA","CLK","DC","RST","CS","3V3","GND","VIN"],
-    note: "OLED 128x64 I2C. DATA=SDA, CLK=SCL. VIN ke 3V3."
+    note: "OLED SPI 7-pin. Untuk I2C pakai wokwi-ssd1306."
   },
   "wokwi-ssd1306": {
     pins: ["GND","VCC","SDA","SCL"],
     attrs: 'alamat I2C 0x3C',
-    note: "OLED 128x64 I2C 4-pin (bukan SPI seperti board-ssd1306). SDA→A4, SCL→A5, VCC→5V."
+    note: "OLED I2C 4-pin. Uno: SDA→A4, SCL→A5, VCC→5V."
   },
   "wokwi-lcd2004": {
-    pins: ["VSS","VDD","V0","RS","RW","E","D0","D1","D2","D3","D4","D5","D6","D7","A","K","SDA","SCL"],
+    pins: ["VSS","VDD","V0","RS","RW","E","D0","D1","D2","D3","D4","D5","D6","D7","A","K","SDA","SCL","VCC","GND"],
     attrs: 'pins: "full" (parallel, default) atau "i2c"',
-    note: "LCD 20x4. Mode i2c (pins=\"i2c\"): SDA→A4, SCL→A5, VSS→GND, VDD→5V."
+    note: 'LCD 20x4 — wiring sama seperti lcd1602.'
   },
   "wokwi-a4988": {
     pins: ["ENABLE","MS1","MS2","MS3","RESET","SLEEP","STEP","DIR","GND","VDD","1B","1A","2A","2B","VMOT"],
-    note: "Driver stepper: STEP=langkah, DIR=arah. Motor: 1B/1A ke B-/B+, 2A/2B ke A+/A-."
+    note: "STEP=langkah, DIR=arah. Motor: 1B/1A→B-/B+, 2A/2B→A+/A-."
   },
   "wokwi-wifi-ap": {
     pins: [],
     attrs: 'ssid, password, channel, internet',
-    note: "Access point WiFi simulasi. Tanpa part ini ESP32 memakai jaringan default Wokwi-GUEST. Tidak punya koneksi kabel."
+    note: "AP WiFi simulasi; tanpa ini ESP32 pakai Wokwi-GUEST."
   }
 };
 
@@ -113,6 +113,27 @@ for (const [type, info] of Object.entries(DOC_PARTS)) {
 
 const ALLOWED_TYPES = Object.keys(WOKWI_PARTS);
 
+// Part yang diikutkan di system prompt (hemat token — limit TPM free tier 8K).
+// Part di luar daftar ini tetap VALID saat validasi (ALLOWED_TYPES penuh),
+// hanya tidak diiklankan ke AI.
+const PROMPT_PARTS = new Set([
+  // board
+  'wokwi-arduino-uno', 'board-esp32-devkit-c-v4',
+  // dasar
+  'wokwi-led', 'wokwi-resistor', 'wokwi-pushbutton', 'wokwi-potentiometer',
+  'wokwi-buzzer', 'wokwi-slide-switch',
+  // sensor
+  'wokwi-dht22', 'wokwi-hc-sr04', 'wokwi-pir-motion-sensor',
+  'wokwi-photoresistor-sensor', 'wokwi-ntc-temperature-sensor', 'wokwi-gas-sensor',
+  'wokwi-mpu6050', 'wokwi-ds18b20',
+  // output/display
+  'wokwi-lcd1602', 'wokwi-lcd2004', 'wokwi-ssd1306', 'wokwi-7segment',
+  'wokwi-tm1637-7segment', 'wokwi-servo', 'wokwi-relay-module',
+  'wokwi-neopixel', 'wokwi-rgb-led',
+  // IoT
+  'wokwi-wifi-ap'
+]);
+
 // ─────────────────────────────────────────────────────────────
 // KATALOG LIBRARY WOKWI (Library Manager) — nama WAJIB persis
 // dipakai untuk: prompt AI + auto-fill deterministik via #include
@@ -143,16 +164,6 @@ const LIBRARY_CATALOG = {
   'IRMP.h': ['IRMP']
 };
 
-// Header bawaan Arduino/ESP32 — tidak butuh library eksternal
-const BUILTIN_HEADERS = [
-  'Arduino.h', 'Wire.h', 'SPI.h', 'LiquidCrystal.h', 'Servo.h', 'Stepper.h',
-  'SoftwareSerial.h', 'EEPROM.h', 'SD.h', 'WiFi.h', 'WebServer.h', 'HTTPClient.h',
-  'WiFiClient.h', 'WiFiServer.h', 'WiFiUdp.h', 'math.h', 'string.h', 'stdlib.h',
-  'stdio.h', 'time.h', 'avr/io.h', 'avr/pgmspace.h', 'util/delay.h', 'esp32-hal.h', 'HardwareSerial.h'
-];
-
-const KNOWN_LIB_NAMES = [...new Set(Object.values(LIBRARY_CATALOG).flat())];
-
 // Auto-fill deterministik: scan #include di cpp_code → daftar library.
 // Menimpa tebakan AI (0 token tambahan, hasil selalu konsisten).
 function detectLibraries(cppCode, boardKey) {
@@ -173,7 +184,7 @@ function detectLibraries(cppCode, boardKey) {
 }
 
 // Teks katalog untuk system prompt (ringkas — hemat token)
-const PARTS_CATALOG_TEXT = ALLOWED_TYPES.map(t => {
+const PARTS_CATALOG_TEXT = ALLOWED_TYPES.filter(t => PROMPT_PARTS.has(t)).map(t => {
   const p = WOKWI_PARTS[t];
   let line = `- ${t}: pins ${p.pins.join(", ")}`;
   if (p.attrs) line += ` | attrs: ${p.attrs}`;
@@ -205,7 +216,7 @@ function validateWokwiDiagram(rawDiagram) {
     diag.parts.forEach((p, i) => {
       if (!p || typeof p !== "object") { errors.push(`parts[${i}] bukan objek valid`); return; }
       if (!ALLOWED_TYPES.includes(p.type)) {
-        errors.push(`parts[${i}] tipe "${p.type}" tidak dikenal — wajib salah satu dari: ${ALLOWED_TYPES.join(", ")}`);
+        errors.push(`parts[${i}] tipe "${p.type}" tidak dikenal — pilih HANYA dari KATALOG PART di system prompt`);
       }
       if (!p.id) errors.push(`parts[${i}] wajib punya "id"`);
       if (ids.has(p.id)) errors.push(`id part "${p.id}" duplikat`);
@@ -247,8 +258,8 @@ const BOARD_INFO = {
     boardType: 'wokwi-arduino-uno',
     codePlatform: 'Uno',
     prompt: `Board utama WAJIB wokwi-arduino-uno (id: "uno"). Pin umum: digital 2-13 (PWM: 3,5,6,9,10,11), analog A0-A5, daya 5V & GND.`,
-    codeRules: `- DHT22 pakai Adafruit DHT: #include <DHT.h>; DHT dht(2, DHT22);
-- LCD 1602 pakai LiquidCrystal lcd(12,11,10,9,8,7); — cocokkan dengan koneksi RS=12,E=11,D4=10,D5=9,D6=8,D7=7.`,
+    codeRules: `- DHT22: #include <DHT.h>; DHT dht(2, DHT22);
+- LCD 1602 parallel: LiquidCrystal lcd(12,11,5,4,3,2); (RS,E,D4,D5,D6,D7) — cocokkan dgn koneksi.`,
     example: `{"version":1,"parts":[{"type":"wokwi-arduino-uno","id":"uno","top":0,"left":0,"attrs":{}},{"type":"wokwi-led","id":"led1","top":-100,"left":300,"attrs":{"color":"red"}},{"type":"wokwi-resistor","id":"r1","top":-20,"left":300,"attrs":{"value":"220"}}],"connections":[["uno:13","r1:1","green",["v0"]],["r1:2","led1:A","green",["v0"]],["led1:C","uno:GND.1","black",["v0"]]]}`
   },
   'esp32': {
@@ -256,9 +267,8 @@ const BOARD_INFO = {
     boardType: 'board-esp32-devkit-c-v4',
     codePlatform: 'ESP32',
     prompt: `Board utama WAJIB board-esp32-devkit-c-v4 (id: "esp"). GPIO digital: 2,4,5,12,13,14,15,16,17,18,19,21,22,23,25,26,27,32,33 (PWM hampir semua). ADC (input saja): 34,35. I2C default: SDA=21, SCL=22. Daya: 3V3, 5V, GND.`,
-    codeRules: `- Semua kode pakai platform ESP32 (Arduino core): #include <WiFi.h>, dll.
-- Bila butuh WiFi/IoT, pakai library & konsep ESP32 (WiFi.begin, dll).
-- Sensor DHT22: #include <DHT.h>; DHT dht(4, DHT22);`,
+    codeRules: `- Kode platform ESP32 (Arduino core): #include <WiFi.h>, dll. WiFi: WiFi.begin.
+- DHT22: #include <DHT.h>; DHT dht(4, DHT22);`,
     example: `{"version":1,"parts":[{"type":"board-esp32-devkit-c-v4","id":"esp","top":0,"left":0,"attrs":{}},{"type":"wokwi-dht22","id":"dht","top":-120,"left":320,"attrs":{}}],"connections":[["dht:VCC","esp:3V3","red",["v0"]],["dht:SDA","esp:4","green",["v0"]],["dht:GND","esp:GND.1","black",["v0"]]]}`
   }
 };
@@ -268,33 +278,144 @@ function buildSystemPrompt(boardKey) {
   return `You are an IoT Expert building projects on ${b.label}. Reply ONLY with raw JSON (no markdown, no code fences).
 
 SCHEMA (wajib persis):
-{"title":"Nama","description":"Deskripsi","bom":["1x ${b.label}","1x LED"],"wiring_guide":[{"komponen":"LED","pin_komponen":"A","koneksi_arduino":"Pin 13 (via resistor)"}],"cpp_code":"Code with \\n hidden string","libraries":["DHT sensor library"],"wokwi_diagram":"MINIFIED stringified JSON"}
+{"title":"Nama","description":"Deskripsi singkat","bom":["1x ${b.label}","1x LED"],"wiring_guide":[{"komponen":"LED","pin_komponen":"A","koneksi_arduino":"Pin 13 (via resistor)"}],"cpp_code":"kode dgn \\n literal","libraries":[],"wokwi_diagram":"string JSON minified 1 baris"}
+- "libraries" SELALU [] — sistem mengisi otomatis dari #include cpp_code.
 
-LIBRARY RULES:
-- Field "libraries" = array nama library Wokwi (Library Manager) yang dipakai cpp_code. JANGAN mengarang nama.
-- Nama WAJIB dari daftar ini: ${KNOWN_LIB_NAMES.join(", ")}
-- Kode hanya pakai library bawaan Arduino (Wire.h, SPI.h, LiquidCrystal.h, Servo.h, WiFi.h, dll) → libraries: []
-
-WOKWI DIAGRAM RULES:
-- wokwi_diagram = satu baris string JSON minified: {"version":1,"parts":[...],"connections":[...]}
-- Setiap part WAJIB objek: {"type":"...","id":"...","top":<angka>,"left":<angka>,"attrs":{...}}
-- connections WAJIB array of arrays: ["partId:pin","partId:pin","color",[]]. JANGAN pernah pakai objek.
-- Semua part & pin WAJIB dari katalog di bawah. DILARANG mengarang nama part/pin.
+DIAGRAM RULES:
+- wokwi_diagram = 1 baris string JSON: {"version":1,"parts":[...],"connections":[...]}
+- Part WAJIB objek {"type","id","top":<angka>,"left":<angka>,"attrs":{}} — type & pin WAJIB dari KATALOG di bawah, dilarang mengarang.
+- connections WAJIB array of arrays: ["partId:pin","partId:pin","color",[]]. JANGAN objek.
 - ${b.prompt}
-- Pilih part dari katalog yang paling sesuai fungsi proyek (sensor, aktuator, display, dll).
+- Semua komponen wajib dapat daya (Uno: 5V & GND; ESP32: 3V3/5V & GND). Motor/pompa/AC wajib via wokwi-relay-module. Sensor tak dikenal → wokwi-potentiometer + catatan di description.
 
-KATALOG PART WOKWI (semua part di bawah diizinkan — pilih yang relevan):
+KATALOG PART WOKWI:
 ${PARTS_CATALOG_TEXT}
 
 CONTOH DIAGRAM (${b.label}):
 ${b.example}
 
 KODE RULES:
-- cpp_code = 1 baris string dengan \\n literal. KOMENTAR BAHASA INDONESIA, maks 5 kata/baris.
-- Baris atas: // Proyek: X \\n // Logika: Y \\n // Platform: ${b.codePlatform}
+- cpp_code = 1 baris string, \\n literal. Komentar Indonesia maks 5 kata. Baris atas: // Proyek: X \\n // Logika: Y \\n // Platform: ${b.codePlatform}
+- Gaya rapi khas Arduino: 1 statement per baris, indentasi 2 spasi. Dilarang minified (buruk: "void setup(){pinMode(13,OUTPUT);}").
 ${b.codeRules}
-- ALWAYS akhiri loop() dengan delay(50); (atau lebih besar sesuai kebutuhan).
-- RULES LAIN: semua komponen wajib dapat daya (5V & GND untuk Uno; 3V3/5V & GND untuk ESP32). Motor/pompa/AC WAJIB lewat relay-module. Sensor tak dikenal → fallback wokwi-potentiometer + catatan di description.`;
+- Akhiri loop() dengan delay(50); atau lebih.`;
+}
+
+// ─────────────────────────────────────────────────────────────
+// FORMATCPP — pretty-printer deterministik utk sketch Arduino.
+// AI sering mengembalikan kode minified dgn "\n" literal → dirapikan
+// di sini (0 token): 1 statement per baris + indentasi 2 spasi.
+// Aman thd string/char literal & komentar (di-skip saat scan).
+// ─────────────────────────────────────────────────────────────
+function formatCpp(raw) {
+  if (!raw) return raw;
+  const src = String(raw)
+    .replace(/\r\n?/g, '\n')
+    .replace(/\\n/g, '\n'); // literal "\n" dari JSON → baris baru
+
+  // Pass 1: pecah baris setelah ; { } (di luar string/komentar/kurung)
+  let out = '';
+  let i = 0;
+  const n = src.length;
+  let paren = 0;
+  while (i < n) {
+    const c = src[i];
+    if (c === '"' || c === "'") {
+      const q = c;
+      out += c; i++;
+      while (i < n) {
+        out += src[i];
+        if (src[i] === '\\') { out += (src[i + 1] || ''); i += 2; continue; }
+        i++;
+        if (src[i - 1] === q) break;
+      }
+      continue;
+    }
+    if (c === '/' && src[i + 1] === '/') {
+      while (i < n && src[i] !== '\n') { out += src[i]; i++; }
+      continue;
+    }
+    if (c === '/' && src[i + 1] === '*') {
+      out += '/*'; i += 2;
+      while (i < n && !(src[i] === '*' && src[i + 1] === '/')) { out += src[i]; i++; }
+      out += '*/'; i += 2;
+      continue;
+    }
+    if (c === '(') paren++;
+    if (c === ')') paren = Math.max(0, paren - 1);
+    if (c === '\n') { out += (paren > 0 ? ' ' : '\n'); i++; continue; }
+    if (c === '{') { out = out.replace(/[ \t]+$/, '') + ' {\n'; i++; continue; }
+    if (c === '}') {
+      out = out.replace(/[ \t]+$/, '');
+      if (src[i + 1] === ';') { out += '};\n'; i += 2; continue; }
+      out += '\n}\n'; i++;
+      continue;
+    }
+    if (c === ';' && paren === 0) {
+      // Jangan pecah bila sisa baris hanya komentar // (biarkan nyambung)
+      let j = i + 1;
+      while (j < n && (src[j] === ' ' || src[j] === '\t')) j++;
+      if (src[j] === '/' && src[j + 1] === '/') { out += ';'; i++; continue; }
+      out += ';\n'; i++; continue;
+    }
+    if (c === ',') {
+      // Rapikan spasi setelah koma (di luar string): f(a,b) → f(a, b)
+      out += ',';
+      i++;
+      if (src[i] !== ' ' && src[i] !== '\t' && src[i] !== '\n') out += ' ';
+      continue;
+    }
+    out += c; i++;
+  }
+
+  // Buang baris kosong beruntun
+  const lines = out.split('\n').map(l => l.trim()).filter(l => l !== '');
+
+  // Pass 2: indentasi (hitung kurung di luar string/komentar)
+  const structural = (line) => line
+    .replace(/"(?:[^"\\]|\\.)*"/g, '""')
+    .replace(/'(?:[^'\\]|\\.)*'/g, "''")
+    .replace(/\/\/.*$/, '')
+    .replace(/\/\*.*?\*\//g, '');
+  let depth = 0;
+  const result = [];
+  for (const line of lines) {
+    if (line.startsWith('#')) { result.push(line); continue; } // preprocessor rata kiri
+    const s = structural(line);
+    const opens = (s.match(/{/g) || []).length;
+    const closes = (s.match(/}/g) || []).length;
+    if (closes > opens) {
+      if (depth === 1 && !result[result.length - 1]) result.pop(); // 1 baris kosong antar fungsi
+      depth = Math.max(0, depth - (closes - opens));
+    }
+    result.push('  '.repeat(depth) + line);
+    if (opens > closes) depth += (opens - closes);
+  }
+  return result.join('\n');
+}
+
+// ─────────────────────────────────────────────────────────────
+// CACHE GENERATE — ide+board sama dalam 30 menit → balas instan
+// tanpa panggil AI (hemat token utk retry/klik ulang).
+// Best-effort: hidup selama proses server (dev lokal efektif;
+// di Vercel instance bisa hangus antar request).
+// ─────────────────────────────────────────────────────────────
+const GEN_CACHE_TTL = 30 * 60 * 1000;
+const GEN_CACHE_MAX = 50;
+const genCache = new Map();
+
+function cacheGet(key) {
+  const hit = genCache.get(key);
+  if (!hit) return null;
+  if (Date.now() - hit.t > GEN_CACHE_TTL) { genCache.delete(key); return null; }
+  return hit.v;
+}
+
+function cacheSet(key, val) {
+  if (genCache.size >= GEN_CACHE_MAX) {
+    genCache.delete(genCache.keys().next().value); // evict tertua
+  }
+  genCache.set(key, { t: Date.now(), v: val });
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -343,6 +464,14 @@ module.exports = async function handler(req, res) {
     const boardKey = (board === 'esp32') ? 'esp32' : 'uno';
     const expectedBoard = BOARD_INFO[boardKey].boardType;
 
+    // Cache hit → balas instan tanpa panggil AI
+    const cacheKey = `${boardKey}:${String(idea).trim().toLowerCase()}`;
+    const cached = cacheGet(cacheKey);
+    if (cached) {
+      console.log(`[Backend] Cache hit: ${cacheKey}`);
+      return res.status(200).json({ result: JSON.stringify(cached), cached: true });
+    }
+
     const systemPrompt = buildSystemPrompt(boardKey);
 
     // Panggil model: coba OpenRouter dulu, fallback Groq (gpt-oss-120b → gpt-oss-20b)
@@ -374,53 +503,50 @@ module.exports = async function handler(req, res) {
       }
 
       if ((!response || !response.ok) && groqKeys.length > 0) {
-        const callGroq = async (model) => {
-          let currentKey = groqKeys[Math.floor(Math.random() * groqKeys.length)];
-          let resp = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-            method: "POST",
-            headers: {
-              "Authorization": `Bearer ${currentKey}`,
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-              ...{
-                model,
-                response_format: { type: "json_object" },
-                messages,
-                temperature: 0.7,
-                max_tokens: maxTokens,
-                stream: false
-              },
-              reasoning_effort: 'low'
-            })
-          });
+        const doFetchGroq = (key, model) => fetch("https://api.groq.com/openai/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${key}`,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            model,
+            response_format: { type: "json_object" },
+            messages,
+            temperature: 0.7,
+            max_tokens: maxTokens,
+            stream: false,
+            reasoning_effort: 'low'
+          })
+        });
 
-          if (resp.status === 429) {
+        const callGroq = async (model) => {
+          if (groqKeys.length === 0) {
+            const err = new Error("Semua API key Groq habis/terkena limit. Coba lagi sebentar.");
+            err.status = 429;
+            throw err;
+          }
+          let currentKey = groqKeys[Math.floor(Math.random() * groqKeys.length)];
+          let resp = await doFetchGroq(currentKey, model);
+
+          if (resp.status === 401 || resp.status === 403) {
+            // Key invalid → buang permanen, coba key lain bila ada
             groqKeys = groqKeys.filter(k => k !== currentKey);
             if (groqKeys.length > 0) {
-              currentKey = groqKeys[Math.floor(Math.random() * groqKeys.length)];
-              resp = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-                method: "POST",
-                headers: {
-                  "Authorization": `Bearer ${currentKey}`,
-                  "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                  model,
-                  response_format: { type: "json_object" },
-                  messages,
-                  temperature: 0.7,
-                  max_tokens: maxTokens,
-                  stream: false
-                })
-              });
+              currentKey = groqKeys[0];
+              resp = await doFetchGroq(currentKey, model);
             }
+          } else if (resp.status === 429 && groqKeys.length > 1) {
+            // Rate limit → rotasi ke key lain (key tetap dipakai request berikutnya)
+            const others = groqKeys.filter(k => k !== currentKey);
+            currentKey = others[Math.floor(Math.random() * others.length)];
+            resp = await doFetchGroq(currentKey, model);
           }
           return resp;
         };
 
         response = await callGroq("openai/gpt-oss-120b");
-        if (response.status === 429 || response.status === 500) {
+        if ([429, 413, 500].includes(response.status)) {
           response = await callGroq("openai/gpt-oss-20b");
         }
       }
@@ -448,7 +574,7 @@ module.exports = async function handler(req, res) {
         { role: "system", content: systemPrompt },
         { role: "user", content: `Buatkan tutorial untuk proyek: ${idea}` }
       ],
-      4000
+      3500
     );
 
     let prj = parseResult(result);
@@ -482,8 +608,13 @@ module.exports = async function handler(req, res) {
           { role: "assistant", content: result },
           { role: "user", content: repairPrompt }
         ],
-        6000
-      );
+        3000
+      ).catch((repairErr) => {
+        // Repair gagal (mis. limit TPM free tier) → pertahankan hasil awal
+        console.warn("[Backend] Auto-repair gagal, pakai hasil awal:", repairErr.message);
+        return null;
+      });
+      if (!result) break;
 
       try {
         prj = parseResult(result);
@@ -499,6 +630,9 @@ module.exports = async function handler(req, res) {
 
     // Auto-fill library (deterministik): timpa tebakan AI dengan hasil scan #include
     prj.libraries = detectLibraries(prj.cpp_code, boardKey);
+
+    // Rapikan sketch (AI sering mengirim kode minified / \n literal)
+    if (prj.cpp_code) prj.cpp_code = formatCpp(prj.cpp_code);
 
     if (errors.length) {
       // Diagram tidak lolos: coba selamatkan — drop hanya jika tidak bisa di-parse sama sekali
@@ -517,6 +651,7 @@ module.exports = async function handler(req, res) {
       }
     }
 
+    cacheSet(cacheKey, prj);
     return res.status(200).json({ result: JSON.stringify(prj) });
 
   } catch (error) {
