@@ -1743,5 +1743,600 @@ $$R = \\rho \\cdot \\frac{L}{A} \\qquad \\Rightarrow \\qquad \\Delta V = 2 \\cdo
       { q: 'Mode kontinuitas berbunyi beep ketika dua probe dihubungkan. Ini berarti…', opts: ['Dua titik tersambung (hambatan ≈ 0)', 'Tegangan tinggi terdeteksi', 'Rangkaian terbuka', 'Dioda sedang menghantar maju'], ans: 0, exp: 'Beep = jalur tertutup/tersambung. Praktis untuk mengecek kabel putus & solderan.' },
       { q: 'Untuk mengukur panel distribusi listrik gedung, DMM minimal harus berkategori…', opts: ['CAT I', 'CAT II', 'CAT III', 'CAT IV'], ans: 2, exp: 'CAT III untuk panel & distribusi bangunan; CAT IV khusus jaringan sumber (meteran utama).' }
     ]
+  },
+  {
+    id: 'sistem-ketenagalistrikan',
+    emoji: '⚡',
+    title: 'Sistem Ketenagalistrikan',
+    subtitle: 'Transformator, distribusi 3 fasa, gardu induk, transmisi & jaringan PLN',
+    level: 'Menengah',
+    durasi: '±40 menit',
+    materi: ['Transformator', 'Sistem 3 Fasa', 'Distribusi', 'Gardu Induk', 'Transmisi'],
+    sections: [
+      {
+        id: 'pengenalan-sistem-tenaga',
+        emoji: '🏭',
+        title: 'Pengenalan Sistem Tenaga Listrik',
+        body: `<p><strong>Sistem tenaga listrik</strong> adalah rangkaian peralatan mulai dari pembangkit hingga konsumen akhir. Tujuannya: menghasilkan, menyalurkan, dan mendistribusikan energi listrik secara <strong>handal, efisien, dan aman</strong>.</p>
+<div class="mt-img-wrap" style="margin:16px 0;"><svg viewBox="0 0 600 120" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:600px"><rect x="0" y="40" width="100" height="40" rx="8" fill="#4f9cf9" opacity="0.15" stroke="#4f9cf9" stroke-width="2"/><text x="50" y="65" text-anchor="middle" font-size="12" font-weight="600" fill="#4f9cf9">🏭 Pembangkit</text><line x1="105" y1="60" x2="175" y2="60" stroke="#4f9cf9" stroke-width="2" marker-end="url(#arrow)"/><rect x="180" y="40" width="100" height="40" rx="8" fill="#f5a623" opacity="0.15" stroke="#f5a623" stroke-width="2"/><text x="230" y="65" text-anchor="middle" font-size="11" font-weight="600" fill="#f5a623">⚡ Transmisi</text><text x="230" y="80" text-anchor="middle" font-size="9" fill="#999">150-500 kV</text><line x1="285" y1="60" x2="355" y2="60" stroke="#f5a623" stroke-width="2" marker-end="url(#arrow2)"/><rect x="360" y="40" width="100" height="40" rx="8" fill="#3ecf8e" opacity="0.15" stroke="#3ecf8e" stroke-width="2"/><text x="410" y="65" text-anchor="middle" font-size="11" font-weight="600" fill="#3ecf8e">🏘️ Distribusi</text><text x="410" y="80" text-anchor="middle" font-size="9" fill="#999">20 kV → 220/380V</text><line x1="465" y1="60" x2="535" y2="60" stroke="#3ecf8e" stroke-width="2" marker-end="url(#arrow3)"/><rect x="540" y="40" width="60" height="40" rx="8" fill="#e879a0" opacity="0.15" stroke="#e879a0" stroke-width="2"/><text x="570" y="65" text-anchor="middle" font-size="11" font-weight="600" fill="#e879a0">🏠</text><defs><marker id="arrow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#4f9cf9"/></marker><marker id="arrow2" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#f5a623"/></marker><marker id="arrow3" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><path d="M0,0 L8,3 L0,6" fill="#3ecf8e"/></marker></defs></svg><div class="mt-img-cap">Alur energi listrik: Pembangkit → Transmisi → Distribusi → Konsumen (diagram konseptual)</div></div>
+<p><strong>Tiga komponen utama:</strong></p>
+<ol>
+<li><strong>Pembangkit (Generating)</strong> — mengubah energi primer (batu bara, gas, air, surya) menjadi energi listrik AC 3 fasa.</li>
+<li><strong>Transmisi (Transmission)</strong> — menyalurkan daya dari pembangkit ke gardu induk beban dengan tegangan tinggi (150 kV, 500 kV) untuk meminimalkan rugi-rugi daya.</li>
+<li><strong>Distribusi (Distribution)</strong> — menurunkan tegangan dari gardu induk ke konsumen (220/380 V rumah tangga, 380 V industri ringan).</li>
+</ol>
+<p><strong>Rugi-rugi daya</strong> pada transmisi:</p>
+$$P_{\\text{rugi}} = I^2 \\cdot R$$
+<p>Karena \\(P = V \\cdot I\\), menaikkan tegangan secara proporsional menurunkan arus → rugi-rugi mengecil drastis. Inilah alasan transmisi menggunakan <strong>tegangan sangat tinggi (Extra High Voltage)</strong>.</p>
+<div class="mt-tip">💡 PLN Indonesia mengoperasikan tegangan 500 kV (Jawa–Sumatera), 150 kV (transmisi regional), 20 kV (distribusi primer), dan 380/220 V (konsumen akhir).</div>`
+      },
+      {
+        id: 'transformator',
+        emoji: '🔄',
+        title: 'Transformator',
+        body: `<p><strong>Transformator</strong> adalah alat statis (tanpa bagian bergerak) yang mentransfer daya AC dari satu sirkuit ke sirkuit lain melalui induksi elektromagnetik, mengubah level tegangan.</p>
+<div class="mt-img-wrap" style="margin:16px 0;"><svg viewBox="0 0 300 180" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:320px"><ellipse cx="100" cy="90" rx="35" ry="70" fill="none" stroke="#4f9cf9" stroke-width="2"/><ellipse cx="100" cy="90" rx="30" ry="65" fill="#4f9cf9" opacity="0.08"/><ellipse cx="200" cy="90" rx="35" ry="70" fill="none" stroke="#f5a623" stroke-width="2"/><ellipse cx="200" cy="90" rx="30" ry="65" fill="#f5a623" opacity="0.08"/><path d="M65,40 Q100,20 100,40 Q100,60 100,80 Q100,100 100,120 Q100,140 100,160" stroke="#4f9cf9" stroke-width="3" fill="none"/><path d="M235,40 Q200,20 200,40 Q200,60 200,80 Q200,100 200,120 Q200,140 200,160" stroke="#f5a623" stroke-width="3" fill="none"/><line x1="65" y1="90" x2="30" y2="90" stroke="#4f9cf9" stroke-width="3"/><line x1="135" y1="90" x2="170" y2="90" stroke="#4f9cf9" stroke-width="3"/><line x1="230" y1="90" x2="270" y2="90" stroke="#f5a623" stroke-width="3"/><text x="150" y="10" text-anchor="middle" font-size="10" fill="#888">Fluks Magnetik</text><path d="M130,85 Q150,75 170,85" stroke="#888" stroke-width="1.5" fill="none" marker-end="url(#mag)"/><defs><marker id="mag" markerWidth="6" markerHeight="5" refX="6" refY="2.5" orient="auto"><path d="M0,0 L6,2.5 L0,5" fill="#888"/></marker></defs><text x="100" y="175" text-anchor="middle" font-size="11" font-weight="600" fill="#4f9cf9">Primer (N₁)</text><text x="200" y="175" text-anchor="middle" font-size="11" font-weight="600" fill="#f5a623">Sekunder (N₂)</text></svg><div class="mt-img-cap">Diagram transformator ideal: fluks magnetik memotong kedua lilitan · prinsip induksi elektromagnetik</div></div>
+<p><strong>Rumus dasar transformator ideal:</strong></p>
+$$\\frac{V_1}{V_2} = \\frac{N_1}{N_2} = \\frac{I_2}{I_1}$$
+<p>dengan V = tegangan, N = jumlah lilitan, I = arus. Indeks 1 = primer (masukan), 2 = sekunder (keluaran).</p>
+<p><strong>Daya (ideal):</strong></p>
+$$P_1 = P_2 \\quad \\Rightarrow \\quad V_1 I_1 = V_2 I_2$$
+<p><strong>Jenis transformator berdasarkan fungsi:</strong></p>
+<table class="mt-table"><thead><tr><th>Jenis</th><th>Rasio</th><th>Aplikasi</th></tr></thead><tbody>
+<tr><td>Step-down</td><td>N₁ > N₂ → V₂ < V₁</td><td>Gardu distribusi: 20 kV → 380 V</td></tr>
+<tr><td>Step-up</td><td>N₁ < N₂ → V₂ > V₁</td><td>Gardu induk: 22 kV → 150 kV</td></tr>
+<tr><td>Isolasi</td><td>1:1</td><td>Pemisahan galvanik, pengujian</td></tr>
+</tbody></table>
+<p><strong>Transformator nyata</strong> tidak 100% efisien — ada rugi-rugi:</p>
+<ul>
+<li><strong>Rugi tembakau (core loss)</strong> — histeresis + eddy current pada inti besi</li>
+<li><strong>Rugi tembaga (copper loss)</strong> — \\(I^2R\\) pada lilitan primer & sekunder</li>
+<li><strong>Rugi kebocoran (leakage flux)</strong> — fluks yang tidak seluruhnya memotong kedua lilitan</li>
+</ul>
+<p>Efisiensi transformator industri: <strong>95–99%</strong> (sangat tinggi karena tidak ada komponen bergerak).</p>
+<div class="mt-warn">⚠️ Transformator HANYA untuk AC — tidak bisa mengubah tegangan DC. Untuk DC, gunakan konverter switching (buck/boost converter).</div>`
+      },
+      {
+        id: 'sistem-3-fasa',
+        emoji: '🔀',
+        title: 'Sistem 3 Fasa',
+        body: `<p><strong>Sistem 3 fasa</strong> adalah metode distribusi daya paling efisien — tiga gelombang sinusoidal dengan frekuensi sama (50 Hz) tetapi bergeser fase 120° satu sama lain.</p>
+<div class="mt-img-wrap"><img class="mt-img" src="Asset%20Materi/3phase-waveform.png" alt="Gelombang sinusoidal 3 fasa" loading="lazy" onclick="openMateriImg(this)"><div class="mt-img-cap">Gelombang sinusoidal 3 fasa — tiap fasa bergeser 120° (CC BY-SA 4.0 Wikimedia Commons)</div></div>
+<p><strong>Tegangan pada sistem 3 fasa:</strong></p>
+<ul>
+<li><strong>Tegangan fasa (V_phase)</strong> — tegangan antara satu fasa dan netral: 220 V di Indonesia</li>
+<li><strong>Tegangan lini (V_line)</strong> — tegangan antara dua fasa: \\(V_{line} = \\sqrt{3} \\cdot V_{phase} = 380\\,\\text{V}\\)</li>
+</ul>
+<p><strong>Daya sistem 3 fasa:</strong></p>
+$$P = \\sqrt{3} \\cdot V_{line} \\cdot I_{line} \\cdot \\cos\\phi$$
+<p>dengan \\(\\cos\\phi\\) = faktor daya (power factor).</p>
+<p><strong>Sistem koneksi:</strong></p>
+<table class="mt-table"><thead><tr><th>Koneksi</th><th>Cocok Untuk</th><th>Kelebihan</th></tr></thead><tbody>
+<tr><td>Bintang (Y)</td><td>Motor ringan, lampu</td><td>Tersedia fasa + netral (220V)</td></tr>
+<tr><td>Segitiga (Δ)</td><td>Motor berat, pemanas</td><td>Tanpa netral, arus lini = \\(\\sqrt{3}\\) arus fasa</td></tr>
+</tbody></table>
+<div class="mt-tip">💡 Rumus cepat: \\(P = \\sqrt{3} \\cdot V_{line} \\cdot I_{line} \\cdot \\cos\\phi\\). Untuk beban seimbang, arus netral = 0 (hanya ada pada koneksi bintang).</div>`
+      },
+      {
+        id: 'distribusi-pln',
+        emoji: '🏘️',
+        title: 'Sistem Distribusi PLN',
+        body: `<p>Setelah transmisi tegangan tinggi mencapai <strong>gardu induk</strong>, tegangan diturunkan secara bertahap hingga sampai ke konsumen:</p>
+<ol>
+<li><strong>Gardu induk transmisi:</strong> 500 kV / 150 kV → 20 kV</li>
+<li><strong>Gardu distribusi primer:</strong> 20 kV → 380/220 V</li>
+<li><strong>Gardu distribusi (trafo Julius/travo gantung):</strong> 20 kV → 220/380 V langsung ke rumah</li>
+</ol>
+<p><strong>Sistem distribusi 3 fasa di Indonesia:</strong></p>
+<table class="mt-table"><thead><tr><th>Tegangan</th><th>Penggunaan</th><th>Pengaman</th></tr></thead><tbody>
+<tr><td>380 V (fasa-fasa)</td><td>Motor industri, AC besar, mesin</td><td>MCB 3 kutub + ELCB 30 mA</td></tr>
+<tr><td>220 V (fasa-netral)</td><td>Rumah tangga, lampu, elektronik</td><td>MCB 1 kutub + ELCB 30 mA</td></tr>
+</tbody></table>
+<p><strong>Koordinasi proteksi:</strong> MCB utama → ELCB → MCB grup (per ruangan). ELCB melindungi dari arus bocor; MCB melindungi dari arus lebih dan hubung singkat.</p>
+<div class="mt-warn">⚠️ PUIL 2011 menetapkan: susut tegangan maksimum instalasi akhir = 4%, dan setiap sirkuit harus memiliki proteksi sendiri.</div>`
+      },
+      {
+        id: 'gardu-induk',
+        emoji: '🏗️',
+        title: 'Gardu Induk & Peralatan Utama',
+        body: `<p><strong>Gardu induk</strong> adalah fasilitas sentral yang menghubungkan jaringan transmisi dengan distribusi. Peralatan utamanya:</p>
+<table class="mt-table"><thead><tr><th>Peralatan</th><th>Fungsi</th><th>Simbol</th></tr></thead><tbody>
+<tr><td>Transformator daya</td><td>Menurunkan/menaikkan tegangan</td><td>DT (Power Transformer)</td></tr>
+<tr><td>Panel saklar sentral</td><td>Menghubungkan/memutus beban</td><td>SF6 / Vacuum CB</td></tr>
+<tr><td>Pemutus arus (CB)</td><td>Memutus arus gangguan (hubung singkat)</td><td>CB (Circuit Breaker)</td></tr>
+<tr><td>Disconnect switch</td><td>Isolasi visual untuk maintenance</td><td>DS (Disconnecting Switch)</td></tr>
+<tr><td>Lightning arrester</td><td>Proteksi dari petir/surge</td><td>LA (Surge Arrester)</td></tr>
+<tr><td>Current Transformer (CT)</td><td>Mengukur arus (menurunkan ke 5A/1A)</td><td>CT</td></tr>
+<tr><td>Voltage Transformer (VT)</td><td>Mengukur tegangan</td><td>PT/VT</td></tr>
+</tbody></table>
+<p><strong>Urutan peralatan</strong> pada satu feeder distribusi:</p>
+<p>Transformator → CB → DS → CT → Beban</p>
+<div class="mt-tip">💡 CT dan VT mengubah arus/tegangan tinggi ke nilai kecil (5A/110V) sehingga bisa diukur oleh relay proteksi dan meter tanpa risiko tinggi.</div>`
+      },
+      {
+        id: 'faktor-daya',
+        emoji: '📊',
+        title: 'Faktor Daya & Koreksi',
+        body: `<p><strong>Faktor daya (power factor / PF)</strong> adalah rasio daya nyata (kW) terhadap daya semu (kVA):</p>
+<div class="mt-img-wrap"><img class="mt-img" src="Asset%20Materi/power-triangle.png" alt="Segitiga daya" loading="lazy" onclick="openMateriImg(this)"><div class="mt-img-cap">Segitiga Daya — hubungan P (nyata), Q (reaktif), dan S (semu) · power factor = cos φ (CC BY-SA 4.0 Wikimedia Commons)</div></div>
+$$PF = \\cos\\phi = \\frac{P_{\\text{nyata}}}{S_{\\text{semu}}} = \\frac{P}{V \\cdot I}$$
+<p><strong>Mengapa PF rendah buruk?</strong></p>
+<ul>
+<li>Arus lebih besar untuk daya yang sama → rugi-rugi \\(I^2R\\) meningkat</li>
+<li>Kabel, transformator, dan switchgear harus over-dimensions</li>
+<li>PLN meninalir pelanggan industri dengan PF < 0,85</li>
+</ul>
+<p><strong>Segitiga daya (power triangle):</strong></p>
+<ul>
+<li><strong>P (kW)</strong> — daya nyata (aktif), bekerja nyata</li>
+<li><strong>Q (kVAR)</strong> — daya reaktif (magnetisasi, kapasitor/induktor)</li>
+<li><strong>S (kVA)</strong> — daya semu (total yang harus disuplai)</li>
+</ul>
+<p>$$S^2 = P^2 + Q^2$$
+<p><strong>Koreksi PF</strong> dilakukan dengan memasang <strong>kapasitor bank</strong> paralel — menyediakan daya reaktif secara lokal sehingga arus dari sumber berkurang.</p>
+<div class="mt-tip">💡 Contoh: motor 10 kW, PF = 0,7 → S = 14,3 kVA, I = 65 A. Setelah koreksi ke PF = 0,95 → S = 10,5 kVA, I = 48 A — penghematan kabel & losses signifikan!</div>`
+      }
+    ],
+    contoh: [
+      {
+        judul: 'Transformator Step-Down',
+        soal: 'Transformator memiliki N₁ = 1000 lilitan, N₂ = 50 lilitan. Jika V₁ = 20.000 V, berapa V₂? Dan jika I₁ = 50 A, berapa I₂?',
+        langkah: [
+          'Hitung rasio: N₁/N₂ = 1000/50 = 20.',
+          'V₂ = V₁ × (N₂/N₁) = 20.000 × (50/1000) = 1000 V.',
+          'I₂ = I₁ × (N₁/N₂) = 50 × 20 = 1000 A.',
+          '<strong>Jawaban:</strong> V₂ = 1000 V, I₂ = 1000 A. Daya tetap: 20.000 × 50 = 1000 × 1000 = 1.000.000 VA = 1 MVA.'
+        ]
+      },
+      {
+        judul: 'Daya Sistem 3 Fasa',
+        soal: 'Motor 3 fasa 380 V menarik arus 15 A dengan PF = 0,85. Hitung daya aktif (kW) dan arus jika PF diperbaiki ke 0,95.',
+        langkah: [
+          'P = √3 × V_line × I_line × cosφ = √3 × 380 × 15 × 0,85 = 8.387 W ≈ 8,4 kW.',
+          'Setelah koreksi PF: I_baru = P / (√3 × V_line × cosφ_baru) = 8387 / (√3 × 380 × 0,95) = 13,4 A.',
+          'Pengurangan arus: (15 - 13,4)/15 × 100% = 10,7% → rugi-rugi I²R turun 20%!'
+        ]
+      },
+      {
+        judul: 'Rugi-Rugi Transmisi',
+        soal: 'Daya 10 MW ditransmisikan pada 20 kV, kabel R = 10 Ω. Hitung rugi-rugi daya. Lalu bandingkan jika tegangan dinaikkan ke 150 kV.',
+        langkah: [
+          'Pada 20 kV: I = P/V = 10×10⁶ / 20.000 = 500 A. Rugi = I²R = 500² × 10 = 2.500.000 W = 2,5 MW (25%!).',
+          'Pada 150 kV: I = 10×10⁶ / 150.000 = 66,7 A. Rugi = 66,7² × 10 = 44.489 W = 44,5 kW (0,44%).',
+          '<strong>Jawaban:</strong> Transmisi 150 kV mengurangi rugi-rugi dari 2,5 MW menjadi 44,5 kW — 56× lebih efisien!'
+        ]
+      }
+    ],
+    soal: [
+      { q: 'Rumus daya aktif sistem 3 fasa adalah…', opts: ['P = V × I', 'P = √3 × V_line × I_line × cosφ', 'P = 3 × V_phase × I_phase × sinφ', 'P = V² / R'], ans: 1, exp: 'Daya aktif 3 fasa: P = √3 × V_line × I_line × cosφ.' },
+      { q: 'Transformator dengan N₁ = 500 dan N₂ = 50 merupakan transformator…', opts: ['Step-up', 'Step-down', 'Isolasi', 'Autotransformator'], ans: 1, exp: 'N₁ > N₂ → V₂ < V₁ → step-down.' },
+      { q: 'Tegangan lini pada sistem 3 fasa 220 V (fase-netral) adalah…', opts: ['220 V', '380 V', '440 V', '110 V'], ans: 1, exp: 'V_line = √3 × V_phase = √3 × 220 ≈ 380 V.' },
+      { q: 'Untuk memperbaiki faktor daya yang rendah, komponen yang dipasang adalah…', opts: ['Resistor', 'Induktor', 'Kapasitor bank', 'Transformer'], ans: 2, exp: 'Kapasitor menyediakan daya reaktif secara lokal, mengurangi arus dari sumber → PF meningkat.' },
+      { q: 'Peranti yang mengubah arus tinggi pada transmisi ke nilai kecil untuk pengukuran adalah…', opts: ['VT (Voltage Transformer)', 'CT (Current Transformer)', 'CB (Circuit Breaker)', 'LA (Lightning Arrester)'], ans: 1, exp: 'CT menurunkan arus tinggi ke 5A/1A untuk meter & relay proteksi.' }
+    ]
+  },
+  {
+    id: 'sistem-kendali',
+    emoji: '🎛️',
+    title: 'Sistem Kendali (Control Systems)',
+    subtitle: 'Kontrol ON/OFF, PID, feedback loop, implementasi Arduino & PLC',
+    level: 'Menengah → Lanjutan',
+    durasi: '±45 menit',
+    materi: ['Kontrol Dasar', 'PID', 'Feedback Loop', 'Implementasi Arduino', 'Implementasi PLC'],
+    sections: [
+      {
+        id: 'pengenalan-kendali',
+        emoji: '🔄',
+        title: 'Pengenalan Sistem Kendali',
+        body: `<p><strong>Sistem kendali</strong> adalah sistem yang mengatur perilaku sistem lain agar mencapai kondisi yang diinginkan (<em>setpoint</em>). Contoh sehari-hari: AC otomatis menjaga suhu tetap 24°C, cruise control mobil menjaga kecepatan konstan.</p>
+<p><strong>Dua tipe utama:</strong></p>
+<table class="mt-table"><thead><tr><th>Tipe</th><th>Cara Kerja</th><th>Contoh</th></tr></thead><tbody>
+<tr><td><strong>Open-loop</strong></td><td>Tanpa umpan balik — berdasarkan input saja</td><td>Timer lampu, microwave定时</td></tr>
+<tr><td><strong>Closed-loop</strong></td><td>Ada sensor feedback → dibandingkan dengan setpoint → koreksi</td><td>AC thermostat, cruise control, oven digital</td></tr>
+</tbody></table>
+<p><strong>Sirkuit umpan balik (feedback loop):</strong></p>
+<p>Setpoint → (+) Komparator → Error → [Kontroler] → [Plant/Sistem] → Output → [Sensor] → balik ke komparator</p>
+<ul>
+<li><strong>Error</strong> = Setpoint − Output aktual</li>
+<li><strong>Kontroler</strong> memproses error dan menghasilkan sinyal kendali</li>
+<li><strong>Plant</strong> = sistem yang dikendalikan (motor, heater, lampu, dll)</li>
+</ul>
+<div class="mt-tip">💡 Tanpa sensor feedback (open-loop), sistem tidak bisa tahu apakah tujuan tercapai — hanya mengandalkan asumsi. Closed-loop jauh lebih akurat dan robust.</div>`
+      },
+      {
+        id: 'kontrol-on-off',
+        emoji: '🔘',
+        title: 'Kontrol ON/OFF (Bang-Bang)',
+        body: `<p><strong>Kontrol ON/OFF</strong> adalah metode paling sederhana: output hanya bisa <strong>ON</strong> (aktif penuh) atau <strong>OFF</strong> (mati total).</p>
+<div class="mt-img-wrap" style="margin:16px 0;"><svg viewBox="0 0 500 100" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:500px"><rect x="0" y="30" width="80" height="40" rx="6" fill="#4f9cf9" opacity="0.15" stroke="#4f9cf9" stroke-width="1.5"/><text x="40" y="55" text-anchor="middle" font-size="10" font-weight="600" fill="#4f9cf9">Setpoint</text><line x1="85" y1="50" x2="125" y2="50" stroke="#4f9cf9" stroke-width="1.5"/><circle cx="130" cy="50" r="10" fill="none" stroke="#f5a623" stroke-width="1.5"/><text x="130" y="46" text-anchor="middle" font-size="9" fill="#f5a623">+</text><text x="130" y="56" text-anchor="middle" font-size="9" fill="#f5a623">−</text><line x1="145" y1="50" x2="185" y2="50" stroke="#f5a623" stroke-width="1.5"/><rect x="190" y="30" width="80" height="40" rx="6" fill="#f5a623" opacity="0.15" stroke="#f5a623" stroke-width="1.5"/><text x="230" y="55" text-anchor="middle" font-size="10" font-weight="600" fill="#f5a623">Kontroler</text><line x1="275" y1="50" x2="315" y2="50" stroke="#f5a623" stroke-width="1.5"/><rect x="320" y="30" width="80" height="40" rx="6" fill="#3ecf8e" opacity="0.15" stroke="#3ecf8e" stroke-width="1.5"/><text x="360" y="55" text-anchor="middle" font-size="10" font-weight="600" fill="#3ecf8e">Plant</text><line x1="405" y1="50" x2="470" y2="50" stroke="#3ecf8e" stroke-width="1.5"/><circle cx="475" cy="50" r="5" fill="#3ecf8e"/><text x="485" y="55" font-size="10" fill="#3ecf8e">Output</text><path d="M475,55 L475,85 L130,85 L130,60" stroke="#e879a0" stroke-width="1.5" fill="none" stroke-dasharray="4,2"/><text x="300" y="95" text-anchor="middle" font-size="9" fill="#e879a0">Feedback (Sensor)</text></svg><div class="mt-img-cap">Diagram blok sistem kendali closed-loop — setpoint dibandingkan dengan output aktual melalui sensor feedback</div></div>
+<p><strong>Contoh: Thermostat AC:</strong></p>
+<ul>
+<li>Suhu ≥ 26°C → AC ON</li>
+<li>Suhu ≤ 24°C → AC OFF</li>
+<li><strong>Hysteresis (deadband)</strong>: 2°C — mencegah sakelar terus-menerus ON/OFF (chattering)</li>
+</ul>
+<p><strong>Kelebihan:</strong></p>
+<ul>
+<li>Sangat sederhana — cukup komparator + relay</li>
+<li>Murah dan mudah di-maintain</li>
+</ul>
+<p><strong>Kekurangan:</strong></p>
+<ul>
+<li>Overshoot dan oscillation — selalu bolak-balik melewati setpoint</li>
+<li>Tidak cocok untuk sistem yang butuh presisi tinggi</li>
+<li>Wear pada aktuator (relay sering ON/OFF)</li>
+</ul>
+<p><strong>Implementasi Arduino:</strong></p>
+<pre class="mt-code">// Kontrol ON/OFF sederhana — suhu → heater
+const float SETPOINT = 25.0;
+const float DEADBAND = 1.0;  // ±1°C
+
+void loop() {
+  float suhu = bacaSensor();
+  if (suhu < SETPOINT - DEADBAND/2) digitalWrite(HEATER, HIGH);
+  if (suhu > SETPOINT + DEADBAND/2) digitalWrite(HEATER, LOW);
+  delay(500);
+}</pre>`
+      },
+      {
+        id: 'kontrol-pid',
+        emoji: '📐',
+        title: 'Kontrol PID (Proportional-Integral-Derivative)',
+        body: `<p><strong>PID</strong> adalah algoritma kendali paling populer di industri — menghitung koreksi berdasarkan tiga komponen error:</p>
+$$u(t) = K_p \\cdot e(t) + K_i \\cdot \\int e(t)\\,dt + K_d \\cdot \\frac{de(t)}{dt}$$
+<table class="mt-table"><thead><tr><th>Komponen</th><th>Fungsi</th><th>Efek</th></tr></thead><tbody>
+<tr><td><strong>P (Proportional)</strong></td><td>Koreksi sebanding error saat ini</td><td>Cepat merespons, tapi ada steady-state error</td></tr>
+<tr><td><strong>I (Integral)</strong></td><td>Koreksi dari akumulasi error sebelumnya</td><td>Menghilangkan steady-state error, tapi bisa overshoot</td></tr>
+<tr><td><strong>D (Derivative)</strong></td><td>Koreksi dari laju perubahan error</td><td>Redam overshoot, stabilitas meningkat</td></tr>
+</tbody></table>
+<p><strong>Cara memahami secara intuitif:</strong></p>
+<ul>
+<li><strong>P</strong>: "Saya melihat error — saya bereaksi sekarang"</li>
+<li><strong>I</strong>: "Error sudah berlangsung lama — saya harus lebih agresif"</li>
+<li><strong>D</strong>: "Error sudah mengecil — saya mulai melambat agar tidak overshoot"</li>
+</ul>
+<p><strong>Tuning PID:</strong></p>
+<ol>
+<li>Mulai dengan Kp saja, naikkan sampai sistem mulai oscillate</li>
+<li>Tambahkan Ki untuk menghilangkan steady-state error</li>
+<li>Tambahkan Kd untuk meredam overshoot</li>
+</ol>
+<div class="mt-tip">💡 Metode tuning manual Ziegler-Nichols: naikkan Kp sampai sistem oscillasi konstan → catat Kp_ult dan T_ult → hitung Kp, Ki, Kd dari tabel baku.</div>`
+      },
+      {
+        id: 'implementasi-pid-arduino',
+        emoji: '🤖',
+        title: 'Implementasi PID di Arduino',
+        body: `<p>Library bawaan <strong>PID Arduino</strong> (by Brett Beauregard) sangat populer untuk implementasi PID di Arduino:</p>
+<pre class="mt-code">#include <PID_v1.h>
+
+// Sensor suhu (thermistor atau LM35)
+const int SENSOR_PIN = A0;
+const int HEATER_PIN = 9;  // PWM output
+
+// Setpoint dan variabel PID
+double Setpoint = 60.0;  // Target suhu (°C)
+double Input, Output;
+
+// Parameter PID (perlu dituning!)
+double Kp = 2.0, Ki = 5.0, Kd = 1.0;
+PID myPID(&Input, &Output, &Setpoint, Kp, Ki, Kd, DIRECT);
+
+void setup() {
+  myPID.SetMode(AUTOMATIC);
+  myPID.SetOutputLimits(0, 255);  // Rentang PWM
+  analogWrite(HEATER_PIN, 0);
+}
+
+void loop() {
+  Input = bacaSuhu();  // Fungsi baca sensor
+  myPID.Compute();     // Hitung output PID
+  analogWrite(HEATER_PIN, Output);  // Terapkan ke heater
+  delay(200);
+}</pre>
+<p><strong>Poin penting:</strong></p>
+<ul>
+<li><code>SetOutputLimits(0, 255)</code> — membatasi output PWM ke rentang 8-bit</li>
+<li><code>myPID.Compute()</code> harus dipanggil secara berkala (tidak terlalu cepat/lambat)</li>
+<li>Nilai Kp, Ki, Kd harus di-tuning sesuai sistem nyata</li>
+</ul>
+<div class="mt-warn">⚠️ Jangan lupa <strong>anti-windup</strong> untuk integral — mencegah akumulasi error terlalu besar saat actuator sudah mentok (output = 255).</div>`
+      },
+      {
+        id: 'implementasi-pid-plc',
+        emoji: '🏭',
+        title: 'Implementasi PID di PLC',
+        body: `<p>PLC industri memiliki fungsi <strong>PID built-in</strong> yang sudah teroptimasi untuk proses continuous-time — lebih stabil dari implementasi manual di Arduino.</p>
+<p><strong>Parameter PID di PLC (contoh Siemens S7):</strong></p>
+<table class="mt-table"><thead><tr><th>Parameter</th><th>Deskripsi</th><th>Umum</th></tr></thead><tbody>
+<tr><td>SP (Setpoint)</td><td>Nilai target yang diinginkan</td><td>Input dari HMI</td></tr>
+<tr><td>PV (Process Variable)</td><td>Nilai aktual dari sensor</td><td>Input dari transmitter 4-20mA</td></tr>
+<tr><td>CV (Controller Output)</td><td>Output kendali ke actuator</td><td>Output 4-20mA ke VFD/valve</td></tr>
+<tr><td>Kp</td><td>Gain proportional</td><td>0,5 – 50 (tergantung proses)</td></tr>
+<tr><td>Ti (Integral time)</td><td>Waktu integrasi</td><td>10 – 300 detik</td></tr>
+<tr><td>Td (Derivative time)</td><td>Waktu derivatif</td><td>0 – 60 detik</td></tr>
+</tbody></table>
+<p><strong>Studi kasus: Kontrol suhu tanki pemanas</strong></p>
+<ol>
+<li>PT100 mengukur suhu → transmitter 4-20mA → modul analog PLC (AI)</li>
+<li>PLC menjalankan fungsi PID (S7: FB "PID_Compact")</li>
+<li>Output PID → modul analog PLC (AO) 4-20mA → VFD motor pompa pemanas</li>
+<li>HMI menampilkan tren suhu, setpoint, dan output PID</li>
+</ol>
+<div class="mt-tip">💡 PLC menggunakan scan time (1-10ms) sebagai basis perhitungan PID — lebih presisi dari Arduino yang delay()-based. Untuk proses lambat (suhu), keduanya bisa, tapi untuk proses cepat (motor speed), PLC lebih andal.</div>`
+      },
+      {
+        id: 'studi-kasus-kendali',
+        emoji: '🎯',
+        title: 'Studi Kasus: Kendali Kecepatan Motor DC',
+        body: `<p><strong>Spesifikasi:</strong> Motor DC 12V, encoder 600 PPR, target 1000 RPM</p>
+<p><strong>Sistem:</strong></p>
+<ol>
+<li>Sensor: Encoder optik (600 pulse per revolution)</li>
+<li>Actuator: Driver motor L298N (PWM input)</li>
+<li>Kontroler: Arduino Uno + library PID</li>
+</ol>
+<p><strong>Alur kerja:</strong></p>
+<ul>
+<li>Encoder menghasilkan pulse → Arduino menghitung RPM aktual</li>
+<li>Error = Target (1000 RPM) − RPM aktual</li>
+<li>PID menghitung output PWM (0-255)</li>
+<li>PWM → driver L298N → motor → kecepatan berubah</li>
+</ul>
+<p><strong>Cara tuning:</strong></p>
+<ol>
+<li>Set Ki = 0, Kd = 0, naikkan Kp sampai motor mulai goyang (oscillate)</li>
+<li>Catat Kp_ult (ultimte gain) dan T_ult (oscillation period)</li>
+<li>Gunakan tabel Ziegler-Nichols untuk hitung Kp, Ki, Kd</li>
+<li>Uji dan fine-tune secara manual</li>
+</ol>
+<p><strong>Hasil yang baik:</strong> overshoot < 10%, settle time < 2 detik, steady-state error ≈ 0.</p>`
+      }
+    ],
+    contoh: [
+      {
+        judul: 'Menghitung Error PID',
+        soal: 'Suhu aktual = 58°C, setpoint = 60°C. Pada detik sebelumnya error = 3°C. Hitung komponen P, I, Kp=2, Ki=0,5, Kd=0,1 (asumsi derror/dt = -1°C/s).',
+        langkah: [
+          'Error saat ini: e = 60 - 58 = 2°C.',
+          'P = Kp × e = 2 × 2 = 4.',
+          'I = Ki × Σe × dt ≈ 0,5 × (3 + 2) × 1s = 2,5 (asumsi dt = 1s).',
+          'D = Kd × de/dt = 0,1 × (-1) = -0,1.',
+          'Output = P + I + D = 4 + 2,5 - 0,1 = 6,4 (skala normalisasi ke PWM)'
+        ]
+      },
+      {
+        judul: 'Rasio Kontrol ON/OFF dengan Hysteresis',
+        soal: 'Thermostat diset 25°C dengan hysteresis 2°C. Berapa kali AC ON/OFF dalam 10 menit jika suhu naik dari 23°C ke 27°C secara linear?',
+        langkah: [
+          'AC ON pada 26°C (25 + hysteresis/2), OFF pada 24°C (25 - hysteresis/2).',
+          'Suhu naik 4°C dalam 10 menit → laju 0,4°C/menit.',
+          'Waktu ON: 23°C → 26°C = 3°C / 0,4 = 7,5 menit.',
+          'Waktu OFF: 26°C → 24°C = 2°C / 0,4 = 5 menit (tapi tidak sempat turun karena suhu terus naik).',
+          '<strong>Jawaban:</strong> AC hanya ON sekali (dari 23°C → 26°C, lalu terus ON karena suhu tidak pernah turun di bawah 24°C).'
+        ]
+      }
+    ],
+    soal: [
+      { q: 'Sistem yang memiliki sensor feedback untuk mengoreksi output disebut…', opts: ['Open-loop', 'Closed-loop', 'Feedforward', 'Cascade'], ans: 1, exp: 'Closed-loop memiliki sensor feedback yang dibandingkan dengan setpoint untuk menghasilkan error.' },
+      { q: 'Komponen PID yang berfungsi menghilangkan steady-state error adalah…', opts: ['P (Proportional)', 'I (Integral)', 'D (Derivative)', 'Semua komponen'], ans: 1, exp: 'Integral mengakumulasi error dari waktu ke waktu, sehingga terus memberikan koreksi sampai error = 0.' },
+      { q: 'Hysteresis pada kontrol ON/OFF berfungsi untuk…', opts: ['Meningkatkan presisi', 'Mencegah chattering (ON/OFF cepat)', 'Mengurangi konsumsi daya', 'Meningkatkan kecepatan respon'], ans: 1, exp: 'Hysteresis memberi "ruang" antara ON dan OFF sehingga relay tidak berubah-ubah terlalu cepat.' },
+      { q: 'Pada metode Ziegler-Nichols, Kp_ult adalah gain di mana sistem…', opts: ['Tercapai setpoint dengan cepat', 'Mulai oscillasi dengan amplitude konstan', 'Error = 0 sempurna', 'Output mentok maksimum'], ans: 1, exp: 'Kp_ult (ultimate gain) adalah gain di mana sistem mulai oscillasi stabil — titik awal tuning.' },
+      { q: 'Dalam sistem PLC, PID dihitung berdasarkan…', opts: ['Loop time program', 'Scan time PLC (1-10ms)', 'Waktu user-defined', 'Tidak ada basis waktu'], ans: 1, exp: 'PID PLC menggunakan scan time sebagai basis perhitungan waktu (dt) untuk integrasi dan derivasi.' }
+    ]
+  },
+  {
+    id: 'desain-pcb',
+    emoji: '🖥️',
+    title: 'Desain PCB & Hardware',
+    subtitle: 'Schematic, layout PCB, aturan desain, soldering & troubleshooting',
+    level: 'Menengah',
+    durasi: '±35 menit',
+    materi: ['Schematic', 'Layout PCB', 'Aturan Desain', 'Soldering', 'Troubleshooting'],
+    sections: [
+      {
+        id: 'pengenalan-pcb',
+        emoji: '📋',
+        title: 'Apa itu PCB?',
+        body: `<p><strong>PCB (Printed Circuit Board)</strong> adalah papan fiberglass/epoksi dengan jalur tembaga yang menghubungkan komponen elektronik secara permanen. Sebelum PCB, rangkaian dibuat dengan menyolder kabel langsung antar komponen (point-to-point wiring) — lambat, rentan error, dan tidak reproduksibel.</p>
+<div class="mt-img-wrap" style="margin:16px 0;"><svg viewBox="0 0 400 150" xmlns="http://www.w3.org/2000/svg" style="width:100%;max-width:420px"><rect x="20" y="20" width="360" height="110" rx="4" fill="#d4a574" opacity="0.3" stroke="#8b6914" stroke-width="2"/><text x="200" y="15" text-anchor="middle" font-size="10" font-weight="600" fill="#666">Struktur PCB</text><rect x="25" y="30" width="350" height="15" fill="#2d8a4e" rx="2" opacity="0.6"/><text x="200" y="41" text-anchor="middle" font-size="8" fill="white" font-weight="600">Silkscreen (Label)</text><rect x="25" y="50" width="350" height="12" fill="#228b22" rx="2" opacity="0.8"/><text x="200" y="59" text-anchor="middle" font-size="8" fill="white" font-weight="600">Soldermask (Pelindung)</text><rect x="25" y="67" width="350" height="8" fill="#d4a574" rx="1"/><text x="200" y="74" text-anchor="middle" font-size="7" fill="#333" font-weight="600">Copper Foil (35µm)</text><rect x="25" y="80" width="350" height="35" fill="#f5f5dc" stroke="#ccc" stroke-width="1" rx="2"/><text x="200" y="102" text-anchor="middle" font-size="9" fill="#666" font-weight="600">Substrat FR-4 (Fiberglass)</text><rect x="25" y="120" width="350" height="8" fill="#d4a574" rx="1"/><text x="200" y="127" text-anchor="middle" font-size="7" fill="#333" font-weight="600">Copper Foil (35µm)</text><rect x="25" y="20" width="350" height="10" fill="#228b22" rx="2" opacity="0.8"/><text x="200" y="28" text-anchor="middle" font-size="7" fill="white" font-weight="600">Soldermask</text></svg><div class="mt-img-cap">Struktur lapisan PCB — fiberglass FR-4 sebagai inti, dilapisi tembaga, soldermask, dan silkscreen</div></div>
+<p><strong>Keuntungan PCB:</strong></p>
+<ul>
+<li>Reproducible — bisa diproduksi massal dengan konsisten</li>
+<li>Komponen rapat — desain lebih kecil</li>
+<li>Mudah di-maintain — jalur terlihat jelas</li>
+<li>Noise lebih rendah — ground plane bisa mengurangi interferensi</li>
+</ul>
+<p><strong>Lapisan PCB:</strong></p>
+<table class="mt-table"><thead><tr><th>Lapisan</th><th>Material</th><th>Fungsi</th></tr></thead><tbody>
+<tr><td>Copper foil</td><td>Tembaga 35µm / 70µm</td><td>Jalur sinyal & power</td></tr>
+<tr><td>Soldermask</td><td>Hijau (atau warna lain)</td><td>Perlindungan jalur dari oksidasi & short</td></tr>
+<tr><td>Silkscreen</td><td>Teks putih</td><td>Label komponen, nomor referensi</td></tr>
+<tr><td>Substrat</td><td>FR-4 (fiberglass)</td><td>Isolasi mekanis & listrik</td></tr>
+</tbody></table>
+<div class="mt-tip">💡 FR-4 adalah standar industri untuk PCB. Untuk frekuensi tinggi (>1 GHz), gunakan material khusus seperti Rogers atau Teflon.</div>`
+      },
+      {
+        id: 'schematic',
+        emoji: '📝',
+        title: 'Schematic (Diagram Rangkaian)',
+        body: `<p><strong>Schematic</strong> adalah "bahasa" komunikasi utama antara desainer elektronika. Schematic menunjukkan <strong>koneksi logis</strong> antar komponen — bukan posisi fisik.</p>
+<p><strong>Simbol standar (IEC 60617):</strong></p>
+<table class="mt-table"><thead><tr><th>Komponen</th><th>Simbol</th><th>Catatan</th></tr></thead><tbody>
+<tr><td>Resistor</td><td>▄▄▄ atau ─╱╲─</td><td>IEC: kotak; ANSI: zigzag</td></tr>
+<tr><td>Kapasitor</td><td>┤├</td><td>Yang satu lurus, satu melengkung</td></tr>
+<tr><td>Dioda</td><td>▷|</td><td>Arah panah = arah arus konvensional</td></tr>
+<tr><td>Transistor NPN</td><td>—┤&lt;|</td><td>Arrow pada emitor keluar</td></tr>
+<tr><td>Ground</td><td>⏚ atau ▽</td><td>Semua ground terhubung</td></tr>
+</tbody></table>
+<p><strong>Alur desain dari ide ke PCB:</strong></p>
+<ol>
+<li><strong>Brainstorm & spesifikasi</strong> — tentukan fungsi, tegangan, arus, komponen yang dibutuhkan</li>
+<li><strong>Desain schematic</strong> — buat diagram rangkaian di software (KiCad, EAGLE, Altium)</li>
+<li><strong>Simulasi</strong> — uji rangkaian secara virtual (LTspice, Proteus) sebelum fabrikasi</li>
+<li><strong>Layout PCB</strong> — tentukan posisi komponen & jalur tembaga</li>
+<li><strong>Review & fabrikasi</strong> — cek DRC (Design Rule Check), export Gerber, kirim ke pabrik</li>
+<li><strong>Soldering & testing</strong> — rakit komponen, uji fungsi</li>
+</ol>
+<div class="mt-warn">⚠️ Selalu simulasi rangkaian dulu sebelum buat PCB! Biaya revisi PCB jauh lebih mahal dari simulasi di komputer.</div>`
+      },
+      {
+        id: 'layout-pcb',
+        emoji: '🗺️',
+        title: 'Layout PCB — Posisi Komponen & Jalur',
+        body: `<p><strong>Layout</strong> menentukan apakah PCB bisa bekerja dengan baik. Prinsip utama:</p>
+<p><strong>1. Posisi komponen:</strong></p>
+<ul>
+<li>Letakkan komponen sesuai alur sinyal (input di kiri, output di kanan)</li>
+<li>Decoupling capacitor (100nF) harus sedekat mungkin dengan VCC/GND pin IC</li>
+<li>Komponen panas (regulator, transistor daya) beri jarak & akses panas</li>
+</ul>
+<p><strong>2. Jalur (trace):</strong></p>
+<table class="mt-table"><thead><tr><th>Jenis Jalur</th><th>Lebar Minimum</th><th>Catatan</th></tr></thead><tbody>
+<tr><td>Sinyal</td><td>0,2 mm (8 mil)</td><td>Cukup untuk sinyal digital/analog</td></tr>
+<tr><td>Power (1A)</td><td>0,5 mm</td><td>Perhatikan panas (Joule heating)</td></tr>
+<tr><td>Power (3A+)</td><td>1,0 mm atau lebih</td><td>Gunakan polygon pour (ground plane)</td></tr>
+</tbody></table>
+<p><strong>3. Ground plane:</strong></p>
+<ul>
+<li>Gunakan satu sisi PCB sebagai ground plane penuh (solid)</li>
+<li>Ground plane mengurangi noise, memperbaiki impedance matching, dan membantu panas</li>
+<li>Hindari memotong ground plane dengan jalur sinyal — bisa menciptakan loop antenna</li>
+</ul>
+<p><strong>4. Differential pairs & panjang jalur:</strong></p>
+<ul>
+<li>USB, Ethernet, LVDS: jalur harus sepanjang mungkin sama (matched length)</li>
+<li>Impedance control: lebar jalur harus sesuai impedansi target (50Ω single-ended, 90Ω differential)</li>
+</ul>
+<div class="mt-tip">💡 Aturan praktis: mulai dari komponen paling "sulit" (BGA, MCU) dulu, lalu komponen sekitarnya. Jalur power & ground lebih dulu, baru sinyal.</div>`
+      },
+      {
+        id: 'aturan-desain',
+        emoji: '📏',
+        title: 'Aturan Desain PCB (DFM & DRC)',
+        body: `<p><strong>DFM (Design for Manufacturing)</strong> memastikan PCB bisa diproduksi massal tanpa error. Pabrik PCB biasanya punya batasan minimum:</p>
+<table class="mt-table"><thead><tr><th>Parameter</th><th>Minimum</th><th>Rekomendasi</th></tr></thead><tbody>
+<tr><td>Lebar jalur</td><td>0,15 mm (6 mil)</td><td>0,2 mm (8 mil)</td></tr>
+<tr><td>Jarak antar jalur</td><td>0,15 mm</td><td>0,2 mm</td></tr>
+<tr><td>Diameter drill</td><td>0,2 mm</td><td>0,3 mm</td></tr>
+<tr><td>Annular ring</td><td>0,15 mm</td><td>0,2 mm</td></tr>
+<tr><td>Solder mask clearance</td><td>0,05 mm</td><td>0,1 mm</td></tr>
+</tbody></table>
+<p><strong>DRC (Design Rule Check):</strong></p>
+<ul>
+<li>Jalur terputus (open trace)</li>
+<li>Jalur bersentuhan (short)</li>
+<li>Drill terlalu dekat</li>
+<li>Silkscreen menutup pad solder</li>
+<li>Courtyard komponen overlap</li>
+</ul>
+<p><strong>Checklist sebelum fabrikasi:</strong></p>
+<ol>
+<li>✅ DRC zero error</li>
+<li>✅ Net connectivity check (tidak ada koneksi yang terlewat)</li>
+<li>✅ Gerber file lengkap (copper, soldermask, silkscreen, drill)</li>
+<li>✅ Drill file (.drl) format Excellon</li>
+<li>✅ Panelisasi jika produksi massal</li>
+</ol>
+<div class="mt-warn">⚠️ Selalu minta prototipe 1-3 pcs dulu sebelum produksi massal. Cek fisik, ukur impedance jika perlu, baru order dalam jumlah besar.</div>`
+      },
+      {
+        id: 'soldering',
+        emoji: '🔥',
+        title: 'Teknik Soldering',
+        body: `<p><strong>Soldering</strong> adalah proses menyambung komponen ke PCB menggunakan logam solder (timah + flux).</p>
+<p><strong>Jenis soldering:</strong></p>
+<table class="mt-table"><thead><tr><th>Jenis</th><th>Suhu</th><th>Untuk</th></tr></thead><tbody>
+<tr><td>Through-hole (THT)</td><td>300-350°C</td><td>Resistor, kapasitor, IC DIP</td></tr>
+<tr><td>Surface-mount (SMD)</td><td>300-380°C</td><td>Chip resistor, QFP, BGA</td></tr>
+<tr><td>Reflow</td><td>240-260°C (peak)</td><td>Produksi massal SMD</td></tr>
+</tbody></table>
+<p><strong>Teknik soldering yang baik:</strong></p>
+<ol>
+<li>Panaskan pad PCB DAN kaki komponen bersamaan (2-3 detik)</li>
+<li>Dekatkan solder ke sambungan — solder akan mencair & mengalir ke sambungan</li>
+<li>Angkat solder, lalu angkat soldering iron — tunggu 1 detik sebelum lepas</li>
+<li>Hasil: solder yang mengkilap, bentuk kerucut (menempel baik ke pad & kaki)</li>
+</ol>
+<p><strong>Tanda soldering buruk:</strong></p>
+<ul>
+<li><strong>Cold joint</strong> — solder mengkilap tapi tidak menempel baik (jika diketuk, putus)</li>
+<li><strong>Solder bridge</strong> — solder menghubungkan dua pad yang seharusnya terpisah</li>
+<li><strong>Disturbed joint</strong> — solder bergerak saat pendinginan → retak internal</li>
+</ul>
+<div class="mt-tip">💡 Gunakan flux saat soldering — membantu solder mengalir lebih baik & mengurangi cold joint. Untuk SMD, gunakan magnifier atau mikroskop.</div>`
+      },
+      {
+        id: 'troubleshooting',
+        emoji: '🔍',
+        title: 'Troubleshooting Hardware',
+        body: `<p>Ketika PCB tidak berfungsi, gunakan pendekatan sistematis:</p>
+<p><strong>Langkah 1: Inspeksi Visual</strong></p>
+<ul>
+<li>Cek solder joint — apakah ada cold joint atau solder bridge?</li>
+<li>Cek polaritas — kapasitor elektrolitik, dioda, LED, IC</li>
+<li>Cek orientasi komponen — pin 1 IC, arah transistor</li>
+</ul>
+<p><strong>Langkah 2: Uji Daya</strong></p>
+<ul>
+<li>Uji supply voltage: apakah sesuai spesifikasi? (5V, 3,3V, 12V)</li>li>
+<li>Cek arus total: jika terlalu tinggi → short circuit</li>
+<li>Gunakan CC mode pada power supply untuk melindungi rangkaian</li>
+</ul>
+<p><strong>Langkah 3: Ukur Sinyal</strong></p>
+<table class="mt-table"><thead><tr><th>Alat</th><th>Untuk</th><th>Tips</th></tr></thead><tbody>
+<tr><td>Multimeter</td><td>Tegangan DC, kontinuitas, resistansi</td><td>Cek semua titik power, ground, signal</td></tr>
+<tr><td>Osiloskop</td><td>Bentuk gelombang, frekuensi, noise</td><td>Pastikan ground probe = ground rangkaian</td></tr>
+<tr><td>Logic analyzer</td><td>Sinyal digital (SPI, I2C, UART)</td><td>Cek timing & protocol</td></tr>
+</tbody></table>
+<p><strong>Langkah 4: Isolasi Masalah</strong></p>
+<ul>
+<li>Bagi rangkaian menjadi blok-blok kecil</li>
+<li>Uji satu blok pada satu waktu</li>
+<li>Jika MCU tidak jalan: cek clock, reset pin, power supply IC</li>
+</ul>
+<div class="mt-warn">⚠️ Jangan pernah menyalakan PCB tanpa memeriksa polaritas power supply terlebih dahulu — satu kesalahan bisa membakar semua IC!</div>`
+      }
+    ],
+    contoh: [
+      {
+        judul: 'Memilih Lebar Jalur Power',
+        soal: 'Sebuah PCB harus mengalirkan arus 2A pada jalur tembaga 35µm (1 oz). Berapa lebar jalur minimum yang aman?',
+        langkah: [
+          'Gunakan aturan praktis: 1 mm lebar ≈ 1A untuk tembaga 35µm (dengan temperatura ambient 25°C).',
+          'Untuk 2A: lebar minimum ≈ 2 × 1 mm = 2 mm.',
+          'Jika ingin lebih aman (rise suhu < 20°C), gunakan 2,5-3 mm.',
+          '<strong>Jawaban:</strong> minimal 2 mm, rekomendasi 2,5-3 mm.'
+        ]
+      },
+      {
+        judul: 'Memecahkan PCB yang Tidak Berfungsi',
+        soal: 'PCB dengan Arduino Nano + sensor DHT22 tidak menampilkan data di serial monitor. Urutan troubleshooting yang benar?',
+        langkah: [
+          '1. Inspeksi visual: cek solder joint, polaritas, orientasi komponen.',
+          '2. Cek power supply: apakah Arduino Nano mendapat 5V dari USB? Sensor mendapat 3,3V/5V?',
+          '3. Uji kontinuitas: kabel DHT22 terhubung ke pin yang benar (DATA → D4 misalnya)?',
+          '4. Uji dengan multimeter: tegangan pada pin data naik-turun saat DHT22 bekerja?',
+          '5. Jika semua OK: cek kode program — library sudah terinstall, pin number sesuai?' 
+        ]
+      },
+      {
+        judul: 'Memilih Material PCB',
+        soal: 'Untuk proyek jam digital sederhana (frekuensi kerja < 10 MHz), material PCB apa yang paling cocok dan berapa ketebalan?',
+        langkah: [
+          'Untuk frekuensi rendah (< 10 MHz): FR-4 sudah sangat cukup (standar industri).',
+          'Ketebalan: 1,6 mm adalah standar paling umum (murah & kuat).', 
+          'Tembaga: 35µm (1 oz) untuk jalur sinyal, 70µm (2 oz) jika butuh jalur power tebal.',
+          '<strong>Jawaban:</strong> FR-4, 1,6 mm, 35µm copper — paling murah & tersedia di semua pabrik PCB.'
+        ]
+      }
+    ],
+    soal: [
+      { q: 'Lapisan hijau pada PCB yang melindungi jalur tembaga dari oksidasi disebut…', opts: ['Silkscreen', 'Soldermask', 'Copper layer', 'Substrat'], ans: 1, exp: 'Soldermask adalah lapisan pelindung hijau (atau warna lain) yang menutupi jalur tembaga.' },
+      { q: 'Untuk mengurangi noise pada PCB digital, teknik yang paling efektif adalah…', opts: ['Menambah resistor pull-up', 'Menggunakan ground plane solid', 'Memperpanjang jalur sinyal', 'Mengurangi jumlah komponen'], ans: 1, exp: 'Ground plane solid mengurangi loop area, impedance ground, dan noise EMI secara signifikan.' },
+      { q: 'Decoupling capacitor harus diletakkan…', opts: ['Sejauh mungkin dari IC', 'Paralel dengan power supply', 'Sedekat mungkin dengan pin VCC IC', 'Di sisi berlawanan PCB dari IC'], ans: 2, exp: 'Decoupling capacitor harus sedekat mungkin dengan pin VCC/GND IC untuk memfilter noise frekuensi tinggi.' },
+      { q: 'Tanda soldering yang baik adalah…', opts: ['Solder berwarna gelap & kasar', 'Solder mengkilap & berbentuk kerucut', 'Solder menutupi seluruh kaki komponen', 'Solder berbentuk bola besar'], ans: 1, exp: 'Solder mengkilap & kerucut = sambungan baik; gelap = cold joint; bola besar = terlalu banyak solder.' },
+      { q: 'Untuk fabrikasi PCB, format file yang dikirim ke pabrik adalah…', opts: ['.schematic (KiCad)', '.brd (EAGLE)', '.gbr (Gerber)', '.pdf (schematic)'], ans: 2, exp: 'Gerber (.gbr) adalah format standar industri untuk fabrikasi PCB — berisi data copper, soldermask, silkscreen, drill.' }
+    ]
   }
 ];
