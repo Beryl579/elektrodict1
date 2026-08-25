@@ -30,6 +30,10 @@ const BRANDING_KEYWORDS = [
 
 const BRANDING_RESPONSE = `Halo Kak! ElektroDict ini dirancang dan dikembangkan oleh **Beryl Sinaga**, seorang Fresh Graduate yang fokus di dunia teknik elektro dan web development. <br><br> <a href="https://berylnathaniel.my.id/" target="_blank" class="chat-branding-link">Kunjungi portofolio Beryl di sini!</a>`;
 
+// System prompt khusus chat teks (bukan analisis gambar).
+// Wajib dikirim agar backend tidak memicu limit 200 karakter & persona "formal Kak".
+const CHATBOT_SYSTEM_PROMPT = 'Kamu ElektroBot, asisten teknik elektro & elektronika senior. Panggil user "Kak". Hanya bahas: rangkaian, komponen, listrik/instalasi (PUIL/IEEE/IEC), Arduino/ESP32, PLC, energi, SMK elektro. Topik lain tolak sopan. Rumus wajib LaTeX inline $...$ atau blok $$\\n...\\n$$. Tegangan tinggi/PLN: wajib mulai peringatan bahaya. Rangkaian rusak: pandu bertahap, jangan langsung jawab.';
+
 // State
 let isTyping = false;
 let selectedFileBase64 = null;
@@ -147,6 +151,7 @@ async function sendMessage() {
                 const context = chatHistoryState.slice(-6).map(m => ({ role: m.role, content: m.content }));
 
                 response = await window.ElektroAPI.chat([
+                    { role: 'system', content: CHATBOT_SYSTEM_PROMPT },
                     ...context,
                     { role: 'user', content: fullPrompt }
                 ], { model: selectedModel });

@@ -32,7 +32,8 @@ const ElektroProject = {
     
     try {
       if (!window.ElektroAPI) throw new Error("API Layer not loaded");
-      const data = await window.ElektroAPI.generateProject(idea);
+      const board = document.querySelector('.prj-board-opt.on')?.dataset.board || 'uno';
+      const data = await window.ElektroAPI.generateProject(idea, board);
       let rawContent = data.result;
       let cleanContent = rawContent.replace(/```json/ig, '').replace(/```/g, '').trim();
 
