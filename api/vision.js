@@ -72,13 +72,26 @@ module.exports = async function handler(req, res) {
   const kill = setTimeout(() => controller.abort(), UPSTREAM_TIMEOUT_MS);
 
   try {
+    // Inject reasoning_effort: 'none' untuk Qwen3 agar thinking tidak muncul di output.
+    // Aman untuk model lain karena parameter ini hanya dikenali Qwen3 & diabaikan model lain.
+    const visionPayload = { ...payload };
+    // Pastikan output tidak terpotong — default Groq 1024 terlalu kecil untuk analisis gambar.
+    if (!visionPayload.max_tokens) visionPayload.max_tokens = 2048;
+    const visionModel = String(visionPayload.model || '');
+    if (visionModel === 'qwen/qwen3.6-27b' || visionModel.startsWith('qwen/')) {
+      visionPayload.reasoning_effort = 'none';
+    } else if (visionModel.startsWith('openai/gpt-oss')) {
+      visionPayload.reasoning_effort = 'low';
+      visionPayload.include_reasoning = false;
+    }
+
     const response = await fetch(GROQ_URL, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${GROQ_API_KEY}`,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify(payload),
+      body: JSON.stringify(visionPayload),
       signal: controller.signal
     });
 

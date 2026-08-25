@@ -503,22 +503,33 @@ module.exports = async function handler(req, res) {
       }
 
       if ((!response || !response.ok) && groqKeys.length > 0) {
-        const doFetchGroq = (key, model) => fetch("https://api.groq.com/openai/v1/chat/completions", {
-          method: "POST",
-          headers: {
-            "Authorization": `Bearer ${key}`,
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
+        const doFetchGroq = (key, model) => {
+          const groqBody = {
             model,
             response_format: { type: "json_object" },
             messages,
             temperature: 0.7,
             max_tokens: maxTokens,
-            stream: false,
-            reasoning_effort: 'low'
-          })
-        });
+            stream: false
+          };
+          // Sembunyikan thinking dari sumbernya:
+          // gpt-oss → reasoning_effort 'low' + include_reasoning false
+          // qwen3.6-27b → reasoning_effort 'none' (matikan sepenuhnya)
+          if (model.startsWith('openai/gpt-oss')) {
+            groqBody.reasoning_effort = 'low';
+            groqBody.include_reasoning = false;
+          } else if (model === 'qwen/qwen3.6-27b') {
+            groqBody.reasoning_effort = 'none';
+          }
+          return fetch("https://api.groq.com/openai/v1/chat/completions", {
+            method: "POST",
+            headers: {
+              "Authorization": `Bearer ${key}`,
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(groqBody)
+          });
+        };
 
         const callGroq = async (model) => {
           if (groqKeys.length === 0) {

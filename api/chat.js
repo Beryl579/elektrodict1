@@ -75,7 +75,11 @@ ATURAN:
       ...payload,
       model: targetModel,
       messages: messages,
-      stream: false 
+      stream: false,
+      // Pastikan output tidak terpotong di tengah kalimat.
+      // Default Groq = 1024 token (terlalu kecil untuk jawaban teknis yang detail).
+      // 2048 cukup untuk ~1200 kata — aman di free tier TPM.
+      max_tokens: payload.max_tokens || 2048
     };
 
     let response;
@@ -107,9 +111,15 @@ ATURAN:
       const callGroq = async (model) => {
         const currentKey = groqKeys[Math.floor(Math.random() * groqKeys.length)];
         const groqBody = { ...aiPayload, model };
-        // reasoning_effort: hanya gpt-oss yang menerima 'low'.
-        // qwen/qwen3.6-27b hanya menerima 'none'/'default' → biarkan default (thinking aktif).
-        if (model.startsWith('openai/gpt-oss')) groqBody.reasoning_effort = 'low';
+        // reasoning_effort + include_reasoning: sembunyikan thinking dari semua model.
+        // gpt-oss: reasoning_effort 'low' + include_reasoning false (field reasoning tidak dikirim).
+        // qwen3.6-27b: reasoning_effort 'none' = matikan thinking sepenuhnya dari sumbernya.
+        if (model.startsWith('openai/gpt-oss')) {
+          groqBody.reasoning_effort = 'low';
+          groqBody.include_reasoning = false;
+        } else if (model === 'qwen/qwen3.6-27b') {
+          groqBody.reasoning_effort = 'none';
+        }
         return await fetch("https://api.groq.com/openai/v1/chat/completions", {
           method: "POST",
           headers: {

@@ -87,7 +87,7 @@
         model: options.model || MODEL_TEXT,
         messages,
         temperature: options.temperature ?? 0.7,
-        max_tokens: options.max_tokens ?? 1000,
+        max_tokens: options.max_tokens ?? 2048,
         stream: false
       }, TIMEOUT_TEXT_MS);
     },
@@ -117,7 +117,7 @@
             ]
           }
         ],
-        max_tokens: 4096,
+        max_tokens: 2048,
         temperature: 0.3,
         stream: false
       }, TIMEOUT_VISION_MS);
