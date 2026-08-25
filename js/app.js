@@ -380,6 +380,58 @@ function initTheme(){
 // ═══════════════════════════════════════════════════════════
 
 let kat='Semua';
+let sortMode='default';
+let suggestIndex=-1;
+
+const KAT_ICONS = {
+  dasar:'⚡', komponen:'🧩', rangkaian:'🔗', daya:'🔋', elektronika:'💻',
+  pengukuran:'📏', digital:'🔢', sinyal:'〰️', terbarukan:'🌿',
+  instalasi:'🏠', mesin:'⚙️', kontrol:'🎛️', komunikasi:'📡', distribusi:'🏭'
+};
+const KAT_ORDER = ['dasar','komponen','rangkaian','daya','elektronika','pengukuran','digital','sinyal','terbarukan','instalasi','mesin','kontrol','komunikasi','distribusi'];
+const POPULAR_IDS = ['tegangan','arus listrik','hukum ohm','daya listrik','resistor','kapasitor','induktor','transistor bjt','hukum kirchhoff arus','hukum kirchhoff tegangan','transformator','dioda','mosfet','op-amp','gerbang logika','multimeter'];
+
+function getBookmarks(){ try{ return JSON.parse(localStorage.getItem('ed_bookmarks')||'[]'); }catch{ return []; } }
+function isBookmarked(id){ return getBookmarks().includes(String(id).toLowerCase()); }
+function toggleBookmark(e, id){
+  e.stopPropagation();
+  let b=getBookmarks();
+  const key=String(id).toLowerCase();
+  const willAdd=!b.includes(key);
+  b = willAdd ? [...b, key] : b.filter(x=>x!==key);
+  localStorage.setItem('ed_bookmarks', JSON.stringify(b));
+  const card=e.currentTarget.closest('.card');
+  if(card){ card.classList.toggle('bookmarked', willAdd); }
+  e.currentTarget.classList.toggle('on', willAdd);
+  e.currentTarget.innerHTML = willAdd ? '★' : '☆';
+  e.currentTarget.title = willAdd ? 'Hapus bookmark' : 'Bookmark';
+  // update expanded detail if needed
+}
+function getCardIcon(d, isFeature){
+  const id=(d.id||'').toLowerCase();
+  if(isFeature && CORE_ICONS[id]) return CORE_ICONS[id];
+  if(KAT_ICONS[d.kat]) return KAT_ICONS[d.kat];
+  return '📄';
+}
+function getSorted(data){
+  if(sortMode==='az') return [...data].sort((a,b)=>a.en.localeCompare(b.en, 'id', {sensitivity:'base'}));
+  if(sortMode==='za') return [...data].sort((a,b)=>b.en.localeCompare(a.en, 'id', {sensitivity:'base'}));
+  if(sortMode==='populer'){
+    return [...data].sort((a,b)=>{
+      const ai=POPULAR_IDS.indexOf(a.id.toLowerCase());
+      const bi=POPULAR_IDS.indexOf(b.id.toLowerCase());
+      if(ai===-1 && bi===-1) return a.en.localeCompare(b.en);
+      if(ai===-1) return 1;
+      if(bi===-1) return -1;
+      return ai-bi;
+    });
+  }
+  if(sortMode==='tingkat'){
+    return [...data].sort((a,b)=> KAT_ORDER.indexOf(a.kat) - KAT_ORDER.indexOf(b.kat));
+  }
+  return data;
+}
+function setSort(v){ sortMode=v; const inp=document.getElementById('searchInput'); onSearch(inp?inp.value:''); }
 
 function renderChips(){
   document.getElementById('fbar').innerHTML=KAT.map(k=>
@@ -394,18 +446,55 @@ function onSearch(q){
   let res=KAMUS;
   if(kat!=='Semua') res=res.filter(i=>i.kat===kat);
   if(qv){const ql=qv.toLowerCase();res=res.filter(i=>i.en.toLowerCase().includes(ql)||i.id.toLowerCase().includes(ql)||i.desc.toLowerCase().includes(ql)||(i.tags&&i.tags.some(t=>t.toLowerCase().includes(ql))));}
+  res = getSorted(res);
   document.getElementById('slabel').textContent=q?`Hasil: "${q}"`:kat==='Semua'?'Semua Istilah':'Kategori: '+kat;
   document.getElementById('scount').textContent=res.length+' istilah';
   renderGrid(res);
+  if(document.activeElement && document.activeElement.id==='searchInput') showSuggest();
 }
-function clearSearch(){document.getElementById('searchInput').value='';onSearch('');}
+function clearSearch(){document.getElementById('searchInput').value='';hideSuggest();onSearch('');}
 
-// id di bawah harus cocok persis dengan field `id` di js/data.js (lowercase)
 const CORE_IDS = ['tegangan', 'arus listrik', 'hukum ohm', 'daya listrik', 'kapasitor', 'resistor', 'transistor bjt', 'induktor'];
 const CORE_ICONS = {
   'tegangan': '⚡', 'arus listrik': '🌊', 'hukum ohm': '♎', 'daya listrik': '💡', 
   'kapasitor': '🔋', 'resistor': '〰️', 'transistor bjt': '⏀', 'induktor': '🌀'
 };
+
+// — Autocomplete —
+function showSuggest(){
+  const inp=document.getElementById('searchInput');
+  const box=document.getElementById('searchSuggest');
+  if(!inp||!box) return;
+  const q=inp.value.trim().toLowerCase();
+  if(!q){ box.classList.remove('show'); box.innerHTML=''; suggestIndex=-1; return; }
+  const matches=KAMUS.filter(i=> i.en.toLowerCase().includes(q) || i.id.toLowerCase().includes(q) || (i.tags&&i.tags.some(t=>t.toLowerCase().includes(q))) ).slice(0,6);
+  if(!matches.length){ box.classList.remove('show'); box.innerHTML=''; return; }
+  box.innerHTML=matches.map((m,idx)=>`
+    <div class="suggest-item" role="option" data-idx="${idx}" onclick="selectSuggest('${m.en.replace(/'/g,"\\'").replace(/"/g,'&quot;')}')">
+      <div class="suggest-ico">${KAT_ICONS[m.kat]||'🔍'}</div>
+      <div class="suggest-main"><div class="suggest-en">${m.en}</div><div class="suggest-id">${m.id}</div></div>
+      <div class="suggest-cat">${m.kat}</div>
+    </div>
+  `).join('');
+  box.classList.add('show');
+  suggestIndex=-1;
+}
+function hideSuggest(){ const box=document.getElementById('searchSuggest'); if(box){ box.classList.remove('show'); suggestIndex=-1; } }
+function selectSuggest(val){
+  const inp=document.getElementById('searchInput');
+  if(inp){ inp.value=val; hideSuggest(); onSearch(val); inp.focus(); }
+}
+function handleSuggestNav(e){
+  const box=document.getElementById('searchSuggest');
+  if(!box||!box.classList.contains('show')) return;
+  const items=box.querySelectorAll('.suggest-item');
+  if(e.key==='ArrowDown'){ e.preventDefault(); suggestIndex=Math.min(suggestIndex+1, items.length-1); updateSuggestHighlight(items); }
+  else if(e.key==='ArrowUp'){ e.preventDefault(); suggestIndex=Math.max(suggestIndex-1, -1); updateSuggestHighlight(items); }
+  else if(e.key==='Enter'){ if(suggestIndex>=0){ e.preventDefault(); items[suggestIndex].click(); } }
+  else if(e.key==='Escape'){ hideSuggest(); }
+}
+function updateSuggestHighlight(items){ items.forEach((it,idx)=> it.classList.toggle('on', idx===suggestIndex)); }
+document.addEventListener('click', (e)=>{ if(!e.target.closest('.sfield')) hideSuggest(); });
 
 function renderGrid(data){
   const g=document.getElementById('grid'), e=document.getElementById('empty');
@@ -419,18 +508,36 @@ function renderGrid(data){
     googleWrap.innerHTML = '';
     
     if (query) {
-      emptyMsg.innerHTML = `Istilah "<strong>${query}</strong>" tidak ditemukan.`;
+      emptyMsg.innerHTML = `
+        <div class="empty-ico">🔍</div>
+        <div class="empty-title">Tidak ada hasil untuk "<strong>${query}</strong>"</div>
+        <div class="empty-desc">Coba ubah kata kunci, periksa ejaan, atau pilih kategori lain. Kamu juga bisa cari di Google atau lihat semua istilah.</div>
+      `;
       googleWrap.innerHTML = `
-        <a href="https://www.google.com/search?q=${encodeURIComponent(query + ' teknik elektro')}" 
-           target="_blank" 
-           class="pdf-btn" 
-           style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px; background: var(--accent); border: 1px solid var(--line); color: var(--bg);">
-           <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:currentColor"><path d="M12.48 10.92v3.28h7.84c-.24 1.84-2.12 5.4-7.84 5.4-4.92 0-8.96-4.04-8.96-8.96 0-4.92 4.04-8.96 8.96-8.96 2.84 0 4.76 1.16 5.84 2.2l2.56-2.48C19.24 1.92 16.12 0 12.48 0 5.6 0 0 5.6 0 12.48s5.6 12.48 12.48 12.48c7.2 0 12-5.08 12-12.2 0-.84-.08-1.48-.2-2.12l-11.8 0z"/></svg>
-           Cari di Google
-        </a>
+        <div class="empty-actions">
+          <button class="empty-btn" onclick="clearSearch()">Hapus Pencarian</button>
+          <button class="empty-btn" onclick="setKat('Semua'); clearSearch()">Lihat Semua</button>
+          <a href="https://www.google.com/search?q=${encodeURIComponent(query + ' teknik elektro')}" 
+             target="_blank" 
+             class="empty-btn primary" 
+             style="text-decoration:none;display:inline-flex;align-items:center;gap:8px">
+            <svg viewBox="0 0 24 24" style="width:14px;height:14px;fill:currentColor"><path d="M12.48 10.92v3.28h7.84c-.24 1.84-2.12 5.4-7.84 5.4-4.92 0-8.96-4.04-8.96-8.96 0-4.92 4.04-8.96 8.96-8.96 2.84 0 4.76 1.16 5.84 2.2l2.56-2.48C19.24 1.92 16.12 0 12.48 0 5.6 0 0 5.6 0 12.48s5.6 12.48 12.48 12.48c7.2 0 12-5.08 12-12.2 0-.84-.08-1.48-.2-2.12l-11.8 0z"/></svg>
+            Cari di Google
+          </a>
+        </div>
       `;
     } else {
-      emptyMsg.textContent = '🔌 Tidak ada istilah yang cocok di kategori ini';
+      emptyMsg.innerHTML = `
+        <div class="empty-ico">📭</div>
+        <div class="empty-title">Tidak ada istilah di kategori ini</div>
+        <div class="empty-desc">Kategori "<strong>${kat}</strong>" belum memiliki istilah. Coba pilih kategori lain atau ubah urutan.</div>
+      `;
+      googleWrap.innerHTML = `
+        <div class="empty-actions">
+          <button class="empty-btn primary" onclick="setKat('Semua')">Tampilkan Semua</button>
+          <button class="empty-btn" onclick="document.getElementById('sortSelect').value='az'; setSort('az')">Urut A-Z</button>
+        </div>
+      `;
     }
     
     e.style.display='block';
@@ -455,38 +562,57 @@ function renderGrid(data){
 
   g.innerHTML = html;
 
-  // render KaTeX formulas
+  // render KaTeX formulas (full + mini preview)
   data.forEach((d,i)=>{
     if(!d.formula) return;
     const el=document.getElementById(`ef${i}`);
-    if(!el) return;
-    if(typeof katex!=='undefined'){
-      try{katex.render(d.formula,el,{throwOnError:false,displayMode:false});}catch(e){el.textContent=d.formula;}
-    } else {
-      pendingMathEls.push({el,latex:d.formula,mode:'render'});
+    if(el){
+      if(typeof katex!=='undefined'){
+        try{katex.render(d.formula,el,{throwOnError:false,displayMode:false});}catch(e){el.textContent=d.formula;}
+      } else {
+        pendingMathEls.push({el,latex:d.formula,mode:'render'});
+      }
+    }
+    const mini=document.getElementById(`cfm${i}`);
+    if(mini){
+      if(typeof katex!=='undefined'){
+        try{katex.render(d.formula,mini,{throwOnError:false,displayMode:false});}catch(e){ /* keep plain */ }
+      } else {
+        pendingMathEls.push({el:mini,latex:d.formula,mode:'render'});
+      }
     }
   });
 }
 
 function renderCard(d, i, isFeature) {
-  const icon = isFeature ? (CORE_ICONS[d.id?.toLowerCase()] || '⚡') : '';
+  const key=String(d.id||'').toLowerCase();
+  const icon = getCardIcon(d, isFeature);
+  const bookmarked = isBookmarked(key);
+  const visited = (()=>{ try{ const v=JSON.parse(localStorage.getItem('ed_visited')||'[]'); return v.includes(key);}catch{return false} })();
+  const plainFormula = d.formula ? d.formula.replace(/"/g,'&quot;') : '';
+  const miniFormula = d.formula ? `<span class="cformula-mini" id="cfm${i}" data-latex="${plainFormula}" title="${plainFormula}">${d.formula.slice(0,28).replace(/</g,'&lt;')}</span>` : '';
+  const bookmarkBtn = `<button class="cbookmark ${bookmarked?'on':''}" onclick="toggleBookmark(event,'${d.id.replace(/'/g,"\\'").replace(/"/g,'&quot;')}')" title="${bookmarked?'Hapus bookmark':'Bookmark'}" aria-label="Bookmark">${bookmarked?'★':'☆'}</button>`;
   
   if (isFeature) {
     return `
-    <div class="card core-card" id="c${i}" onclick="tog(${i})" style="animation-delay:${i * 0.03}s">
+    <div class="card core-card ${bookmarked?'bookmarked':''} ${visited?'visited':''}" id="c${i}" data-id="${d.id.replace(/"/g,'&quot;')}" onclick="tog(${i})" style="animation-delay:${i * 0.03}s">
+      <div class="card-progress"></div><div class="card-visited"></div>
+      ${bookmarkBtn}
       <div class="ccore-body">
-        <div class="ccore-icon">${icon}</div>
+        <div class="cicon-core">${icon}</div>
         <div class="ccore-content">
           <div class="ccore-title">${d.en}</div>
           <div class="ccore-sub">${d.id}</div>
         </div>
         <div class="ctag t-${d.kat}">${d.kat}</div>
       </div>
+      <div class="cdesc" style="margin-top:10px;font-size:12.5px;color:var(--text2);display:-webkit-box;-webkit-line-clamp:1;line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;">${d.desc||d.detail.slice(0,72)+'...'}</div>
+      ${d.formula?`<div class="cpreview-row">${miniFormula}<span style="font-size:11px;color:var(--text3);font-family:var(--mono)">rumus</span></div>`:''}
       <div class="cexp" id="cx${i}">
         <div class="expbody">
           <div class="elabel">PENJELASAN</div>
           <div class="etext">${d.detail}</div>
-          ${d.formula?`<div class="elabel">RUMUS</div><div class="eformula" id="ef${i}" data-latex="${d.formula.replace(/"/g,'&quot;')}"></div>`:''}
+          ${d.formula?`<div class="elabel">RUMUS</div><div class="eformula" id="ef${i}" data-latex="${plainFormula}"></div>`:''}
           <div class="etags">${(d.tags||[]).map(t=>`<span class="etag">#${t}</span>`).join('')}</div>
           <div class="card-actions">
             <button class="eask" onclick="askCard(event,'${d.en.replace(/'/g,'\\\'').replace(/"/g,'')}','${d.id.replace(/'/g,'\\\'').replace(/"/g,'')}')"><span>💬</span> Tanya AI</button>
@@ -499,17 +625,21 @@ function renderCard(d, i, isFeature) {
   }
 
   return `
-    <div class="card" id="c${i}" onclick="tog(${i})" style="animation-delay:${i * 0.03}s">
+    <div class="card ${bookmarked?'bookmarked':''} ${visited?'visited':''}" id="c${i}" data-id="${d.id.replace(/"/g,'&quot;')}" onclick="tog(${i})" style="animation-delay:${i * 0.03}s">
+      <div class="card-progress"></div><div class="card-visited"></div>
+      ${bookmarkBtn}
       <div class="ctop">
+        <div class="cicon">${icon}</div>
         <div class="cleft"><div class="cen">${d.en}</div><div class="cid">${d.id}</div></div>
         <div class="ctag t-${d.kat}">${d.kat}</div>
       </div>
       <div class="cdesc">${d.desc}</div>
+      ${d.formula?`<div class="cpreview-row">${miniFormula}</div>`:''}
       <div class="cexp" id="cx${i}">
         <div class="expbody">
           <div class="elabel">PENJELASAN</div>
           <div class="etext">${d.detail}</div>
-          ${d.formula?`<div class="elabel">RUMUS</div><div class="eformula" id="ef${i}" data-latex="${d.formula.replace(/"/g,'&quot;')}"></div>`:''}
+          ${d.formula?`<div class="elabel">RUMUS</div><div class="eformula" id="ef${i}" data-latex="${plainFormula}"></div>`:''}
           <div class="etags">${(d.tags||[]).map(t=>`<span class="etag">#${t}</span>`).join('')}</div>
           <div class="card-actions">
             <button class="eask" onclick="askCard(event,'${d.en.replace(/'/g,'\\\'').replace(/"/g,'')}','${d.id.replace(/'/g,'\\\'').replace(/"/g,'')}')"><span>💬</span> Tanya AI</button>
@@ -525,7 +655,19 @@ function renderCard(d, i, isFeature) {
 function tog(i){
   const c=document.getElementById(`c${i}`),isOpen=c.classList.contains('open');
   document.querySelectorAll('.card.open').forEach(x=>x.classList.remove('open'));
-  if(!isOpen){c.classList.add('open');setTimeout(()=>c.scrollIntoView({behavior:'smooth',block:'nearest'}),50);}
+  if(!isOpen){
+    c.classList.add('open');
+    // mark visited
+    try{
+      const id=(c.dataset.id||'').toLowerCase();
+      if(id){
+        let v=JSON.parse(localStorage.getItem('ed_visited')||'[]');
+        if(!v.includes(id)){ v.push(id); localStorage.setItem('ed_visited', JSON.stringify(v)); }
+        c.classList.add('visited');
+      }
+    }catch{}
+    setTimeout(()=>c.scrollIntoView({behavior:'smooth',block:'nearest'}),50);
+  }
 }
 
 function askCard(e,en,id){

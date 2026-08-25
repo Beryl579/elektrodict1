@@ -55,7 +55,9 @@
 
 <!-- ═══════ NAVIGATION (Dual Mode) ═══════ -->
 <div class="bottom-nav" id="bottomNav">
-  <!-- PRIMARY: Visible on Both (Mobile Bottom Bar & Desktop Sidebar) -->
+  <div class="bnav-scroll">
+  <!-- ── BELAJAR ── -->
+  <div class="bnav-section desktop-only">BELAJAR</div>
   <button class="bnav-item on mobile-visible" id="bnav-kamus" onclick="switchTab('kamus')">
     <div class="bnav-dot"></div>
     <span class="bnav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span>
@@ -66,7 +68,6 @@
     <span class="bnav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10L12 5 2 10l10 5 10-5z"/><path d="M6 12v5c0 1.7 2.7 3 6 3s6-1.3 6-3v-5"/></svg></span>
     <span class="bnav-label">Materi</span>
   </button>
-
 
   <button class="bnav-item mobile-visible" id="bnav-quiz" onclick="switchTab('quiz')">
     <div class="bnav-dot"></div>
@@ -80,11 +81,28 @@
     <span class="bnav-label">AI Vision</span>
   </button>
 
+  <button class="bnav-item desktop-only" id="bnav-timeline" onclick="switchTab('timeline')">
+    <span class="bnav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
+    <span class="bnav-label">Timeline</span>
+  </button>
+
+  <button class="bnav-item desktop-only" id="bnav-logika" onclick="switchTab('logika')">
+    <span class="bnav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/><path d="M15 3v18"/><path d="M3 9h18"/><path d="M3 15h18"/></svg></span>
+    <span class="bnav-label">Logika</span>
+  </button>
+
+  <button class="bnav-item desktop-only" id="bnav-news" onclick="switchTab('news')">
+    <span class="bnav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/></svg></span>
+    <span class="bnav-label">Video</span>
+  </button>
+
+  <!-- ── ALAT ── -->
+  <div class="bnav-section desktop-only">ALAT</div>
+
   <button class="bnav-item desktop-only" id="bnav-kalk" onclick="switchTab('kalk')">
     <span class="bnav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="16" height="20" x="4" y="2" rx="2"/><line x1="8" x2="16" y1="6" y2="6"/><line x1="16" x2="16" y1="14" y2="18"/><path d="M16 10h.01"/><path d="M12 10h.01"/><path d="M8 10h.01"/><path d="M12 14h.01"/><path d="M8 14h.01"/><path d="M12 18h.01"/><path d="M8 18h.01"/></svg></span>
     <span class="bnav-label">Kalkulator</span>
   </button>
-
 
   <button class="bnav-item mobile-visible" id="bnav-projects" onclick="switchTab('projects')">
     <div class="bnav-dot"></div>
@@ -102,26 +120,9 @@
     <span class="bnav-label">Konversi</span>
   </button>
 
-  <button class="bnav-item desktop-only" id="bnav-timeline" onclick="switchTab('timeline')">
-    <span class="bnav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
-    <span class="bnav-label">Timeline</span>
-  </button>
-
-  <button class="bnav-item desktop-only" id="bnav-logika" onclick="switchTab('logika')">
-    <span class="bnav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/><path d="M15 3v18"/><path d="M3 9h18"/><path d="M3 15h18"/></svg></span>
-    <span class="bnav-label">Logika</span>
-  </button>
-
-
   <button class="bnav-item desktop-only" id="bnav-standards" onclick="switchTab('standards')">
     <span class="bnav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></span>
     <span class="bnav-label">Standar & K3</span>
-  </button>
-
-
-  <button class="bnav-item desktop-only" id="bnav-news" onclick="switchTab('news')">
-    <span class="bnav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 22h16a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v16a2 2 0 0 1-2 2Zm0 0a2 2 0 0 1-2-2v-9c0-1.1.9-2 2-2h2"/><path d="M18 14h-8"/><path d="M15 18h-5"/><path d="M10 6h8v4h-8V6Z"/></svg></span>
-    <span class="bnav-label">Video</span>
   </button>
 
   <button class="bnav-item desktop-only" id="bnav-about" onclick="switchTab('about')">
@@ -135,12 +136,28 @@
     <span class="bnav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></span>
     <span class="bnav-label">Lainnya</span>
   </button>
+
+  <!-- MOBILE ONLY: Tanya AI docked in bottom bar (replaces floating) -->
+  <button class="bnav-item mobile-visible bnav-ai-mobile" id="bnav-ai" onclick="openGlobalChat()" title="Tanya AI">
+    <span class="bnav-icon" style="background:linear-gradient(135deg,#4f9cf9,#2563eb);border-radius:8px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;color:#fff;"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width:16px;height:16px;fill:#fff;"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.17L4 17.17V4h16v12z"/><path d="M7 9h2v2H7zm4 0h2v2h-2zm4 0h2v2h-2z"/></svg></span>
+    <span class="bnav-label" style="color:var(--accent)">Tanya AI</span>
+  </button>
+  </div>
+  <!-- DESKTOP ONLY: Tanya AI docked at bottom of sidebar -->
+  <div class="bnav-ai-wrap desktop-only">
+    <button class="bnav-ai" onclick="openGlobalChat()" title="Tanya AI — tersedia di halaman mana pun">
+      <span class="bnav-ai-ico"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width:18px;height:18px;fill:#fff;"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.17L4 17.17V4h16v12z"/><path d="M7 9h2v2H7zm4 0h2v2h-2zm4 0h2v2h-2z"/></svg></span>
+      <span>Tanya AI</span>
+    </button>
+    <div style="font-size:10px;color:var(--text3);text-align:center;margin-top:6px;font-family:var(--mono);">AI siap bantu 24/7</div>
+  </div>
 </div>
 <div class="page on" id="page-kamus">
   <div class="sbar"><div class="sfield">
     <span class="sico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg></span>
-    <input type="text" id="searchInput" placeholder="Cari istilah, rumus, kata kunci..." oninput="onSearch(this.value)">
+    <input type="text" id="searchInput" placeholder="Cari istilah, rumus, kata kunci..." oninput="onSearch(this.value)" onfocus="showSuggest()" onkeydown="handleSuggestNav(event)" autocomplete="off">
     <button class="sx" id="sx" onclick="clearSearch()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg></button>
+    <div id="searchSuggest" class="suggest-box" role="listbox"></div>
   </div></div>
   <div class="fbar-wrap" id="fbarWrap">
     <button class="fbar-btn fbar-left" onclick="document.getElementById('fbar').scrollBy({left: -200, behavior: 'smooth'})" title="Geser Kiri"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></button>
@@ -151,7 +168,17 @@
     <div class="ksec">
       <div class="smeta">
         <div class="slabel" id="slabel">Semua Istilah</div>
-        <div class="scount" id="scount"></div>
+        <div class="smeta-right">
+          <span class="sort-label">Urut:</span>
+          <select id="sortSelect" class="sort-select" onchange="setSort(this.value)" aria-label="Urutkan istilah">
+            <option value="default">Default</option>
+            <option value="az">A-Z</option>
+            <option value="za">Z-A</option>
+            <option value="populer">Terpopuler</option>
+            <option value="tingkat">Tingkat Kesulitan</option>
+          </select>
+          <div class="scount" id="scount"></div>
+        </div>
       </div>
       <div class="grid" id="grid"></div>
       <div class="empty" id="empty">
