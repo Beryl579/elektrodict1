@@ -398,7 +398,7 @@ const PROJECTS = [
 // Sumber: channel edukasi berbahasa Indonesia, diverifikasi via
 // YouTube oEmbed. Thumbnail diambil dari i.ytimg.com.
 // ---- TENTANG ----
-const VIDEO_TOPICS = ['Semua','Dasar Listrik','Elektronika & Komponen','Motor Listrik','Energi Terbarukan','Instalasi & Panel','Digital & Kontrol','Arduino & IoT','PLC, HMI & SCADA'];
+const VIDEO_TOPICS = ['Semua','Dasar Listrik','Elektronika & Komponen','Motor Listrik','Energi Terbarukan','Instalasi & Panel','Digital & Kontrol','Arduino & IoT','PLC, HMI & SCADA','Instrumentasi & Pengukuran'];
 
 const VIDEOS = [
   // ==== DASAR LISTRIK ====
@@ -471,6 +471,14 @@ const VIDEOS = [
   { id:'DP41lE_hyAA', title:'Wecon HMI — Komunikasi Modbus dengan Servo Wecon', channel:'Wecon Indonesia', channelUrl:'https://www.youtube.com/@weconindonesia', topic:'PLC, HMI & SCADA', desc:'Integrasi HMI dengan servo drive Wecon via Modbus: setting parameter, display, dan kontrol posisi/kecepatan.' },
   { id:'TmTyxr_D_n8', title:'Pengenalan SCADA (Supervisory Control And Data Acquisition)', channel:'Anak Elektro 09', channelUrl:'https://www.youtube.com/@AnakElektro09', topic:'PLC, HMI & SCADA', desc:'Apa itu SCADA: kumpulan software & hardware untuk memantau dan mengendalikan proses industri secara real-time.' },
   { id:'32qBzn3Wk2s', title:'Implementasi SCADA Pompa Sunter Selatan Jakarta Utara', channel:'Dinas Sumber Daya Air Provinsi DKI Jakarta', channelUrl:'https://www.youtube.com/@dinassdajakarta', topic:'PLC, HMI & SCADA', desc:'Contoh nyata penerapan SCADA di lapangan: monitoring dan kontrol pompa air secara terpusat dan real-time.' },
+
+  // ==== INSTRUMENTASI & PENGUKURAN (Multimeter & Alat Ukur) ====
+  { id:'nYUD8uMLk2Q', title:'CARA UKUR ARUS DENGAN MULTIMETER DIGITAL | ARUS AC', channel:'JAGO LISTRIK', channelUrl:'https://www.youtube.com/@JAGOLISTRIK', topic:'Instrumentasi & Pengukuran', desc:'Tutorial Indonesia: cara mengukur arus AC dengan multimeter digital — pengaturan selector, posisi probe seri, dan pembacaan hasil yang benar.' },
+  { id:'8l4zn8WOfYc', title:'Cara Pakai Multitester Dengan Cepat ! Belajar 10 Menit Langsung Bisa', channel:'Youbeagger', channelUrl:'https://www.youtube.com/@Youbeagger', topic:'Instrumentasi & Pengukuran', desc:'Belajar cepat pakai multitester: mengenal selector, fungsi tombol, dan cara mengukur tegangan, arus, serta hambatan dalam 10 menit.' },
+  { id:'4lAyzRxsbDc', title:'How to use a multimeter like a pro! The Ultimate guide', channel:'The Engineering Mindset', channelUrl:'https://www.youtube.com/@EngineeringMindset', topic:'Instrumentasi & Pengukuran', desc:'Panduan lengkap luar negeri (Inggris): fungsi multimeter untuk tegangan AC/DC, hambatan (Ohm), continuity, baterai, kapasitor, dioda, dan komponen elektronik dasar.' },
+  { id:'bF3OyQ3HwfU', title:'THE BEST Multimeter tutorial (HD)', channel:'Afrotechmods', channelUrl:'https://www.youtube.com/@Afrotechmods', topic:'Instrumentasi & Pengukuran', desc:'Tutorial klasik luar negeri: cara mengatur selector multimeter, mengukur tegangan, arus, hambatan, dan tes continuity dengan benar.' },
+  { id:'pVyQOPmes_Q', title:'How to test a Battery with a Multimeter', channel:'alwaysafix', channelUrl:'https://www.youtube.com/@alwaysafix', topic:'Instrumentasi & Pengukuran', desc:'Cara mengecek kondisi baterai (1.5V, 9V, aki) dengan multimeter — membedakan baterai masih bagus vs sudah drop.' },
+  { id:'wNx73o-3ESw', title:'How to test for continuity with a multimeter! ⚡️', channel:'FixMyPEV', channelUrl:'https://www.youtube.com/@fixmypev', topic:'Instrumentasi & Pengukuran', desc:'Cara cek kabel putus / continuity test: menggunakan mode buzzer/beep untuk mendeteksi jalur terputus atau korslet.' },
 
   // ==== DASAR LISTRIK (The Engineering Mindset & RealPars) ====
   { id:'mc979OhitAg', title:'Cara Kerja Listrik — Prinsip Dasar', channel:'The Engineering Mindset', channelUrl:'https://www.youtube.com/@EngineeringMindset', topic:'Dasar Listrik', desc:'Video paling populer The Engineering Mindset: atom & elektron, konduktor, tegangan, arus, hambatan, induktor, kapasitor, hingga beda AC dan DC.' },

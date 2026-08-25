@@ -1544,5 +1544,204 @@ $$R = \\rho \\cdot \\frac{L}{A} \\qquad \\Rightarrow \\qquad \\Delta V = 2 \\cdo
       { q: 'Pada sistem PLTS grid-tied, kelebihan energi yang tidak dipakai…', opts: ['Hilang sia-sia', 'Diekspor ke jaringan PLN', 'Disimpan ke baterai', 'Dibakar oleh dump load'], ans: 1, exp: 'Grid-tied: kelebihan energi diekspor ke jaringan PLN via bi-directional meter (net metering).' },
       { q: 'Turbin yang cocok untuk PLTA dengan head rendah (&lt;30m) dan debit besar adalah…', opts: ['Pelton', 'Francis', 'Kaplan', 'Steam turbine'], ans: 2, exp: 'Turbin Kaplan dirancang untuk head rendah dan debit tinggi.' }
     ]
+  },
+  {
+    id: 'instrumentasi',
+    emoji: '🔬',
+    title: 'Instrumentasi & Alat Ukur',
+    subtitle: 'Cara pakai multimeter & osiloskop — ukur tegangan, arus, resistansi di rangkaian seri & paralel',
+    level: 'Pemula',
+    durasi: '±35 menit',
+    materi: ['Multimeter', 'Ukur Tegangan/Arus/Resistansi', 'Osiloskop', 'Power Supply & FG', 'K3 Pengukuran'],
+    sections: [
+      {
+        id: 'pengantar-alat',
+        emoji: '🔭',
+        title: 'Mengenal Alat Ukur Listrik',
+        body: `<p>Tiga besaran dasar yang paling sering diukur di dunia elektro adalah <strong>tegangan \\(V\\)</strong> (volt), <strong>arus \\(I\\)</strong> (ampere), dan <strong>resistansi \\(R\\)</strong> (ohm). Ketiganya saling terkait lewat hukum Ohm \\(V = I \\times R\\), sehingga dengan mengukur dua di antaranya kita bisa menghitung yang ketiga.</p>
+<p>Alat ukur terbagi dua jenis tampilan:</p>
+<ul>
+<li><strong>Analog</strong> — membaca posisi jarum pada skala. Cocok melihat <em>tren</em> perubahan nilai, tapi rawan salah baca karena <strong>paralaks</strong> (posisi mata tidak tegak lurus skala).</li>
+<li><strong>Digital (DMM)</strong> — angka langsung tampil di layar. Lebih akurat, mudah dibaca, dan menjadi standar praktikum saat ini.</li>
+</ul>
+<div class="mt-img-wrap"><img class="mt-img" src="Asset%20Materi/galvanometer.jpg" alt="Galvanometer D'Arsonval" onclick="openMateriImg(this)" loading="lazy"><div class="mt-img-cap">Galvanometer D'Arsonval — nenek moyang semua alat ukur analog; jarum bergerak karena gaya elektromagnetik pada kumparan · sumber: Wikimedia Commons, Rama (CC BY-SA 2.0 fr)</div></div>
+<p>Di meja praktikum modern, tiga alat inti biasanya berjajar: <strong>osiloskop</strong>, <strong>multimeter</strong>, dan <strong>power supply DC</strong>.</p>
+<div class="mt-img-wrap"><img class="mt-img" src="Asset%20Materi/test-equipment-stack.jpg" alt="Tumpukan alat ukur meja lab" onclick="openMateriImg(this)" loading="lazy"><div class="mt-img-cap">Peralatan ukur standar meja lab: osiloskop Tektronix, multimeter Fluke 45, dan power supply DC · sumber: Wikimedia Commons, Tpdwkouaa (CC BY-SA 4.0)</div></div>`
+      },
+      {
+        id: 'multimeter',
+        emoji: '🔧',
+        title: 'Multimeter Digital (DMM)',
+        body: `<p><strong>Multimeter</strong> adalah tiga alat sekaligus dalam satu bodi: <strong>voltmeter</strong> (ukur tegangan), <strong>amperemeter</strong> (ukur arus), dan <strong>ohmmeter</strong> (ukur resistansi). Sebelum memakai, kenali bagian-bagiannya:</p>
+<ul>
+<li><strong>Layar LCD</strong> — menampilkan hasil ukur beserta satuannya.</li>
+<li><strong>Rotary selector</strong> — memilih mode: \\(V\\!\\dfrac{\\;}{\\;}\\\\) (DC), \\(V\\sim\\) (AC), \\(\\Omega\\), kontinuitas, diode, mA/µA, A.</li>
+<li><strong>Jack probe</strong> — <strong>COM</strong> (selalu probe <span style="color:#111">⬛ hitam</span>), <strong>VΩ</strong> (probe merah untuk tegangan/resistansi), <strong>A/mA</strong> (probe merah dipindah ke sini saat mengukur arus).</li>
+</ul>
+<div class="mt-img-wrap"><img class="mt-img" src="Asset%20Materi/multimeter-dmm.jpg" alt="Multimeter digital Fluke 87" onclick="openMateriImg(this)" loading="lazy"><div class="mt-img-cap">Multimeter digital Fluke 87 — perhatikan rotary selector dan tiga jack probe di bagian bawah · sumber: Wikimedia Commons, Alex P. Kok (CC BY-SA 4.0)</div></div>
+<p>Yang penting dipahami dari spesifikasi DMM:</p>
+<ul>
+<li><strong>Akurasi</strong> — misal ±(0,5% + 2 digit): error 0,5% dari hasil baca plus 2 satuan digit terakhir.</li>
+<li><strong>Resolusi</strong> — perubahan nilai terkecil yang bisa ditampilkan; DMM 3½ digit menampilkan maksimal ±1999.</li>
+<li><strong>True RMS</strong> — wajib untuk mengukur tegangan AC bentuk gelombang non-sinusoidal (misal keluaran inverter) dengan akurat.</li>
+<li><strong>Kategori keselamatan CAT</strong> — CAT II (stopkontak), CAT III (panel bangunan), CAT IV (jaringan sumber). Semakin tinggi, makin tahan lonjakan tegangan.</li>
+</ul>
+<div class="mt-img-wrap"><img class="mt-img" src="Asset%20Materi/multimeter-analog.jpg" alt="Multimeter analog jarum" onclick="openMateriImg(this)" loading="lazy"><div class="mt-img-cap">Multimeter analog — masih dipakai karena tahan noise & murah, tapi pembacaan skala butuh kehati-hatian · sumber: Wikimedia Commons, KENPEI (CC BY-SA 3.0)</div></div>`
+      },
+      {
+        id: 'ukur-tegangan',
+        emoji: '⚡',
+        title: 'Mengukur Tegangan (Voltmeter → Paralel)',
+        body: `<p><strong>Aturan emas:</strong> voltmeter dipasang <strong>paralel</strong> (sejajar) dengan komponen yang diukur — tanpa perlu memutus rangkaian. Alasannya: komponen paralel memiliki tegangan yang sama, jadi voltmeter "mengintip" tegangan komponen tersebut.</p>
+<div class="mt-img-wrap"><img class="mt-img" src="Asset%20Materi/circuit-series-parallel.svg" alt="Perbandingan rangkaian seri dan paralel" onclick="openMateriImg(this)" loading="lazy"><div class="mt-img-cap">Rangkaian seri (kiri): tegangan terbagi ke tiap resistor, arus sama di semua titik. Rangkaian paralel (kanan): tegangan sama di tiap cabang, arus terbagi · sumber: Wikimedia Commons, Xyzzyva (CC BY-SA 3.0)</div></div>
+<h4>Langkah praktik mengukur tegangan</h4>
+<ol>
+<li>Putar selector ke <strong>V⎓ (DC)</strong> untuk baterai/rangkaian DC, atau <strong>V~ (AC)</strong> untuk PLN/trafo.</li>
+<li>Pastikan probe merah di jack <strong>VΩ</strong>, probe hitam di <strong>COM</strong>.</li>
+<li>Sentuhkan probe <strong>menjembatani</strong> dua titik komponen (misal dua kaki resistor) — rangkaian boleh tetap menyala.</li>
+<li>Baca hasil. Tanda minus hanya berarti polaritas terbalik — tidak berbahaya pada DMM.</li>
+</ol>
+<div class="mt-img-wrap"><img class="mt-img" src="Asset%20Materi/voltmeter-parallel-circuit.png" alt="Voltmeter paralel pada rangkaian seri" onclick="openMateriImg(this)" loading="lazy"><div class="mt-img-cap">Tiga voltmeter dipasang paralel pada rangkaian seri dua lampu — tiap voltmeter menjembatani satu komponen · sumber: Wikimedia Commons, Paulgwilliamson (CC BY-SA 4.0)</div></div>
+<div class="mt-tip">💡 <strong>Di rangkaian seri</strong>, jumlah tegangan tiap komponen = tegangan sumber (\\(V_1 + V_2 = V_{sumber}\\)). <strong>Di rangkaian paralel</strong>, semua cabang memiliki tegangan sama dengan sumber. Gunakan fakta ini untuk mengecek hasil ukurmu.</div>
+<div class="mt-img-wrap"><img class="mt-img" src="Asset%20Materi/voltmeter-ammeter-circuit.svg" alt="Posisi voltmeter dan amperemeter yang benar" onclick="openMateriImg(this)" loading="lazy"><div class="mt-img-cap">Posisi yang benar: voltmeter (V) paralel dengan beban, amperemeter (A) seri dalam jalur arus · sumber: Wikimedia Commons, rones (CC0)</div></div>`
+      },
+      {
+        id: 'ukur-arus',
+        emoji: '🌊',
+        title: 'Mengukur Arus (Amperemeter → Seri)',
+        body: `<p><strong>Aturan emas:</strong> amperemeter dipasang <strong>seri</strong> — rangkaian <strong>harus diputus</strong> dulu di titik pengukuran, lalu amperemeter menjadi jembatan penggantinya. Alasannya: arus pada rangkaian seri nilainya sama di semua titik, jadi arus yang melewati amperemeter = arus yang melewati komponen.</p>
+<div class="mt-img-wrap"><img class="mt-img" src="Asset%20Materi/ammeter-series-circuit.svg" alt="Amperemeter dipasang seri" onclick="openMateriImg(this)" loading="lazy"><div class="mt-img-cap">Amperemeter (A) dipasang seri — seluruh arus rangkaian harus melewatinya · sumber: Wikimedia Commons, Maxmath12 (CC0)</div></div>
+<h4>Langkah praktik mengukur arus</h4>
+<ol>
+<li><strong>Matikan daya</strong> rangkaian dulu (safety — rangkaian harus dibuka).</li>
+<li>Pindahkan probe merah ke jack <strong>A</strong> atau <strong>mA</strong> (baca manual DMM-mu!), selector ke mode arus DC/AC.</li>
+<li>Buka rangkaian di titik ukur, sambungkan amperemeter menggantikan kabel yang dilepas — arus masuk lewat probe merah, keluar lewat hitam.</li>
+<li>Nyalakan daya, baca hasil. Kembalikan jack probe ke VΩ setelah selesai!</li>
+</ol>
+<div class="mt-warn">⚠️ <strong>Kesalahan paling berbahaya:</strong> memasang amperemeter <strong>paralel</strong> dengan beban. Hambatan dalam amperemeter hampir nol → arus melonjak seperti korslet → <strong>fuse DMM putus</strong> (atau lebih buruk). Selalu cek posisi jack & mode sebelum menyentuhkan probe!</div>
+<div class="mt-tip">💡 <strong>Di rangkaian seri</strong> cukup satu amperemeter di titik mana pun (arusnya sama). <strong>Di rangkaian paralel</strong>, arus tiap cabang berbeda — amperemeter harus dipasang seri <em>pada cabang yang diukur</em>, dan jumlah arus semua cabang = arus total (KCL).</div>`
+      },
+      {
+        id: 'ukur-resistansi',
+        emoji: '📏',
+        title: 'Mengukur Resistansi & Kontinuitas',
+        body: `<p>Mode <strong>ohmmeter (Ω)</strong> bekerja dengan menyuntikkan arus kecil ke komponen lalu menghitung \\(R = \\dfrac{V}{I}\\). Karena alat sendiri yang menyuplai arus, ada dua syarat mutlak:</p>
+<ol>
+<li><strong>Rangkaian harus dipatikan</strong> (dan kapasitor dilepas muatannya) — tegangan dari luar akan mengacaukan hasil bahkan merusak DMM.</li>
+<li>Komponen diukur <strong>terisolasi</strong> — minimal lepas satu kakinya dari rangkaian, agar arus uji tidak memotong jalur lain.</li>
+</ol>
+<h4>Mode tambahan yang sering dipakai</h4>
+<ul>
+<li><strong>Kontinuitas (🔊)</strong> — berbunyi beep bila dua titik tersambung (hambatan mendekati 0 Ω). Praktis untuk mengecek kabel putus, solderan, dan jalur PCB.</li>
+<li><strong>Diode test</strong> — menampilkan tegangan jatuh dioda maju (~0,6–0,7 V untuk silikon); OL saat terbalik = dioda baik.</li>
+</ul>
+<div class="mt-img-wrap"><img class="mt-img" src="Asset%20Materi/multimeter-scale-mirror.jpg" alt="Skala multimeter analog dengan cermin" onclick="openMateriImg(this)" loading="lazy"><div class="mt-img-cap">Skala multimeter analog Multavi 5 — garis cermin di bawah skala dipakai agar pembacaan bebas paralaks: posisikan mata sehingga jarum menutupi bayangannya · sumber: Wikimedia Commons, Harke (domain publik)</div></div>
+<div class="mt-tip">💡 Saat mengukur resistor di pasaran, tahan kedua ujung probe dengan tangan <strong>tidak masalah</strong> pada resistor kecil (kΩ), tapi pada resistor besar (MΩ) hambatan tubuhmu (±1 MΩ) ikut terukur paralel dan membuat hasil lebih kecil dari sebenarnya.</div>`,
+        referensi: 'Prinsip ohmmeter modern (constant current source): Fluke "Understanding basic analog testing" & datasheet DMM IEC 61010.'
+      },
+      {
+        id: 'osiloskop',
+        emoji: '📈',
+        title: 'Osiloskop Dasar',
+        body: `<p>Multimeter hanya menampilkan <em>angka</em>. <strong>Osiloskop</strong> menggambar bentuk gelombang tegangan terhadap waktu di layar — satu-satunya cara "melihat" sinyal: apakah ia DC, sinusoida, persegi, ada noise, atau berdenyut (PWM).</p>
+<div class="mt-img-wrap"><img class="mt-img" src="Asset%20Materi/oscilloscope-dso.jpg" alt="Osiloskop digital 4 kanal sedang dipakai" onclick="openMateriImg(this)" loading="lazy"><div class="mt-img-cap">Osiloskop digital 4 kanal (Keysight DSOX4024A) mengukur sinyal di lab · sumber: Wikimedia Commons, Radarvector (CC BY-SA 4.0)</div></div>
+<p>Tiga grup kontrol yang wajib dikuasai:</p>
+<ul>
+<li><strong>Vertical (volt/div)</strong> — skala tegangan per kotak vertikal. Mengatur seberapa "tinggi" gelombang tampil.</li>
+<li><strong>Horizontal (timebase, sec/div)</strong> — skala waktu per kotak horizontal. Mengatur seberapa "lebar" periode tampil.</li>
+<li><strong>Trigger</strong> — menstabilkan gelombang agar tidak "berlari"; umumnya di-set pada tepi naik (rising edge) dengan level tertentu.</li>
+</ul>
+<p><strong>Cara membaca hasil ukur:</strong> amplitudo puncak = jumlah kotak vertikal × volt/div; periode = jumlah kotak horizontal × sec/div; lalu frekuensi \\(f = \\dfrac{1}{T}\\).</p>
+<div class="mt-tip">💡 Gunakan probe pada pengali <strong>10×</strong> untuk sinyal umum (impedansi tinggi, aman untuk rangkaian), dan ingat untuk menyesuaikan setelan probe di osiloskop — kalau tidak, amplitudo terbaca 10× lebih kecil. Sebelum mengukur, jalankan <strong>probe compensation</strong> ke terminal kalibrasi agar gelombang persegi tidak melengkung.</div>`,
+        referensi: 'Fundamental probe compensation & pengali 10×: Keysight "Application Note: Probe Fundamentals".'
+      },
+      {
+        id: 'alat-bench',
+        emoji: '🔌',
+        title: 'Power Supply DC & Function Generator',
+        body: `<p><strong>Power supply DC laboratorium</strong> memberi tegangan kerja yang stabil dan <em>terbatas arusnya</em>. Dua mode kerjanya:</p>
+<ul>
+<li><strong>Mode CV (constant voltage)</strong> — tegangan mengikuti setelan, arus mengikuti kebutuhan beban (normal).</li>
+<li><strong>Mode CC (constant current)</strong> — arus menyentuh batas <em>current limit</em> yang kamu set, tegangan turun. Ini fitur <strong>pengaman</strong>: set limit kecil dulu saat mencoba rangkaian baru agar kesalahan wiring tidak membakar komponen.</li>
+</ul>
+<div class="mt-img-wrap"><img class="mt-img" src="Asset%20Materi/bench-power-supply.jpg" alt="Power supply DC meja lab" onclick="openMateriImg(this)" loading="lazy"><div class="mt-img-cap">Power supply DC meja lab — perhatikan knob tegangan, knob current limit, dan indikator CV/CC · sumber: Wikimedia Commons, Derrick Parker (CC0)</div></div>
+<p><strong>Function generator</strong> menghasilkan sinyal uji: sinusoida, persegi, dan segitiga, dengan frekuensi dan amplitudo yang bisa diatur. Pasangan sejatinya adalah osiloskop — generator memicu sinyal, osiloskop melihat respons rangkaian (dasar pengujian filter, penguat, dan rangkaian waktu).</p>
+<div class="mt-img-wrap"><img class="mt-img" src="Asset%20Materi/function-generator.jpg" alt="Function generator Tektronix CFG200" onclick="openMateriImg(this)" loading="lazy"><div class="mt-img-cap">Function generator Tektronix CFG200 — pilih bentuk gelombang, atur frekuensi & amplitudo, keluaran lewat konektor BNC · sumber: Wikimedia Commons, Whiteknight (CC BY-SA 4.0)</div></div>
+<div class="mt-tip">💡 Alur praktikum klasik: <strong>function generator → rangkaian → osiloskop</strong>, dengan multimeter memantau DC bias. Semua ground (probe & generator) terhubung ke ground bodi alat — jangan menghubungkan probe "hot" ke dua titik yang beda potensialnya besar.</div>`
+      },
+      {
+        id: 'kesalahan-k3',
+        emoji: '⚠️',
+        title: 'Kesalahan Umum & Keselamatan Pengukuran',
+        body: `<p>Tabel berikut merangkum kesalahan yang paling sering (dan paling mahal) terjadi saat praktik:</p>
+<table style="width:100%; border-collapse:collapse; font-size:13.5px;">
+<tr style="text-align:left; border-bottom:2px solid var(--line2, #ddd);"><th style="padding:8px 6px;">Kesalahan</th><th style="padding:8px 6px;">Akibat</th><th style="padding:8px 6px;">Pencegahan</th></tr>
+<tr><td style="padding:7px 6px;">Amperemeter dipasang paralel</td><td style="padding:7px 6px;">Korslet, fuse DMM putus</td><td style="padding:7px 6px;">Seri untuk arus; cek jack & mode sebelum probe menyentuh</td></tr>
+<tr><td style="padding:7px 6px;">Ohmmeter dipakai di rangkaian menyala</td><td style="padding:7px 6px;">Hasil ngawur, DMM rusak</td><td style="padding:7px 6px;">Patikan daya, lepas muatan kapasitor</td></tr>
+<tr><td style="padding:7px 6px;">Probe merah tertinggal di jack A saat mengukur tegangan</td><td style="padding:7px 6px;">Korslet langsung saat probe menyentuh tegangan</td><td style="padding:7px 6px;">Rutinitas akhir: kembalikan probe merah ke VΩ</td></tr>
+<tr><td style="padding:7px 6px;">Mode DC dipakai untuk AC (atau sebaliknya)</td><td style="padding:7px 6px;">Hasil 0 atau salah baca besar</td><td style="padding:7px 6px;">Kenali simbol V⎓ (DC) dan V~ (AC)</td></tr>
+<tr><td style="padding:7px 6px;">Mengukur tegangan di atas kategori CAT alat</td><td style="padding:7px 6px;">Lonjakan arc — alat & pengguna terancam</td><td style="padding:7px 6px;">Cocokkan CAT II/III/IV dengan lokasi ukur</td></tr>
+</table>
+<div class="mt-warn">⚠️ <strong>Aturan aman praktikum:</strong> satu tangan saat mengukur tegangan tinggi, jangan pegang bagian logam probe, mulai dari range tertinggi lalu turun (pada DMM manual-range), dan ganti fuse DMM <em>sesuai rating asli</em> — jangan pernah dibypass.</div>`,
+        referensi: 'Kategori CAT & keselamatan pengukuran: IEC 61010-031 & Fluke "ABCs of DMM Safety".'
+      },
+      {
+        id: 'rangkuman-instrumen',
+        emoji: '🎓',
+        title: 'Rangkuman',
+        body: `<p>Tabel satu ini adalah inti dari seluruh modul — hafalkan barisnya, aman 90% praktik pengukuran:</p>
+<table style="width:100%; border-collapse:collapse; font-size:13.5px;">
+<tr style="text-align:left; border-bottom:2px solid var(--line2, #ddd);"><th style="padding:8px 6px;">Yang diukur</th><th style="padding:8px 6px;">Mode DMM</th><th style="padding:8px 6px;">Koneksi</th><th style="padding:8px 6px;">Syarat</th></tr>
+<tr><td style="padding:7px 6px;">Tegangan \\(V\\)</td><td style="padding:7px 6px;">V⎓ atau V~</td><td style="padding:7px 6px;"><strong>Paralel</strong> dgn komponen</td><td style="padding:7px 6px;">Rangkaian boleh menyala</td></tr>
+<tr><td style="padding:7px 6px;">Arus \\(I\\)</td><td style="padding:7px 6px;">A / mA (jack pindah)</td><td style="padding:7px 6px;"><strong>Seri</strong> (putus rangkaian)</td><td style="padding:7px 6px;">Estimasi arus &lt; rating jack</td></tr>
+<tr><td style="padding:7px 6px;">Resistansi \\(R\\)</td><td style="padding:7px 6px;">Ω</td><td style="padding:7px 6px;">Menjembatani komponen</td><td style="padding:7px 6px;">Rangkaian mati, komponen terisolasi</td></tr>
+<tr><td style="padding:7px 6px;">Kontinuitas</td><td style="padding:7px 6px;">🔊 / diode</td><td style="padding:7px 6px;">Dua titik yang dicek</td><td style="padding:7px 6px;">Rangkaian mati</td></tr>
+<tr><td style="padding:7px 6px;">Bentuk gelombang</td><td style="padding:7px 6px;">Osiloskop</td><td style="padding:7px 6px;">Probe ×10 ke titik uji</td><td style="padding:7px 6px;">Ground probe = ground rangkaian</td></tr>
+</table>
+<p style="margin-top:10px;">Lanjutkan latihan dengan memverifikasi rangkaian di modul <strong>Dasar Listrik</strong>: rakit pembagi tegangan, ukur tiap komponen, lalu bandingkan dengan perhitungan. Pengalaman tangan inilah yang membedakan yang paham dengan yang sekadar hafal.</p>`
+      }
+    ],
+    contoh: [
+      {
+        judul: 'Membaca Osiloskop',
+        soal: 'Osiloskop disetel 2 V/div dan 5 ms/div. Gelombang sinus puncaknya setinggi 3 kotak dan satu periode selebar 4 kotak. Tentukan amplitudo puncak dan frekuensinya!',
+        langkah: [
+          'Amplitudo puncak: \\(V_p = 3\\,\\text{div} \\times 2\\,\\text{V/div} = 6\\,\\text{V}\\).',
+          'Periode: \\(T = 4\\,\\text{div} \\times 5\\,\\text{ms/div} = 20\\,\\text{ms} = 0{,}02\\,\\text{s}\\).',
+          'Frekuensi: \\(f = \\dfrac{1}{T} = \\dfrac{1}{0{,}02} = 50\\,\\text{Hz}\\).',
+          '<strong>Jawaban:</strong> gelombang 6 V puncak dengan frekuensi <strong>50 Hz</strong> — pola khas sinyal PLN.'
+        ]
+      },
+      {
+        judul: 'Verifikasi Resistor dengan Kode Warna vs DMM',
+        soal: 'Resistor bercincin merah–hitam–merah–emas diukur DMM menunjukkan 2,17 kΩ. Apakah resistor masih baik?',
+        langkah: [
+          'Kode warna: merah=2, hitam=0, merah=×100 → \\(R = 20 \\times 100 = 2000\\,\\Omega = 2\\,\\text{k}\\Omega\\), emas = toleransi 5%.',
+          'Rentang wajar: \\(2000 \\times (1 \\pm 0{,}05) = 1900\\text{–}2100\\,\\Omega\\).',
+          'Hasil ukur 2,17 kΩ = 2170 Ω → di luar rentang 5%.',
+          '<strong>Kesimpulan:</strong> kemungkinan toleransi sebenarnya lebih besar (periksa cincin ke-4) atau resistor terdegradasi — ukur lagi dengan kaki yang benar-benar terlepas.'
+        ]
+      },
+      {
+        judul: 'Menghitung Error Pengukuran DMM',
+        soal: 'DMM berspesifikasi akurasi ±(0,5% + 2 digit) menampilkan 5,00 V. Berapa rentang nilai sebenarnya?',
+        langkah: [
+          'Komponen persen: \\(0{,}5\\% \\times 5{,}00 = 0{,}025\\,\\text{V}\\).',
+          'Komponen digit: 2 digit terakhir = \\(\\pm 0{,}02\\,\\text{V}\\) (resolusi 0,01 V).',
+          'Total error: \\(\\pm(0{,}025 + 0{,}02) = \\pm 0{,}045\\,\\text{V}\\).',
+          '<strong>Jawaban:</strong> nilai sebenarnya berada di antara <strong>4,955–5,045 V</strong>.'
+        ]
+      }
+    ],
+    soal: [
+      { q: 'Untuk mengukur tegangan sebuah resistor, voltmeter dipasang…', opts: ['Seri dengan resistor', 'Paralel dengan resistor', 'Diputus dulu rangkaiannya', 'Di sumber saja'], ans: 1, exp: 'Voltmeter paralel — komponen paralel memiliki tegangan yang sama, jadi hasil ukur = tegangan resistor.' },
+      { q: 'Sebelum mengukur arus, probe merah DMM harus dipindahkan ke…', opts: ['Jack COM', 'Jack VΩ', 'Jack A atau mA', 'Tidak perlu dipindah'], ans: 2, exp: 'Jack VΩ dilindungi fuse tegangan; jalur arus punya jalur shunt tersendiri di jack A/mA.' },
+      { q: 'Mengukur resistansi resistor yang masih terpasang di rangkaian aktif akan…', opts: ['Hasil akurat karena rangkaian menyala', 'Hasil salah & berpotensi merusak DMM', 'Membuat resistor lebih presisi', 'Tidak ada efek apa pun'], ans: 1, exp: 'Ohmmeter menyuntikkan arus sendiri; tegangan luar mengacaukan pengukuran dan bisa merusak mode Ω.' },
+      { q: 'Amperemeter yang tak sengaja dipasang paralel dengan beban akan…', opts: ['Menampilkan arus normal', 'Menjadi korslet — arus melonjak & fuse putus', 'Membaca tegangan dengan benar', 'Memutus rangkaian secara aman'], ans: 1, exp: 'Hambatan dalam amperemeter ≈ 0 Ω, sehingga paralel = korslet. Inilah kesalahan paling berbahaya pemula.' },
+      { q: 'Osiloskop disetel 2 V/div, puncak gelombang setinggi 3 kotak. Amplitudo puncaknya…', opts: ['1,5 V', '5 V', '6 V', '8 V'], ans: 2, exp: 'Vp = 3 div × 2 V/div = 6 V.' },
+      { q: 'Timebase 5 ms/div dengan satu periode selebar 4 kotak. Frekuensinya…', opts: ['20 Hz', '50 Hz', '100 Hz', '200 Hz'], ans: 1, exp: 'T = 4 × 5 ms = 20 ms → f = 1/0,02 = 50 Hz.' },
+      { q: 'Mode kontinuitas berbunyi beep ketika dua probe dihubungkan. Ini berarti…', opts: ['Dua titik tersambung (hambatan ≈ 0)', 'Tegangan tinggi terdeteksi', 'Rangkaian terbuka', 'Dioda sedang menghantar maju'], ans: 0, exp: 'Beep = jalur tertutup/tersambung. Praktis untuk mengecek kabel putus & solderan.' },
+      { q: 'Untuk mengukur panel distribusi listrik gedung, DMM minimal harus berkategori…', opts: ['CAT I', 'CAT II', 'CAT III', 'CAT IV'], ans: 2, exp: 'CAT III untuk panel & distribusi bangunan; CAT IV khusus jaringan sumber (meteran utama).' }
+    ]
   }
 ];

@@ -74,6 +74,23 @@ Gunakan untuk konten materi; sertakan atribusi sesuai lisensi masing-masing.
 | `hydro-dam.png` | Diagram pembangkit listrik tenaga air | CC BY-SA 4.0 | [File:Hydroelectric dam.svg](https://commons.wikimedia.org/wiki/File:Hydroelectric_dam.svg) |
 | `wind-turbine.png` | Turbin angin modern (HAWT) | CC BY-SA 4.0 | [File:Wind turbine.svg](https://commons.wikimedia.org/wiki/File:Wind_turbine.svg) |
 
+## Modul Instrumentasi & Alat Ukur
+
+| File | Isi | Lisensi | Sumber |
+|---|---|---|---|
+| `galvanometer.jpg` | Foto galvanometer D'Arsonval (1100px) | CC BY-SA 2.0 fr | [File:Instruments-de-mesure-p1010624.jpg](https://commons.wikimedia.org/wiki/File:Instruments-de-mesure-p1010624.jpg) — Rama |
+| `test-equipment-stack.jpg` | Osiloskop + multimeter + power supply (1100px) | CC BY-SA 4.0 | [File:Test Equipment Stack.jpg](https://commons.wikimedia.org/wiki/File:Test_Equipment_Stack.jpg) — Tpdwkouaa |
+| `multimeter-dmm.jpg` | Multimeter digital Fluke 87 (1100px) | CC BY-SA 4.0 | [File:Fluke 87 multimeter.jpg](https://commons.wikimedia.org/wiki/File:Fluke_87_multimeter.jpg) — Alex P. Kok |
+| `multimeter-analog.jpg` | Multimeter analog jarum (1100px) | CC BY-SA 3.0 | [File:Analog Multimeter.jpg](https://commons.wikimedia.org/wiki/File:Analog_Multimeter.jpg) — KENPEI |
+| `multimeter-scale-mirror.jpg` | Skala multimeter analog dgn cermin anti-paralaks (1100px) | Domain publik | [File:Analogmultimeter Multavi.jpg](https://commons.wikimedia.org/wiki/File:Analogmultimeter_Multavi.jpg) — Harke |
+| `circuit-series-parallel.svg` | Diagram rangkaian seri & paralel | CC BY-SA 3.0 | [File:Series and parallel circuits.svg](https://commons.wikimedia.org/wiki/File:Series_and_parallel_circuits.svg) — Xyzzyva |
+| `voltmeter-parallel-circuit.png` | 3 voltmeter paralel pada rangkaian seri 2 lampu | CC BY-SA 4.0 | [File:Series circuit 2 bulbs with voltmeters.png](https://commons.wikimedia.org/wiki/File:Series_circuit_2_bulbs_with_voltmeters.png) — Paulgwilliamson |
+| `voltmeter-ammeter-circuit.svg` | Posisi benar voltmeter (paralel) & amperemeter (seri) | CC0 | [File:Voltmeter and ammeter.svg](https://commons.wikimedia.org/wiki/File:Voltmeter_and_ammeter.svg) — rones |
+| `ammeter-series-circuit.svg` | Amperemeter dipasang seri dalam rangkaian | CC0 | [File:Ammeter circuit.svg](https://commons.wikimedia.org/wiki/File:Ammeter_circuit.svg) — Maxmath12 |
+| `oscilloscope-dso.jpg` | Osiloskop digital 4 kanal Keysight (1100px) | CC BY-SA 4.0 | [File:Digital oscilloscope in use.jpg](https://commons.wikimedia.org/wiki/File:Digital_oscilloscope_in_use.jpg) — Radarvector |
+| `bench-power-supply.jpg` | Power supply DC meja lab (1100px) | CC0 | [File:Bench power supply.jpg](https://commons.wikimedia.org/wiki/File:Bench_power_supply.jpg) — Derrick Parker |
+| `function-generator.jpg` | Function generator Tektronix CFG200 (1100px) | CC BY-SA 4.0 | [File:Tektronix CFG200 Function Generator.jpg](https://commons.wikimedia.org/wiki/File:Tektronix_CFG200_Function_Generator.jpg) — Whiteknight |
+
 ## Catatan Penggunaan
 
 - **CC BY-SA 4.0** → wajib mencantumkan atribusi (nama penulis + lisensi + tautan sumber).
