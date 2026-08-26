@@ -3,7 +3,6 @@
 // ═══════════════════════════════════════════════════════════
 
 // Konstanta diambil dari ElektroAPI di js/api.js jika tersedia
-const API_MODEL = (window.ElektroAPI && window.ElektroAPI.MODEL_TEXT) || "qwen/qwen3.6-27b";
 const VERCEL_URL = (window.ElektroAPI && window.ElektroAPI.VERCEL_URL) || "/api/chat";
 
 /**
@@ -49,7 +48,6 @@ async function callAI(payload) {
   try {
     // Gunakan fungsi chat dari API layer (sudah ada timeout & error handling)
     return await window.ElektroAPI.chat(payload.messages, {
-      model: payload.model,
       temperature: payload.temperature,
       max_tokens: payload.max_tokens
     });
@@ -806,7 +804,6 @@ Aturan:
 
   try {
     const data = await callAI({
-      model: API_MODEL,
       messages:[
         {role:'system', content:'Kamu adalah generator soal teknik elektro. Selalu kembalikan HANYA JSON valid tanpa teks tambahan apapun.'},
         {role:'user', content: prompt}
@@ -1029,7 +1026,7 @@ async function fetchQuoteBackground(){
   ];
   const p = prompts[Math.floor(Math.random()*prompts.length)];
   try {
-    const data = await callAI({model:API_MODEL, messages:[{role:'user',content:p}], max_tokens:120, temperature:0.9});
+    const data = await callAI({messages:[{role:'user',content:p}], max_tokens:120, temperature:0.9});
     const raw = stripThink(data.choices?.[0]?.message?.content) || '';
     const lines = raw.split('\n').filter(l=>l.trim());
     const quote = lines[0]?.replace(/^[""]|[""]$/g,'').trim() || raw;
@@ -1241,8 +1238,6 @@ function initResistor(){
 // ═══════════════════════════════════════════════════════════
 // AI VISION — SOAL FOTO + RANGKAIAN ANALYZER
 // ═══════════════════════════════════════════════════════════
-// Groq vision: qwen/qwen3.6-27b (multimodal). gpt-oss-120b di Groq teks-only → ditolak bila ada gambar.
-const AIV_MODEL = 'qwen/qwen3.6-27b';
 let aivMode = 'soal';
 let aivImageB64 = null;
 let aivImageType = 'image/jpeg';
@@ -1471,7 +1466,6 @@ async function analyzeImage(){
 
   try {
     const data = await callAI({
-      model: AIV_MODEL,
       messages:[{
         role:'user',
         content:[
@@ -2055,13 +2049,12 @@ async function send(v){
   showDots('D'); showDots('M');
 
   try{
-    const mc = document.getElementById('modelChoiceD') ? document.getElementById('modelChoiceD').value : 'qwen/qwen3.6-27b';
     // Sanitize history: remove 'file', 'image', or any extra properties before API call
     const cleanHistory = chatHistory.slice(-10).map(m => ({ role: m.role, content: m.content }));
     // Suntikkan konteks materi bila chat dibuka dari tab Materi
     let sys = SYS;
     if (materiChatCtx && materiChatCtx.active) sys += '\n\n── KONTEKS MATERI (rujukan utama) ──\n' + materiChatCtx.prompt;
-    const data = await callAI({model: mc, messages:[{role:'system',content:sys},...cleanHistory]});
+    const data = await callAI({messages:[{role:'system',content:sys},...cleanHistory]});
     if(data.error) throw new Error(data.error.message);
     const rep=stripThink(data.choices?.[0]?.message?.content)||'(tidak ada respons)';
     botMsg('D',rep);

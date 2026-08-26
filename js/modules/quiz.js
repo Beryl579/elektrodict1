@@ -89,7 +89,6 @@ Aturan:
     try {
       // callAI is defined in app.js or global
       const data = await callAI({
-        model: API_MODEL,
         messages:[
           {role:'system', content:'Kamu adalah generator soal teknik elektro. Selalu kembalikan HANYA JSON valid tanpa teks tambahan apapun.'},
           {role:'user', content: prompt}

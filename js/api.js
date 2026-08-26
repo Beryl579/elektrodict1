@@ -1,13 +1,13 @@
 /**
  * ElektroDict API Layer
  * Semua panggilan Groq lewat /api/chat — API key hanya di Vercel (GROQ_API_KEY).
+ * Model AI ditentukan sepenuhnya di backend — tidak dikirim dari frontend.
  */
+
+// Model AI ditentukan sepenuhnya di backend — tidak dikirim dari frontend.
 
 (function() {
   const VERCEL_URL = '/api/chat';
-  const MODEL_TEXT = 'qwen/qwen3.6-27b';
-  // Groq vision: qwen/qwen3.6-27b (multimodal). gpt-oss-120b di Groq teks-only → ditolak bila ada gambar.
-  const MODEL_VISION = 'qwen/qwen3.6-27b';
   const TIMEOUT_TEXT_MS = 60000;
   const TIMEOUT_VISION_MS = 120000;
 
@@ -79,12 +79,9 @@
 
   window.ElektroAPI = {
     VERCEL_URL,
-    MODEL_TEXT,
-    MODEL_VISION,
     
     async chat(messages, options = {}) {
       return await callAIBase({
-        model: options.model || MODEL_TEXT,
         messages,
         temperature: options.temperature ?? 0.7,
         max_tokens: options.max_tokens ?? 2048,
@@ -94,7 +91,6 @@
 
     async generateQuiz(userPrompt) {
       return await callAIBase({
-        model: MODEL_TEXT,
         messages: [
           { role: 'system', content: 'Kamu adalah generator soal teknik elektro. Selalu kembalikan HANYA JSON valid.' },
           { role: 'user', content: userPrompt }
@@ -107,7 +103,6 @@
 
     async analyzeImage(imageB64, imageType, prompt) {
       return await callAIBase({
-        model: MODEL_VISION,
         messages: [
           {
             role: 'user',
@@ -125,7 +120,6 @@
 
     async fetchQuote(prompt) {
       return await callAIBase({
-        model: MODEL_TEXT,
         messages: [{ role: 'user', content: prompt }],
         max_tokens: 200,
         temperature: 0.9,

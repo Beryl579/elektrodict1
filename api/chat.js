@@ -42,9 +42,9 @@ module.exports = async function handler(req, res) {
       return res.status(400).json({ error: { message: "Payload tidak valid." } });
     }
 
-    // --- MODEL SWITCHER LOGIC ---
-    let requestedModel = payload.model;
-    let targetModel = requestedModel || "qwen/qwen3.6-27b"; 
+    // Model ditentukan di backend — frontend tidak perlu tahu nama model.
+    const DEFAULT_MODEL = 'qwen/qwen3.6-27b';
+    let targetModel = DEFAULT_MODEL;
     let messages = Array.isArray(payload.messages) ? [...payload.messages] : [];
     
     const latexRules = "Rumus wajib LaTeX: inline $...$, blok $$...$$. Contoh: $V = IR$. Dilarang memakai kurung biasa (...) untuk rumus.";

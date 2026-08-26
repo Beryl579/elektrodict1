@@ -1,9 +1,9 @@
 /**
  * ElektroDict AI Vision Module
  * Handles Image uploading, Analyzing, and AI-powered tutor responses.
+ * Model AI ditentukan sepenuhnya di backend — tidak dikirim dari frontend.
  */
 
-const AIV_MODEL = 'qwen/qwen3.6-27b';
 let aivMode = 'soal';
 let aivImageB64 = null;
 let aivImageType = 'image/jpeg';
@@ -116,7 +116,6 @@ const ElektroVision = {
     try {
       // callAI provided globally
       const data = await callAI({
-        model: AIV_MODEL,
         messages:[{
           role:'user',
           content:[
