@@ -13,7 +13,6 @@ const previewImg = document.getElementById('previewImg');
 const fileInfo = document.getElementById('fileInfo');
 const fileNameDisplay = document.getElementById('fileName');
 const imageInput = document.getElementById('imageInput');
-const modelSelector = document.getElementById('modelSelector');
 
 // Buang blok proses berpikir model (<think>...</think>) dari jawaban AI
 function stripThink(text) {
@@ -113,7 +112,6 @@ async function sendMessage() {
     const userText = text;
     const userImg = selectedFileBase64 ? previewImg.src : null;
     const userFile = !selectedFileBase64 && selectedFileName ? selectedFileName : null;
-    const selectedModel = modelSelector.value;
 
     // Reset Input UI
     chatInput.value = '';
@@ -158,7 +156,7 @@ async function sendMessage() {
                     { role: 'system', content: CHATBOT_SYSTEM_PROMPT },
                     ...context,
                     { role: 'user', content: fullPrompt }
-                ], { model: selectedModel });
+                ]);
             }
 
             const aiMsg = stripThink(response.choices?.[0]?.message?.content) || 'Maaf Kak, saya belum bisa memproses permintaan ini. Silakan coba lagi dengan pertanyaan yang lebih spesifik.';
