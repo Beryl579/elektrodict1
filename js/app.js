@@ -3703,6 +3703,9 @@ function openMateriModule(id) {
     renderMateriQuiz();
     mountOhmAnim();
     mountPwmAnim();
+    mountResistorSim();
+    mountLedCalc();
+    mountBjtSim();
     updateMateriDoneBtn();
   }, 60);
   window.scrollTo({top:0, behavior:'smooth'});
@@ -4047,6 +4050,209 @@ function pwmDraw() {
   ctx.fillStyle = d > 0 ? '#ffe082' : 'rgba(255,255,255,0.5)'; ctx.font = '12px monospace'; ctx.textAlign = 'center';
   ctx.fillText('LED', lx, ly + 42);
   ctx.fillText(d + '%', lx, ly + 58);
+}
+
+function mountResistorSim() {
+  const wrap = document.getElementById('resistor-sim');
+  if (!wrap) return;
+  const COLORS = [
+    { name: 'Hitam',  val: 0, mul: 1,      hex: '#222' },
+    { name: 'Coklat', val: 1, mul: 10,     hex: '#8B4513' },
+    { name: 'Merah',  val: 2, mul: 100,    hex: '#e53935' },
+    { name: 'Jingga', val: 3, mul: 1000,   hex: '#FF6F00' },
+    { name: 'Kuning', val: 4, mul: 10000,  hex: '#fdd835' },
+    { name: 'Hijau',  val: 5, mul: 100000, hex: '#43a047' },
+    { name: 'Biru',   val: 6, mul: 1e6,    hex: '#1e88e5' },
+    { name: 'Ungu',   val: 7, mul: 1e7,    hex: '#8e24aa' },
+    { name: 'Abu',    val: 8, mul: 1e8,    hex: '#757575' },
+    { name: 'Putih',  val: 9, mul: 1e9,    hex: '#f5f5f5' }
+  ];
+  const TOL = [
+    { name: 'Emas ±5%',   hex: '#FFD700' },
+    { name: 'Perak ±10%', hex: '#C0C0C0' }
+  ];
+  wrap.innerHTML = `
+    <div style="background:rgba(99,102,241,.07);border:1px solid rgba(99,102,241,.2);border-radius:12px;padding:16px;margin:12px 0;">
+      <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;margin-bottom:12px;">
+        <div><div style="font-size:11px;color:var(--text3);margin-bottom:4px;">Gelang 1</div>
+          <select id="rs-g1" style="background:var(--card2);color:var(--text);border:1px solid var(--line2);border-radius:6px;padding:6px 8px;font-size:13px;">
+            ${COLORS.slice(1).map(c=>`<option value="${c.val}" ${c.val===2?'selected':''}>${c.name}</option>`).join('')}
+          </select></div>
+        <div><div style="font-size:11px;color:var(--text3);margin-bottom:4px;">Gelang 2</div>
+          <select id="rs-g2" style="background:var(--card2);color:var(--text);border:1px solid var(--line2);border-radius:6px;padding:6px 8px;font-size:13px;">
+            ${COLORS.map(c=>`<option value="${c.val}" ${c.val===7?'selected':''}>${c.name}</option>`).join('')}
+          </select></div>
+        <div><div style="font-size:11px;color:var(--text3);margin-bottom:4px;">Gelang 3 (Pengali)</div>
+          <select id="rs-g3" style="background:var(--card2);color:var(--text);border:1px solid var(--line2);border-radius:6px;padding:6px 8px;font-size:13px;">
+            ${COLORS.map(c=>`<option value="${c.mul}" ${c.mul===100?'selected':''}>${c.name} (×${c.mul<1000?c.mul:c.mul>=1e6?c.mul/1e6+'M':c.mul/1000+'k'})</option>`).join('')}
+          </select></div>
+        <div><div style="font-size:11px;color:var(--text3);margin-bottom:4px;">Gelang 4 (Toleransi)</div>
+          <select id="rs-g4" style="background:var(--card2);color:var(--text);border:1px solid var(--line2);border-radius:6px;padding:6px 8px;font-size:13px;">
+            ${TOL.map((t,i)=>`<option value="${i}">${t.name}</option>`).join('')}
+          </select></div>
+      </div>
+      <div id="rs-result" style="font-size:22px;font-weight:700;color:var(--accent);font-family:var(--mono);">2.7 kΩ ±5%</div>
+      <div id="rs-bands" style="display:flex;gap:4px;margin-top:8px;height:32px;border-radius:6px;overflow:hidden;width:160px;"></div>
+    </div>`;
+  function rsCalc() {
+    const d1 = parseInt(document.getElementById('rs-g1').value);
+    const d2 = parseInt(document.getElementById('rs-g2').value);
+    const mul = parseFloat(document.getElementById('rs-g3').value);
+    const tolIdx = parseInt(document.getElementById('rs-g4').value);
+    const R = (d1*10 + d2) * mul;
+    const tolStr = TOL[tolIdx].name.split(' ')[1];
+    let display;
+    if (R >= 1e6) display = (R/1e6).toFixed(R%1e6===0?0:2).replace('.',',') + ' MΩ';
+    else if (R >= 1000) display = (R/1000).toFixed(R%1000===0?0:2).replace('.',',') + ' kΩ';
+    else display = R + ' Ω';
+    document.getElementById('rs-result').textContent = display + ' ' + tolStr;
+    const g1c = COLORS.find(c=>c.val===d1)?.hex||'#222';
+    const g2c = COLORS.find(c=>c.val===d2)?.hex||'#222';
+    const g3val = COLORS.find(c=>c.mul===mul);
+    const g3c = g3val?.hex||'#222';
+    const g4c = TOL[tolIdx].hex;
+    document.getElementById('rs-bands').innerHTML =
+      `<div style="flex:1;background:#c8a06e;"></div><div style="width:18px;background:${g1c};"></div><div style="width:18px;background:${g2c};"></div><div style="width:18px;background:${g3c};"></div><div style="flex:.5;background:#c8a06e;"></div><div style="width:14px;background:${g4c};"></div><div style="width:8px;background:#c8a06e;"></div>`;
+  }
+  ['rs-g1','rs-g2','rs-g3','rs-g4'].forEach(id => {
+    document.getElementById(id).addEventListener('change', rsCalc);
+  });
+  rsCalc();
+}
+
+function mountLedCalc() {
+  const wrap = document.getElementById('led-calc');
+  if (!wrap) return;
+  wrap.innerHTML = `
+    <div style="background:rgba(99,102,241,.07);border:1px solid rgba(99,102,241,.2);border-radius:12px;padding:16px;margin:12px 0;">
+      <div style="display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end;margin-bottom:14px;">
+        <div>
+          <div style="font-size:11px;color:var(--text3);margin-bottom:4px;">Tegangan Sumber (Vcc)</div>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <input type="range" id="lc-vcc" min="1.5" max="12" step="0.5" value="5" style="width:100px;">
+            <span id="lc-vcc-val" style="font-family:var(--mono);color:var(--accent);min-width:36px;">5 V</span>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--text3);margin-bottom:4px;">Tegangan LED (Vf)</div>
+          <select id="lc-vf" style="background:var(--card2);color:var(--text);border:1px solid var(--line2);border-radius:6px;padding:6px 8px;font-size:13px;">
+            <option value="2.0">Merah/Kuning — 2,0 V</option>
+            <option value="2.2">Jingga — 2,2 V</option>
+            <option value="3.0">Hijau — 3,0 V</option>
+            <option value="3.2" selected>Biru/Putih — 3,2 V</option>
+          </select>
+        </div>
+        <div>
+          <div style="font-size:11px;color:var(--text3);margin-bottom:4px;">Arus LED (If)</div>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <input type="range" id="lc-if" min="5" max="30" step="1" value="20" style="width:100px;">
+            <span id="lc-if-val" style="font-family:var(--mono);color:var(--accent);min-width:40px;">20 mA</span>
+          </div>
+        </div>
+      </div>
+      <div id="lc-result" style="font-size:18px;font-weight:700;color:var(--accent);font-family:var(--mono);margin-bottom:6px;"></div>
+      <div id="lc-warn" style="font-size:12px;color:var(--rose);"></div>
+    </div>`;
+  function lcCalc() {
+    const vcc = parseFloat(document.getElementById('lc-vcc').value);
+    const vf  = parseFloat(document.getElementById('lc-vf').value);
+    const If  = parseInt(document.getElementById('lc-if').value) / 1000;
+    document.getElementById('lc-vcc-val').textContent = vcc + ' V';
+    document.getElementById('lc-if-val').textContent = (If*1000) + ' mA';
+    const warn = document.getElementById('lc-warn');
+    if (vcc <= vf) {
+      document.getElementById('lc-result').textContent = '⚠️ Vcc harus lebih besar dari Vf!';
+      warn.textContent = '';
+      return;
+    }
+    const R = (vcc - vf) / If;
+    let display;
+    if (R >= 1000) display = (R/1000).toFixed(2).replace('.',',') + ' kΩ';
+    else display = Math.round(R) + ' Ω';
+    const E12 = [10,12,15,18,22,27,33,39,47,56,68,82];
+    let best = E12[0], bestMul = 1;
+    outer: for (let m of [1,10,100,1000,10000]) {
+      for (let v of E12) {
+        if (v*m >= Math.round(R)) { best = v; bestMul = m; break outer; }
+      }
+    }
+    document.getElementById('lc-result').textContent = `R = ${display} → pakai ${best*bestMul} Ω (nilai E12 terdekat)`;
+    const Iactual = (vcc - vf) / (best*bestMul) * 1000;
+    warn.textContent = Iactual > 30 ? `⚠️ Arus aktual ${Iactual.toFixed(1)} mA — terlalu besar! Naikkan nilai resistor.` : `✓ Arus aktual ≈ ${Iactual.toFixed(1)} mA`;
+    warn.style.color = Iactual > 30 ? 'var(--rose)' : 'var(--green, #4ade80)';
+  }
+  document.getElementById('lc-vcc').addEventListener('input', lcCalc);
+  document.getElementById('lc-vf').addEventListener('change', lcCalc);
+  document.getElementById('lc-if').addEventListener('input', lcCalc);
+  lcCalc();
+}
+
+function mountBjtSim() {
+  const wrap = document.getElementById('bjt-sim');
+  if (!wrap) return;
+  wrap.innerHTML = `
+    <div style="background:rgba(99,102,241,.07);border:1px solid rgba(99,102,241,.2);border-radius:12px;padding:16px;margin:12px 0;">
+      <canvas id="bjt-canvas" width="480" height="200" style="width:100%;max-width:480px;display:block;"></canvas>
+      <div style="display:flex;flex-wrap:wrap;gap:14px;margin-top:12px;align-items:center;">
+        <div>
+          <label style="font-size:12px;color:var(--text3);">Arus Basis IB: <b id="bjt-ib-val">0</b> μA</label><br>
+          <input type="range" id="bjt-ib" min="0" max="100" step="5" value="0" style="width:180px;">
+        </div>
+        <div style="font-family:var(--mono);font-size:13px;">
+          <div>β (hFE) = 150</div>
+          <div>IC = β × IB = <span id="bjt-ic">0</span> mA</div>
+          <div>Mode: <b id="bjt-mode" style="color:var(--accent);">CUTOFF (OFF)</b></div>
+        </div>
+      </div>
+    </div>`;
+  const bjtAnim = { ib: 0, raf: null };
+  function bjtDraw() {
+    const canvas = document.getElementById('bjt-canvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const W = canvas.width, H = canvas.height;
+    ctx.clearRect(0, 0, W, H);
+    const ib = bjtAnim.ib;
+    const beta = 150;
+    const IC = Math.min(ib * beta / 1000, 20);
+    const sat = IC >= 19.5;
+    const on = ib > 0;
+    ctx.strokeStyle = 'rgba(255,255,255,0.7)'; ctx.lineWidth = 2.5;
+    ctx.beginPath(); ctx.moveTo(160, 100); ctx.lineTo(200, 100); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(200, 50); ctx.lineTo(200, 150); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(200, 70); ctx.lineTo(250, 30); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(200, 130); ctx.lineTo(250, 170); ctx.stroke();
+    ctx.fillStyle = 'rgba(255,255,255,0.7)';
+    ctx.beginPath(); ctx.arc(245, 165, 4, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = 'rgba(255,255,255,0.6)'; ctx.font = '12px monospace';
+    ctx.fillText('B', 145, 104);
+    ctx.fillText('C', 255, 25);
+    ctx.fillText('E', 255, 175);
+    ctx.fillText('NPN', 185, 190);
+    const lx = 390, ly = 100;
+    const glow = on ? 8 + IC * 1.5 : 5;
+    const ledColor = on && sat ? '#ffe082' : on ? `rgba(255,220,80,${0.3 + IC/20*0.7})` : 'rgba(120,120,120,0.4)';
+    const g = ctx.createRadialGradient(lx, ly, 1, lx, ly, glow);
+    g.addColorStop(0, ledColor); g.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = g;
+    ctx.beginPath(); ctx.arc(lx, ly, glow, 0, Math.PI*2); ctx.fill();
+    ctx.strokeStyle = on ? '#ffe082' : 'rgba(255,255,255,0.3)'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(lx, ly-18); ctx.lineTo(lx+10, ly); ctx.lineTo(lx, ly+18); ctx.closePath(); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(lx, ly-20); ctx.lineTo(lx, ly+20); ctx.stroke();
+    ctx.fillStyle = 'rgba(255,255,255,0.5)'; ctx.font = '11px monospace';
+    ctx.fillText('LED', lx+16, ly+4);
+    document.getElementById('bjt-ic').textContent = IC.toFixed(1);
+    const modeEl = document.getElementById('bjt-mode');
+    if (!on) { modeEl.textContent = 'CUTOFF (OFF)'; modeEl.style.color = 'var(--rose, #f87171)'; }
+    else if (sat) { modeEl.textContent = 'SATURASI (ON penuh)'; modeEl.style.color = '#4ade80'; }
+    else { modeEl.textContent = 'AKTIF / LINEAR'; modeEl.style.color = 'var(--accent)'; }
+  }
+  document.getElementById('bjt-ib').addEventListener('input', function() {
+    bjtAnim.ib = parseInt(this.value);
+    document.getElementById('bjt-ib-val').textContent = bjtAnim.ib;
+    bjtDraw();
+  });
+  bjtDraw();
 }
 
 // ── Lightbox perbesar gambar pinout ──
