@@ -391,22 +391,6 @@ const KAT_ICONS = {
 const KAT_ORDER = ['dasar','komponen','rangkaian','daya','elektronika','pengukuran','digital','sinyal','terbarukan','instalasi','mesin','kontrol','komunikasi','distribusi'];
 const POPULAR_IDS = ['tegangan','arus listrik','hukum ohm','daya listrik','resistor','kapasitor','induktor','transistor bjt','hukum kirchhoff arus','hukum kirchhoff tegangan','transformator','dioda','mosfet','op-amp','gerbang logika','multimeter'];
 
-function getBookmarks(){ try{ return JSON.parse(localStorage.getItem('ed_bookmarks')||'[]'); }catch{ return []; } }
-function isBookmarked(id){ return getBookmarks().includes(String(id).toLowerCase()); }
-function toggleBookmark(e, id){
-  e.stopPropagation();
-  let b=getBookmarks();
-  const key=String(id).toLowerCase();
-  const willAdd=!b.includes(key);
-  b = willAdd ? [...b, key] : b.filter(x=>x!==key);
-  localStorage.setItem('ed_bookmarks', JSON.stringify(b));
-  const card=e.currentTarget.closest('.card');
-  if(card){ card.classList.toggle('bookmarked', willAdd); }
-  e.currentTarget.classList.toggle('on', willAdd);
-  e.currentTarget.innerHTML = willAdd ? '★' : '☆';
-  e.currentTarget.title = willAdd ? 'Hapus bookmark' : 'Bookmark';
-  // update expanded detail if needed
-}
 function getCardIcon(d, isFeature){
   const id=(d.id||'').toLowerCase();
   if(isFeature && CORE_ICONS[id]) return CORE_ICONS[id];
@@ -587,17 +571,14 @@ function renderGrid(data){
 function renderCard(d, i, isFeature) {
   const key=String(d.id||'').toLowerCase();
   const icon = getCardIcon(d, isFeature);
-  const bookmarked = isBookmarked(key);
   const visited = (()=>{ try{ const v=JSON.parse(localStorage.getItem('ed_visited')||'[]'); return v.includes(key);}catch{return false} })();
   const plainFormula = d.formula ? d.formula.replace(/"/g,'&quot;') : '';
   const miniFormula = d.formula ? `<span class="cformula-mini" id="cfm${i}" data-latex="${plainFormula}" title="${plainFormula}">${d.formula.slice(0,28).replace(/</g,'&lt;')}</span>` : '';
-  const bookmarkBtn = `<button class="cbookmark ${bookmarked?'on':''}" onclick="toggleBookmark(event,'${d.id.replace(/'/g,"\\'").replace(/"/g,'&quot;')}')" title="${bookmarked?'Hapus bookmark':'Bookmark'}" aria-label="Bookmark">${bookmarked?'★':'☆'}</button>`;
   
   if (isFeature) {
     return `
-    <div class="card core-card ${bookmarked?'bookmarked':''} ${visited?'visited':''}" id="c${i}" data-id="${d.id.replace(/"/g,'&quot;')}" onclick="tog(${i})" style="animation-delay:${i * 0.03}s">
+    <div class="card core-card ${visited?'visited':''}" id="c${i}" data-id="${d.id.replace(/"/g,'&quot;')}" onclick="tog(${i})" style="animation-delay:${i * 0.03}s">
       <div class="card-progress"></div><div class="card-visited"></div>
-      ${bookmarkBtn}
       <div class="ccore-body">
         <div class="cicon-core">${icon}</div>
         <div class="ccore-content">
@@ -625,9 +606,8 @@ function renderCard(d, i, isFeature) {
   }
 
   return `
-    <div class="card ${bookmarked?'bookmarked':''} ${visited?'visited':''}" id="c${i}" data-id="${d.id.replace(/"/g,'&quot;')}" onclick="tog(${i})" style="animation-delay:${i * 0.03}s">
+    <div class="card ${visited?'visited':''}" id="c${i}" data-id="${d.id.replace(/"/g,'&quot;')}" onclick="tog(${i})" style="animation-delay:${i * 0.03}s">
       <div class="card-progress"></div><div class="card-visited"></div>
-      ${bookmarkBtn}
       <div class="ctop">
         <div class="cicon">${icon}</div>
         <div class="cleft"><div class="cen">${d.en}</div><div class="cid">${d.id}</div></div>
