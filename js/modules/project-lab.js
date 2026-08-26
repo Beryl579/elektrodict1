@@ -59,7 +59,11 @@ const ElektroProject = {
 
     } catch (err) {
       console.error("Generate Error:", err);
-      const isLimit = err?.status === 'limit_reached' || err?.httpStatus === 429 || (err?.message || '').includes('429');
+      const isLimit = err?.isRateLimit ||
+        err?.status === 429 ||
+        err?.httpStatus === 429 ||
+        (err?.message || '').includes('429') ||
+        (err?.message || '').includes('RATE_LIMIT');
       if (isLimit) {
         this.showToast("Waduh, trafik lagi padat banget! 🚦 Kuota AI kita lagi istirahat bentar. Coba lagi dalam 1-2 menit ya!", 'warn');
       } else {
@@ -119,11 +123,16 @@ const ElektroProject = {
     }
     const safeWokwi = wokwiPretty.replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
+    const boardSlug = (prj.board === 'esp32' || document.querySelector('.prj-board-opt.on')?.dataset.board === 'esp32')
+      ? 'esp32'
+      : 'arduino-uno';
+    const wokwiUrl = `https://wokwi.com/projects/new/${boardSlug}`;
+
     const wokwiSectionHtml = wokwiPretty ? `
       <div class="pd-section">
         <h3 class="pd-section-h">🛠️ Jalankan di Simulator</h3>
         <div style="border:1px solid rgba(99,102,241,.25);border-radius:12px;padding:18px;background:rgba(99,102,241,.04);display:flex;flex-direction:column;gap:14px;">
-          ${this._renderStep(1, "Persiapkan Simulator", `<a href="https://wokwi.com/projects/new/arduino-uno" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:linear-gradient(135deg,#4ade80,#16a34a);color:#fff;border-radius:7px;text-decoration:none;font-weight:600;font-size:12px;box-shadow:0 3px 12px rgba(22,163,74,.3);">🌐 Buka Wokwi (Uno)</a>`)}
+          ${this._renderStep(1, "Persiapkan Simulator", `<a href="${wokwiUrl}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:linear-gradient(135deg,#4ade80,#16a34a);color:#fff;border-radius:7px;text-decoration:none;font-weight:600;font-size:12px;box-shadow:0 3px 12px rgba(22,163,74,.3);">🌐 Buka Wokwi (Uno)</a>`)}
           <div style="height:1px;background:var(--line2);opacity:.5;"></div>
           ${this._renderStep(2, "Pasang Komponen (Wiring)", `<button class="pd-code-copy" onclick="ElektroProject.copyCode(this,'wokwi')">📋 Salin Data Wiring (JSON)</button><p style="font-size:11px;color:var(--text3);margin-top:7px;">Buka file <b>diagram.json</b>, hapus isinya, lalu <b>PASTE</b>.</p>`)}
           <div style="height:1px;background:var(--line2);opacity:.5;"></div>

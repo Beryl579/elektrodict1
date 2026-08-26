@@ -38,6 +38,8 @@ function shrinkImageForApi(base64, mimeType) {
         canvas.width = w;
         canvas.height = h;
         const ctx = canvas.getContext('2d');
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
         ctx.drawImage(img, 0, 0, w, h);
         const outMime = mimeType === 'image/png' ? 'image/jpeg' : mimeType;
         const dataUrl = canvas.toDataURL(outMime, 0.88);
@@ -147,7 +149,8 @@ const ElektroVision = {
       const prompt = AIV_PROMPTS[aivMode];
       const data = await ElektroAPI.analyzeImage(b64, mime, prompt);
       
-      const reply = data.choices?.[0]?.message?.content || "(Waduh, AI-nya lagi gak bisa jawab nih)";
+      const reply = (data.choices?.[0]?.message?.content || "(Waduh, AI-nya lagi gak bisa jawab nih)")
+        .replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
       const bubble = document.getElementById('aiv-result-bubble');
       bubble.innerHTML = ElektroUtils.parseAIText(reply);
       

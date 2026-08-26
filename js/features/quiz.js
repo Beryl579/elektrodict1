@@ -81,7 +81,9 @@ CRITICAL RULES FOR VALID JSON:
 
     try {
       const data = await ElektroAPI.generateQuiz(prompt);
-      const raw = data.choices?.[0]?.message?.content || "";
+      const raw = (data.choices?.[0]?.message?.content || '')
+        .replace(/<think>[\s\S]*?<\/think>/gi, '')
+        .trim();
       
       const cleanJSON = ElektroUtils.cleanAIJSON(raw);
       if (!cleanJSON) throw new Error("AI tidak mengembalikan format JSON yang dapat dibaca.");

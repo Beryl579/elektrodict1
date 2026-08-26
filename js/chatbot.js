@@ -130,6 +130,10 @@ async function sendMessage() {
     setLoading(true);
 
     try {
+        if (!window.ElektroAPI) {
+          renderBubble('Maaf Kak, layanan AI belum siap. Coba refresh halaman.', 'ai');
+          return;
+        }
         const lowerText = userText.toLowerCase();
         const isBrandingQuery = BRANDING_KEYWORDS.some(kw => lowerText.includes(kw));
 
@@ -260,23 +264,28 @@ function renderBubble(content, role, imageSrc = null, fileName = null) {
  * History & Session Persistence
  */
 function saveToHistory(role, content, image = null, file = null) {
+    // Never persist raw base64 to localStorage — save placeholder instead
+    const safeImage = image ? '[image]' : null;
     chatHistoryState.push({ role, content, image, file, timestamp: Date.now() });
     // Batasi riwayat agar localStorage tidak membengkak tak terkendali
     if (chatHistoryState.length > 100) {
         chatHistoryState.splice(0, chatHistoryState.length - 100);
     }
     try {
-        localStorage.setItem('main_chatbot_history', JSON.stringify(chatHistoryState));
+        const toSave = chatHistoryState.map(m => ({
+            role: m.role, content: m.content, image: m.image ? '[image]' : null, file: m.file, timestamp: m.timestamp
+        }));
+        localStorage.setItem('main_chatbot_history', JSON.stringify(toSave));
     } catch (e) {
         // Kuota penuh (biasanya karena base64 gambar besar) — buang pesan terlama & gambar,
         // lalu coba simpan lagi. Kalau masih gagal, lanjut tanpa persistensi.
         console.warn('[Chat] Gagal simpan history, mencoba memangkas...', e);
-        chatHistoryState = chatHistoryState.map(m => ({
+        let fallback = chatHistoryState.map(m => ({
             role: m.role, content: m.content, file: m.file, timestamp: m.timestamp
         }));
-        if (chatHistoryState.length > 10) chatHistoryState.splice(0, chatHistoryState.length - 10);
+        if (fallback.length > 10) fallback.splice(0, fallback.length - 10);
         try {
-            localStorage.setItem('main_chatbot_history', JSON.stringify(chatHistoryState));
+            localStorage.setItem('main_chatbot_history', JSON.stringify(fallback));
         } catch (e2) {
             console.warn('[Chat] History tidak bisa disimpan (storage penuh).', e2);
         }
