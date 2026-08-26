@@ -140,6 +140,189 @@ $$R_{\\text{total}} = \\frac{R_1 \\cdot R_2}{R_1 + R_2}$$
       { q: 'Sebuah resistor 2 kΩ dialiri arus 5 mA. Tegangan pada resistor adalah…', opts: ['0,4 V', '2,5 V', '10 V', '400 V'], ans: 2, exp: 'V = I × R = 0,005 × 2000 = 10 V.' }
     ]
   },
+  // ASSET MATERI DIPERLUKAN — download dan simpan ke folder "Asset Materi/":
+  // 1. resistor-kode-warna.png — https://commons.wikimedia.org/wiki/File:Resistor_color_codes.png (CC BY-SA 4.0)
+  // 2. kapasitor-jenis.png    — https://commons.wikimedia.org/wiki/File:Capacitors_(7189597135).jpg (CC BY 2.0)
+  // 3. dioda-kurva-vi.png     — https://commons.wikimedia.org/wiki/File:Diode_current_wiki.png (CC BY-SA 3.0)
+  // 4. transistor-bjt-pinout.png — https://commons.wikimedia.org/wiki/File:NPN_BJT_(Transistor)_Pinout.svg (CC BY-SA)
+  {
+    id: 'komponen-elektronika',
+    emoji: '🔧',
+    title: 'Komponen Elektronika',
+    subtitle: 'Resistor, kapasitor, dioda, LED & transistor BJT',
+    level: 'Pemula',
+    durasi: '±40 menit',
+    materi: ['Resistor', 'Kapasitor', 'Dioda & LED', 'Transistor BJT'],
+    sections: [
+      {
+        id: 'resistor',
+        emoji: '🟫',
+        title: 'Resistor & Kode Warna',
+        body: `<p><strong>Resistor</strong> adalah komponen pasif yang menghambat aliran arus listrik. Simbol \\(R\\), satuan <strong>ohm (Ω)</strong>. Nilai resistansi menentukan seberapa besar resistor menahan arus — semakin besar ohm, semakin kecil arus yang mengalir pada tegangan yang sama.</p>
+<p><strong>Sistem kode warna 4 gelang</strong> dipakai karena resistor terlalu kecil untuk dicetak angka. Cara baca: Gelang 1 = digit pertama, Gelang 2 = digit kedua, Gelang 3 = pengali (\\(10^n\\)), Gelang 4 = toleransi. Urutan warna digit:</p>
+<table class="mt-table"><thead><tr><th>Warna</th><th>Digit</th><th>Pengali</th><th>Toleransi</th></tr></thead><tbody>
+<tr><td>Hitam</td><td>0</td><td>×1</td><td>—</td></tr>
+<tr><td>Coklat</td><td>1</td><td>×10</td><td>±1%</td></tr>
+<tr><td>Merah</td><td>2</td><td>×100</td><td>±2%</td></tr>
+<tr><td>Jingga</td><td>3</td><td>×1.000</td><td>—</td></tr>
+<tr><td>Kuning</td><td>4</td><td>×10.000</td><td>—</td></tr>
+<tr><td>Hijau</td><td>5</td><td>×100.000</td><td>±0,5%</td></tr>
+<tr><td>Biru</td><td>6</td><td>×1.000.000</td><td>±0,25%</td></tr>
+<tr><td>Ungu</td><td>7</td><td>×10.000.000</td><td>±0,1%</td></tr>
+<tr><td>Abu-abu</td><td>8</td><td>×100.000.000</td><td>±0,05%</td></tr>
+<tr><td>Putih</td><td>9</td><td>×1.000.000.000</td><td>—</td></tr>
+<tr><td>Emas</td><td>—</td><td>×0,1</td><td>±5%</td></tr>
+<tr><td>Perak</td><td>—</td><td>×0,01</td><td>±10%</td></tr>
+</tbody></table>
+<p><strong>Rumus nilai resistor:</strong></p>
+$$R = (digit_1 \\times 10 + digit_2) \\times pengali$$
+<p><strong>Contoh:</strong> merah-ungu-merah-emas = \\((2 \\times 10 + 7) \\times 100 = 2700\\,\\Omega = 2{,}7\\,\\text{k}\\Omega \\pm 5\\%\\).</p>
+<p><strong>Rangkaian resistor:</strong></p>
+$$R_{seri} = R_1 + R_2 + \\cdots$$
+$$\\frac{1}{R_{paralel}} = \\frac{1}{R_1} + \\frac{1}{R_2} + \\cdots$$
+<div class="mt-img-wrap"><img class="mt-img" src="Asset%20Materi/resistor-kode-warna.png" alt="Tabel kode warna resistor 4 gelang" onclick="openMateriImg(this)" loading="lazy"><div class="mt-img-cap">Klik untuk memperbesar · sumber: Wikimedia Commons (CC BY-SA 4.0)</div></div>
+<p>👇 Coba kalkulator kode warna interaktif:</p>
+<div class="sim-wrap" id="resistor-sim"></div>
+<div class="mt-tip">💡 Hafal urutan warna dengan: Hi-Co-Me-Ji-Ku-Hi-Bi-Un-Abu-Pu (Hitam-Coklat-Merah-Jingga-Kuning-Hijau-Biru-Ungu-Abu-Putih)</div>`
+      },
+      {
+        id: 'kapasitor',
+        emoji: '⚡',
+        title: 'Kapasitor — Penyimpan Muatan',
+        body: `<p><strong>Kapasitor</strong> terdiri dari dua pelat konduktor yang dipisahkan bahan <strong>dielektrik</strong>. Fungsinya menyimpan muatan listrik sementara — seperti ember yang menampung air untuk dilepas nanti.</p>
+<p><strong>Rumus dasar:</strong></p>
+$$Q = C \\cdot V$$
+$$C = \\varepsilon \\frac{A}{d}$$
+<p>dengan \\(Q\\) = muatan (coulomb), \\(C\\) = kapasitansi (farad/F), \\(V\\) = tegangan (volt), \\(\\varepsilon\\) = permitivitas dielektrik, \\(A\\) = luas pelat, \\(d\\) = jarak antar pelat. Nilai umum: <strong>pF</strong> (pikofarad), <strong>nF</strong> (nanofarad), <strong>μF</strong> (mikrofarad).</p>
+<p><strong>Jenis kapasitor:</strong></p>
+<ul>
+<li><strong>Elektrolit</strong> — polar (punya + dan −), 1μF–10000μF, kapasitas besar, <strong>perhatikan polaritas!</strong></li>
+<li><strong>Keramik</strong> — non-polar, 1pF–100nF, untuk decoupling & bypass frekuensi tinggi</li>
+<li><strong>Film</strong> — non-polar, presisi tinggi, stabil, untuk filter audio & rangkaian presisi</li>
+</ul>
+<p><strong>Pengisian RC:</strong> saat kapasitor diisi lewat resistor, tegangannya naik tidak instan:</p>
+$$V(t) = V_s (1 - e^{-t/RC})$$
+<p>Konstanta waktu \\(\\tau = RC\\) — setelah \\(5\\tau\\) kapasitor terisi ~99,3%.</p>
+<div class="mt-img-wrap"><img class="mt-img" src="Asset%20Materi/kapasitor-jenis.png" alt="Berbagai jenis kapasitor: elektrolit, keramik, dan film" onclick="openMateriImg(this)" loading="lazy"><div class="mt-img-cap">Klik untuk memperbesar · sumber: Wikimedia Commons (CC BY 2.0)</div></div>
+<p>👇 Animasi kurva pengisian RC:</p>
+<div class="sim-wrap" id="rc-sim"></div>
+<div class="mt-warn">⚠️ Kapasitor elektrolit berpolaritas — pasang terbalik bisa meledak! Kaki panjang = + (positif).</div>`
+      },
+      {
+        id: 'dioda',
+        emoji: '➡️',
+        title: 'Dioda — Katup Arus Satu Arah',
+        body: `<p><strong>Dioda</strong> adalah sambungan semikonduktor <strong>PN junction</strong> yang mengalirkan arus hanya satu arah: dari <strong>anoda (+)</strong> ke <strong>katoda (−)</strong>. Ibarat katup air yang hanya membuka ke satu sisi.</p>
+<ul>
+<li><strong>Forward bias</strong> (anoda lebih positif dari katoda): dioda konduksi, tegangan jatuh \\(V_f \\approx 0{,}7\\text{V}\\) untuk silikon (Si), \\(0{,}3\\text{V}\\) untuk germanium (Ge), \\(2–3\\text{V}\\) untuk LED.</li>
+<li><strong>Reverse bias</strong> (katoda lebih positif): arus terblokir, hanya arus bocor sangat kecil. Jika tegangan balik terlalu besar, terjadi <em>zener breakdown</em>.</li>
+</ul>
+<p><strong>Rumus resistor pembatas untuk dioda/LED:</strong></p>
+$$R = \\frac{V_{cc} - V_f}{I_f}$$
+<p>Aplikasi: <strong>penyearah (rectifier)</strong> AC→DC, proteksi polaritas terbalik, <em>signal clamping</em>, dan regulator tegangan zener.</p>
+<div class="mt-img-wrap"><img class="mt-img" src="Asset%20Materi/dioda-kurva-vi.png" alt="Kurva karakteristik V-I dioda semikonduktor" onclick="openMateriImg(this)" loading="lazy"><div class="mt-img-cap">Klik untuk memperbesar · Kurva V-I dioda silikon · sumber: Wikimedia Commons (CC BY-SA 3.0)</div></div>
+<div class="mt-tip">💡 Cara cek dioda dengan multimeter: mode dioda, tempelkan probe merah ke anoda dan hitam ke katoda. Muncul angka ~0,6–0,7 = baik. Terbalik = OL (open). Dua arah = rusak/short.</div>`
+      },
+      {
+        id: 'led',
+        emoji: '💡',
+        title: 'LED — Dioda Pemancar Cahaya',
+        body: `<p><strong>LED (Light Emitting Diode)</strong> adalah dioda yang memancarkan cahaya saat arus forward mengalir. Elektron yang melompat di sambungan PN melepaskan energi sebagai foton.</p>
+<p><strong>Tegangan forward berdasarkan warna:</strong> Merah/Kuning ≈ \\(1{,}8–2{,}2\\text{V}\\), Hijau/Biru ≈ \\(2{,}8–3{,}5\\text{V}\\), Putih ≈ \\(3{,}0–3{,}6\\text{V}\\). Arus forward umum \\(I_f = 10–20\\,\\text{mA}\\).</p>
+<p><strong>WAJIB pasang resistor seri</strong> untuk membatasi arus:</p>
+$$R = \\frac{V_{cc} - V_f}{I_f}$$
+<p><strong>Contoh:</strong> LED merah (\\(V_f=2\\text{V}\\), \\(I_f=20\\text{mA}\\)) di 5V → \\(R = (5-2)/0{,}02 = 150\\,\\Omega\\).</p>
+<p>👇 Kalkulator resistor LED — masukkan nilai dan lihat hasilnya:</p>
+<div class="sim-wrap" id="led-calc"></div>
+<div class="mt-warn">⚠️ Jangan sambungkan LED langsung ke sumber tegangan tanpa resistor — LED akan rusak dalam hitungan detik karena arus tidak terbatas!</div>`
+      },
+      {
+        id: 'transistor-bjt',
+        emoji: '🔀',
+        title: 'Transistor BJT — Switch & Amplifier',
+        body: `<p><strong>BJT (Bipolar Junction Transistor)</strong> adalah transistor sambungan dwikutub dengan 3 terminal: <strong>Base (B)</strong>, <strong>Collector (C)</strong>, <strong>Emitter (E)</strong>.</p>
+<p><strong>Dua tipe:</strong> <strong>NPN</strong> (arus masuk B → C-E aktif, paling umum) dan <strong>PNP</strong> (kebalikannya, arus keluar B).</p>
+<p><strong>Tiga mode kerja:</strong></p>
+<ul>
+<li><strong>Cutoff:</strong> \\(I_B \\approx 0\\), transistor OFF, \\(I_C \\approx 0\\) — sakelar terbuka.</li>
+<li><strong>Saturasi:</strong> transistor ON penuh, \\(V_{CE} \\approx 0{,}2\\text{V}\\) — sebagai <strong>switch</strong>.</li>
+<li><strong>Aktif/Linear:</strong> \\(I_C = \\beta \\times I_B\\) (sebagai <strong>amplifier</strong>), \\(\\beta\\) (hFE) biasanya 100–300.</li>
+</ul>
+<p><strong>Rumus kunci:</strong></p>
+$$I_C = \\beta \\cdot I_B$$
+<p>Transistor umum: <strong>BC547</strong> (NPN, TO-92, 100mA), <strong>2N2222</strong> (NPN, 600mA), <strong>TIP31</strong> (NPN, power).</p>
+<div class="mt-img-wrap"><img class="mt-img" src="Asset%20Materi/transistor-bjt-pinout.png" alt="Pinout transistor NPN BC547 TO-92 dan simbol rangkaian" onclick="openMateriImg(this)" loading="lazy"><div class="mt-img-cap">Klik untuk memperbesar · Pinout NPN TO-92 (BC547) · sumber: Wikimedia Commons (CC BY-SA)</div></div>
+<p>👇 Simulasi switch transistor — atur arus basis dan lihat LED menyala:</p>
+<div class="sim-wrap" id="bjt-sim"></div>
+<div class="mt-tip">💡 Transistor sebagai switch digital: Arduino GPIO (5V, maks 40mA) tidak cukup kuat untuk langsung nyalakan motor atau relay. Pakai transistor sebagai 'penguat' — sinyal kecil dari GPIO mengontrol arus besar dari catu daya terpisah.</div>`
+      },
+      {
+        id: 'rangkaian-praktis',
+        emoji: '🛠️',
+        title: 'Rangkaian Praktis: Driver LED dengan Transistor',
+        body: `<p>Rangkaian lengkap: <strong>Arduino GPIO → \\(R_{basis}\\) → Base NPN → Collector → LED + \\(R_{LED}\\) → VCC (5V)</strong>. Emitter NPN ke GND. Transistor bertindak sebagai sakelar yang dikendalikan GPIO.</p>
+<p><strong>Langkah desain step-by-step:</strong></p>
+<ol>
+<li><strong>Tentukan LED:</strong> \\(V_f=2\\text{V}\\), \\(I_f=20\\text{mA}\\)</li>
+<li><strong>Hitung \\(R_{LED}\\):</strong> \\((5-2)/0{,}02 = 150\\,\\Omega\\)</li>
+<li><strong>Tentukan \\(\\beta = 100\\), \\(I_C = 20\\text{mA}\\) → \\(I_{B}\\) minimum = \\(I_C/\\beta = 0{,}2\\text{mA}\\)</strong></li>
+<li><strong>Pakai \\(I_B = 2\\text{mA}\\)</strong> (10× overdrive untuk saturasi penuh)</li>
+<li><strong>Hitung \\(R_{basis}\\):</strong> \\((5-0{,}7)/0{,}002 = 2150\\,\\Omega\\) → pakai <strong>2,2kΩ</strong></li>
+</ol>
+<div class="mt-tip">💡 Selalu overdrive basis 5–10× dari nilai minimum — ini memastikan transistor benar-benar saturasi dan \\(V_{CE}\\) mendekati 0V. Transistor yang tidak saturasi penuh akan panas dan boros.</div>
+<div class="mt-warn">⚠️ Perhatikan urutan: hitung kebutuhan beban dulu (\\(I_C\\)), baru hitung \\(I_B\\), baru \\(R_{basis}\\). Urutan terbalik adalah kesalahan umum pemula.</div>`
+      }
+    ],
+    contoh: [
+      {
+        judul: 'Baca Kode Warna Resistor',
+        soal: 'Resistor dengan gelang coklat-hitam-jingga-emas bernilai berapa?',
+        langkah: [
+          'Coklat = 1, Hitam = 0, Jingga = ×1.000, Emas = ±5%.',
+          'Gunakan rumus: \\(R = (1 \\times 10 + 0) \\times 1000\\).',
+          'Hitung: \\(R = 10 \\times 1000 = 10000\\,\\Omega = 10\\,\\text{k}\\Omega\\).',
+          '<strong>Jawaban:</strong> <strong>10 kΩ ±5%</strong>.'
+        ]
+      },
+      {
+        judul: 'Hitung Resistor LED',
+        soal: 'LED biru (Vf=3,2V, If=15mA) dipasang pada sumber 3,3V. Berapa resistor seri yang dibutuhkan?',
+        langkah: [
+          'Diketahui \\(V_{cc}=3{,}3\\text{V}\\), \\(V_f=3{,}2\\text{V}\\), \\(I_f=15\\text{mA}=0{,}015\\text{A}\\).',
+          'Gunakan rumus: \\(R = \\dfrac{V_{cc}-V_f}{I_f}\\).',
+          'Hitung: \\(R = \\dfrac{3{,}3-3{,}2}{0{,}015} = \\dfrac{0{,}1}{0{,}015} \\approx 6{,}7\\,\\Omega\\).',
+          '<strong>Jawaban:</strong> <strong>6,7Ω → pakai 10Ω</strong> (nilai standar E12 terdekat, lebih aman).'
+        ]
+      },
+      {
+        judul: 'Konstanta Waktu RC',
+        soal: 'Rangkaian RC dengan R=10kΩ dan C=100μF. Berapa konstanta waktu τ dan kapan kapasitor terisi penuh?',
+        langkah: [
+          'Konversi: \\(C=100\\,\\mu\\text{F}=0{,}0001\\,\\text{F}\\).',
+          'Hitung: \\(\\tau = RC = 10000 \\times 0{,}0001 = 1\\,\\text{detik}\\).',
+          'Setelah \\(5\\tau = 5\\,\\text{detik}\\) kapasitor terisi \\(1-e^{-5} \\approx 99{,}3\\%\\).',
+          '<strong>Jawaban:</strong> \\(\\tau = 1\\) detik, penuh ~5 detik.'
+        ]
+      },
+      {
+        judul: 'Transistor sebagai Switch',
+        soal: 'Motor 12V/200mA dikendalikan transistor NPN β=150. Hitung R_basis agar saturasi penuh bila GPIO 5V.',
+        langkah: [
+          'Hitung \\(I_{Bmin} = I_C/\\beta = 200/150 \\approx 1{,}33\\,\\text{mA}\\).',
+          'Pakai overdrive 5mA untuk saturasi (≫1,33mA).',
+          'Hitung: \\(R_{basis} = (5-0{,}7)/0{,}005 = 860\\,\\Omega\\).',
+          '<strong>Jawaban:</strong> <strong>860Ω → pakai 1kΩ</strong> (nilai standar).'
+        ]
+      }
+    ],
+    soal: [
+      { q: 'Resistor dengan gelang merah-merah-coklat-emas bernilai…', opts: ['200Ω ±5%', '220Ω ±5%', '2200Ω ±5%', '22Ω ±5%'], ans: 1, exp: 'Merah=2, Merah=2, Coklat=×10 → (2×10+2)×10 = 220Ω, toleransi emas ±5%.' },
+      { q: 'Kapasitor elektrolit berbeda dari keramik karena…', opts: ['Lebih kecil fisiknya', 'Memiliki polaritas dan tidak boleh dipasang terbalik', 'Nilainya lebih kecil', 'Tidak bisa menyimpan muatan'], ans: 1, exp: 'Kapasitor elektrolit berpolaritas — pasang terbalik bisa rusak atau meledak. Keramik non-polar.' },
+      { q: 'Forward voltage dioda silikon saat konduksi adalah…', opts: ['0,3V', '1,2V', '0,7V', '2,0V'], ans: 2, exp: 'Dioda silikon (Si) ≈ 0,7V saat konduksi. Germanium ≈ 0,3V.' },
+      { q: 'LED merah (Vf=2V, If=20mA) dipasang di 9V. Resistor seri yang dibutuhkan…', opts: ['100Ω', '350Ω', '450Ω', '200Ω'], ans: 1, exp: 'R = (Vcc−Vf)/If = (9−2)/0,02 = 350Ω.' },
+      { q: 'Transistor BJT NPN dalam mode saturasi berfungsi sebagai…', opts: ['Amplifier tegangan', 'Sakelar terbuka', 'Sakelar tertutup/ON', 'Dioda'], ans: 2, exp: 'Saturasi = transistor ON penuh, VCE ≈ 0,2V, arus mengalir bebas dari C ke E — seperti sakelar tertutup.' }
+    ]
+  },
   {
     id: 'mikrokontroler',
     emoji: '🤖',
@@ -541,143 +724,6 @@ $$R = \\rho \\cdot \\frac{L}{A} \\qquad \\Rightarrow \\qquad \\Delta V = 2 \\cdo
       { q: 'Tahanan pentanahan instalasi gedung yang dianjurkan (praktik acuan PUIL/SPLN) adalah…', opts: ['≤ 0,5 Ω', '≤ 5 Ω', '≤ 50 Ω', '≤ 500 Ω'], ans: 1, exp: 'Praktik kelistrikan Indonesia menetapkan batas umum tahanan pentanahan ≤ 5 Ω.' },
       { q: 'Kode IP67 berarti peralatan…', opts: ['Kedap debu total dan tahan perendaman sementara', 'Tahan percikan air dan debu sebagian', 'Tanpa proteksi debu dan air', 'Kedap debu total dan tahan pancaran kuat'], ans: 0, exp: 'Digit pertama 6 = kedap debu total; digit kedua 7 = tahan perendaman sementara (IEC 60529).' },
       { q: 'RCD/ELCB untuk proteksi manusia terhadap kejut listrik memiliki sensitivitas arus sisa…', opts: ['300 mA', '30 mA', '3 A', '30 A'], ans: 1, exp: 'RCD proteksi kejut listrik standar 30 mA; 300 mA dipakai untuk proteksi kebakaran.' }
-    ]
-  },
-  {
-    id: 'komponen-elektronika',
-    emoji: '🔌',
-    title: 'Komponen Elektronika',
-    subtitle: 'Resistor, kapasitor, dioda, transistor, op-amp & cara baca datasheet',
-    level: 'Pemula → Menengah',
-    durasi: '±30 menit',
-    materi: ['Resistor', 'Kapasitor', 'Dioda', 'Transistor', 'Op-amp', 'Datasheet'],
-    sections: [
-      {
-        id: 'resistor-kode-warna',
-        emoji: '🔌',
-        title: 'Resistor & Kode Warna',
-        body: `<p>Resistor adalah komponen pasif yang memberikan hambatan terhadap arus listrik. Satuan hambatan adalah <strong>ohm (Ω)</strong>.</p>
-<p>Kode warna pada resistor band karbon terdiri dari 4 atau 5 strip warna yang menunjukkan nilai hambatan dan toleransi.</p>
-<div class="mt-img-wrap"><img class="mt-img" src="Asset%20Materi/resistor-color-code.png" alt="Tabel kode warna resistor" loading="lazy" onclick="openMateriImg(this)"><div class="mt-img-cap">Tabel kode warna resistor (CC BY-SA 4.0 Wikimedia Commons)</div></div>
-<p><strong>Rumus dasar seri & paralel:</strong></p>
-<p>$$R_{seri} = R_1 + R_2 + \\dots + R_n$$</p>
-<p>$$\\frac{1}{R_{paralel}} = \\frac{1}{R_1} + \\frac{1}{R_2} + \\dots + \\frac{1}{R_n}$$</p>
-<div class="mt-tip">💡 <strong>Tip:</strong> Resistor SMD menggunakan kode angka — misalnya 103 = 10 × 10³ = 10 kΩ, 4R7 = 4,7 Ω.</div>`,
-        referensi: 'Tabel kode warna resistor mengikuti standar IEC 60062. Nilai E-series (E12, E24) ditetapkan dalam standar yang sama.'
-      },
-      {
-        id: 'kapasitor',
-        emoji: '🔋',
-        title: 'Kapasitor',
-        body: `<p>Kapasitor menyimpan energi dalam medan listrik. Satuan kapasitansi adalah <strong>farad (F)</strong>, namun nilai praktis umumnya dalam µF, nF, atau pF.</p>
-<p>$$Q = C \\cdot V \\qquad E = \\tfrac{1}{2} C V^2$$</p>
-<table class="mt-table"><thead><tr><th>Tipe</th><th>Karakteristik</th><th>Aplikasi Umum</th></tr></thead><tbody>
-<tr><td>Elektrolitik</td><td>Polaritas, kapasitas besar (1µF–10.000µF)</td><td>Filter catu daya, coupling audio</td></tr>
-<tr><td>Keramik (MLCC)</td><td>Non-polar, kapasitas kecil (1pF–100µF)</td><td>Bypass, filter frekuensi tinggi</td></tr>
-<tr><td>Tantalum</td><td>Polar, stabil, ESR rendah</td><td>Decoupling sirkuit digital</td></tr>
-<tr><td>Film (Polypropylene)</td><td>Presisi tinggi, stabil suhu</td><td>Filter, rangkaian pengukuran</td></tr>
-</tbody></table>
-<div class="mt-warn">⚠️ <strong>Perhatian:</strong> Kapasitor elektrolitik dipasang dengan polaritas yang benar. Terbalik bisa menyebabkan ledakan!</div>`,
-        referensi: 'Karakteristik tipe kapasitor dari datasheet vendor (Kemet, Murata, Panasonic). ESR & lifetime referensi datasheet komponen spesifik.'
-      },
-      {
-        id: 'dioda',
-        emoji: '💡',
-        title: 'Dioda',
-        body: `<p>Dioda adalah komponen semiconductor yang mengalirkan arus hanya dalam satu arah (anoda → katoda).</p>
-<div class="mt-img-wrap"><img class="mt-img" src="Asset%20Materi/diode-symbol.jpg" alt="Simbol dioda dalam berbagai jenis" loading="lazy" onclick="openMateriImg(this)"><div class="mt-img-cap">Simbol berbagai jenis dioda (CC BY-SA 4.0 Wikimedia Commons)</div></div>
-<p><strong>Jenis dioda utama:</strong></p>
-<ul>
-<li><strong>Dioda biasa:</strong> Forward voltage ~0,7V (Si) atau ~0,3V (Ge)</li>
-<li><strong>LED:</strong> Menghasilkan cahaya; Vf = 1,8V (merah) hingga 3,3V (biru/putih)</li>
-<li><strong>Zener:</strong> Dirancang untuk breakdown terkontrol pada tegangan tertentu</li>
-<li><strong>Schottky:</strong> Vf rendah (~0,3V), switching cepat, cocok untuk catu daya switching</li>
-</ul>
-<p>Persamaan Shockley untuk dioda:</p>
-<p>$$I = I_s \\left( e^{V/nV_T} - 1 \\right)$$</p>
-<div class="mt-tip">💡 Dioda Schottky ditandai huruf "S" atau nomor seri 1N58xx. Zener ditandai seri 1N47xx/1N52xx.</div>`,
-        referensi: 'Persamaan Shockley dari teori semiconductor (Sze, Physics of Semiconductor Devices). Voltage drop Si=0.7V, Ge=0.3V dari datasheet material.'
-      },
-      {
-        id: 'transistor',
-        emoji: '🔀',
-        title: 'Transistor (BJT & MOSFET)',
-        body: `<p>Transistor adalah komponen aktif yang berfungsi sebagai sakelar atau penguat sinyal.</p>
-<div class="mt-img-wrap"><img class="mt-img" src="Asset%20Materi/bjt-npn-symbol.png" alt="Simbol transistor BJT NPN dan PNP" loading="lazy" onclick="openMateriImg(this)"><div class="mt-img-cap">Simbol transistor BJT NPN & PNP (CC BY-SA 4.0 Wikimedia Commons)</div></div>
-<p><strong>BJT (Bipolar Junction Transistor):</strong></p>
-<table class="mt-table"><thead><tr><th>Tipe</th><th>Kutub</th><th>Arus</th><th>Kondisi aktif</th></tr></thead><tbody>
-<tr><td>NPN</td><td>Emitor, Basis, Kolektor</td><td>E → K</td><td>Vbe &gt; 0,7V; Vce &gt; 0,2V</td></tr>
-<tr><td>PNP</td><td>Emitor, Basis, Kolektor</td><td>K → E</td><td>Vbe &lt; -0,7V</td></tr>
-</tbody></table>
-<p><strong>MOSFET:</strong></p>
-<ul>
-<li><strong>N-channel enhancement:</strong> ON ketika Vgs &gt; Vth (threshold, umumnya 2–4V)</li>
-<li><strong>P-channel enhancement:</strong> ON ketika Vgs &lt; Vth (negatif)</li>
-<li><strong>Rds(on):</strong> Hambatan saat ON — makin rendah, makin efisien</li>
-</ul>
-<div class="mt-tip">💡 MOSFET adalah pilihan utama untuk sakelar daya karena Rds(on) sangat rendah (mΩ) dan tidak membutuhkan arus basis.</div>`,
-        referensi: 'Simbol BJT & MOSFET mengikuti IEC 60617. Parameter Vbe, Vth, Rds(on) dari datasheet vendor (ON Semi, Infineon, Vishay).'
-      },
-      {
-        id: 'op-amp',
-        emoji: '⚙️',
-        title: 'Op-Amp (Operational Amplifier)',
-        body: `<p>Op-amp adalah IC penguat analog serbaguna. Dalam konfigurasi ideal: impedansi masuk tak hingga, impedansi keluar nol, penguatan terbuka tak hingga.</p>
-<div class="mt-img-wrap"><img class="mt-img" src="Asset%20Materi/opamp-symbol.png" alt="Simbol op-amp" loading="lazy" onclick="openMateriImg(this)"><div class="mt-img-cap">Simbol op-amp standar (CC BY-SA 4.0 Wikimedia Commons)</div></div>
-<p><strong>Konfigurasi dasar:</strong></p>
-<table class="mt-table"><thead><tr><th>Konfigurasi</th><th>Penguatan (Av)</th><th>Aplikasi</th></tr></thead><tbody>
-<tr><td>Inverting</td><td>-Rf / Rin</td><td>Pembalik sinyal, mixer audio</td></tr>
-<tr><td>Non-Inverting</td><td>1 + Rf / R1</td><td>Penguat impedansi tinggi</td></tr>
-<tr><td>Voltage Follower</td><td>1</td><td>Buffer impedansi</td></tr>
-<tr><td>Diferensial</td><td>Rf/R1</td><td>Pengukuran diferensial</td></tr>
-</tbody></table>
-<div class="mt-warn">⚠️ Op-amp nyata memiliki keterbatasan: Gain-Bandwidth Product, Slew Rate, Input Offset Voltage, dan Rail-to-Rail vs output terbatas.</div>`,
-        referensi: 'Konfigurasi op-amp dari teori analog electronics (Sedra/Smith, Microelectronic Circuits). Parameter GBW, slew rate dari datasheet (LM358, TL072).'
-      },
-      {
-        id: 'cara-membaca-datasheet',
-        emoji: '📄',
-        title: 'Cara Membaca Datasheet',
-        body: `<p>Datasheet adalah dokumen resmi dari pabrikan yang berisi semua spesifikasi teknis komponen.</p>
-<p><strong>Bagian penting dalam datasheet:</strong></p>
-<ol>
-<li><strong>Absolute Maximum Ratings:</strong> Batas maksimum yang TIDAK BOLEH dilampaui</li>
-<li><strong>Electrical Characteristics:</strong> Parameter operasi normal</li>
-<li><strong>Typical Performance Graphs:</strong> Grafik karakteristik</li>
-<li><strong>Package & Pinout:</strong> Dimensi fisik dan nomor pin</li>
-<li><strong>Application Notes:</strong> Contoh rangkaian dan tips desain</li>
-</ol>
-<div class="mt-tip">💡 Selalu cek "Absolute Maximum Ratings" dulu — melebihi nilai ini bisa merusak komponen secara permanen.</div>
-<div class="mt-warn">⚠️ Jangan hanya melihat nilai "Typical" — selalu cek batas minimum dan maksimum (Min/Max) karena variasi fabrikasi antar produsen.</div>`,
-        referensi: 'Struktur datasheet mengikuti standar JEDEC. Contoh datasheet di situs vendor: ti.com, digikey.com, mouser.com, vishay.com.'
-      }
-    ],
-    contoh: [
-      {
-        judul: 'Menghitung Hambatan Paralel',
-        soal: 'Tiga resistor R₁ = 100Ω, R₂ = 220Ω, R₃ = 330Ω dipasang paralel.',
-        langkah: [
-          'Gunakan rumus: 1/R = 1/R₁ + 1/R₂ + 1/R₃',
-          '1/R = 0,01 + 0,004545 + 0,003030 = 0,017575',
-          'R = 1/0,017575 ≈ 56,9Ω'
-        ]
-      },
-      {
-        judul: 'Menghitung Arus Basis Transistor NPN',
-        soal: 'Transistor NPN: Vcc = 12V, Rb = 10kΩ, β = 100',
-        langkah: [
-          'Arus basis: Ib = (Vcc - Vbe) / Rb = (12 - 0,7) / 10.000 = 1,13 mA',
-          'Arus kolektor: Ic = β × Ib = 100 × 1,13mA = 113 mA',
-          'Jika Rc = 100Ω, Vce = 12 - 0,113 × 100 = 0,7V (mendekati saturasi)'
-        ]
-      }
-    ],
-    soal: [
-      { q: 'Nilai resistor dari kode warna kuning-violet-cemas emas adalah…', opts: ['47Ω ±5%', '470Ω ±5%', '47kΩ ±5%', '470kΩ ±5%'], ans: 0, exp: 'Kuning=4, Violet=7, Emas=×10⁰=×1, toleransi ±5%. Jadi 47Ω ±5%.' },
-      { q: 'Kapasitor elektrolitik dipasang terbalik pada tegangan kerja, yang paling mungkin terjadi adalah…', opts: ['Tidak ada efek', 'Kapasitor mengembung atau meledak', 'Nilai kapasitansi berkurang', 'Arus bocor meningkat'], ans: 1, exp: 'Kapasitor elektrolitik terbalik mengalami elektrolisis → tekanan gas → mengembung atau meledak.' },
-      { q: 'Tegangan forward dioda silikon pada arus kerja normal adalah sekitar…', opts: ['0,1V', '0,3V', '0,7V', '1,2V'], ans: 2, exp: 'Dioda silikon memiliki Vf ≈ 0,7V pada arus kerja normal.' },
-      { q: 'Op-amp inverting dengan Rf = 10kΩ dan Rin = 2kΩ memiliki penguatan sebesar…', opts: ['-5', '-0,2', '+5', '+20'], ans: 0, exp: 'Av = -Rf/Rin = -10.000/2.000 = -5.' },
-      { q: 'MOSFET N-channel enhancement aktif (ON) ketika…', opts: ['Vgs &lt; 0', 'Vgs &gt; Vth (threshold positive)', 'Vgs = 0', 'Vds &gt; Vth'], ans: 1, exp: 'MOSFET N-channel enhancement aktif ketika Vgs > Vth (threshold), biasanya 2–4V.' }
     ]
   },
   {
