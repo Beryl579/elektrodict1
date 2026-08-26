@@ -4276,6 +4276,19 @@ function closeMateriImg() {
   document.body.style.overflow = '';
 }
 
+// Fallback untuk gambar materi yang gagal load (asset belum di-download)
+document.addEventListener('error', (e) => {
+  const t = e.target;
+  if (t && t.classList && t.classList.contains('mt-img')) {
+    t.style.display = 'none';
+    const cap = t.nextElementSibling;
+    if (cap && cap.classList.contains('mt-img-cap')) {
+      cap.textContent = '⚠️ Gambar belum tersedia — lihat sumber di Wikimedia Commons (klik caption)';
+      cap.style.color = 'var(--rose, #f87171)';
+    }
+  }
+}, true);
+
 // ═══════════════════════════════════════════════════════════
 // TENTANG — render README.md sebagai halaman informasi
 // ═══════════════════════════════════════════════════════════
