@@ -76,7 +76,7 @@ window.addEventListener('load',()=>{
     if(s)s.classList.add('fade-out');
   },1500);
 });
-// katexLoaded is handled below
+let katexLoaded = false;
 // pendingMathEls stores either: DOM element (for auto-render) or {el, latex} object (for katex.render)
 const pendingMathEls = [];
 function renderPendingMath() {
@@ -2082,7 +2082,6 @@ async function send(v){
     let sys = SYS;
     if (materiChatCtx && materiChatCtx.active) sys += '\n\n── KONTEKS MATERI (rujukan utama) ──\n' + materiChatCtx.prompt;
     const data = await callAI({model: mc, messages:[{role:'system',content:sys},...cleanHistory]});
-    hideDots('D'); hideDots('M');
     if(data.error) throw new Error(data.error.message);
     const rep=stripThink(data.choices?.[0]?.message?.content)||'(tidak ada respons)';
     botMsg('D',rep);
@@ -2090,7 +2089,6 @@ async function send(v){
     pushHist({role:'assistant',content:rep});
     speak(rep);
   }catch(err){
-    hideDots('D'); hideDots('M');
     // ── Handle 429 Rate Limit gracefully ──
     if(err.isRateLimit) {
       const wait = err.waitSeconds || 20;
@@ -2102,6 +2100,9 @@ async function send(v){
       botMsg('D','⚠ Error: '+err.message,true);
       botMsg('M','⚠ Error: '+err.message,true);
     }
+  } finally {
+    hideDots('D');
+    hideDots('M');
   }
   busy=false;
   if(isBotOnline) { document.getElementById('send'+v).disabled=false; inp.focus(); }
@@ -2450,10 +2451,13 @@ async function generateAIProject() {
   } catch (err) {
     console.error("Generate Error:", err);
 
-    // Read structured status from backend response if available
-    const status = err?.status || (err?.message || '').includes('429') ? 'limit_reached' : '';
+    const isLimit = err?.isRateLimit ||
+      err?.status === 429 ||
+      err?.httpStatus === 429 ||
+      (err?.message || '').includes('429') ||
+      (err?.message || '').includes('RATE_LIMIT');
 
-    if (status === 'limit_reached' || err?.httpStatus === 429) {
+    if (isLimit) {
       showPrjToast("Maaf Kak, layanan AI sedang padat. Silakan coba lagi dalam 1-2 menit.", 'warn');
     } else if (err?.name === 'TypeError' || err?.message?.includes('fetch') || err?.message?.includes('network')) {
       showPrjToast("Koneksi lagi bapuk nih... 🌐 Coba cek internet kamu atau klik 'Generate' sekali lagi!", 'warn');

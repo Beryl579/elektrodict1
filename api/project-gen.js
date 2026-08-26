@@ -571,6 +571,9 @@ module.exports = async function handler(req, res) {
       }
 
       const data = await response.json();
+      if (!data?.choices?.[0]?.message?.content) {
+        throw new Error(`Model returned empty response (no choices). Raw: ${JSON.stringify(data).slice(0, 200)}`);
+      }
       return data.choices[0].message.content;
     };
 

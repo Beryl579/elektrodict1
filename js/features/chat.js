@@ -207,7 +207,8 @@ async function send(v) {
     hideDots('D');
     hideDots('M');
 
-    const rep = data.choices?.[0]?.message?.content || '(tidak ada respons)';
+    const rep = (data.choices?.[0]?.message?.content || '(tidak ada respons)')
+      .replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
     botMsg('D', rep);
     botMsg('M', rep);
     pushHist({ role: 'assistant', content: rep });
@@ -220,9 +221,14 @@ async function send(v) {
   } catch (err) {
     hideDots('D');
     hideDots('M');
-    const errMsg = '⚠ Error: ' + (err && err.message ? err.message : String(err));
-    botMsg('D', errMsg, true);
-    botMsg('M', errMsg, true);
+    const isRateLimit = err?.isRateLimit ||
+      (err?.message || '').includes('RATE_LIMIT') ||
+      (err?.message || '').includes('429');
+    const msg = isRateLimit
+      ? `⏳ Kuota AI lagi penuh nih Sob. Tunggu ${err?.waitSeconds ?? 20} detik ya baru coba lagi!`
+      : `⚠️ Error: ${err?.message || 'Gagal terhubung ke server.'}`;
+    botMsg('D', msg, true);
+    botMsg('M', msg, true);
   } finally {
     releaseChatBusy(sendD, sendM, inp);
   }
