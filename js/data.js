@@ -5244,6 +5244,363 @@ const WOKWI_TEMPLATES = [
         "alur_perakitan": "A=1, B=1: S mati, C nyala → hasil 10 (biner). Bandingkan dengan tabel kebenaran penjumlahan biner."
       }
     ]
+  },
+  {
+    id: "tpl-esp-now-sender",
+    title: "ESP-NOW Sender — Kirim Data Tanpa Router",
+    desc: "ESP32 mengirim data suhu (simulasi) ke ESP32 lain via ESP-NOW setiap 2 detik tanpa perlu WiFi router — cocok untuk mesh sensor.",
+    difficulty: "Menengah",
+    tags: ["ESP32", "ESP-NOW", "Wireless"],
+    verified: true,
+    board: "esp32",
+    bom: ["1x ESP32 DevKitC V4", "Kabel jumper", "Kabel USB (untuk Serial Monitor)"],
+    wiring_guide: [
+      { komponen: "ESP32 DevKit", pin_komponen: "3V3", koneksi_arduino: "— (daya dari USB)" },
+      { komponen: "ESP32 DevKit", pin_komponen: "GND", koneksi_arduino: "GND" },
+      { komponen: "Serial Monitor", pin_komponen: "USB", koneksi_arduino: "Komputer (115200 baud)" }
+    ],
+    cpp_code: "// ===== ESP-NOW Sender — Kirim Data Tanpa Router =====\n// ESP32 mengirim struct suhu tiap 2 detik via ESP-NOW (tanpa WiFi router)\n// Ganti peerMAC dengan MAC address ESP32 penerima (lihat Serial saat boot penerima)\n\n#include <esp_now.h>\n#include <WiFi.h>\n\n// TODO: ganti dengan MAC address ESP32 penerima (6 byte, format hex)\nuint8_t peerMAC[] = {0x24, 0x6F, 0x28, 0xAA, 0xBB, 0xCC};\n\ntypedef struct {\n  float suhu;\n  float kelembaban;\n  int id;\n} DataKirim;\n\nDataKirim data = {0, 0, 1};\n\nvoid onSent(const uint8_t *mac, esp_now_send_status_t status) {\n  Serial.print(\"Status kirim: \");\n  Serial.println(status == ESP_NOW_SEND_SUCCESS ? \"Sukses\" : \"Gagal\");\n}\n\nvoid setup() {\n  Serial.begin(115200);\n  WiFi.mode(WIFI_STA);\n  Serial.print(\"MAC Sender: \"); Serial.println(WiFi.macAddress());\n\n  if (esp_now_init() != ESP_OK) { Serial.println(\"ESP-NOW init gagal\"); return; }\n  esp_now_register_send_cb(onSent);\n\n  esp_now_peer_info_t peer = {};\n  memcpy(peer.peer_addr, peerMAC, 6);\n  peer.channel = 0;\n  peer.encrypt = false;\n  if (esp_now_add_peer(&peer) != ESP_OK) { Serial.println(\"Add peer gagal\"); return; }\n  Serial.println(\"ESP-NOW Sender siap\");\n}\n\nvoid loop() {\n  data.suhu = 25.0 + random(-10, 10) / 10.0; // simulasi sensor\n  data.kelembaban = 60 + random(-5, 5);\n  esp_err_t r = esp_now_send(peerMAC, (uint8_t*)&data, sizeof(data));\n  Serial.printf(\"Kirim: suhu=%.1fC humid=%.0f%% -> %s\\n\", data.suhu, data.kelembaban, r==ESP_OK?\"OK\":\"ERR\");\n  delay(2000);\n}\n",
+    wokwi_diagram: JSON.stringify({
+      version: 1, author: "ElektroDict", editor: "wokwi",
+      parts: [
+        { type: "board-esp32-devkit-c-v4", id: "esp", top: 0, left: 0, attrs: {} }
+      ],
+      connections: []
+    }),
+    steps: [
+      { nama_komponen: "ESP32 Sender", alur_perakitan: "Hubungkan ESP32 ke USB komputer untuk daya dan Serial Monitor (115200 baud)." },
+      { nama_komponen: "MAC Address", alur_perakitan: "Upload dulu kode penerima, catat MAC yang tercetak di Serial Monitor, lalu ganti peerMAC di kode sender." },
+      { nama_komponen: "Upload & Uji", alur_perakitan: "Upload kode sender. Amati Serial Monitor sender: status Sukses tiap 2 detik. Pasangkan dengan receiver." }
+    ]
+  },
+  {
+    id: "tpl-esp-now-receiver",
+    title: "ESP-NOW Receiver — Terima Data Peer-to-Peer",
+    desc: "Pasangan dari Sender — ESP32 menerima data via ESP-NOW dan menampilkan suhu/kelembaban di Serial Monitor.",
+    difficulty: "Menengah",
+    tags: ["ESP32", "ESP-NOW", "Wireless"],
+    verified: true,
+    board: "esp32",
+    bom: ["1x ESP32 DevKitC V4", "Kabel jumper", "Kabel USB (untuk Serial Monitor)"],
+    wiring_guide: [
+      { komponen: "ESP32 DevKit", pin_komponen: "3V3", koneksi_arduino: "— (daya dari USB)" },
+      { komponen: "ESP32 DevKit", pin_komponen: "GND", koneksi_arduino: "GND" },
+      { komponen: "Serial Monitor", pin_komponen: "USB", koneksi_arduino: "Komputer (115200 baud)" }
+    ],
+    cpp_code: "// ===== ESP-NOW Receiver — Terima Data Peer-to-Peer =====\n// Pasangan dari tpl-esp-now-sender: menerima struct dan print ke Serial Monitor\n\n#include <esp_now.h>\n#include <WiFi.h>\n\ntypedef struct {\n  float suhu;\n  float kelembaban;\n  int id;\n} DataKirim;\n\nvoid onRecv(const uint8_t *mac, const uint8_t *data, int len) {\n  DataKirim d;\n  memcpy(&d, data, sizeof(d));\n  Serial.printf(\"Dari %02X:%02X:%02X:%02X:%02X:%02X -> suhu=%.1fC humid=%.0f%% id=%d\\n\",\n    mac[0], mac[1], mac[2], mac[3], mac[4], mac[5], d.suhu, d.kelembaban, d.id);\n}\n\nvoid setup() {\n  Serial.begin(115200);\n  WiFi.mode(WIFI_STA);\n  Serial.print(\"MAC Receiver: \"); Serial.println(WiFi.macAddress());\n  Serial.println(\"Bagikan MAC ini ke kode Sender (peerMAC)\");\n\n  if (esp_now_init() != ESP_OK) { Serial.println(\"ESP-NOW init gagal\"); return; }\n  esp_now_register_recv_cb(onRecv);\n  Serial.println(\"ESP-NOW Receiver siap — menunggu data...\");\n}\n\nvoid loop() {\n  delay(100);\n}\n",
+    wokwi_diagram: JSON.stringify({
+      version: 1, author: "ElektroDict", editor: "wokwi",
+      parts: [
+        { type: "board-esp32-devkit-c-v4", id: "esp", top: 0, left: 0, attrs: {} }
+      ],
+      connections: []
+    }),
+    steps: [
+      { nama_komponen: "ESP32 Receiver", alur_perakitan: "Hubungkan ESP32 ke USB komputer, buka Serial Monitor 115200 baud." },
+      { nama_komponen: "Catat MAC", alur_perakitan: "Upload kode ini dulu, catat MAC yang tercetak, tempel ke peerMAC di kode Sender." },
+      { nama_komponen: "Uji coba", alur_perakitan: "Biarkan receiver menyala, lalu nyalakan sender — data suhu akan muncul tiap 2 detik di Serial Monitor." }
+    ]
+  },
+  {
+    id: "tpl-ble-server",
+    title: "BLE Server — Notifikasi Sensor via Bluetooth",
+    desc: "ESP32 sebagai BLE GATT Server, broadcast nilai ADC sebagai karakteristik yang bisa dibaca/dinotifikasi smartphone (nRF Connect).",
+    difficulty: "Menengah",
+    tags: ["ESP32", "BLE", "Bluetooth", "GATT"],
+    verified: true,
+    board: "esp32",
+    bom: ["1x ESP32 DevKitC V4", "1x Potensiometer 10k (simulasi sensor)", "Kabel jumper"],
+    wiring_guide: [
+      { komponen: "Potensiometer", pin_komponen: "VCC", koneksi_arduino: "3V3" },
+      { komponen: "Potensiometer", pin_komponen: "SIG", koneksi_arduino: "GPIO 34 (ADC)" },
+      { komponen: "Potensiometer", pin_komponen: "GND", koneksi_arduino: "GND" }
+    ],
+    cpp_code: "// ===== BLE Server — Notifikasi Sensor via Bluetooth =====\n// ESP32 sebagai GATT Server, nilai ADC dibroadcast via notify tiap detik\n// Scan dari HP pakai aplikasi nRF Connect -> cari \"ElektroDict_BLE\"\n\n#include <BLEDevice.h>\n#include <BLEServer.h>\n#include <BLEUtils.h>\n#include <BLE2902.h>\n\n#define SERVICE_UUID        \"4fafc201-1fb5-459e-8fcc-c5c9c331914b\"\n#define CHARACTERISTIC_UUID \"beb5483e-36e1-4688-b7f5-ea07361b26a8\"\n\nBLECharacteristic *pChar;\nbool deviceConnected = false;\n\nclass CB : public BLEServerCallbacks {\n  void onConnect(BLEServer* s) { deviceConnected = true; Serial.println(\"Client terhubung\"); }\n  void onDisconnect(BLEServer* s) { deviceConnected = false; Serial.println(\"Client terputus\"); s->getAdvertising()->start(); }\n};\n\nvoid setup() {\n  Serial.begin(115200);\n  pinMode(34, INPUT);\n  BLEDevice::init(\"ElektroDict_BLE\");\n  BLEServer *srv = BLEDevice::createServer();\n  srv->setCallbacks(new CB());\n  BLEService *svc = srv->createService(SERVICE_UUID);\n  pChar = svc->createCharacteristic(CHARACTERISTIC_UUID, BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_NOTIFY);\n  pChar->addDescriptor(new BLE2902());\n  svc->start();\n  srv->getAdvertising()->start();\n  Serial.println(\"BLE Server siap: ElektroDict_BLE\");\n}\n\nvoid loop() {\n  if (deviceConnected) {\n    int adc = analogRead(34);\n    float volt = adc * 3.3 / 4095.0;\n    String val = String(volt, 2) + \" V (\" + String(adc) + \")\";\n    pChar->setValue(val.c_str());\n    pChar->notify();\n    Serial.println(\"Notify: \" + val);\n  }\n  delay(1000);\n}\n",
+    wokwi_diagram: JSON.stringify({
+      version: 1, author: "ElektroDict", editor: "wokwi",
+      parts: [
+        { type: "board-esp32-devkit-c-v4", id: "esp", top: 0, left: 0, attrs: {} },
+        { type: "wokwi-potentiometer", id: "pot", top: -120, left: 300, attrs: {} }
+      ],
+      connections: [
+        ["pot:VCC", "esp:3V3", "red", ["v0"]],
+        ["pot:SIG", "esp:34", "green", ["v0"]],
+        ["pot:GND", "esp:GND.1", "black", ["v0"]]
+      ]
+    }),
+    steps: [
+      { nama_komponen: "Potensiometer", alur_perakitan: "VCC ke 3V3, SIG ke GPIO 34, GND ke GND — simulasi sensor analog." },
+      { nama_komponen: "ESP32", alur_perakitan: "Upload kode, buka Serial Monitor 115200 untuk lihat status." },
+      { nama_komponen: "Uji BLE", alur_perakitan: "Buka nRF Connect di HP, scan 'ElektroDict_BLE', connect, enable notify pada characteristic — nilai ADC update tiap detik." }
+    ]
+  },
+  {
+    id: "tpl-lora-sender",
+    title: "LoRa Sender — Transmisi Data Jarak Jauh",
+    desc: "ESP32 + modul LoRa SX1276 mengirim paket data setiap 5 detik hingga jarak kilometer — tampil di Serial Monitor.",
+    difficulty: "Lanjut",
+    tags: ["ESP32", "LoRa", "SX1276", "Wireless", "Jarak Jauh"],
+    verified: true,
+    board: "esp32",
+    bom: ["1x ESP32 DevKitC V4", "1x Modul LoRa SX1276 / Ra-02 (915 MHz)", "Kabel jumper", "Antena 915 MHz"],
+    wiring_guide: [
+      { komponen: "LoRa SX1276", pin_komponen: "VCC", koneksi_arduino: "3V3" },
+      { komponen: "LoRa SX1276", pin_komponen: "GND", koneksi_arduino: "GND" },
+      { komponen: "LoRa SX1276", pin_komponen: "SCK", koneksi_arduino: "GPIO 18" },
+      { komponen: "LoRa SX1276", pin_komponen: "MISO", koneksi_arduino: "GPIO 19" },
+      { komponen: "LoRa SX1276", pin_komponen: "MOSI", koneksi_arduino: "GPIO 23" },
+      { komponen: "LoRa SX1276", pin_komponen: "NSS (CS)", koneksi_arduino: "GPIO 5" },
+      { komponen: "LoRa SX1276", pin_komponen: "RST", koneksi_arduino: "GPIO 14" },
+      { komponen: "LoRa SX1276", pin_komponen: "DIO0", koneksi_arduino: "GPIO 2" }
+    ],
+    cpp_code: "// ===== LoRa Sender — Transmisi Data Jarak Jauh =====\n// ESP32 + SX1276 (Ra-02) 915 MHz, kirim paket tiap 5 detik\n// INSTALL: library LoRa by Sandeep Mistry\n\n#include <SPI.h>\n#include <LoRa.h>\n\n#define SS   5\n#define RST  14\n#define DIO0 2\nint counter = 0;\n\nvoid setup() {\n  Serial.begin(115200);\n  LoRa.setPins(SS, RST, DIO0);\n  while (!LoRa.begin(915E6)) { Serial.println(\"LoRa init gagal, coba lagi\"); delay(1000); }\n  LoRa.setSyncWord(0xF3);\n  Serial.println(\"LoRa Sender siap 915 MHz\");\n}\n\nvoid loop() {\n  String pesan = \"Halo LoRa #\" + String(counter) + \" suhu:\" + String(25 + random(-5,5)/10.0);\n  LoRa.beginPacket();\n  LoRa.print(pesan);\n  LoRa.endPacket();\n  Serial.println(\"Terkirim: \" + pesan);\n  counter++;\n  delay(5000);\n}\n",
+    wokwi_diagram: JSON.stringify({
+      version: 1, author: "ElektroDict", editor: "wokwi",
+      parts: [
+        { type: "board-esp32-devkit-c-v4", id: "esp", top: 0, left: 0, attrs: {} },
+        { type: "wokwi-sx127x", id: "lora", top: -120, left: 320, attrs: {} }
+      ],
+      connections: [
+        ["lora:VCC", "esp:3V3", "red", ["v0"]],
+        ["lora:GND", "esp:GND.1", "black", ["v0"]],
+        ["lora:SCK", "esp:18", "yellow", ["v0"]],
+        ["lora:MISO", "esp:19", "blue", ["v0"]],
+        ["lora:MOSI", "esp:23", "green", ["v0"]],
+        ["lora:NSS", "esp:5", "orange", ["v0"]],
+        ["lora:RST", "esp:14", "purple", ["v0"]],
+        ["lora:DIO0", "esp:2", "gray", ["v0"]]
+      ]
+    }),
+    steps: [
+      { nama_komponen: "Modul LoRa", alur_perakitan: "VCC ke 3V3, GND ke GND, SCK 18, MISO 19, MOSI 23, NSS 5, RST 14, DIO0 2 — sesuaikan setPins di kode." },
+      { nama_komponen: "Antena", alur_perakitan: "Pasang antena 915 MHz ke konektor SMA modul — jangan transmit tanpa antena!" },
+      { nama_komponen: "Upload & Uji", alur_perakitan: "Upload, buka Serial Monitor 115200 — paket terkirim tiap 5 detik. Pasangkan dengan receiver untuk tes jarak." }
+    ]
+  },
+  {
+    id: "tpl-nrf24-transceiver",
+    title: "NRF24L01 — Transceiver 2.4 GHz (Arduino Uno)",
+    desc: "Arduino Uno + NRF24L01 mengirim string pesan; pasangan unit penerima mem-print ke Serial Monitor — dasar komunikasi RF 2,4 GHz.",
+    difficulty: "Menengah",
+    tags: ["Arduino Uno", "NRF24L01", "RF", "SPI", "Wireless"],
+    verified: true,
+    board: "uno",
+    bom: ["2x Arduino Uno", "2x Modul NRF24L01 (2.4 GHz)", "1x Kapasitor 10 µF (di VCC NRF)", "Kabel jumper", "Kabel SPI"],
+    wiring_guide: [
+      { komponen: "NRF24L01", pin_komponen: "VCC", koneksi_arduino: "3,3 V (jangan 5 V!)" },
+      { komponen: "NRF24L01", pin_komponen: "GND", koneksi_arduino: "GND" },
+      { komponen: "NRF24L01", pin_komponen: "CE", koneksi_arduino: "Pin 9" },
+      { komponen: "NRF24L01", pin_komponen: "CSN", koneksi_arduino: "Pin 10 (SS)" },
+      { komponen: "NRF24L01", pin_komponen: "SCK", koneksi_arduino: "Pin 13" },
+      { komponen: "NRF24L01", pin_komponen: "MOSI", koneksi_arduino: "Pin 11" },
+      { komponen: "NRF24L01", pin_komponen: "MISO", koneksi_arduino: "Pin 12" }
+    ],
+    cpp_code: "// ===== NRF24L01 Transceiver — Arduino Uno =====\n// INSTALL: library RF24 by TMRh20\n// Mode pengirim: ubah isSender = true ; penerima = false\n\n#include <SPI.h>\n#include <RF24.h>\nRF24 radio(9, 10); // CE, CSN\nconst byte pipe[6] = \"00001\";\nbool isSender = true; // ganti false untuk unit penerima\n\nvoid setup() {\n  Serial.begin(9600);\n  radio.begin();\n  radio.setPALevel(RF24_PA_MIN);\n  radio.setDataRate(RF24_250KBPS);\n  if (isSender) {\n    radio.openWritingPipe(pipe);\n    radio.stopListening();\n    Serial.println(\"NRF24 Sender siap\");\n  } else {\n    radio.openReadingPipe(0, pipe);\n    radio.startListening();\n    Serial.println(\"NRF24 Receiver siap\");\n  }\n}\n\nvoid loop() {\n  if (isSender) {\n    const char msg[] = \"Halo dari NRF24!\";\n    bool ok = radio.write(&msg, sizeof(msg));\n    Serial.println(ok ? \"Terkirim\" : \"Gagal kirim\");\n    delay(1000);\n  } else {\n    if (radio.available()) {\n      char buf[32] = \"\";\n      radio.read(&buf, sizeof(buf));\n      Serial.print(\"Diterima: \"); Serial.println(buf);\n    }\n  }\n}\n",
+    wokwi_diagram: JSON.stringify({
+      version: 1, author: "ElektroDict", editor: "wokwi",
+      parts: [
+        { type: "wokwi-arduino-uno", id: "uno", top: 0, left: 0, attrs: {} },
+        { type: "wokwi-nrf24l01", id: "nrf", top: -120, left: 300, attrs: {} }
+      ],
+      connections: [
+        ["nrf:VCC", "uno:3.3V", "red", ["v0"]],
+        ["nrf:GND", "uno:GND.1", "black", ["v0"]],
+        ["nrf:CE", "uno:9", "green", ["v0"]],
+        ["nrf:CSN", "uno:10", "green", ["v0"]],
+        ["nrf:SCK", "uno:13", "yellow", ["v0"]],
+        ["nrf:MOSI", "uno:11", "blue", ["v0"]],
+        ["nrf:MISO", "uno:12", "blue", ["v0"]]
+      ]
+    }),
+    steps: [
+      { nama_komponen: "Wiring NRF24L01", alur_perakitan: "VCC ke 3,3 V Uno (jangan 5 V), GND ke GND, CE 9, CSN 10, SCK 13, MOSI 11, MISO 12 — pasang kapasitor 10 µF di VCC-GND modul." },
+      { nama_komponen: "Dua Unit", alur_perakitan: "Siapkan 2 set Uno+NRF: satu sebagai Sender (isSender=true), satu Receiver (isSender=false)." },
+      { nama_komponen: "Upload & Uji", alur_perakitan: "Upload kode berbeda ke tiap Uno, buka Serial Monitor — pesan 'Halo dari NRF24!' muncul tiap detik di receiver." }
+    ]
+  },
+  {
+    id: "tpl-freertos-multitask",
+    title: "FreeRTOS — Dua Task Berjalan Paralel",
+    desc: "Dua task FreeRTOS berjalan bersamaan: Task 1 kedipkan LED tiap 500ms, Task 2 print counter ke Serial tiap 1 detik — buktikan scheduler paralel.",
+    difficulty: "Lanjut",
+    tags: ["ESP32", "FreeRTOS", "Multitasking"],
+    verified: true,
+    board: "esp32",
+    bom: ["1x ESP32 DevKitC V4", "1x LED merah", "1x Resistor 220 Ohm", "Kabel jumper"],
+    wiring_guide: [
+      { komponen: "LED", pin_komponen: "A (anoda)", koneksi_arduino: "GPIO 2 (via resistor)" },
+      { komponen: "LED", pin_komponen: "C (katoda)", koneksi_arduino: "GND" }
+    ],
+    cpp_code: "// ===== FreeRTOS — Dua Task Berjalan Paralel =====\n// ESP32: TaskKedip (LED 500ms) + TaskCetak (Serial 1s) berjalan bersamaan\n\n#include <Arduino.h>\n\nvoid TaskKedip(void *pv) {\n  pinMode(2, OUTPUT);\n  for (;;) {\n    digitalWrite(2, HIGH);\n    vTaskDelay(500 / portTICK_PERIOD_MS);\n    digitalWrite(2, LOW);\n    vTaskDelay(500 / portTICK_PERIOD_MS);\n  }\n}\n\nvoid TaskCetak(void *pv) {\n  int cnt = 0;\n  for (;;) {\n    Serial.printf(\"[TaskCetak] hitung=%d core=%d\\n\", cnt++, xPortGetCoreID());\n    vTaskDelay(1000 / portTICK_PERIOD_MS);\n  }\n}\n\nvoid setup() {\n  Serial.begin(115200);\n  // Prioritas Cetak (2) > Kedip (1)\n  xTaskCreatePinnedToCore(TaskKedip, \"Kedip\", 2048, NULL, 1, NULL, 0);\n  xTaskCreatePinnedToCore(TaskCetak, \"Cetak\", 2048, NULL, 2, NULL, 1);\n  Serial.println(\"FreeRTOS dua task berjalan...\");\n}\n\nvoid loop() {\n  vTaskDelay(1000 / portTICK_PERIOD_MS);\n}\n",
+    wokwi_diagram: JSON.stringify({
+      version: 1, author: "ElektroDict", editor: "wokwi",
+      parts: [
+        { type: "board-esp32-devkit-c-v4", id: "esp", top: 0, left: 0, attrs: {} },
+        { type: "wokwi-led", id: "led1", top: -120, left: 300, attrs: { color: "red" } },
+        { type: "wokwi-resistor", id: "r1", top: -40, left: 300, attrs: { value: "220" } }
+      ],
+      connections: [
+        ["esp:2", "r1:1", "green", ["v0"]],
+        ["r1:2", "led1:A", "green", ["v0"]],
+        ["led1:C", "esp:GND.1", "black", ["v0"]]
+      ]
+    }),
+    steps: [
+      { nama_komponen: "LED", alur_perakitan: "Anoda via resistor 220 Ohm ke GPIO 2, katoda ke GND." },
+      { nama_komponen: "Upload", alur_perakitan: "Upload kode, buka Serial Monitor 115200 — lihat counter tiap 1 detik sementara LED kedip tiap 500ms tanpa saling blokir." },
+      { nama_komponen: "Eksperimen", alur_perakitan: "Ubah prioritas task atau delay — amati urutan eksekusi di Serial Monitor." }
+    ]
+  },
+  {
+    id: "tpl-interrupt-button",
+    title: "Hardware Interrupt — Tombol Tanpa Polling",
+    desc: "Tombol push-button memicu interrupt (bukan polling), menghitung berapa kali tombol ditekan tanpa delay() — respons instan.",
+    difficulty: "Menengah",
+    tags: ["Arduino Uno", "Interrupt", "Tombol", "ISR"],
+    verified: true,
+    board: "uno",
+    bom: ["1x Arduino Uno", "1x Pushbutton", "1x LED merah", "1x Resistor 220 Ohm", "Kabel jumper"],
+    wiring_guide: [
+      { komponen: "Pushbutton", pin_komponen: "1", koneksi_arduino: "Pin 2 (INT0)" },
+      { komponen: "Pushbutton", pin_komponen: "2", koneksi_arduino: "GND" },
+      { komponen: "LED", pin_komponen: "A", koneksi_arduino: "Pin 13 (via resistor)" },
+      { komponen: "LED", pin_komponen: "C", koneksi_arduino: "GND" }
+    ],
+    cpp_code: "// ===== Hardware Interrupt — Tombol Tanpa Polling =====\n// Tombol di Pin 2 (INT0) memicu ISR, counter bertambah, LED toggle\n// Tanpa polling, tanpa delay — debounce sederhana 50ms\n\nvolatile int counter = 0;\nvolatile unsigned long lastMs = 0;\n\nvoid IRAM_ATTR isrTombol() {\n  unsigned long now = millis();\n  if (now - lastMs > 50) { // debounce 50ms\n    counter++;\n    lastMs = now;\n  }\n}\n\nvoid setup() {\n  Serial.begin(9600);\n  pinMode(2, INPUT_PULLUP);\n  pinMode(13, OUTPUT);\n  attachInterrupt(digitalPinToInterrupt(2), isrTombol, FALLING);\n  Serial.println(\"Interrupt siap — tekan tombol di Pin 2\");\n}\n\nvoid loop() {\n  static int last = -1;\n  if (counter != last) {\n    last = counter;\n    Serial.print(\"Tombol ditekan: \"); Serial.println(counter);\n    digitalWrite(13, counter % 2); // toggle tiap tekan\n  }\n  delay(10);\n}\n",
+    wokwi_diagram: JSON.stringify({
+      version: 1, author: "ElektroDict", editor: "wokwi",
+      parts: [
+        { type: "wokwi-arduino-uno", id: "uno", top: 0, left: 0, attrs: {} },
+        { type: "wokwi-pushbutton", id: "btn", top: -120, left: 300, attrs: {} },
+        { type: "wokwi-led", id: "led1", top: -120, left: 420, attrs: { color: "red" } },
+        { type: "wokwi-resistor", id: "r1", top: -40, left: 420, attrs: { value: "220" } }
+      ],
+      connections: [
+        ["btn:1.l", "uno:2", "green", ["v0"]],
+        ["btn:2.l", "uno:GND.1", "black", ["v0"]],
+        ["uno:13", "r1:1", "green", ["v0"]],
+        ["r1:2", "led1:A", "green", ["v0"]],
+        ["led1:C", "uno:GND.2", "black", ["v0"]]
+      ]
+    }),
+    steps: [
+      { nama_komponen: "Pushbutton", alur_perakitan: "Satu kaki ke Pin 2 (INT0), kaki lain ke GND — pakai INPUT_PULLUP." },
+      { nama_komponen: "LED", alur_perakitan: "Anoda via resistor 220 Ohm ke Pin 13, katoda ke GND." },
+      { nama_komponen: "Upload & Uji", alur_perakitan: "Upload, buka Serial Monitor — tiap tekan tombol, counter bertambah tanpa polling. Coba tahan tombol, amati debounce." }
+    ]
+  },
+  {
+    id: "tpl-deep-sleep-timer",
+    title: "ESP32 Deep Sleep — Wake-Up Timer 10 Detik",
+    desc: "ESP32 baca ADC, print ke Serial, lalu masuk deep sleep 10 detik, bangun otomatis, ulang lagi — hemat daya maksimal (~10 µA saat tidur).",
+    difficulty: "Menengah",
+    tags: ["ESP32", "Deep Sleep", "Low Power", "Timer"],
+    verified: true,
+    board: "esp32",
+    bom: ["1x ESP32 DevKitC V4", "1x Potensiometer 10k (simulasi sensor)", "Kabel jumper"],
+    wiring_guide: [
+      { komponen: "Potensiometer", pin_komponen: "VCC", koneksi_arduino: "3V3" },
+      { komponen: "Potensiometer", pin_komponen: "SIG", koneksi_arduino: "GPIO 34 (ADC)" },
+      { komponen: "Potensiometer", pin_komponen: "GND", koneksi_arduino: "GND" }
+    ],
+    cpp_code: "// ===== ESP32 Deep Sleep — Wake-Up Timer 10 Detik =====\n// Bangun -> baca ADC -> print -> tidur 10 detik -> ulang (hemat daya)\n\n#include <esp_sleep.h>\n\nRTC_DATA_ATTR int bootCount = 0;\n#define POT_PIN 34\n\nvoid printWakeupReason() {\n  esp_sleep_wakeup_cause_t c = esp_sleep_get_wakeup_cause();\n  switch(c) {\n    case ESP_SLEEP_WAKEUP_EXT0: Serial.println(\"Bangun karena EXT0\"); break;\n    case ESP_SLEEP_WAKEUP_TIMER: Serial.println(\"Bangun karena TIMER\"); break;\n    case ESP_SLEEP_WAKEUP_TOUCHPAD: Serial.println(\"Bangun karena TOUCH\"); break;\n    default: Serial.printf(\"Bangun bukan dari deep sleep: %d\\n\", c); break;\n  }\n}\n\nvoid setup() {\n  Serial.begin(115200);\n  delay(500);\n  ++bootCount;\n  Serial.printf(\"\\nBoot ke-%d\\n\", bootCount);\n  printWakeupReason();\n\n  int adc = analogRead(POT_PIN);\n  float volt = adc * 3.3 / 4095.0;\n  Serial.printf(\"ADC=%d -> %.2f V\\n\", adc, volt);\n\n  esp_sleep_enable_timer_wakeup(10 * 1000000ULL); // 10 detik\n  Serial.println(\"Tidur 10 detik...\");\n  Serial.flush();\n  esp_deep_sleep_start();\n}\n\nvoid loop() {}\n",
+    wokwi_diagram: JSON.stringify({
+      version: 1, author: "ElektroDict", editor: "wokwi",
+      parts: [
+        { type: "board-esp32-devkit-c-v4", id: "esp", top: 0, left: 0, attrs: {} },
+        { type: "wokwi-potentiometer", id: "pot", top: -120, left: 300, attrs: {} }
+      ],
+      connections: [
+        ["pot:VCC", "esp:3V3", "red", ["v0"]],
+        ["pot:SIG", "esp:34", "green", ["v0"]],
+        ["pot:GND", "esp:GND.1", "black", ["v0"]]
+      ]
+    }),
+    steps: [
+      { nama_komponen: "Potensiometer", alur_perakitan: "VCC ke 3V3, SIG ke GPIO 34, GND ke GND — simulasi tegangan sensor." },
+      { nama_komponen: "Upload", alur_perakitan: "Upload kode, buka Serial Monitor 115200 — lihat bootCount bertambah tiap 10 detik." },
+      { nama_komponen: "Amati Deep Sleep", alur_perakitan: "Di hardware asli arus turun ke ~10 µA saat tidur. Di Wokwi, amati log wake-up cause dan bootCount." }
+    ]
+  },
+  {
+    id: "tpl-timer-interrupt",
+    title: "Timer Hardware — Interrupt Tiap 1 Detik (Uno)",
+    desc: "Gunakan Timer1 ATmega328P dalam mode CTC untuk generate interrupt tepat setiap 1 detik, tanpa delay() atau millis() — presisi hardware.",
+    difficulty: "Lanjut",
+    tags: ["Arduino Uno", "Timer1", "CTC", "Interrupt"],
+    verified: true,
+    board: "uno",
+    bom: ["1x Arduino Uno", "1x LED merah", "1x Resistor 220 Ohm", "Kabel jumper"],
+    wiring_guide: [
+      { komponen: "LED", pin_komponen: "A (anoda)", koneksi_arduino: "Pin 13 (via resistor)" },
+      { komponen: "LED", pin_komponen: "C (katoda)", koneksi_arduino: "GND" }
+    ],
+    cpp_code: "// ===== Timer Hardware — Interrupt Tiap 1 Detik (Uno) =====\n// Timer1 CTC 1 Hz, toggle LED di ISR — tanpa delay/millis\n\nvoid setup() {\n  pinMode(13, OUTPUT);\n  Serial.begin(9600);\n  Serial.println(\"Timer1 CTC 1 detik dimulai\");\n\n  noInterrupts();\n  TCCR1A = 0; TCCR1B = 0;\n  TCNT1 = 0;\n  OCR1A = 15624; // 16MHz/1024/1Hz -1\n  TCCR1B |= (1 << WGM12); // CTC\n  TCCR1B |= (1 << CS12) | (1 << CS10); // prescaler 1024\n  TIMSK1 |= (1 << OCIE1A); // enable interrupt\n  interrupts();\n}\n\nISR(TIMER1_COMPA_vect) {\n  digitalWrite(13, !digitalRead(13));\n  // Jangan pakai Serial di ISR pada kode produksi!\n}\n\nvoid loop() {\n  // loop bebas — bisa kerja lain tanpa ganggu timer\n  Serial.println(\"Loop berjalan bebas...\");\n  delay(2000);\n}\n",
+    wokwi_diagram: JSON.stringify({
+      version: 1, author: "ElektroDict", editor: "wokwi",
+      parts: [
+        { type: "wokwi-arduino-uno", id: "uno", top: 0, left: 0, attrs: {} },
+        { type: "wokwi-led", id: "led1", top: -120, left: 300, attrs: { color: "red" } },
+        { type: "wokwi-resistor", id: "r1", top: -40, left: 300, attrs: { value: "220" } }
+      ],
+      connections: [
+        ["uno:13", "r1:1", "green", ["v0"]],
+        ["r1:2", "led1:A", "green", ["v0"]],
+        ["led1:C", "uno:GND.1", "black", ["v0"]]
+      ]
+    }),
+    steps: [
+      { nama_komponen: "LED", alur_perakitan: "Anoda via resistor 220 Ohm ke Pin 13, katoda ke GND." },
+      { nama_komponen: "Upload", alur_perakitan: "Upload kode, amati LED toggle tepat tiap 1 detik (presisi hardware) sementara Serial print tiap 2 detik tetap jalan." },
+      { nama_komponen: "Ubah Periode", alur_perakitan: "Ganti OCR1A: 7812 untuk 0,5 detik, 31248 untuk 2 detik — lihat rumus di materi MCU Lanjut." }
+    ]
+  },
+  {
+    id: "tpl-buck-monitor",
+    title: "Buck Converter Monitor — Baca Tegangan Output via ADC",
+    desc: "Simulasi monitoring tegangan output konverter Buck menggunakan voltage divider + ADC Arduino. Tampilkan tegangan terukur di Serial Monitor, alert jika diluar 4.8V–5.2V.",
+    difficulty: "Menengah",
+    tags: ["Arduino Uno", "Buck", "ADC", "Voltage Divider", "Elektronika Daya"],
+    verified: true,
+    board: "uno",
+    bom: ["1x Arduino Uno", "1x Potensiometer 10k (simulasi tegangan Buck)", "1x LED hijau", "1x LED merah", "2x Resistor 220 Ohm", "Kabel jumper"],
+    wiring_guide: [
+      { komponen: "Potensiometer", pin_komponen: "VCC", koneksi_arduino: "5V" },
+      { komponen: "Potensiometer", pin_komponen: "SIG (wiper)", koneksi_arduino: "A0" },
+      { komponen: "Potensiometer", pin_komponen: "GND", koneksi_arduino: "GND" },
+      { komponen: "LED Hijau (OK)", pin_komponen: "A", koneksi_arduino: "Pin 8 (via resistor)" },
+      { komponen: "LED Merah (Error)", pin_komponen: "A", koneksi_arduino: "Pin 9 (via resistor)" },
+      { komponen: "LED", pin_komponen: "C", koneksi_arduino: "GND" }
+    ],
+    cpp_code: "// ===== Buck Converter Monitor — Baca Tegangan via ADC =====\n// Simulasi tegangan output Buck dengan potensiometer + voltage divider\n// Rumus: Vout = ADC * (5.0/1023.0) * ((R1+R2)/R2) ; di sini pakai pot langsung 0-5V\n\nconst int PIN_ADC = A0;\nconst int LED_OK = 8;\nconst int LED_ERR = 9;\nconst float VREF = 5.0;\n// Jika pakai divider R1=10k, R2=10k untuk ukur hingga 10V: faktor = (R1+R2)/R2 = 2\nconst float DIVIDER_FACTOR = 1.0; // pot langsung 0-5V, jadi faktor 1. Ubah ke 2 jika pakai divider 10k/10k\n\nvoid setup() {\n  Serial.begin(9600);\n  pinMode(LED_OK, OUTPUT); pinMode(LED_ERR, OUTPUT);\n  Serial.println(\"Buck Monitor siap — putar potensiometer (simulasi Vout)\");\n}\n\nvoid loop() {\n  int adc = analogRead(PIN_ADC);\n  float vout = adc * (VREF / 1023.0) * DIVIDER_FACTOR;\n  bool ok = (vout >= 4.8 && vout <= 5.2);\n  digitalWrite(LED_OK, ok ? HIGH : LOW);\n  digitalWrite(LED_ERR, ok ? LOW : HIGH);\n  Serial.print(\"Vout: \"); Serial.print(vout, 2); Serial.print(\" V \");\n  Serial.println(ok ? \"[OK] 4.8-5.2V\" : \"[ALERT] di luar range!\");\n  delay(500);\n}\n",
+    wokwi_diagram: JSON.stringify({
+      version: 1, author: "ElektroDict", editor: "wokwi",
+      parts: [
+        { type: "wokwi-arduino-uno", id: "uno", top: 0, left: 0, attrs: {} },
+        { type: "wokwi-potentiometer", id: "pot", top: -120, left: 300, attrs: {} },
+        { type: "wokwi-led", id: "ledG", top: -120, left: 420, attrs: { color: "green" } },
+        { type: "wokwi-led", id: "ledR", top: -40, left: 420, attrs: { color: "red" } },
+        { type: "wokwi-resistor", id: "r1", top: -120, left: 340, attrs: { value: "220" } },
+        { type: "wokwi-resistor", id: "r2", top: -40, left: 340, attrs: { value: "220" } }
+      ],
+      connections: [
+        ["pot:VCC", "uno:5V", "red", ["v0"]],
+        ["pot:SIG", "uno:A0", "green", ["v0"]],
+        ["pot:GND", "uno:GND.1", "black", ["v0"]],
+        ["uno:8", "r1:1", "green", ["v0"]],
+        ["r1:2", "ledG:A", "green", ["v0"]],
+        ["ledG:C", "uno:GND.2", "black", ["v0"]],
+        ["uno:9", "r2:1", "red", ["v0"]],
+        ["r2:2", "ledR:A", "red", ["v0"]],
+        ["ledR:C", "uno:GND.3", "black", ["v0"]]
+      ]
+    }),
+    steps: [
+      { nama_komponen: "Potensiometer", alur_perakitan: "VCC ke 5V, wiper ke A0, GND ke GND — putar untuk simulasi tegangan output Buck (0–5V)." },
+      { nama_komponen: "LED Indikator", alur_perakitan: "Hijau (OK) ke Pin 8 via resistor, Merah (Error) ke Pin 9 via resistor, katoda ke GND." },
+      { nama_komponen: "Upload & Uji", alur_perakitan: "Upload, buka Serial Monitor — putar pot: hijau nyala di 4.8–5.2V, merah nyala di luar itu." },
+      { nama_komponen: "Divider Asli", alur_perakitan: "Untuk ukur hingga 10V, pakai divider R1=10k ke Vout, R2=10k ke GND, titik tengah ke A0, dan ubah DIVIDER_FACTOR jadi 2." }
+    ]
   }
 ];;
 

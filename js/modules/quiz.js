@@ -351,7 +351,7 @@ Aturan:
         setTimeout(()=>btn.textContent=oldText,2000);
       }
     }).catch(()=>{
-      alert(text);
+      if(window.showToast) window.showToast(text, 4000); else alert(text);
     });
   },
 

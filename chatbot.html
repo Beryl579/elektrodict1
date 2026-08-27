@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&family=Outfit:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style.css?v=74">
     <!-- Markdown & Math Rendering Libraries -->
     <script defer src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
@@ -33,7 +33,7 @@
 <body class="chat-page-body">
     <header class="chat-header">
         <div class="chat-title-wrap">
-            <div class="chat-logo">⚡</div>
+            <div class="chat-logo" style="background:#fff; border:2px solid #0A0A0A; border-radius:8px; overflow:hidden; padding:0; display:flex; align-items:center; justify-content:center;"><img src="logo.png" alt="ElektroBot" style="width:100%;height:100%;object-fit:cover;"></div>
             <div class="chat-h-info">
                 <div class="chat-h-name">ElektroBot AI</div>
                 <div class="chat-h-status"><span>●</span> <span class="u-hide-mobile">Online & Ready</span></div>
@@ -105,6 +105,19 @@
     <!-- html2pdf dimuat on-demand saat Export PDF dipakai (hemat ~2MB di awal) -->
     <script src="js/api.js"></script>
     <script src="js/chatbot.js"></script>
+    <div id="toastWrap" class="toast-wrap" aria-live="polite" aria-atomic="true"></div>
+    <script>
+      function showToast(msg, duration=2600){
+        const wrap=document.getElementById('toastWrap');
+        if(!wrap){ alert(msg); return; }
+        const el=document.createElement('div');
+        el.className='toast';
+        el.innerHTML=`<span class="toast-ico">⚡</span><span class="toast-msg">${msg}</span>`;
+        el.onclick=()=>{ el.classList.add('hide'); setTimeout(()=>el.remove(),250); };
+        wrap.appendChild(el);
+        setTimeout(()=>{ el.classList.add('hide'); setTimeout(()=>el.remove(),250); }, duration);
+      }
+    </script>
     <script>
       // Smooth Navigation for Clean URLs
       document.querySelectorAll('a[href^="index"]').forEach(link => {
