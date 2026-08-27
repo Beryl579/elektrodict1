@@ -10,8 +10,8 @@
 
 <!-- Apple Touch Icons (fallback kalau belum ada file icon) -->
 <link rel="apple-touch-icon" href="icons/icon-192.png">
-<link rel="icon" type="image/png" sizes="32x32" href="icons/icon-96.png">
-<link rel="icon" type="image/png" sizes="16x16" href="icons/icon-72.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="icon" type="image/png" sizes="128x128" href="icons/icon-128.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
@@ -21,37 +21,27 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="katexLoaded=true;renderPendingMath()"></script>
-<link rel="stylesheet" href="css/style.css?v=68">
+<link rel="stylesheet" href="css/style.css?v=74">
 </head>
-<body>
-  <!-- Splash Screen Launch Animation -->
+<body class="light">
+  <!-- Single light theme — dark/light toggle disabled -->
   <div id="splash-screen">
     <div class="splash-content">
-      <div class="splash-bolt">⚡</div>
-      <div class="splash-text">Elektro<span>Dict</span></div>
+      <img class="splash-logo" src="logo.png" alt="ElektroDict Logo">
+      <div class="splash-text typewriter">Elektro<span>Dict</span></div>
+      <div class="splash-sub">Kamus, Materi & Lab Teknik Elektro — Belajar dari Nol hingga Mahir</div>
     </div>
   </div>
 
-
-
-
 <nav class="nav">
   <div class="nav-inner">
-    <a class="logo" href="#"><div class="logo-mark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="m13 2-10 12h9l-1 8 10-12h-9l1-8z"/></svg></div><div class="logo-name">Elektro<span>Dict</span></div></a>
+    <a class="logo" href="#"><div class="logo-mark"><img src="logo.png" alt="ElektroDict Logo" style="width:100%;height:100%;object-fit:cover;display:block;"></div><div class="logo-name">Elektro<span>Dict</span></div></a>
 
     <div class="hbadge"><b id="totalCount">0</b> istilah</div>
-    <button class="theme-btn" id="themeBtn" onclick="toggleTheme()" title="Ganti tema"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg></button>
     <a href="flowchart.html" target="_blank" rel="noopener" class="theme-btn" title="Lihat Arsitektur Sistem" style="display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:16px;">📄</a>
     <a href="https://berylnathaniel.my.id/" target="_blank" rel="noopener" class="nav-portfolio" title="Portfolio Beryl Sinaga">🔗</a>
   </div>
 </nav>
-
-<!-- ═══════ FLOATING CHAT BUBBLE (mobile left) ═══════ -->
-<div class="chat-fab-left-wrap" id="chatFabWrap">
-  <button class="chat-fab-left" id="bnav-chat" onclick="openM()" title="Chat ElektroBot">
-    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.17L4 17.17V4h16v12z"/><path d="M7 9h2v2H7zm4 0h2v2h-2zm4 0h2v2h-2z"/></svg>
-  </button>
-</div>
 
 <!-- ═══════ NAVIGATION (Dual Mode) ═══════ -->
 <div class="bottom-nav" id="bottomNav">
@@ -152,6 +142,8 @@
     <div style="font-size:10px;color:var(--text3);text-align:center;margin-top:6px;font-family:var(--mono);">AI siap bantu 24/7</div>
   </div>
 </div>
+<!-- Floating Tanya AI — mengambang di kanan bawah di atas tombol Lainnya (pengganti Saran) -->
+<button class="chat-fab-left" onclick="openGlobalChat()" aria-label="Tanya AI" title="Tanya AI"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="width:22px;height:22px;fill:currentColor;"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.17L4 17.17V4h16v12z"/><path d="M7 9h2v2H7zm4 0h2v2h-2zm4 0h2v2h-2z"/></svg></button>
 <div class="page on" id="page-kamus">
   <div class="sbar"><div class="sfield">
     <span class="sico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg></span>
@@ -191,8 +183,8 @@
     <aside class="chat-sidebar">
       <div style="display:flex;flex-direction:column;height:100%">
         <div class="chead">
-          <div class="cava"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg></div>
-          <div class="cinfo"><div class="cname">ElektroBot</div><div class="cstatus">● online</div></div>
+          <div class="cava" style="background:#fff; border:var(--nb-border); box-shadow:var(--nb-shadow-sm); overflow:hidden; padding:0; border-radius:7px;"><img src="logo.png" alt="ElektroBot" style="width:100%;height:100%;object-fit:cover;"></div>
+          <div class="cinfo"><div class="cname">ElektroBot</div><div class="cstatus">● online · siap bantu</div></div>
           <button class="ctts" id="tts-toggle-D" onclick="toggleTTS()" title="Mute/Unmute Suara"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg></button>
           <button class="cback" onclick="clearChatHistory()" title="Reset riwayat chat" style="font-size:13px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg></button>
         </div>
@@ -285,9 +277,6 @@
   </div>
 </div>
 
-<!-- Bubble chat AI global (body-level): muncul di semua halaman, klik → panel chat melebar -->
-<button class="mt-chat-fab" id="mtChatFab" onclick="openGlobalChat()" title="Tanya AI — tersedia di halaman mana pun"><span class="mt-chat-fab-ico"><svg class="mt-chat-fab-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.17L4 17.17V4h16v12z"/><path d="M7 9h2v2H7zm4 0h2v2h-2zm4 0h2v2h-2z"/></svg><span class="mt-chat-fab-emoji">💬</span></span><span class="mt-chat-fab-label">Tanya AI</span></button>
-
 <!-- ═══════ MATERI PAGE ═══════ -->
 <div class="page" id="page-materi">
   <div class="page-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
@@ -315,12 +304,11 @@
 </div>
 
 <!-- FAB + MOBILE CHAT -->
-<!-- FAB + MOBILE CHAT -->
-<button class="fab" id="chat-fab-trigger" onclick="openM()" title="Chat ElektroBot (SaaS Mode)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg></button>
+
 <div class="chat-mobile" id="chatM">
   <div class="chat-handle"></div>
-  <div class="chead" style="background:linear-gradient(135deg,var(--accent-d),var(--bg3));border-bottom:1px solid var(--line2)">
-    <div class="cava" style="background:linear-gradient(135deg,var(--accent),#2563eb);border:none;box-shadow:0 2px 8px #4f9cf966"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg></div>
+  <div class="chead" style="background:var(--bg3);border-bottom:var(--nb-border)">
+    <div class="cava" style="background:#fff; border:var(--nb-border); box-shadow:var(--nb-shadow-sm); overflow:hidden; padding:0; border-radius:7px;"><img src="logo.png" alt="ElektroBot" style="width:100%;height:100%;object-fit:cover;"></div>
     <div class="cinfo">
       <div class="cname">ElektroBot</div>
       <div class="cstatus">● online · siap bantu</div>
@@ -403,7 +391,6 @@
       <div class="sheet-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px;"><rect width="16" height="20" x="4" y="2" rx="2"/><line x1="8" x2="16" y1="6" y2="6"/><line x1="16" x2="16" y1="14" y2="18"/><path d="M16 10h.01"/><path d="M12 10h.01"/><path d="M8 10h.01"/><path d="M12 14h.01"/><path d="M8 14h.01"/><path d="M12 18h.01"/><path d="M8 18h.01"/></svg></div>
       <div class="sheet-label">Kalkulator</div>
     </div>
-
 
     <div class="sheet-item" onclick="switchTab('resistor')">
       <div class="sheet-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px;"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
@@ -564,10 +551,7 @@
   </div>
 </div>
 
-<!-- ═══════ FEEDBACK FLOATING BUTTON (Replacing Tour) ═══════ -->
-<a href="Saran dan masukan.html" class="tour-trigger" title="Kirim Saran & Masukan" style="text-decoration:none; display:flex; align-items:center; justify-content:center; padding:0; line-height:1;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A5 5 0 0 0 8 8c0 1.3.5 2.6 1.5 3.5.8.8 1.3 1.5 1.5 2.5"></path><path d="M9 18h6"></path><path d="M10 22h4"></path></svg></a>
-
-<!-- ═══════ LOGIKA SIMULATOR PAGE ═══════ -->
+<!-- FEEDBACK BUTTON REMOVED — single theme colorful -->
 <div class="page" id="page-logika">
   <div class="logika-wrap">
     <div class="logika-header">
@@ -820,8 +804,6 @@
     <div id="project-detail-content"></div>
   </div>
 </div>
-
-
 
 <!-- ═══════ STANDAR & K3 PAGE ═══════ -->
 <div class="page" id="page-standards">
@@ -1124,8 +1106,6 @@
 <!-- jsPDF & Mermaid tidak dimuat di sini — dimuat on-demand saat fitur dipakai
      (hemat ~2.4 MB unduhan & parsing di HP, app jadi jauh lebih ringan). -->
 
-
-
 <script src="js/data.js"></script>
 <script src="js/data-materi.js"></script>
 <script src="js/api.js"></script>
@@ -1139,6 +1119,9 @@
     if (window.caches) caches.keys().then(ks => ks.forEach(k => caches.delete(k)));
   }
 </script>
+
+<!-- Neubrutalism Toast Container (pengganti alert) -->
+<div id="toastWrap" class="toast-wrap" aria-live="polite" aria-atomic="true"></div>
 
 <!-- Smooth Navigation SPA-like Feel -->
 <script>

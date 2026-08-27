@@ -5,6 +5,9 @@
 // Konstanta diambil dari ElektroAPI di js/api.js jika tersedia
 const VERCEL_URL = (window.ElektroAPI && window.ElektroAPI.VERCEL_URL) || "/api/chat";
 
+let materiChatCtx = null;
+let materiWelcomeShown = false;
+
 /**
  * Muat library eksternal on-demand (jsPDF, Mermaid) — hemat beban awal di HP.
  */
@@ -72,7 +75,7 @@ window.addEventListener('load',()=>{
   setTimeout(()=>{
     const s=document.getElementById('splash-screen');
     if(s)s.classList.add('fade-out');
-  },1500);
+  },2800);
 });
 let katexLoaded = false;
 // pendingMathEls stores either: DOM element (for auto-render) or {el, latex} object (for katex.render)
@@ -310,7 +313,7 @@ const CALCS = [
 function switchTab(t){
   // Cek apakah ada sesi kuis yang aktif dan tab yang dituju bukan kuis
   if (window.activeQuizSession && t !== 'quiz') {
-    alert("Selesaikan dulu soalnya bro! ⚡🏁");
+    showToast("Selesaikan dulu soalnya bro! ⚡🏁");
     return;
   }
   // If more menu is open, close it
@@ -359,18 +362,42 @@ function toggleMoreMenu(){
   document.body.style.overflow = isOpen ? 'hidden' : '';
 }
 
-// ── THEME TOGGLE ──
-function toggleTheme(){
-  const isLight = document.body.classList.toggle('light');
-  document.getElementById('themeBtn').textContent = isLight ? '🌙' : '☀️';
-  localStorage.setItem('theme', isLight ? 'light' : 'dark');
+// ── Wikimedia Commons CDN helper ──
+// Buat URL thumbnail langsung dari Wikimedia CDN tanpa download lokal.
+// Gunakan untuk gambar informatif yang tidak disimpan di Asset Materi/.
+// maxWidth: lebar thumbnail dalam piksel (default 600).
+function wikiImgUrl(filename, maxWidth = 600) {
+  const clean = filename.replace(/ /g, '_');
+  const md5 = clean; // Wikimedia path pakai nama file langsung untuk URL thumb
+  return `https://upload.wikimedia.org/wikipedia/commons/thumb/${md5.charAt(0).toLowerCase()}/${md5.charAt(0).toLowerCase()}${md5.charAt(1).toLowerCase()}/${encodeURIComponent(md5)}/${maxWidth}px-${encodeURIComponent(md5)}`;
 }
+
+// Render blok gambar Wikimedia CDN — dipakai di modul baru yang tidak punya file lokal.
+// Kembalikan string HTML siap pakai.
+// Contoh: wikiImgBlock('Radio_spectrum.svg', 'Spektrum radio', 'CC BY-SA 3.0', 'Inductiveload', 'Spektrum frekuensi radio 3kHz–300GHz')
+function wikiImgBlock(filename, caption, license, author, altText, maxWidth = 600) {
+  const url = wikiImgUrl(filename, maxWidth);
+  const attrLine = `sumber: Wikimedia Commons, <i>File:${filename}</i> (${license}${author ? ', ' + author : ''})`;
+  return `<div class="mt-img-wrap"><img class="mt-img" src="${url}" alt="${altText}" onclick="openMateriImg(this)" loading="lazy"><div class="mt-img-cap">${caption} · ${attrLine}</div></div>`;
+}
+
+// ── THEME TOGGLE — DISABLED single light theme (varied colors) ──
+function toggleTheme(){ return; }
 function initTheme(){
-  const saved = localStorage.getItem('theme');
-  if(saved === 'light'){
-    document.body.classList.add('light');
-    document.getElementById('themeBtn').textContent = '🌙';
-  }
+  document.body.classList.add('light');
+  localStorage.setItem('theme','light');
+  const btn = document.getElementById('themeBtn');
+  if(btn) btn.style.display='none';
+}
+function showToast(msg, duration=2600){
+  const wrap=document.getElementById('toastWrap');
+  if(!wrap){ alert(msg); return; }
+  const el=document.createElement('div');
+  el.className='toast';
+  el.innerHTML=`<span class="toast-ico">⚡</span><span class="toast-msg">${msg}</span>`;
+  el.onclick=()=>{ el.classList.add('hide'); setTimeout(()=>el.remove(),250); };
+  wrap.appendChild(el);
+  setTimeout(()=>{ el.classList.add('hide'); setTimeout(()=>el.remove(),250); }, duration);
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -715,7 +742,7 @@ async function getWikiInfo(e, i, query) {
   e.stopPropagation();
   const btn = document.getElementById(`wb${i}`);
   const resEl = document.getElementById(`wr${i}`);
-  
+  if (!resEl || !btn) return;
   if (resEl.classList.contains('show')) {
     resEl.classList.remove('show');
     btn.classList.remove('active');
@@ -948,10 +975,10 @@ function shareScore(){
 function copyScore(){
   navigator.clipboard.writeText(getScoreText()).then(()=>{
     const btn = event.target;
-    btn.textContent='✅ Tersalin!';
-    setTimeout(()=>btn.textContent='📋 Copy Teks Hasil',2000);
+    if(btn){ btn.textContent='✅ Tersalin!'; setTimeout(()=>btn.textContent='📋 Copy Teks Hasil',2000); }
+    showToast("Teks hasil tersalin! ✅", 2000);
   }).catch(()=>{
-    alert(getScoreText());
+    showToast(getScoreText(), 4000);
   });
 }
 
@@ -3219,7 +3246,7 @@ function toggleMic(v) {
   if(!recognition) {
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     if(!SpeechRecognition) {
-      alert("Maaf, browser kamu tidak mendukung fitur perekam suara (Web Speech API). Coba gunakan Chrome.");
+      showToast("Maaf, browser kamu tidak mendukung perekam suara. Coba Chrome ya! 🎙️", 3000);
       return;
     }
     recognition = new SpeechRecognition();
@@ -3714,8 +3741,6 @@ function openMateriModule(id) {
 function closeMateriModule() { renderMateri(); }
 
 // ── Chat AI kontekstual di tab Materi ──
-let materiChatCtx = null;      // { active, prompt } — disuntikkan ke system prompt chat
-let materiWelcomeShown = false;
 function buildMateriCtx(m) {
   if (!m) return { active: true, prompt: 'User sedang menjelajah halaman Materi ElektroDict (modul belajar elektronika berbahasa Indonesia). Bantu jelaskan materi, bandingkan antar modul, atau rekomendasikan urutan belajar.' };
   return {
@@ -4256,7 +4281,22 @@ function mountBjtSim() {
 }
 
 // ── Lightbox perbesar gambar pinout ──
-function openMateriImg(img) {
+function openMateriImg(el) {
+  // Tangani baik <img> maupun <svg>
+  let src = '';
+  let alt = '';
+  if (el.tagName === 'IMG') {
+    src = el.src;
+    alt = el.alt || '';
+  } else if (el.tagName === 'svg' || el.tagName === 'SVG') {
+    // Untuk SVG inline, buat blob URL agar bisa dibuka di lightbox
+    const svgStr = el.outerHTML;
+    const blob = new Blob([svgStr], { type: 'image/svg+xml' });
+    src = URL.createObjectURL(blob);
+    alt = 'Diagram SVG';
+  } else {
+    return;
+  }
   let lb = document.getElementById('mt-lightbox');
   if (!lb) {
     lb = document.createElement('div');
@@ -4266,7 +4306,9 @@ function openMateriImg(img) {
     lb.addEventListener('click', (e) => { if (e.target === lb) closeMateriImg(); });
     document.body.appendChild(lb);
   }
-  lb.querySelector('img').src = img.src;
+  const lbImg = lb.querySelector('img');
+  lbImg.src = src;
+  lbImg.alt = alt;
   lb.classList.add('on');
   document.body.style.overflow = 'hidden';
 }

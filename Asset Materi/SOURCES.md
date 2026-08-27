@@ -98,3 +98,16 @@ Gunakan untuk konten materi; sertakan atribusi sesuai lisensi masing-masing.
 - **CC0** → bebas digunakan tanpa atribusi.
 - `arduino-uno-r3.jpg` (~5 MB) terlalu besar untuk web — kompres dulu sebelum dipakai.
 - Semua gambar sudah dikompres untuk web (max 1280px, JPEG q0.8) kecuali yang sudah berukuran kecil.
+
+## Gambar Baru — Task-1 Addition
+
+| File | Isi | Lisensi | Sumber |
+|---|---|---|---|
+| `dc-motor-diagram.png` | Komponen dalam motor DC | CC BY-SA 3.0 | [File:Motor parts.jpg](https://commons.wikimedia.org/wiki/File:Motor_parts.jpg) |
+| `contactor.jpg` | Kontaktor industri 3 fasa (sudah ada) | CC BY-SA 4.0 | [File:Contactor.jpg](https://commons.wikimedia.org/wiki/File:Contactor.jpg) |
+| `plc-timer-ladder.png` | Diagram timer TON PLC | CC BY-SA 3.0 | [File:TimerOnDelayDiagram.png](https://commons.wikimedia.org/wiki/File:TimerOnDelayDiagram.png) |
+| `hmi-panel.jpg` | Panel HMI Siemens TP900 | CC BY-SA 4.0 | [File:Siemens TP900 Comfort.jpg](https://commons.wikimedia.org/wiki/File:Siemens_TP900_Comfort.jpg) — Siemens AG |
+| `dht22-sensor.jpg` | Sensor DHT22 suhu & kelembaban | CC BY-SA 4.0 | [File:DHT22 sensor.jpg](https://commons.wikimedia.org/wiki/File:DHT22_sensor.jpg) |
+| `solar-inverter.jpg` | Inverter surya SMA Sunny Boy | CC BY-SA 3.0 | [File:SMA Sunny Boy inverter.jpg](https://commons.wikimedia.org/wiki/File:SMA_Sunny_Boy_inverter.jpg) |
+| `rf-spectrum.png` | Spektrum elektromagnetik | CC BY-SA 3.0 | [File:Electromagnetic-Spectrum.svg](https://commons.wikimedia.org/wiki/File:Electromagnetic-Spectrum.svg) |
+| `lora-network.png` | Arsitektur LoRaWAN | CC BY-SA 4.0 | [File:LoRaWAN Architecture.png](https://commons.wikimedia.org/wiki/File:LoRaWAN_Architecture.png) |

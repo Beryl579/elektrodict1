@@ -104,8 +104,8 @@ ATURAN:
 
     // 2. Groq fallback — model harus model Groq yang valid (bukan model OpenRouter)
     if ((!response || !response.ok) && groqKeys.length > 0) {
-      // Semua model di bawah didukung oleh Groq (key yang sama)
-      const GROQ_MODELS = ['openai/gpt-oss-20b', 'openai/gpt-oss-120b', 'qwen/qwen3.6-27b'];
+      // Model ini harus berupa nama model valid Groq API — jangan pakai prefix openai/ (itu format OpenRouter)
+      const GROQ_MODELS = ['moonshotai/kimi-k2-instruct', 'llama-3.3-70b-versatile', 'qwen/qwen3.6-27b'];
       const groqModel = GROQ_MODELS.includes(targetModel) ? targetModel : 'qwen/qwen3.6-27b';
 
       const callGroq = async (model) => {
@@ -133,7 +133,7 @@ ATURAN:
       // gpt-oss-20b: konten bersih tanpa <think>, reasoning_effort low = hemat token
       response = await callGroq(groqModel);
       if (response.status === 429 || response.status === 500) {
-        response = await callGroq(groqModel === 'openai/gpt-oss-20b' ? 'openai/gpt-oss-120b' : 'openai/gpt-oss-20b');
+        response = await callGroq(groqModel === 'moonshotai/kimi-k2-instruct' ? 'llama-3.3-70b-versatile' : 'moonshotai/kimi-k2-instruct');
       }
     }
 

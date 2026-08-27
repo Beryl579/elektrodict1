@@ -152,7 +152,7 @@ const ElektroUtils = {
   // 4. Export
   exportKamusPDF() {
     if (typeof window.jspdf === 'undefined' || !window.KAMUS) {
-      alert("PDF library or data not loaded.");
+      if(window.showToast) window.showToast("PDF library atau data belum siap.", 2500); else alert("PDF library or data not loaded.");
       return;
     }
     const { jsPDF } = window.jspdf;
