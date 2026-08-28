@@ -157,7 +157,7 @@
       <div class="dash-feature-pills">
         ${pills.map(p=>`<span class="dash-pill">${p}</span>`).join('')}
       </div>
-      <button class="dash-cta" onclick="switchTab('kamus')">
+      <button class="dash-cta" onclick="switchTab('materi')">
         <span>Mulai Belajar</span>
         ${svgIcon('<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>',16)}
       </button>
@@ -295,7 +295,7 @@
         ${renderQuick()}
         ${renderRecent()}
         ${renderFormulas()}
-        <div class="dash-foot">by Beryl Nathaniel Sinaga — ElektroDict v76</div>
+        <div class="dash-foot">by Beryl Nathaniel Sinaga — ElektroDict v79</div>
       </div>
     `;
     container.innerHTML = html;
