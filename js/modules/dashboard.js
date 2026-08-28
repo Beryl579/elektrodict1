@@ -452,7 +452,7 @@
         ${renderRecent()}
         ${renderFormulas()}
         ${renderTips()}
-        <div class="dash-foot">by Beryl Nathaniel Sinaga — ElektroDict v82</div>
+        <div class="dash-foot">by Beryl Nathaniel Sinaga — ElektroDict v83</div>
       </div>
     `;
     container.innerHTML = html;
