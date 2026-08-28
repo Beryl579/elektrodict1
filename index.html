@@ -21,7 +21,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="katexLoaded=true;renderPendingMath()"></script>
-<link rel="stylesheet" href="css/style.css?v=77">
+<link rel="stylesheet" href="css/style.css?v=78">
 </head>
 <body class="light">
   <!-- Single light theme — dark/light toggle disabled -->
@@ -35,7 +35,7 @@
 
 <nav class="nav">
   <div class="nav-inner">
-    <a class="logo" href="#"><div class="logo-mark"><img src="logo.png" alt="ElektroDict Logo" style="width:100%;height:100%;object-fit:cover;display:block;"></div><div class="logo-name">Elektro<span>Dict</span></div></a>
+    <a class="logo" href="javascript:void(0)" onclick="switchTab('dashboard')" title="Kembali ke Dashboard" aria-label="Kembali ke Dashboard"><div class="logo-mark"><img src="logo.png" alt="ElektroDict Logo" style="width:100%;height:100%;object-fit:cover;display:block;"></div><div class="logo-name">Elektro<span>Dict</span></div></a>
 
     <div class="hbadge"><b id="totalCount">0</b> istilah</div>
     <a href="flowchart.html" target="_blank" rel="noopener" class="theme-btn" title="Lihat Arsitektur Sistem" style="display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:16px;">📄</a>
@@ -48,7 +48,7 @@
   <div class="bnav-scroll">
   <!-- ── BELAJAR ── -->
   <div class="bnav-section desktop-only">BELAJAR</div>
-  <button class="bnav-item on" id="bnav-dashboard" onclick="switchTab('dashboard')">
+  <button class="bnav-item on mobile-visible" id="bnav-dashboard" onclick="switchTab('dashboard')">
     <div class="bnav-dot"></div>
     <span class="bnav-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg></span>
     <span class="bnav-label">Dashboard</span>
