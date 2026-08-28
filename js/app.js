@@ -795,8 +795,50 @@ function selectQuizCat(btn, c){
   startBtn.textContent = `⚡ Mulai — ${QUIZ_CATS[c].label}`;
 }
 
-async function startAIQuiz(){
-  if(!qCat || qGenerating) return;
+// ── Helper: parser JSON kuis yang toleran (perbaikan trailing comma, potongan token) ──
+function parseQuizJSONSafe(raw){
+  let s = String(raw || '').trim();
+  // buang fence markdown jika ada
+  s = s.replace(/```json/gi, '').replace(/```/g, '').trim();
+  // ambil dari { pertama
+  const first = s.indexOf('{');
+  const last = s.lastIndexOf('}');
+  if(first === -1) throw new Error('Tidak ada JSON ditemukan');
+  let candidate = last !== -1 ? s.slice(first, last + 1) : s.slice(first);
+  // 1) coba langsung
+  try { return JSON.parse(candidate); } catch(e) {}
+  // 2) hilangkan trailing comma sebelum } atau ]
+  let fixed = candidate.replace(/,\s*([}\]])/g, '$1');
+  try { return JSON.parse(fixed); } catch(e) {}
+  // 3) kalau terpotong di tengah (max_tokens habis), coba tutup array secara paksa
+  // cari posisi terakhir objek lengkap "},"
+  const lastObj = fixed.lastIndexOf('},');
+  if(lastObj !== -1){
+    // ambil sampai objek terakhir + tutup
+    let truncated = fixed.slice(0, lastObj + 1) + ']}';
+    // pastikan masih dalam wrapper {"soal": [ ... ]}
+    if(!truncated.trim().startsWith('{')) truncated = '{"soal":' + truncated;
+    // tutup kurung jika kurang
+    const openBraces = (truncated.match(/\{/g)||[]).length;
+    const closeBraces = (truncated.match(/\}/g)||[]).length;
+    if(openBraces > closeBraces) truncated += '}'.repeat(openBraces - closeBraces);
+    try { return JSON.parse(truncated); } catch(e) {}
+    // coba tanpa tambahan ']}' kedua
+    let alt = fixed.slice(0, lastObj + 1) + '] }';
+    try { return JSON.parse(alt); } catch(e) {}
+  }
+  // 4) fallback: coba ekstrak array soal via regex (lebih toleran)
+  try {
+    // ganti kutip tunggal di dalam value yang salah? biarkan JSON.parse yang strict
+    return JSON.parse(fixed);
+  } catch(e){
+    throw e;
+  }
+}
+
+async function startAIQuiz(retryCount = 0){
+  if(!qCat) return;
+  if(qGenerating && retryCount === 0) return;
   qGenerating = true;
   window.activeQuizSession = true; // Kunci tab navigasi
 
@@ -807,7 +849,7 @@ async function startAIQuiz(){
   document.getElementById('quiz-box').style.display = 'none';
   document.getElementById('quiz-nav').style.display = 'none';
   document.getElementById('quiz-loading').classList.add('show');
-  document.getElementById('ql-sub').textContent = `Generate 5 soal · ${cat.label} · Level ${qDiff}`;
+  document.getElementById('ql-sub').textContent = retryCount>0 ? `Mencoba lagi (${retryCount}/2) · ${cat.label} · ${qDiff}` : `Generate 5 soal · ${cat.label} · Level ${qDiff}`;
   document.getElementById('quiz-start-btn').disabled = true;
 
   const diffMap = {
@@ -825,31 +867,34 @@ Aturan:
 - "ans" adalah INDEX jawaban benar (0=A, 1=B, 2=C, 3=D)
 - Soal dalam bahasa Indonesia yang jelas
 - Pilihan jawaban harus masuk akal (jangan terlalu obvious)
-- Penjelasan singkat tapi informatif
-- Boleh pakai rumus dalam format teks biasa (misal: V=IR)
-- Pastikan SEMUA 5 soal ada dalam array`;
+- Penjelasan singkat tapi informatif (maks 1 kalimat)
+- Boleh pakai rumus dalam format teks biasa (misal: V=IR) — JANGAN pakai tanda petik ganda di dalam teks; pakai petik tunggal ' jika perlu
+- Jangan pakai koma di akhir array/objek (no trailing comma)
+- Pastikan SEMUA 5 soal ada dalam array dan JSON lengkap tertutup`;
 
   try {
     const data = await callAI({
       messages:[
-        {role:'system', content:'Kamu adalah generator soal teknik elektro. Selalu kembalikan HANYA JSON valid tanpa teks tambahan apapun.'},
+        {role:'system', content:'Kamu adalah generator soal teknik elektro. Selalu kembalikan HANYA JSON valid tanpa teks tambahan apapun. Jangan gunakan petik ganda di dalam string, jangan ada trailing comma, pastikan JSON tertutup sempurna.'},
         {role:'user', content: prompt}
       ],
-      temperature: 0.8,
-      max_tokens: 2000
+      temperature: 0.7,
+      max_tokens: 3500
     });
     if(data.error) throw new Error(data.error.message);
 
     let raw = stripThink(data.choices?.[0]?.message?.content) || '';
-    // bersihkan kalau ada markdown
-    raw = raw.replace(/```json|```/g,'').trim();
-    // ambil bagian JSON-nya saja
-    const match = raw.match(/\{[\s\S]*\}/);
-    if(!match) throw new Error('Format JSON tidak valid dari AI');
-    const parsed = JSON.parse(match[0]);
-    if(!parsed.soal || parsed.soal.length === 0) throw new Error('Soal kosong');
+    const parsed = parseQuizJSONSafe(raw);
+    if(!parsed.soal || !Array.isArray(parsed.soal) || parsed.soal.length === 0) throw new Error('Soal kosong');
+    if(parsed.soal.length < 5) throw new Error('JSON terpotong (hanya '+parsed.soal.length+'/5 soal)');
+    // validasi struktur tiap soal
+    parsed.soal.forEach((it, idx)=>{
+      if(typeof it.q !== 'string' || !Array.isArray(it.opts) || it.opts.length !== 4 || typeof it.ans !== 'number' || typeof it.exp !== 'string'){
+        throw new Error(`Format soal ke-${idx+1} tidak lengkap`);
+      }
+    });
 
-    qList = parsed.soal;
+    qList = parsed.soal.slice(0,5);
     qIdx=0; qScore=0; qWrong=0; qAnswered=Array(qList.length).fill(null);
 
     document.getElementById('quiz-loading').classList.remove('show');
@@ -858,19 +903,30 @@ Aturan:
     renderQuestion();
 
   } catch(err) {
+    const isJSONErr = /JSON|Unexpected|Expected|parse|soal/i.test(err.message || '');
+    if(isJSONErr && retryCount < 2){
+      document.getElementById('ql-sub').textContent = `Format bermasalah, coba lagi... (${retryCount+1}/2)`;
+      qGenerating = false;
+      // retry dengan delay kecil
+      setTimeout(()=> startAIQuiz(retryCount + 1), 600);
+      return;
+    }
     window.activeQuizSession = false; // Buka kunci navigasi jika gagal
     document.getElementById('quiz-loading').classList.remove('show');
     document.getElementById('quiz-box').style.display = 'block';
+    const friendly = isJSONErr ? 'Format jawaban AI kurang valid (JSON terpotong). Silakan coba lagi — biasanya berhasil di percobaan ke-2.' : err.message;
     document.getElementById('quiz-box').innerHTML = `
       <div style="text-align:center;padding:32px 16px;color:var(--rose)">
         <div style="font-size:28px;margin-bottom:10px">😵</div>
         <div style="font-size:14px;font-weight:600;margin-bottom:6px">Gagal generate soal</div>
-        <div style="font-size:12px;color:var(--text3)">${err.message}</div>
+        <div style="font-size:12px;color:var(--text3);line-height:1.6;max-width:360px;margin:0 auto 4px">${friendly}</div>
+        <div style="font-size:11px;color:var(--text3);font-family:var(--mono);opacity:.7">${String(err.message).slice(0,180)}</div>
         <button class="quiz-start-btn" onclick="startAIQuiz()" style="margin-top:16px;display:block;max-width:200px">🔄 Coba Lagi</button>
       </div>`;
     document.getElementById('quiz-start-btn').disabled = false;
   } finally {
     // BUGFIX #2: always reset flag so retryQuiz / "Coba Lagi" always work
+    // jika sedang retry, biarkan next call yang set true lagi — tetap reset ke false dulu
     qGenerating = false;
   }
 }
