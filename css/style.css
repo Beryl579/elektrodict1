@@ -28,6 +28,7 @@
 
   --font: 'Plus Jakarta Sans', sans-serif;
   --font-h: 'Outfit', sans-serif;
+  --font-chat: 'Space Grotesk', sans-serif;
   --mono: 'Fira Code', monospace;
 
   /* NEUBRUTALISM: radius kecil, shadow offset blok */
@@ -888,14 +889,14 @@ body.light .chat-fab-left{
 }
 .chead{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--line);flex-shrink:0}
 .cava{width:28px;height:28px;border-radius:7px;background:var(--accent-d);border:1px solid #2a2a2a;display:flex;align-items:center;justify-content:center;font-size:12px}
-.cinfo{flex:1}.cname{font-size:13px;font-weight:600;color:var(--text)}.cstatus{font-size:10px;color:var(--green);font-family:var(--mono);transition:color .3s}
+.cinfo{flex:1}.cname{font-family:var(--font-chat);font-size:13px;font-weight:700;letter-spacing:-.01em;color:var(--text)}.cstatus{font-size:10px;color:var(--green);font-family:var(--mono);transition:color .3s}
 .cstatus.offline{color:var(--rose);animation:statusPulse 2s ease-in-out infinite}
 @keyframes statusPulse{0%,100%{opacity:1}50%{opacity:.5}}
 .cback{background:none;border:1px solid var(--line);color:var(--text2);width:28px;height:28px;border-radius:7px;cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center}
 .cmsgs{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:6px}
 .cm{display:flex;flex-direction:column;gap:2px;animation:up .2s ease}
 .cm.u{align-items:flex-end}.cm.b{align-items:flex-start}
-.bbl{max-width:88%;padding:9px 12px;border-radius:var(--r2);font-size:13px;line-height:1.7;word-break:break-word}
+.bbl{max-width:88%;padding:9px 12px;border-radius:var(--r2);font-family:var(--font-chat);font-size:13px;font-weight:500;letter-spacing:-.01em;line-height:1.7;word-break:break-word}
 .cm.u .bbl{background:#1a3a5c;color:#cce0ff;border:var(--nb-border);border-radius:var(--r2);box-shadow:var(--nb-shadow-dark)}
 .cm.b .bbl{background:var(--bg3);color:var(--text);border:var(--nb-border);border-radius:var(--r2);box-shadow:2px 2px 0 var(--accent)}
 .cm.b.err .bbl{background:#1f1010;border-color:#4a2020;color:var(--rose)}
@@ -908,10 +909,10 @@ body.light .chat-fab-left{
 @keyframes td{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-5px)}}
 .quick{padding:6px 12px;display:flex;gap:5px;overflow-x:auto;scrollbar-width:none;border-top:1px solid var(--line);flex-shrink:0}
 .quick::-webkit-scrollbar{display:none}
-.qchip{flex-shrink:0;font-size:11px;font-family:var(--mono);background:var(--bg3);border:1px solid var(--line);color:var(--text2);padding:5px 10px;border-radius: var(--r3);cursor:pointer;transition:all .15s;white-space:nowrap}
+.qchip{flex-shrink:0;font-size:11px;font-family:var(--font-chat);font-weight:700;letter-spacing:.02em;background:var(--bg3);border:1px solid var(--line);color:var(--text2);padding:5px 10px;border-radius: var(--r3);cursor:pointer;transition:all .15s;white-space:nowrap}
 .qchip:hover{border-color:var(--accent);color:var(--accent)}
 .cinp{padding:8px 12px 12px;border-top:1px solid var(--line);display:flex;gap:7px;align-items:flex-end;flex-shrink:0}
-.cinp textarea{flex:1;background:var(--bg3);border:1px solid var(--line);border-radius:var(--r);padding:8px 12px;font-family:var(--font);font-size:13px;color:var(--text);resize:none;outline:none;min-height:38px;max-height:90px;line-height:1.5;transition:border-color .2s}
+.cinp textarea{flex:1;background:var(--bg3);border:1px solid var(--line);border-radius:var(--r);padding:8px 12px;font-family:var(--font-chat);font-size:13px;font-weight:500;color:var(--text);resize:none;outline:none;min-height:38px;max-height:90px;line-height:1.5;transition:border-color .2s}
 .cinp textarea:focus{border-color:var(--accent)}
 .cinp textarea::placeholder{color:var(--text3)}
 .csend{width:38px;height:38px;border-radius:10px;background:var(--accent);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;flex-shrink:0}
@@ -1641,7 +1642,7 @@ body.light .sk-diagram{filter:none}
 .aiv-result-bubble{
   background:var(--bg3);border:1px solid var(--line);
   border-radius:16px;border-top-left-radius:4px;
-  padding:16px 18px;font-size:13px;color:var(--text);
+  padding:16px 18px;font-family:var(--font-chat);font-size:13px;font-weight:500;color:var(--text);
   line-height:1.75;word-break:break-word;
 }
 .aiv-result-bubble .katex{color:var(--amber)}
@@ -2217,7 +2218,9 @@ body.light .led-bulb.on .led-val { color:#fff; }
   max-width: 85%;
   padding: 14px 20px;
   border-radius: 20px;
+  font-family: var(--font-chat);
   font-size: 15px;
+  font-weight: 500;
   line-height: 1.6;
   position: relative;
   animation: bubbleAppear 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
@@ -2324,7 +2327,8 @@ body.light .led-bulb.on .led-val { color:#fff; }
   color: white;
   padding: 10px 0;
   font-size: 16px;
-  font-family: var(--font);
+  font-family: var(--font-chat);
+  font-weight: 500;
   line-height: 1.5;
   resize: none;
   max-height: 200px;
