@@ -75,7 +75,7 @@ window.addEventListener('load',()=>{
   setTimeout(()=>{
     const s=document.getElementById('splash-screen');
     if(s)s.classList.add('fade-out');
-  },2800);
+  },3800);
 });
 let katexLoaded = false;
 // pendingMathEls stores either: DOM element (for auto-render) or {el, latex} object (for katex.render)
