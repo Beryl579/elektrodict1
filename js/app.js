@@ -316,6 +316,14 @@ function switchTab(t){
     showToast("Selesaikan dulu soalnya bro! ⚡🏁");
     return;
   }
+  // Simpan recent tabs (kecuali dashboard)
+  if(t !== 'dashboard'){
+    try{
+      const recent = JSON.parse(localStorage.getItem('ed_recent_tabs') || '[]');
+      const updated = [t, ...recent.filter(x => x !== t)].slice(0, 5);
+      localStorage.setItem('ed_recent_tabs', JSON.stringify(updated));
+    }catch(e){}
+  }
   // If more menu is open, close it
   const moreSheet = document.getElementById('moreSheet');
   if(moreSheet && moreSheet.classList.contains('on')) toggleMoreMenu();
@@ -335,6 +343,10 @@ function switchTab(t){
   document.querySelectorAll('.bnav-item').forEach(b=>b.classList.remove('on'));
   const bn=document.getElementById('bnav-'+t);
   if(bn) bn.classList.add('on');
+  // juga highlight kedua tombol dashboard jika duplicate id (fallback)
+  if(t === 'dashboard'){
+    document.querySelectorAll('[id="bnav-dashboard"]').forEach(el=>el.classList.add('on'));
+  }
 
   // slight delay so display:block renders before transition fires
   setTimeout(()=>{
@@ -344,11 +356,12 @@ function switchTab(t){
       requestAnimationFrame(()=>requestAnimationFrame(()=>pg.classList.add('visible')));
     }
   }, 60);
+  if(t === 'dashboard' && window.ElektroDash) window.ElektroDash.init();
   if(t === 'news') { videoChips(); renderVideos(); }
   if(t === 'about') loadAbout();
   if(t === 'materi') renderMateri();
   else { stopMateriAnims(); materiChatCtx = null; }
-  if(t === 'dashboard' && window.ElektroFBDash) window.ElektroFBDash.open();
+  if(t === 'iot' && window.ElektroFBDash) window.ElektroFBDash.open();
 
   window.scrollTo({top:0,behavior:'smooth'});
 }
@@ -671,6 +684,7 @@ function tog(i){
         c.classList.add('visited');
       }
     }catch{}
+    if(window.ElektroDash) window.ElektroDash.addTermView();
     setTimeout(()=>c.scrollIntoView({behavior:'smooth',block:'nearest'}),50);
   }
 }
@@ -1010,6 +1024,7 @@ function showScore(){
   document.getElementById('sc-c').textContent=qScore;
   document.getElementById('sc-w').textContent=qWrong;
   document.getElementById('sc-t').textContent=total;
+  if(window.ElektroDash){ window.ElektroDash.addQuizScore(pct); window.ElektroDash.addQuizDone(); }
 }
 
 function getScoreText(){
@@ -2285,9 +2300,19 @@ window.onload=()=>{
   initProjects();
   initOnboarding();
   loadChatHistory();
+  // Dashboard sebagai landing page
+  if(window.ElektroDash) window.ElektroDash.updateStreak();
   // #22: set initial page as visible after paint
   requestAnimationFrame(()=>requestAnimationFrame(()=>{
-    document.getElementById('page-kamus').classList.add('visible');
+    document.getElementById('page-dashboard').classList.add('visible');
+    // pastikan nav dashboard on (fallback jika HTML belum)
+    const bd = document.getElementById('bnav-dashboard');
+    if(bd) {
+      document.querySelectorAll('.bnav-item').forEach(b=>b.classList.remove('on'));
+      bd.classList.add('on');
+      document.querySelectorAll('[id="bnav-dashboard"]').forEach(el=>el.classList.add('on'));
+    }
+    if(window.ElektroDash) window.ElektroDash.init();
   }));
 };
 
@@ -2910,7 +2935,7 @@ function renderProjectDetail(prj) {
       <ol style="margin:0; padding-left:20px; color:var(--text2); font-size:13px; line-height:1.9;">
         ${fbSteps.map(s => `<li>${s}</li>`).join('')}
       </ol>
-      <button class="fb-btn fb-btn-primary" style="margin-top:12px;" onclick="switchTab('dashboard')">📊 Buka Dashboard IoT</button>
+      <button class="fb-btn fb-btn-primary" style="margin-top:12px;" onclick="switchTab('iot')">Buka Dashboard IoT</button>
     </div>` : '';
 
   // === Dashboard HTML (field baru: dashboard — template ESP32 Firebase) ===
