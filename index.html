@@ -21,7 +21,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" onload="katexLoaded=true;renderPendingMath()"></script>
-<link rel="stylesheet" href="css/style.css?v=78">
+<link rel="stylesheet" href="css/style.css?v=79">
 </head>
 <body class="light">
   <!-- Single light theme — dark/light toggle disabled -->
@@ -449,39 +449,6 @@
   </div>
 </div>
 
-<!-- ═══════ ONBOARDING POPUP ═══════ -->
-
-<!-- ═══════ ONBOARDING POPUP (EXTRACTED) ═══════ -->
-<div class="onboard-overlay" id="onboardOverlay">
-  <div class="onboard-card">
-    <div class="onboard-quote">
-      <div class="onboard-quote-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:24px;height:24px;"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A5 5 0 0 0 8 8c0 1.3.5 2.6 1.5 3.5.8.8 1.3 1.5 1.5 2.5"></path><path d="M9 18h6"></path><path d="M10 22h4"></path></svg></div>
-      <div class="onboard-quote-text" id="oq-text">Memuat kutipan inspiratif...</div>
-      <div class="onboard-quote-src" id="oq-src">— ElektroBot ⚡</div>
-    </div>
-    <div class="onboard-body">
-      <div class="onboard-title">⚡ ElektroDict</div>
-      <div class="onboard-sub">Kamus teknik elektro lengkap — buat mahasiswa, oleh mahasiswa</div>
-      <div class="onboard-features">
-        <div class="onboard-feat"><span class="onboard-feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5z"></path><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path></svg></span><div class="onboard-feat-info"><div class="onboard-feat-title">100+ Istilah Elektro</div><div class="onboard-feat-desc">Lengkap dengan rumus & penjelasan</div></div></div>
-        <div class="onboard-feat"><span class="onboard-feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;"><circle cx="12" cy="12" r="10"></circle><path d="M9 12h6"></path><path d="M12 9v6"></path></svg></span><div class="onboard-feat-info"><div class="onboard-feat-title">Latihan Soal AI</div><div class="onboard-feat-desc">Soal random di-generate tiap sesi</div></div></div>
-        <div class="onboard-feat"><span class="onboard-feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path><path d="M8 9h8"></path><path d="M8 13h6"></path></svg></span><div class="onboard-feat-info"><div class="onboard-feat-title">ElektroBot AI</div><div class="onboard-feat-desc">Tanya soal elektro, jawab gaul & akurat</div></div></div>
-        <div class="onboard-feat"><span class="onboard-feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;"><rect x="4" y="2" width="16" height="20" rx="2"></rect><line x1="8" y1="6" x2="16" y2="6"></line><line x1="16" y1="14" x2="16" y2="18"></line><path d="M16 10h.01"></path><path d="M12 10h.01"></path><path d="M8 10h.01"></path><path d="M12 14h.01"></path><path d="M8 14h.01"></path><path d="M12 18h.01"></path><path d="M8 18h.01"></path></svg></span><div class="onboard-feat-info"><div class="onboard-feat-title">Lab Proyek (AI)</div><div class="onboard-feat-desc">Rancang proyek mikrokontroler instan</div></div></div>
-        
-        <!-- scroll hint step — only shown on mobile -->
-        <div class="onboard-feat" id="onboard-scroll-hint" style="display:none;background:var(--accent-d);border-color:#2a5a9a">
-          <span class="onboard-feat-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;"><path d="m18 15-6-6-6 6"></path></svg></span>
-          <div class="onboard-feat-info">
-            <div class="onboard-feat-title" style="color:var(--accent)">Menu bisa digeser!</div>
-            <div class="onboard-feat-desc">Tombol navigasi di bawah bisa di-<strong>swipe kanan</strong> untuk akses semua fitur</div>
-          </div>
-        </div>
-      </div>
-      <a href="flowchart.html" target="_blank" class="onboard-btn" style="background:#1e293b; border:1px solid #334155; color:#f1f5f9; margin-bottom:12px; text-decoration:none; display:flex; align-items:center; justify-content:center; gap:8px; font-weight:600;"><span style="font-size:18px;">📄</span> Lihat Diagram Arsitektur (PDF)</a>
-      <button class="onboard-btn" onclick="closeOnboard()">Gas Belajar! ⚡</button>
-    </div>
-  </div>
-</div>
 
 <!-- ═══════ AI VISION PAGE ═══════ -->
 <div class="page" id="page-aivision">
