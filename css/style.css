@@ -1776,43 +1776,38 @@ body.light .led-bulb.on .led-val { color:#fff; }
   .csend { width: 44px; height: 44px; }
 }
 
-/* ── SPLASH SCREEN INTRO — NEOBRUTALISM (polos hitam + grid) ── */
+/* ── SPLASH SCREEN INTRO — PUTIH POLOS NEOBRUTALISM ── */
 #splash-screen{
   position:fixed;inset:0;z-index:10000;
-  background:#0A0A0A;
-  background-image:
-    linear-gradient(rgba(255,234,0,0.07) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,234,0,0.07) 1px, transparent 1px);
-  background-size:28px 28px;
+  background:#FFFFFF;
   display:flex;align-items:center;justify-content:center;
   transition:transform 0.8s cubic-bezier(0.87,0,0.13,1),opacity 0.5s ease;
-  border-bottom:3px solid #FFEA00;
-}
-#splash-screen::before{
-  content:""; position:absolute; inset:0;
-  background:radial-gradient(ellipse at 50% 20%, rgba(255,234,0,0.08), transparent 55%);
-  pointer-events:none;
 }
 #splash-screen.fade-out{transform:translateY(-100%);opacity:0;pointer-events:none}
-.splash-content{text-align:center;display:flex;flex-direction:column;align-items:center;position:relative;z-index:1;padding:0 16px}
+.splash-content{
+  text-align:center;display:flex;flex-direction:column;align-items:center;
+  background:#FFFFFF; border:var(--nb-border); border-radius:var(--r);
+  padding:32px 24px 28px; box-shadow:var(--nb-shadow);
+  max-width:360px; width:calc(100% - 32px);
+}
 .splash-bolt{font-size:80px;filter:drop-shadow(0 0 20px var(--accent));opacity:0;transform:scale(0);animation:boltStrike 0.6s cubic-bezier(0.175,0.885,0.32,1.275) forwards}
-.splash-logo{width:120px;height:120px;object-fit:contain;opacity:0;transform:scale(0);animation:boltStrike 0.6s cubic-bezier(0.175,0.885,0.32,1.275) forwards; filter: drop-shadow(4px 4px 0 #FFEA00); border-radius: 12px;}
-.splash-text{margin-top:20px;font-family:var(--font-h);font-size:32px;font-weight:700;color:#F5F0E8;letter-spacing:-0.02em;opacity:0;transform:translateY(10px);animation:textRev 0.5s ease 0.4s forwards}
-.splash-text span{color:#FFEA00}
+.splash-logo{width:120px;height:120px;object-fit:contain;opacity:0;transform:scale(0);animation:boltStrike 0.6s cubic-bezier(0.175,0.885,0.32,1.275) forwards; filter: drop-shadow(4px 4px 0 #0A0A0A); border-radius: 12px; border:var(--nb-border);}
+.splash-text{margin-top:20px;font-family:var(--font-h);font-size:32px;font-weight:700;color:var(--text);letter-spacing:-0.02em;opacity:0;transform:translateY(10px);animation:textRev 0.5s ease 0.4s forwards}
+.splash-text span{color:var(--text); font-weight:800;}
 .splash-text.typewriter{
   opacity:1; transform:none; animation:none;
-  overflow:hidden; white-space:nowrap; border-right:3px solid #FFEA00;
-  width:0; max-width: 13ch; /* ElektroDict = 11 char, 13ch biar tidak kepotong di Outfit */
+  overflow:hidden; white-space:nowrap; border-right:3px solid var(--text);
+  width:0; max-width: 13ch;
   animation: typing 1.3s steps(11) 0.85s forwards, caretBlink 0.65s step-end 0.85s 4, caretOff 0.2s forwards 2.6s;
 }
 .splash-sub{
-  margin-top:10px; font-family:var(--font); font-size:13px; font-weight:500; color:#A8A29E;
+  margin-top:10px; font-family:var(--font); font-size:13px; font-weight:500; color:var(--text2);
   letter-spacing:.02em; line-height:1.5; max-width: 320px; text-align:center;
   opacity:0; transform: translateY(6px);
   animation: subFade 0.5s ease 1.9s forwards;
 }
 .splash-by{
-  margin-top:16px; font-family:var(--mono); font-size:10px; font-weight:800; letter-spacing:.1em; text-transform:uppercase;
+  margin-top:16px; font-family:var(--mono); font-size:10px; font-weight:800; letter-spacing:.08em; text-transform:uppercase;
   color:#FFEA00; background:#0A0A0A; border:2px solid #FFEA00; padding:8px 14px; border-radius:var(--r3);
   box-shadow:3px 3px 0 #FFEA00; opacity:0; transform:translateY(6px);
   animation: subFade 0.5s ease 2.35s forwards;
