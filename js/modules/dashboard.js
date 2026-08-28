@@ -180,9 +180,9 @@
         <div class="dash-hero-logo"><img src="logo.png" alt="ElektroDict" style="width:100%;height:100%;object-fit:cover;display:block"></div>
         <div class="dash-hero-title">Elektro<span>Dict</span></div>
       </div>
-      <div class="dash-hero-tagline">Kamus, Materi & Lab Teknik Elektro — Belajar dari Nol hingga Mahir</div>
+      <div class="dash-hero-tagline">AKSES MATERI, FITUR AI, DLL — COBAIIN DEH</div>
       <div class="dash-hero-desc">
-        Platform kamus teknik elektro terlengkap untuk mahasiswa & pelajar SMK. Dilengkapi <b>300+ istilah</b> dengan rumus LaTeX, <b>materi visual</b>, <b>latihan soal AI</b> yang beda tiap sesi, dan <b>Lab Proyek Wokwi</b> untuk simulasi Arduino & ESP32 langsung di browser.
+        PLATFORM BELAJAR ELEKTRO SIAPA SAJA BISA AKSES ASAL ADA KEMAUAN. Dilengkapi <b>300+ istilah</b> dengan rumus LaTeX, <b>materi visual</b>, <b>latihan soal AI</b> yang beda tiap sesi, dan <b>Lab Proyek Wokwi</b> untuk simulasi Arduino & ESP32 langsung di browser.
       </div>
       <div class="dash-feature-pills">
         ${pills.map(p=>`<span class="dash-pill">${p}</span>`).join('')}
@@ -452,7 +452,7 @@
         ${renderRecent()}
         ${renderFormulas()}
         ${renderTips()}
-        <div class="dash-foot">by Beryl Nathaniel Sinaga — ElektroDict v83</div>
+        <div class="dash-foot">by Beryl Nathaniel Sinaga — ElektroDict v84</div>
       </div>
     `;
     container.innerHTML = html;
