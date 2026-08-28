@@ -1776,10 +1776,25 @@ body.light .led-bulb.on .led-val { color:#fff; }
   .csend { width: 44px; height: 44px; }
 }
 
-/* ── SPLASH SCREEN INTRO ── */
-#splash-screen{position:fixed;inset:0;z-index:10000;background:var(--bg);display:flex;align-items:center;justify-content:center;transition:transform 0.8s cubic-bezier(0.87,0,0.13,1),opacity 0.5s ease}
+/* ── SPLASH SCREEN INTRO — NEOBRUTALISM (polos hitam + grid) ── */
+#splash-screen{
+  position:fixed;inset:0;z-index:10000;
+  background:#0A0A0A;
+  background-image:
+    linear-gradient(rgba(255,234,0,0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,234,0,0.07) 1px, transparent 1px);
+  background-size:28px 28px;
+  display:flex;align-items:center;justify-content:center;
+  transition:transform 0.8s cubic-bezier(0.87,0,0.13,1),opacity 0.5s ease;
+  border-bottom:3px solid #FFEA00;
+}
+#splash-screen::before{
+  content:""; position:absolute; inset:0;
+  background:radial-gradient(ellipse at 50% 20%, rgba(255,234,0,0.08), transparent 55%);
+  pointer-events:none;
+}
 #splash-screen.fade-out{transform:translateY(-100%);opacity:0;pointer-events:none}
-.splash-content{text-align:center;display:flex;flex-direction:column;align-items:center}
+.splash-content{text-align:center;display:flex;flex-direction:column;align-items:center;position:relative;z-index:1;padding:0 16px}
 .splash-bolt{font-size:80px;filter:drop-shadow(0 0 20px var(--accent));opacity:0;transform:scale(0);animation:boltStrike 0.6s cubic-bezier(0.175,0.885,0.32,1.275) forwards}
 .splash-logo{width:120px;height:120px;object-fit:contain;opacity:0;transform:scale(0);animation:boltStrike 0.6s cubic-bezier(0.175,0.885,0.32,1.275) forwards; filter: drop-shadow(4px 4px 0 #0A0A0A); border-radius: 12px;}
 .splash-text{margin-top:20px;font-family:var(--font-h);font-size:32px;font-weight:700;color:var(--text);letter-spacing:-0.02em;opacity:0;transform:translateY(10px);animation:textRev 0.5s ease 0.4s forwards}
@@ -1797,11 +1812,14 @@ body.light .led-bulb.on .led-val { color:#fff; }
   animation: subFade 0.5s ease 1.9s forwards;
 }
 .splash-by{
-  margin-top:14px; font-family:var(--mono); font-size:11px; font-weight:800; letter-spacing:.14em; text-transform:uppercase;
-  color:var(--bg); background:var(--accent); border:var(--nb-border); padding:6px 14px; border-radius:var(--r3);
-  box-shadow:var(--nb-shadow-sm); opacity:0; transform:translateY(6px);
+  margin-top:16px; font-family:var(--mono); font-size:10px; font-weight:800; letter-spacing:.1em; text-transform:uppercase;
+  color:#FFEA00; background:#0A0A0A; border:2px solid #FFEA00; padding:8px 14px; border-radius:var(--r3);
+  box-shadow:3px 3px 0 #FFEA00; opacity:0; transform:translateY(6px);
   animation: subFade 0.5s ease 2.35s forwards;
+  max-width:360px; text-align:center; line-height:1.6; display:inline-flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:5px;
 }
+.splash-smile{ display:inline-flex; align-items:center; justify-content:center; color:#FFEA00; flex-shrink:0; }
+.splash-smile svg{ width:16px; height:16px; stroke:#FFEA00; }
 @keyframes typing{ from{width:0} to{width:11ch} }
 @keyframes caretBlink{ 0%,100%{border-color:transparent} 50%{border-color:var(--accent)} }
 @keyframes caretOff{ to{border-color:transparent} }
