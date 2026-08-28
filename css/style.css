@@ -85,7 +85,9 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
 /* ── TOP NAV (desktop) ── */
 .nav{position:sticky;top:0;z-index:100;background:var(--glass);backdrop-filter:none;border-bottom:var(--nb-border);transition:all 0.3s ease;padding-top:env(safe-area-inset-top);} /* safe-area: 0 di desktop & Android — hanya berpengaruh di HP ber-notch (iPhone) */
 .nav-inner{max-width:1400px;margin:0 auto;padding:0 20px;display:flex;align-items:center;gap:0;height:54px}
-.logo{display:flex;align-items:center;gap:8px;text-decoration:none;margin-right:16px;flex-shrink:0}
+.logo{display:flex;align-items:center;gap:8px;text-decoration:none;margin-right:16px;flex-shrink:0;cursor:pointer;transition:transform .12s, opacity .12s; -webkit-tap-highlight-color:transparent}
+.logo:active{ transform:translate(1px,1px) scale(.98); opacity:.92; }
+.logo:active .logo-mark{ box-shadow:1px 1px 0 #2A2A2A; transform:translate(1px,1px); }
 .logo-mark{
   width:28px; height:28px;
   border-radius: 4px;
@@ -97,6 +99,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:1
   color: var(--bg);
   overflow:hidden;
   padding:0;
+  transition:transform .12s, box-shadow .12s;
 }
 .logo-name{font-family:var(--font-h);font-size:16px;font-weight:700;color:var(--text);letter-spacing:-.5px;white-space:nowrap}
 .logo-name span{color:var(--text2); font-weight: 800;}
