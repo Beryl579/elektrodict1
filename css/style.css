@@ -4009,3 +4009,76 @@ body:not(.light) .mt-svg-wrap svg [fill="black"] {
 .toast-ico{ font-size:16px; flex-shrink:0; }
 .toast-msg{ flex:1; }
 @keyframes toastIn{ from{opacity:0; transform:translateY(12px) scale(0.95)} to{opacity:1; transform:translateY(0) scale(1)} }
+
+/* ═══════════════════════════════════════════════════════════
+   HOTFIX: cegah geser kiri-kanan di tab Kamus — Infinix Note 40
+   Root cause: beberapa elemen & shadow neubrutalism bisa bikin
+   scrollWidth melebihi viewport di WebView Android → halaman
+   jadi bisa di-pan horizontal. Kunci overflow & touch-action
+   hanya di sumbu X, scroll vertikal tetap normal.
+   ═══════════════════════════════════════════════════════════ */
+html{
+  overflow-x: hidden;
+  overflow-x: clip;
+  max-width: 100%;
+  overscroll-behavior-x: none;
+}
+body{
+  overflow-x: hidden;
+  overflow-x: clip;
+  max-width: 100%;
+  overscroll-behavior-x: none;
+  /* cegah rubber-band horizontal di Android */
+  overscroll-behavior-y: auto;
+  touch-action: pan-y;
+  position: relative;
+  width: 100%;
+}
+/* fbar: scroll horizontal khusus chip, tapi jangan bocor ke page */
+.fbar-wrap{
+  max-width: 100% !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+}
+.fbar{
+  max-width: 100% !important;
+  overscroll-behavior-x: contain !important;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x pan-y !important;
+}
+#page-kamus{
+  touch-action: pan-y !important;
+  overscroll-behavior-x: none !important;
+  overflow-x: clip !important;
+}
+@media(max-width:767px){
+  .page,
+  #page-kamus,
+  .kbody,
+  .ksec,
+  .grid,
+  .feature-grid,
+  .compact-list{
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+    overflow-x: clip !important;
+  }
+  .card,
+  .core-card{
+    max-width: 100% !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+}
+/* toast fixed: pakai % bukan 100vw biar tidak tambah scrollbar gutter di Android */
+.toast-wrap{
+  max-width: calc(100% - 24px) !important;
+}
+@media(max-width:767px){
+  .toast-wrap{
+    max-width: calc(100% - 24px) !important;
+    /* tetap center di mobile, biarkan rule original left:50% + translate */
+  }
+  .page{ padding-left:12px !important; padding-right:12px !important; }
+}
