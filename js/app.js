@@ -3744,6 +3744,7 @@ function openMateriModule(id) {
   const m = (typeof MATERI_MODULES !== 'undefined' ? MATERI_MODULES : []).find(x => x.id === id);
   if (!m) return;
   materiState = { moduleId: id, qIdx: 0, qScore: 0, qAnswered: Array(m.soal.length).fill(null), quizDone: false };
+  if(window.ElektroDash && window.ElektroDash.addMateriDone) window.ElektroDash.addMateriDone(id);
   const detail = document.getElementById('materi-detail');
   // Normalisasi skema section (id/emoji/body) & contoh (judul/soal) agar tidak pernah render "undefined"
   const normSec = s => ({
@@ -3944,6 +3945,7 @@ function markMateriDone() {
   prog[m.id] = prog[m.id] || {};
   prog[m.id].done = true;
   saveMateriProgress(prog);
+  if(window.ElektroDash && window.ElektroDash.addMateriDone) window.ElektroDash.addMateriDone(m.id);
   updateMateriDoneBtn();
 }
 function updateMateriDoneBtn() {
