@@ -1,4 +1,4 @@
-﻿# ⚡ ElektroDict
+# ⚡ ElektroDict
 
 > **Kamus teknik elektro lengkap — buat mahasiswa, oleh mahasiswa.**
 
@@ -26,7 +26,7 @@ semua dalam satu tempat.
 | **AI Vision** | Analisis foto rangkaian/komponen dengan AI |
 | **Lab Proyek (AI)** | Rancang proyek mikrokontroler (Arduino Uno / ESP32) secara instan + 51 template siap pakai |
 | **Dashboard IoT Firebase** | Pantau sensor ESP32 real-time dengan grafik & kontrol servo/RGB via Firebase |
-| **Video Pembelajaran** | Kumpulan video edukasi elektronika dari channel YouTube Indonesia (10 topik, termasuk Instrumentasi & Pengukuran), bisa diputar langsung di dalam app |
+| **Video Pembelajaran** | Kumpulan video edukasi elektronika dari channel YouTube Indonesia (11 topik, termasuk Instrumentasi & Pengukuran dan Belajar Wiring Kontrol Dari Nol), bisa diputar langsung di dalam app |
 | **Logika** | Eksplorasi gerbang logika digital |
 | **Export PDF** | Ekspor kamus / materi menjadi file PDF |
 | **Mode Gelap** | Tema gelap & terang otomatis |
