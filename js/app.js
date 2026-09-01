@@ -3711,10 +3711,24 @@ function getMateriModule() {
   return (typeof MATERI_MODULES !== 'undefined' ? MATERI_MODULES : []).find(x => x.id === materiState.moduleId);
 }
 
+function migrateEbtProgress(prog){
+  try{
+    if(prog['energi-terbarukan'] && !prog['ebt-surya']){
+      const old = prog['energi-terbarukan'];
+      ['ebt-surya','ebt-angin','ebt-air','ebt-biomassa'].forEach(id=>{
+        if(!prog[id]) prog[id]={done: !!old.done, quizBest: old.quizBest!=null?old.quizBest:null};
+      });
+      // hibrida & panasbumi tetap baru (tidak auto-done)
+      saveMateriProgress(prog);
+    }
+    // cleanup old id display (optional keep for history)
+  }catch(e){}
+}
 function renderMateri() {
   const list = document.getElementById('materi-list');
   if (!list) return;
   const prog = getMateriProgress();
+  migrateEbtProgress(prog);
   const cards = (typeof MATERI_MODULES !== 'undefined' ? MATERI_MODULES : []).map(m => {
     const p = prog[m.id] || {};
     const done = p.done ? '<span class="mt-badge-done">✓ Selesai</span>' : '';
@@ -3812,6 +3826,12 @@ function openMateriModule(id) {
     renderMateriQuiz();
     mountOhmAnim();
     mountPwmAnim();
+    mountSuryaAnim();
+    mountAnginAnim();
+    mountHydroAnim();
+    mountBiomassaAnim();
+    mountGeothermalAnim();
+    mountHibridaAnim();
     mountResistorSim();
     mountLedCalc();
     mountBjtSim();
@@ -4085,7 +4105,7 @@ function ohmLoop() {
 
   ohmAnim.raf = requestAnimationFrame(ohmLoop);
 }
-function stopMateriAnims() { stopOhmAnim(); stopPwmAnim(); }
+function stopMateriAnims() { stopOhmAnim(); stopPwmAnim(); /* EBT anims no loop */ }
 
 // ── Animasi interaktif PWM (duty cycle → gelombang + LED) ──
 let pwmAnim = { duty: 50 };
@@ -4158,6 +4178,238 @@ function pwmDraw() {
   ctx.fillStyle = d > 0 ? '#ffe082' : 'rgba(255,255,255,0.5)'; ctx.font = '12px monospace'; ctx.textAlign = 'center';
   ctx.fillText('LED', lx, ly + 42);
   ctx.fillText(d + '%', lx, ly + 58);
+}
+
+// ── EBT Animasi: Surya / Angin / Hydro / Biomassa / Geothermal / Hibrida ──
+let suryaAnim = { g: 1000, area: 10, eta: 20 };
+function mountSuryaAnim(){
+  const wrap=document.getElementById('surya-anim'); if(!wrap) return;
+  wrap.innerHTML=`
+    <div class="ohm-layout">
+      <canvas id="surya-canvas" width="640" height="160"></canvas>
+      <div class="ohm-caption">Geser irradiance & tilt — daya PV ∝ G·A·η·cos(tilt)</div>
+      <div class="ohm-controls">
+        <label>Irradiance <b id="surya-g-val">1000</b> W/m²</label><input type="range" id="surya-g" min="200" max="1200" step="50" value="1000">
+        <label>Luas <b id="surya-a-val">10</b> m²</label><input type="range" id="surya-a" min="2" max="40" step="1" value="10">
+        <label>Efisiensi <b id="surya-e-val">20</b>%</label><input type="range" id="surya-e" min="10" max="24" step="1" value="20">
+      </div>
+      <div class="ohm-readout">
+        <div class="ohm-cell"><div class="ohm-cell-lbl">Daya DC</div><div class="ohm-cell-val" id="surya-p">2,00 kW</div></div>
+        <div class="ohm-cell"><div class="ohm-cell-lbl">Energi/hari (PSH 4,5h)</div><div class="ohm-cell-val" id="surya-eh">9,0 kWh</div></div>
+      </div>
+    </div>`;
+  const g=document.getElementById('surya-g'), a=document.getElementById('surya-a'), e=document.getElementById('surya-e');
+  const upd=()=>{ suryaAnim.g=+g.value; suryaAnim.area=+a.value; suryaAnim.eta=+e.value;
+    document.getElementById('surya-g-val').textContent=g.value;
+    document.getElementById('surya-a-val').textContent=a.value;
+    document.getElementById('surya-e-val').textContent=e.value;
+    const p=suryaAnim.g*suryaAnim.area*suryaAnim.eta/100;
+    document.getElementById('surya-p').textContent=(p/1000).toFixed(2).replace('.',',')+' kW';
+    document.getElementById('surya-eh').textContent=(p*4.5/1000).toFixed(1).replace('.',',')+' kWh';
+    suryaDraw();
+  };
+  g.oninput=upd; a.oninput=upd; e.oninput=upd; upd();
+}
+function suryaDraw(){
+  const c=document.getElementById('surya-canvas'); if(!c) return; const ctx=c.getContext('2d'); const W=c.width,H=c.height; ctx.clearRect(0,0,W,H);
+  // sun
+  const g=suryaAnim.g; const r=14+g/80; ctx.fillStyle='rgba(255,213,79,0.9)'; ctx.beginPath(); ctx.arc(80,40,r,0,Math.PI*2); ctx.fill();
+  // panel
+  const px=220, py=60, pw=260, ph=80; ctx.strokeStyle='rgba(255,255,255,0.3)'; ctx.lineWidth=2; ctx.strokeRect(px,py,pw,ph);
+  // cells grid 4x2
+  ctx.fillStyle='rgba(79,156,249,0.35)'; for(let i=0;i<4;i++) for(let j=0;j<2;j++) ctx.fillRect(px+10+i*60, py+10+j*35, 50,25);
+  // rays
+  ctx.strokeStyle='rgba(255,235,59,0.6)'; ctx.lineWidth=1.5; for(let i=0;i<5;i++){ ctx.beginPath(); ctx.moveTo(110+i*18,55); ctx.lineTo(px+20+i*45, py); ctx.stroke();}
+  ctx.fillStyle='rgba(255,255,255,0.7)'; ctx.font='11px monospace'; ctx.textAlign='center';
+  ctx.fillText('G='+g+' W/m²', px+pw/2, py+ph+18);
+  ctx.fillText('P='+ (g*suryaAnim.area*suryaAnim.eta/100/1000).toFixed(2)+' kW', px+pw/2, py-10);
+}
+let anginAnim={v:8, r:40, cp:38};
+function mountAnginAnim(){
+  const wrap=document.getElementById('angin-anim'); if(!wrap) return;
+  wrap.innerHTML=`
+    <div class="ohm-layout">
+      <canvas id="angin-canvas" width="640" height="160"></canvas>
+      <div class="ohm-caption">Geser kecepatan angin — daya ∝ v³ (kubik)</div>
+      <div class="ohm-controls">
+        <label>Kecepatan v <b id="angin-v-val">8</b> m/s</label><input type="range" id="angin-v" min="3" max="25" step="0.5" value="8">
+        <label>Radius <b id="angin-r-val">40</b> m</label><input type="range" id="angin-r" min="10" max="60" step="5" value="40">
+        <label>Cp <b id="angin-cp-val">38</b>%</label><input type="range" id="angin-cp" min="20" max="45" step="1" value="38">
+      </div>
+      <div class="ohm-readout">
+        <div class="ohm-cell"><div class="ohm-cell-lbl">Area</div><div class="ohm-cell-val" id="angin-a">5.027 m²</div></div>
+        <div class="ohm-cell"><div class="ohm-cell-lbl">Daya P=½ρAv³Cp</div><div class="ohm-cell-val" id="angin-p">0,60 MW</div></div>
+      </div>
+    </div>`;
+  const vi=document.getElementById('angin-v'), ri=document.getElementById('angin-r'), ci=document.getElementById('angin-cp');
+  const upd=()=>{ anginAnim.v=+vi.value; anginAnim.r=+ri.value; anginAnim.cp=+ci.value;
+    document.getElementById('angin-v-val').textContent=vi.value;
+    document.getElementById('angin-r-val').textContent=ri.value;
+    document.getElementById('angin-cp-val').textContent=ci.value;
+    const A=Math.PI*anginAnim.r*anginAnim.r; const P=0.5*1.225*A*Math.pow(anginAnim.v,3)*anginAnim.cp/100;
+    document.getElementById('angin-a').textContent=Math.round(A).toLocaleString('id-ID')+' m²';
+    document.getElementById('angin-p').textContent=(P/1e6).toFixed(2).replace('.',',')+' MW';
+    anginDraw();
+  };
+  vi.oninput=upd; ri.oninput=upd; ci.oninput=upd; upd();
+}
+function anginDraw(){
+  const c=document.getElementById('angin-canvas'); if(!c) return; const ctx=c.getContext('2d'); const W=c.width,H=c.height; ctx.clearRect(0,0,W,H);
+  const v=anginAnim.v; const len= 20+v*3;
+  ctx.strokeStyle='rgba(129,212,250,0.7)'; ctx.lineWidth=2;
+  for(let i=0;i<8;i++){ const y=20+i*18; ctx.beginPath(); ctx.moveTo(20,y); ctx.lineTo(20+len,y); ctx.lineTo(20+len-8,y-4); ctx.moveTo(20+len,y); ctx.lineTo(20+len-8,y+4); ctx.stroke();}
+  // turbine simple
+  const cx=380, cy=80; ctx.strokeStyle='rgba(255,255,255,0.6)'; ctx.lineWidth=4; ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(cx,140); ctx.stroke();
+  ctx.fillStyle='rgba(255,255,255,0.8)'; ctx.beginPath(); ctx.arc(cx,cy,10,0,Math.PI*2); ctx.fill();
+  const ang=Date.now()/400; for(let k=0;k<3;k++){ const a=ang+k*2.09; ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(cx+50*Math.cos(a), cy+50*Math.sin(a)); ctx.strokeStyle='rgba(255,255,255,0.9)'; ctx.lineWidth=3; ctx.stroke();}
+  ctx.fillStyle='rgba(255,255,255,0.7)'; ctx.font='11px monospace'; ctx.textAlign='center'; ctx.fillText('v='+v+' m/s', cx, cy+65);
+}
+let hydroAnim={q:0.5, h:15, eta:75};
+function mountHydroAnim(){
+  const wrap=document.getElementById('hydro-anim'); if(!wrap) return;
+  wrap.innerHTML=`
+    <div class="ohm-layout">
+      <canvas id="hydro-canvas" width="640" height="160"></canvas>
+      <div class="ohm-caption">Geser debit Q & head H — P = η·ρ·g·Q·H</div>
+      <div class="ohm-controls">
+        <label>Debit Q <b id="hydro-q-val">0,5</b> m³/s</label><input type="range" id="hydro-q" min="0.1" max="5" step="0.1" value="0.5">
+        <label>Head H <b id="hydro-h-val">15</b> m</label><input type="range" id="hydro-h" min="2" max="100" step="1" value="15">
+        <label>η <b id="hydro-eta-val">75</b>%</label><input type="range" id="hydro-eta" min="60" max="90" step="5" value="75">
+      </div>
+      <div class="ohm-readout">
+        <div class="ohm-cell"><div class="ohm-cell-lbl">Daya</div><div class="ohm-cell-val" id="hydro-p">55 kW</div></div>
+        <div class="ohm-cell"><div class="ohm-cell-lbl">Turbin rekomendasi</div><div class="ohm-cell-val" id="hydro-t">Kaplan</div></div>
+      </div>
+    </div>`;
+  const qi=document.getElementById('hydro-q'), hi=document.getElementById('hydro-h'), ei=document.getElementById('hydro-eta');
+  const upd=()=>{ hydroAnim.q=+qi.value; hydroAnim.h=+hi.value; hydroAnim.eta=+ei.value;
+    document.getElementById('hydro-q-val').textContent=qi.value.replace('.',',');
+    document.getElementById('hydro-h-val').textContent=hi.value;
+    document.getElementById('hydro-eta-val').textContent=ei.value;
+    const P=hydroAnim.eta/100*1000*9.81*hydroAnim.q*hydroAnim.h;
+    document.getElementById('hydro-p').textContent=(P/1000).toFixed(1).replace('.',',')+' kW';
+    let rec='Francis'; if(hydroAnim.h>150) rec='Pelton'; else if(hydroAnim.h<30) rec='Kaplan'; else if(hydroAnim.h<80) rec='Crossflow/Francis';
+    document.getElementById('hydro-t').textContent=rec;
+    hydroDraw();
+  };
+  qi.oninput=upd; hi.oninput=upd; ei.oninput=upd; upd();
+}
+function hydroDraw(){
+  const c=document.getElementById('hydro-canvas'); if(!c) return; const ctx=c.getContext('2d'); const W=c.width,H=c.height; ctx.clearRect(0,0,W,H);
+  const h=hydroAnim.h; const q=hydroAnim.q;
+  // reservoir
+  ctx.fillStyle='rgba(79,156,249,0.3)'; ctx.fillRect(40,30,160,60); ctx.strokeStyle='rgba(79,156,249,0.6)'; ctx.strokeRect(40,30,160,60);
+  // penstock
+  const sy=60, ey=120-h/2; ctx.strokeStyle='rgba(129,212,250,0.8)'; ctx.lineWidth=6; ctx.beginPath(); ctx.moveTo(200,60); ctx.lineTo(320,ey); ctx.stroke();
+  // turbine
+  ctx.fillStyle='rgba(255,255,255,0.85)'; ctx.beginPath(); ctx.arc(340,ey,18,0,Math.PI*2); ctx.fill(); ctx.fillStyle='rgba(0,0,0,0.4)'; ctx.font='10px monospace'; ctx.textAlign='center'; ctx.fillText('T',340,ey+4);
+  // water drops
+  ctx.fillStyle='rgba(129,212,250,0.9)'; for(let i=0;i<6;i++){ const t=(Date.now()/300+i)%1; const x=200+(120*t); const y=60+(ey-60)*t; ctx.beginPath(); ctx.arc(x,y,3,0,Math.PI*2); ctx.fill();}
+  ctx.fillStyle='rgba(255,255,255,0.7)'; ctx.font='11px monospace'; ctx.textAlign='left'; ctx.fillText('H='+h+'m Q='+q+'m³/s', 400, ey+5);
+}
+let biomassaAnim={m:15};
+function mountBiomassaAnim(){
+  const wrap=document.getElementById('biomassa-anim'); if(!wrap) return;
+  wrap.innerHTML=`
+    <div class="ohm-layout">
+      <canvas id="biomassa-canvas" width="640" height="120"></canvas>
+      <div class="ohm-caption">Geser kadar air — LHV turun</div>
+      <div class="ohm-controls">
+        <label>Moisture <b id="bio-m-val">15</b>%</label><input type="range" id="bio-m" min="5" max="60" step="5" value="15">
+      </div>
+      <div class="ohm-readout">
+        <div class="ohm-cell"><div class="ohm-cell-lbl">LHV basah (dari 18 MJ/kg)</div><div class="ohm-cell-val" id="bio-lhv">14,3 MJ/kg</div></div>
+        <div class="ohm-cell"><div class="ohm-cell-lbl">Daya boiler 1 t/hari</div><div class="ohm-cell-val" id="bio-p">~1,2 MWh listrik</div></div>
+      </div>
+    </div>`;
+  const mi=document.getElementById('bio-m');
+  const upd=()=>{ biomassaAnim.m=+mi.value; document.getElementById('bio-m-val').textContent=mi.value;
+    const M=biomassaAnim.m/100; const lhv=18*(1-M)-2.44*M; const lhvC=Math.max(0,lhv);
+    document.getElementById('bio-lhv').textContent=lhvC.toFixed(1).replace('.',',')+' MJ/kg';
+    const mwh= (lhvC*1000/3.6*0.25/1000).toFixed(1); // 1 ton
+    document.getElementById('bio-p').textContent='~'+mwh.replace('.',',')+' MWh listrik';
+    biomassaDraw(lhvC);
+  };
+  mi.oninput=upd; upd();
+}
+function biomassaDraw(lhv){
+  const c=document.getElementById('biomassa-canvas'); if(!c) return; const ctx=c.getContext('2d'); ctx.clearRect(0,0,c.width,c.height);
+  const pct=Math.max(5, Math.min(100, lhv/18*100));
+  ctx.fillStyle='rgba(255,255,255,0.15)'; ctx.fillRect(40,50,560,30); ctx.fillStyle='rgba(62,207,142,0.8)'; ctx.fillRect(40,50,560*pct/100,30);
+  ctx.strokeStyle='rgba(255,255,255,0.3)'; ctx.strokeRect(40,50,560,30);
+  ctx.fillStyle='rgba(255,255,255,0.8)'; ctx.font='12px monospace'; ctx.textAlign='center'; ctx.fillText(lhv.toFixed(1)+' MJ/kg ('+Math.round(pct)+'%)',320,70);
+}
+let geoAnim={t:250};
+function mountGeothermalAnim(){
+  const wrap=document.getElementById('geothermal-anim'); if(!wrap) return;
+  wrap.innerHTML=`
+    <div class="ohm-layout">
+      <canvas id="geo-canvas" width="640" height="140"></canvas>
+      <div class="ohm-caption">Geser suhu reservoir — pilih Flash vs Binary</div>
+      <div class="ohm-controls">
+        <label>Suhu reservoir <b id="geo-t-val">250</b>°C</label><input type="range" id="geo-t" min="100" max="320" step="10" value="250">
+        <label><input type="radio" name="geo-type" value="flash" checked> Flash</label>
+        <label><input type="radio" name="geo-type" value="binary"> Binary ORC</label>
+      </div>
+      <div class="ohm-readout">
+        <div class="ohm-cell"><div class="ohm-cell-lbl">Rekomendasi</div><div class="ohm-cell-val" id="geo-rec">Flash</div></div>
+        <div class="ohm-cell"><div class="ohm-cell-lbl">Daya/sumur</div><div class="ohm-cell-val" id="geo-p">~4,7 MW</div></div>
+      </div>
+    </div>`;
+  const ti=document.getElementById('geo-t'); const rec=document.getElementById('geo-rec'); const pp=document.getElementById('geo-p');
+  const upd=()=>{ geoAnim.t=+ti.value; document.getElementById('geo-t-val').textContent=ti.value;
+    const type=document.querySelector('input[name=\"geo-type\"]:checked').value;
+    const isFlash= type==='flash';
+    const needFlash = geoAnim.t>=180;
+    rec.textContent = needFlash? (geoAnim.t>250?'Double Flash':'Single Flash') : 'Binary ORC';
+    rec.style.color = (isFlash===needFlash)? '#3ecf8e':'#ff8a65';
+    // rough power: 50kg/s brine, flash frac
+    let p=0; if(geoAnim.t>=180){ const h=1085+(geoAnim.t-250)*2; const frac=(h-640)/(2748-640); p=50*frac*600*0.75/1000; } else { p=50*4.18*(geoAnim.t-70)*0.12/1000 +1.5; }
+    pp.textContent='~'+p.toFixed(1).replace('.',',')+' MW';
+    geoDraw(type);
+  };
+  ti.oninput=upd; document.querySelectorAll('input[name=\"geo-type\"]').forEach(r=>r.oninput=upd); upd();
+}
+function geoDraw(type){
+  const c=document.getElementById('geo-canvas'); if(!c) return; const ctx=c.getContext('2d'); ctx.clearRect(0,0,c.width,c.height);
+  const isFlash=type==='flash';
+  ctx.fillStyle='rgba(255,100,50,0.15)'; ctx.fillRect(40,100,560,20); // reservoir
+  ctx.fillStyle='rgba(255,138,101,0.7)'; ctx.fillRect(300,100,4,20);
+  ctx.strokeStyle='rgba(255,255,255,0.5)'; ctx.lineWidth=4; ctx.beginPath(); ctx.moveTo(302,100); ctx.lineTo(302,50); ctx.stroke();
+  ctx.fillStyle='rgba(255,255,255,0.9)'; ctx.beginPath(); ctx.arc(302,40,12,0,Math.PI*2); ctx.fill(); ctx.fillStyle='#333'; ctx.font='9px monospace'; ctx.textAlign='center'; ctx.fillText(isFlash?'SEP':'HX',302,44);
+  ctx.fillStyle='rgba(255,255,255,0.7)'; ctx.font='11px monospace'; ctx.fillText(isFlash?'Flash Steam':'Binary ORC',320,20);
+}
+let hibridaAnim={dod:90};
+function mountHibridaAnim(){
+  const wrap=document.getElementById('hibrida-anim'); if(!wrap) return;
+  wrap.innerHTML=`
+    <div class="ohm-layout">
+      <canvas id="hibrida-canvas" width="640" height="120"></canvas>
+      <div class="ohm-caption">Geser DoD — umur vs kapasitas usable</div>
+      <div class="ohm-controls">
+        <label>DoD <b id="hib-dod-val">90</b>%</label><input type="range" id="hib-dod" min="50" max="100" step="5" value="90">
+      </div>
+      <div class="ohm-readout">
+        <div class="ohm-cell"><div class="ohm-cell-lbl">Cycle life</div><div class="ohm-cell-val" id="hib-cycle">4000</div></div>
+        <div class="ohm-cell"><div class="ohm-cell-lbl">Biaya/kWh/cycle</div><div class="ohm-cell-val" id="hib-cost">Rp 700</div></div>
+      </div>
+    </div>`;
+  const di=document.getElementById('hib-dod');
+  const upd=()=>{ hibridaAnim.dod=+di.value; document.getElementById('hib-dod-val').textContent=di.value;
+    const base=4000; const dod0=90; const k=1.2; const cyc=Math.round(base*Math.pow(dod0/hibridaAnim.dod,k));
+    document.getElementById('hib-cycle').textContent=cyc.toLocaleString('id-ID');
+    const cost=Math.round(18000000/(7.2*cyc)); // 3 modul 7.2kWh Rp18jt
+    document.getElementById('hib-cost').textContent='Rp '+cost.toLocaleString('id-ID');
+    hibridaDraw();
+  };
+  di.oninput=upd; upd();
+}
+function hibridaDraw(){
+  const c=document.getElementById('hibrida-canvas'); if(!c) return; const ctx=c.getContext('2d'); ctx.clearRect(0,0,c.width,c.height);
+  const dod=hibridaAnim.dod; const pct=dod;
+  ctx.fillStyle='rgba(255,255,255,0.15)'; ctx.fillRect(40,50,560,30); ctx.fillStyle=dod>80?'rgba(255,100,80,0.8)':'rgba(62,207,142,0.8)'; ctx.fillRect(40,50,560*pct/100,30);
+  ctx.strokeStyle='rgba(255,255,255,0.3)'; ctx.strokeRect(40,50,560,30);
+  ctx.fillStyle='rgba(255,255,255,0.8)'; ctx.font='12px monospace'; ctx.textAlign='center'; ctx.fillText('DoD '+dod+'% → '+(Math.round(4000*Math.pow(90/dod,1.2)))+' cycles',320,70);
 }
 
 function mountResistorSim() {
