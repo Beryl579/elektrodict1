@@ -60,19 +60,66 @@ Gunakan untuk konten materi; sertakan atribusi sesuai lisensi masing-masing.
 | `plc-cpu.jpg` | Unit PLC industri | CC BY-SA 4.0 | [File:Siemens S7-1200 PLC.jpg](https://commons.wikimedia.org/wiki/File:Siemens_S7-1200_PLC.jpg) |
 | `ladder-and.jpg` | Ladder diagram AND gate | CC BY-SA 4.0 | [File:Ladder diagram.svg](https://commons.wikimedia.org/wiki/File:Ladder_diagram.svg) |
 
-## Modul IoT & Firebase
+## Modul Internet of Things (IoT)
 
 | File | Isi | Lisensi | Sumber |
 |---|---|---|---|
-| `iot-diagram.jpg` | Diagram arsitektur IoT | CC BY-SA 4.0 | [File:IoT architecture.svg](https://commons.wikimedia.org/wiki/File:IoT_architecture.svg) |
+| `iot-diagram.jpg` | Diagram arsitektur dasar IoT (edge, gateway, cloud, app) | CC BY-SA 4.0 | [File:IoT architecture.svg](https://commons.wikimedia.org/wiki/File:IoT_architecture.svg) |
+| `esp32-devkitc-pinout.png` | Diagram pinout ESP32 DevKitC V4 (38 pin) | CC BY-SA 4.0 | [File:ESP32-Devkit-Pinout-Rev-12-9600p.png](https://commons.wikimedia.org/wiki/File:ESP32-Devkit-Pinout-Rev-12-9600p.png) — Vishnu Maiea |
+| `esp32-wroom-module.jpg` | Foto modul ESP-WROOM-32 Wi-Fi & Bluetooth | CC BY-SA 4.0 | [File:Espressif ESP-WROOM-32 Wi-Fi & Bluetooth Module.jpg](https://commons.wikimedia.org/wiki/File:Espressif_ESP-WROOM-32_Wi-Fi_%26_Bluetooth_Module.jpg) — Brian Krent |
+| `dht22-sensor.jpg` | Foto sensor suhu & kelembaban DHT22 (AM2302) | CC BY-SA 4.0 | [File:DHT22 sensor.jpg](https://commons.wikimedia.org/wiki/File:DHT22_sensor.jpg) |
+| `rf-spectrum.png` | Spektrum gelombang radio & nirkabel (ISM band) | CC BY-SA 3.0 | [File:Electromagnetic-Spectrum.svg](https://commons.wikimedia.org/wiki/File:Electromagnetic-Spectrum.svg) |
+| `lora-network.png` | Diagram arsitektur jaringan LoRaWAN (node, gateway, server) | CC BY-SA 4.0 | [File:LoRaWAN Architecture.png](https://commons.wikimedia.org/wiki/File:LoRaWAN_Architecture.png) |
+| `hmi-panel.jpg` | Panel antarmuka visual monitoring telemetri industri | CC BY-SA 4.0 | [File:Siemens TP900 Comfort.jpg](https://commons.wikimedia.org/wiki/File:Siemens_TP900_Comfort.jpg) — Siemens AG |
 
-## Modul Energi Terbarukan & Pembangkit
+## Modul EBT — Surya (PLTS)
 
 | File | Isi | Lisensi | Sumber |
 |---|---|---|---|
-| `pv-system.jpg` | Sistem PLTS atap | CC BY-SA 4.0 | [File:Photovoltaic system.jpg](https://commons.wikimedia.org/wiki/File:Photovoltaic_system.jpg) |
-| `hydro-dam.png` | Diagram pembangkit listrik tenaga air | CC BY-SA 4.0 | [File:Hydroelectric dam.svg](https://commons.wikimedia.org/wiki/File:Hydroelectric_dam.svg) |
-| `wind-turbine.png` | Turbin angin modern (HAWT) | CC BY-SA 4.0 | [File:Wind turbine.svg](https://commons.wikimedia.org/wiki/File:Wind_turbine.svg) |
+| `pv-system.jpg` | Sistem PLTS atap on-grid | CC BY-SA 4.0 | [File:Photovoltaic system.jpg](https://commons.wikimedia.org/wiki/File:Photovoltaic_system.jpg) |
+| `Standard_Solar_Cell.png` | Struktur sel surya kristalin | CC BY-SA 3.0 | [File:Standard Solar Cell.png](https://commons.wikimedia.org/wiki/File:Standard_Solar_Cell.png) |
+| `Best_Research-Cell_Efficiencies.png` | Grafik NREL efisiensi sel | CC BY-SA / PD (NREL) | [File:Best Research-Cell Efficiencies.png](https://commons.wikimedia.org/wiki/File:Best_Research-Cell_Efficiencies.png) — NREL |
+| `Solar_cell_I-V_curve.svg` | Kurva I-V, Fill Factor | CC BY-SA 4.0 | [File:Solar cell I-V curve.svg](https://commons.wikimedia.org/wiki/File:Solar_cell_I-V_curve.svg) |
+
+## Modul EBT — Angin (PLTB)
+
+| File | Isi | Lisensi | Sumber |
+|---|---|---|---|
+| `wind-turbine.png` | Turbin HAWT 3 bilah | CC BY-SA 4.0 | [File:Wind turbine.svg](https://commons.wikimedia.org/wiki/File:Wind_turbine.svg) |
+| `Wind_turbine_power_curve.svg` | Kurva Cp vs TSR / power curve | CC BY-SA 3.0 | [File:Wind turbine power curve.svg](https://commons.wikimedia.org/wiki/File:Wind_turbine_power_curve.svg) |
+| `Darrieus_wind_turbine.svg` | VAWT Darrieus | CC BY-SA 3.0 | [File:Darrieus wind turbine.svg](https://commons.wikimedia.org/wiki/File:Darrieus_wind_turbine.svg) |
+
+## Modul EBT — Air (PLTA & Micro-Hydro)
+
+| File | Isi | Lisensi | Sumber |
+|---|---|---|---|
+| `hydro-dam.png` | Skema PLTA reservoir | CC BY-SA 4.0 | [File:Hydroelectric dam.svg](https://commons.wikimedia.org/wiki/File:Hydroelectric_dam.svg) |
+| `Pelton_wheel.svg` | Turbin Pelton impulse | CC BY-SA 3.0 | [File:Pelton wheel.svg](https://commons.wikimedia.org/wiki/File:Pelton_wheel.svg) |
+| `Francis_turbine.svg` | Turbin Francis reaction | CC BY-SA 3.0 | [File:Francis turbine.svg](https://commons.wikimedia.org/wiki/File:Francis_turbine.svg) |
+| `Pumped-storage_hydroelectricity.svg` | Skema pumped storage | CC BY-SA 3.0 | [File:Pumped-storage hydroelectricity.svg](https://commons.wikimedia.org/wiki/File:Pumped-storage_hydroelectricity.svg) |
+
+## Modul EBT — Biomassa & Biogas
+
+| File | Isi | Lisensi | Sumber |
+|---|---|---|---|
+| `Gasification_process.svg` | Proses gasifikasi → syngas | CC BY-SA 3.0 | [File:Gasification process.svg](https://commons.wikimedia.org/wiki/File:Gasification_process.svg) |
+| `Biogas_plant.svg` | Skema digester biogas | CC BY-SA 4.0 | [File:Biogas plant.svg](https://commons.wikimedia.org/wiki/File:Biogas_plant.svg) |
+
+## Modul EBT — Panas Bumi (Geothermal)
+
+| File | Isi | Lisensi | Sumber |
+|---|---|---|---|
+| `Geothermal_energy.svg` | Skema reservoir panas bumi | CC BY-SA 3.0 | [File:Geothermal energy.svg](https://commons.wikimedia.org/wiki/File:Geothermal_energy.svg) |
+| `Flash_steam_geothermal_plant.svg` | Flash steam plant | CC BY-SA 3.0 | [File:Flash steam geothermal plant.svg](https://commons.wikimedia.org/wiki/File:Flash_steam_geothermal_plant.svg) |
+| `Binary_cycle_geothermal_plant.svg` | Binary ORC plant | CC BY-SA 3.0 | [File:Binary cycle geothermal plant.svg](https://commons.wikimedia.org/wiki/File:Binary_cycle_geothermal_plant.svg) |
+| `Ring_of_Fire_map.svg` | Peta Ring of Fire | CC BY-SA 3.0 | [File:Ring of Fire map.svg](https://commons.wikimedia.org/wiki/File:Ring_of_Fire_map.svg) |
+
+## Modul EBT — Hibrida & Penyimpanan
+
+| File | Isi | Lisensi | Sumber |
+|---|---|---|---|
+| `pv-system.jpg` | Sistem PLTS on-grid (reuse) | CC BY-SA 4.0 | [File:Photovoltaic system.jpg](https://commons.wikimedia.org/wiki/File:Photovoltaic_system.jpg) |
+| `Lithium_iron_phosphate_battery.svg` | Struktur LiFePO4 | CC BY-SA 3.0 | [File:Lithium iron phosphate battery.svg](https://commons.wikimedia.org/wiki/File:Lithium_iron_phosphate_battery.svg) |
 
 ## Modul Instrumentasi & Alat Ukur
 
@@ -111,3 +158,23 @@ Gunakan untuk konten materi; sertakan atribusi sesuai lisensi masing-masing.
 | `solar-inverter.jpg` | Inverter surya SMA Sunny Boy | CC BY-SA 3.0 | [File:SMA Sunny Boy inverter.jpg](https://commons.wikimedia.org/wiki/File:SMA_Sunny_Boy_inverter.jpg) |
 | `rf-spectrum.png` | Spektrum elektromagnetik | CC BY-SA 3.0 | [File:Electromagnetic-Spectrum.svg](https://commons.wikimedia.org/wiki/File:Electromagnetic-Spectrum.svg) |
 | `lora-network.png` | Arsitektur LoRaWAN | CC BY-SA 4.0 | [File:LoRaWAN Architecture.png](https://commons.wikimedia.org/wiki/File:LoRaWAN_Architecture.png) |
+
+## Modul Analisis Rangkaian Lanjut (NEW — Wikimedia direct)
+
+| File (via Special:FilePath) | Isi | Lisensi | Sumber |
+|---|---|---|---|
+| `Thevenin_equivalent_circuit.svg` | Rangkaian ekivalen Thevenin (Vth seri Rth) | CC BY-SA 3.0 / PD | [File:Thevenin equivalent circuit.svg](https://commons.wikimedia.org/wiki/File:Thevenin_equivalent_circuit.svg) |
+| `Thevenin_norton_equivalents.svg` | Perbandingan Thevenin vs Norton | PD-self | [File:Thevenin norton equivalents.svg](https://commons.wikimedia.org/wiki/File:Thevenin_norton_equivalents.svg) |
+| `Norton_Equivalent.svg` | Rangkaian ekivalen Norton (In paralel Rn) | CC BY-SA 3.0 / PD | [File:Norton Equivalent.svg](https://commons.wikimedia.org/wiki/File:Norton_Equivalent.svg) |
+| `Series_RC_capacitor_voltage.svg` | Kurva pengisian kapasitor RC (τ, 5τ) | CC BY-SA 3.0 | [File:Series RC capacitor voltage.svg](https://commons.wikimedia.org/wiki/File:Series_RC_capacitor_voltage.svg) — Inductiveload |
+
+## Modul Elektronika Analog & Op-Amp (NEW — Wikimedia direct)
+
+| File (via Special:FilePath) | Isi | Lisensi | Sumber |
+|---|---|---|---|
+| `Op-amp_symbol.svg` | Simbol Op-Amp ideal | CC BY-SA 3.0 | [File:Op-amp symbol.svg](https://commons.wikimedia.org/wiki/File:Op-amp_symbol.svg) — Omegatron |
+| `Op-Amp_Inverting_Amplifier.svg` | Penguat inverting (Rf/Rin) | PD | [File:Op-Amp Inverting Amplifier.svg](https://commons.wikimedia.org/wiki/File:Op-Amp_Inverting_Amplifier.svg) — Inductiveload |
+| `Op-Amp_Non-Inverting_Amplifier.svg` | Penguat non-inverting (1+Rf/R1) | PD | [File:Op-Amp Non-Inverting Amplifier.svg](https://commons.wikimedia.org/wiki/File:Op-Amp_Non-Inverting_Amplifier.svg) — Inductiveload |
+| `Op-Amp_Differential_Amplifier.svg` | Differential amplifier / dasar komparator | PD | [File:Op-Amp Differential Amplifier.svg](https://commons.wikimedia.org/wiki/File:Op-Amp_Differential_Amplifier.svg) — Inductiveload |
+| `Sallen-Key_Generic_Circuit.svg` | Topologi generic Sallen-Key | CC BY-SA 3.0 | [File:Sallen-Key Generic Circuit.svg](https://commons.wikimedia.org/wiki/File:Sallen-Key_Generic_Circuit.svg) |
+| `WienBridgeOscillator.svg` | Osilator Jembatan Wien (RC seri-paralel) | CC BY-SA 3.0 | [File:WienBridgeOscillator.svg](https://commons.wikimedia.org/wiki/File:WienBridgeOscillator.svg) |
