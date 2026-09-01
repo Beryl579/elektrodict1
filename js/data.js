@@ -545,6 +545,7 @@ const VIDEO_TEMPLATE_LINKS = {
 const WOKWI_TEMPLATES = [
   {
     id: "tpl-led-blink",
+    "wokwi_id": "473338591560793089",
     title: "LED Blink (Hello World)",
     desc: "Kedipkan LED tiap 1 detik — proyek paling dasar untuk memahami struktur setup() dan loop() di Arduino.",
     difficulty: "Mudah",
@@ -579,6 +580,7 @@ const WOKWI_TEMPLATES = [
   },
   {
     id: "tpl-traffic-light",
+    "wokwi_id": "473338591560793089",
     title: "Lampu Lalu Lintas 3 LED",
     desc: "Simulasi lampu lalu lintas: merah 3 detik, kuning 1 detik, hijau 3 detik secara bergantian.",
     difficulty: "Mudah",
@@ -624,6 +626,7 @@ const WOKWI_TEMPLATES = [
   },
   {
     id: "tpl-dht22",
+    "wokwi_id": "473338591560793089",
     title: "Suhu & Kelembaban DHT22",
     desc: "Baca suhu dan kelembaban ruangan dengan sensor DHT22, tampilkan di Serial Monitor tiap 2 detik.",
     difficulty: "Mudah",
@@ -658,6 +661,7 @@ const WOKWI_TEMPLATES = [
   },
   {
     id: "tpl-hc-sr04",
+    "wokwi_id": "473338591560793089",
     title: "Pengukur Jarak HC-SR04",
     desc: "Ukur jarak benda dengan sensor ultrasonik HC-SR04 dan tampilkan dalam cm di Serial Monitor.",
     difficulty: "Menengah",
@@ -693,6 +697,7 @@ const WOKWI_TEMPLATES = [
   },
   {
     id: "tpl-lcd1602",
+    "wokwi_id": "473338591560793089",
     title: "Tampilan LCD 16x2",
     desc: "Tampilkan teks 'ElektroDict!' pada LCD 16x2 mode parallel 4-bit — dasar untuk proyek display.",
     difficulty: "Menengah",
@@ -739,6 +744,7 @@ const WOKWI_TEMPLATES = [
   },
   {
     id: "tpl-relay",
+    "wokwi_id": "473338591560793089",
     title: "Kendali Relay (Motor/Pompa)",
     desc: "Kendalikan relay untuk menyalakan/mematikan beban (motor, pompa, lampu AC) dari pin digital.",
     difficulty: "Menengah",
@@ -773,6 +779,7 @@ const WOKWI_TEMPLATES = [
   },
   {
     id: "tpl-servo",
+    "wokwi_id": "473338591560793089",
     title: "Servo Sweep 0-180°",
     desc: "Gerakkan servo maju-mundur dari 0° ke 180° dan kembali — dasar kontrol posisi.",
     difficulty: "Mudah",
@@ -805,6 +812,7 @@ const WOKWI_TEMPLATES = [
   },
   {
     id: "tpl-pushbutton-led",
+    "wokwi_id": "473338591560793089",
     title: "LED Dikontrol Tombol",
     desc: "Tekan tombol untuk menyalakan LED. Memakai INPUT_PULLUP internal Arduino — tanpa resistor pull-up.",
     difficulty: "Mudah",
@@ -843,6 +851,7 @@ const WOKWI_TEMPLATES = [
   },
   {
   "id": "tpl-rgb-led",
+    "wokwi_id": "473338591560793089",
   "title": "LED RGB Warna Berganti",
   "desc": "LED RGB menyala bergantian merah, hijau, biru, dan campurannya — latihan dasar PWM 3 kanal.",
   "difficulty": "Mudah",
@@ -899,6 +908,7 @@ const WOKWI_TEMPLATES = [
 },
   {
   "id": "tpl-pir-alarm",
+    "wokwi_id": "473338591560793089",
   "title": "Alarm Gerakan PIR",
   "desc": "Sensor PIR mendeteksi gerakan lalu menyalakan LED dan membunyikan buzzer sebagai alarm sederhana.",
   "difficulty": "Mudah",
@@ -967,6 +977,7 @@ const WOKWI_TEMPLATES = [
 },
   {
   "id": "tpl-ldr-night-light",
+    "wokwi_id": "473338591560793089",
   "title": "Lampu Otomatis (LDR)",
   "desc": "Modul sensor cahaya LDR menyalakan LED otomatis saat ruangan gelap — simulasi lampu jalan hemat energi.",
   "difficulty": "Mudah",
@@ -1029,6 +1040,7 @@ const WOKWI_TEMPLATES = [
 },
   {
   "id": "tpl-servo-knob",
+    "wokwi_id": "473338591560793089",
   "title": "Servo Knob",
   "desc": "Putar potensiometer untuk menggerakkan sudut servo 0-180 derajat — dasar kontrol posisi analog.",
   "difficulty": "Mudah",
@@ -1095,6 +1107,7 @@ const WOKWI_TEMPLATES = [
 },
   {
   "id": "tpl-joystick-servo",
+    "wokwi_id": "473338591560793089",
   "title": "Servo Kendali Joystick",
   "desc": "Joystick analog menggerakkan servo secara halus — sumbu X mengontrol posisi, sumbu Y mengontrol kecepatan.",
   "difficulty": "Menengah",
@@ -1166,6 +1179,7 @@ const WOKWI_TEMPLATES = [
 },
   {
   "id": "tpl-7segment-counter",
+    "wokwi_id": "473338591560793089",
   "title": "Counter 7-Segmen 0-9",
   "desc": "Tampilkan angka 0-9 bergantian di display 7-segmen setiap detik — belajar decode BCD ke segmen.",
   "difficulty": "Menengah",
@@ -1217,6 +1231,7 @@ const WOKWI_TEMPLATES = [
 },
   {
   "id": "tpl-stepper-motor",
+    "wokwi_id": "473338591560793089",
   "title": "Motor Stepper Berputar",
   "desc": "Motor stepper bipolar berputar satu arah lalu berbalik — dasar kontrol presisi untuk printer/CNC mini.",
   "difficulty": "Menengah",
@@ -1272,6 +1287,7 @@ const WOKWI_TEMPLATES = [
 },
   {
   "id": "tpl-ultrasonic-buzzer",
+    "wokwi_id": "473338591560793089",
   "title": "Alarm Jarak Ultrasonik",
   "desc": "HC-SR04 mengukur jarak; buzzer berbunyi semakin cepat saat objek semakin dekat — simulasi sensor parkir.",
   "difficulty": "Menengah",
@@ -1338,6 +1354,7 @@ const WOKWI_TEMPLATES = [
 },
   {
   "id": "tpl-dht22-lcd",
+    "wokwi_id": "473338591560793089",
   "title": "Termometer LCD (DHT22)",
   "desc": "Suhu & kelembaban dari DHT22 ditampilkan di LCD 1602 — kombinasi sensor dan display populer.",
   "difficulty": "Menengah",
@@ -1406,6 +1423,7 @@ const WOKWI_TEMPLATES = [
 },
   {
   "id": "tpl-ntc-thermostat",
+    "wokwi_id": "473338591560793089",
   "title": "Termostat Otomatis (NTC)",
   "desc": "Sensor NTC membaca suhu; relay menyala/mati untuk mengontrol beban seperti kipas atau pemanas sesuai ambang batas.",
   "difficulty": "Menengah",
@@ -1473,6 +1491,7 @@ const WOKWI_TEMPLATES = [
 },
   {
   "id": "tpl-ds18b20",
+    "wokwi_id": "473338591560793089",
   "title": "Suhu Digital DS18B20",
   "desc": "Sensor DS18B20 1-Wire mengukur suhu presisi dan mengirim data via satu kabel data saja.",
   "difficulty": "Menengah",
@@ -1525,6 +1544,7 @@ const WOKWI_TEMPLATES = [
 },
   {
   "id": "tpl-hx711-scale",
+    "wokwi_id": "473338591560793089",
   "title": "Timbangan Digital HX711",
   "desc": "Modul HX711 + load cell menimbang beban dan menampilkan berat gram di Serial Monitor — dasar timbangan digital.",
   "difficulty": "Sulit",
@@ -1587,6 +1607,7 @@ const WOKWI_TEMPLATES = [
 },
   {
   "id": "tpl-mpu6050-tilt",
+    "wokwi_id": "473338591560793089",
   "title": "Servo Pengikut Kemiringan",
   "desc": "MPU6050 mendeteksi kemiringan sumbu dan menggerakkan servo agar selalu tegak — dasar stabilisasi gimbal.",
   "difficulty": "Sulit",
@@ -1668,6 +1689,7 @@ const WOKWI_TEMPLATES = [
 },
   {
   "id": "tpl-esp32-firebase-dht",
+    "wokwi_id": "473338591560793089",
   "title": "IoT Suhu & Kelembaban Firebase",
   "desc": "ESP32 membaca DHT22 lalu mengirim suhu & kelembaban ke Firebase Realtime Database — pantau dari dashboard web kapan saja.",
   "difficulty": "Menengah",
@@ -1742,6 +1764,7 @@ const WOKWI_TEMPLATES = [
 },
   {
   "id": "tpl-esp32-firebase-ultrasonic",
+    "wokwi_id": "473338591560793089",
   "title": "Monitor Jarak + Alarm Firebase",
   "desc": "HC-SR04 mengukur jarak, buzzer berbunyi jika ada objek terlalu dekat, dan data jarak dikirim ke Firebase untuk dashboard.",
   "difficulty": "Menengah",
@@ -1830,6 +1853,7 @@ const WOKWI_TEMPLATES = [
 },
   {
   "id": "tpl-esp32-firebase-pir",
+    "wokwi_id": "473338591560793089",
   "title": "Deteksi Gerakan + Notifikasi",
   "desc": "Sensor PIR mendeteksi gerakan, LED menyala sebagai indikator, dan status gerakan dikirim ke Firebase untuk dashboard keamanan rumah.",
   "difficulty": "Mudah",
@@ -1914,6 +1938,7 @@ const WOKWI_TEMPLATES = [
 },
   {
   "id": "tpl-esp32-firebase-ldr",
+    "wokwi_id": "473338591560793089",
   "title": "Lampu Otomatis Sensor Cahaya",
   "desc": "LDR mendeteksi intensitas cahaya; ESP32 menyalakan LED saat gelap dan mengirim data ke Firebase untuk dashboard monitoring.",
   "difficulty": "Mudah",
@@ -1998,6 +2023,7 @@ const WOKWI_TEMPLATES = [
 },
   {
   "id": "tpl-esp32-firebase-thermostat",
+    "wokwi_id": "473338591560793089",
   "title": "Termostat + Relay Firebase",
   "desc": "NTC membaca suhu; relay memutus/menyambung beban (mis. kipas/pemanas) otomatis dan statusnya dikirim ke Firebase.",
   "difficulty": "Menengah",
@@ -2087,6 +2113,7 @@ const WOKWI_TEMPLATES = [
 },
   {
   "id": "tpl-esp32-firebase-servo",
+    "wokwi_id": "473338591560793089",
   "title": "Servo Kendali Jarak Jauh",
   "desc": "Kontrol posisi servo dari dashboard Firebase — tulis nilai 0-180 di path /servo/sudut, dan ESP32 langsung menggerakkan servo.",
   "difficulty": "Menengah",
@@ -2157,6 +2184,7 @@ const WOKWI_TEMPLATES = [
 },
   {
   "id": "tpl-esp32-firebase-rgb",
+    "wokwi_id": "473338591560793089",
   "title": "Lampu RGB Kendali Web",
   "desc": "Atur warna LED RGB dari dashboard Firebase — tulis nilai R, G, B (0-255) di database dan ESP32 menampilkannya via PWM.",
   "difficulty": "Menengah",
@@ -2233,6 +2261,7 @@ const WOKWI_TEMPLATES = [
 },
   {
   "id": "tpl-esp32-firebase-gas",
+    "wokwi_id": "473338591560793089",
   "title": "Deteksi Gas Bocor + Alarm",
   "desc": "Sensor MQ2 mendeteksi kadar gas/asap; buzzer berbunyi saat berbahaya dan data dikirim ke Firebase untuk dashboard keamanan.",
   "difficulty": "Menengah",
@@ -2322,6 +2351,7 @@ const WOKWI_TEMPLATES = [
 },
   {
   "id": "tpl-esp32-firebase-oled",
+    "wokwi_id": "473338591560793089",
   "title": "Cuaca Lokal + OLED Firebase",
   "desc": "DHT22 + OLED SSD1306: suhu & kelembaban tampil di layar sekaligus dikirim ke Firebase untuk dashboard dan grafik.",
   "difficulty": "Menengah",
@@ -2414,6 +2444,7 @@ const WOKWI_TEMPLATES = [
 },
   {
   "id": "tpl-esp32-firebase-bell",
+    "wokwi_id": "473338591560793089",
   "title": "Bel Pintu Smart + Notifikasi",
   "desc": "Tombol bel mengaktifkan buzzer dan mengirim notifikasi ke Firebase — dashboard mencatat waktu bel ditekan.",
   "difficulty": "Mudah",
@@ -2493,6 +2524,7 @@ const WOKWI_TEMPLATES = [
   ]
 }, {
   "id": "tpl-keypad-lock",
+    "wokwi_id": "473338591560793089",
   "title": "Kunci Pintu Keypad 4x4 + LCD",
   "desc": "Keypad 4x4 jadi password lock: masukkan sandi 4 digit, LCD I2C menampilkan status BUKA/TOLAK — latihan input & logika kondisi.",
   "difficulty": "Sulit",
@@ -2551,6 +2583,7 @@ const WOKWI_TEMPLATES = [
 },
 {
   "id": "tpl-tm1637-stopwatch",
+    "wokwi_id": "473338591560793089",
   "title": "Stopwatch 4-Digit TM1637",
   "desc": "Modul display 4 digit TM1637 menghitung detik menit (stopwatch) dengan titik dua berkedip — latihan display 7-segmen modern.",
   "difficulty": "Menengah",
@@ -2607,6 +2640,7 @@ const WOKWI_TEMPLATES = [
 },
 {
   "id": "tpl-ir-remote-led",
+    "wokwi_id": "473338591560793089",
   "title": "Lampu Kendali Remote IR",
   "desc": "Remote infrared (38 kHz) menyalakan/mematikan LED — pelajari protokol NEC dan cara membaca sinyal IR dengan Arduino.",
   "difficulty": "Sulit",
@@ -2671,6 +2705,7 @@ const WOKWI_TEMPLATES = [
 },
 {
   "id": "tpl-neopixel-ring",
+    "wokwi_id": "473338591560793089",
   "title": "Cincin Cahaya NeoPixel",
   "desc": "Ring LED NeoPixel 16 pixel menampilkan efek pelangi berjalan — pengenalan LED addressable WS2812 dan perpustakaan Adafruit NeoPixel.",
   "difficulty": "Menengah",
@@ -2723,6 +2758,7 @@ const WOKWI_TEMPLATES = [
 },
 {
   "id": "tpl-rtc-clock",
+    "wokwi_id": "473338591560793089",
   "title": "Jam Digital RTC + LCD",
   "desc": "Modul RTC DS1307 menjaga waktu real (jam:menit:detik & tanggal) meski board mati — ditampilkan di LCD 16x2.",
   "difficulty": "Menengah",
@@ -2786,6 +2822,7 @@ const WOKWI_TEMPLATES = [
 },
 {
   "id": "tpl-shift-register",
+    "wokwi_id": "473338591560793089",
   "title": "LED Chaser 74HC595",
   "desc": "Satu IC shift register 74HC595 mengendalikan 4 (atau lebih) LED hanya dengan 3 pin Arduino — dasar ekspansi output digital.",
   "difficulty": "Menengah",
@@ -2862,6 +2899,7 @@ const WOKWI_TEMPLATES = [
 },
 {
   "id": "tpl-max7219-matrix",
+    "wokwi_id": "473338591560793089",
   "title": "Matrix LED MAX7219",
   "desc": "Dot matrix 8x8 MAX7219 menampilkan pixel berjalan — belajar driver display dengan protokol SPI dan library LedControl.",
   "difficulty": "Sulit",
@@ -2918,6 +2956,7 @@ const WOKWI_TEMPLATES = [
 },
 {
   "id": "tpl-rotary-dimmer",
+    "wokwi_id": "473338591560793089",
   "title": "Dimmer Rotary Encoder",
   "desc": "Encoder rotary KY-040 mengatur kecerahan LED PWM (dimmer) dan tombolnya sebagai saklar on/off — latihan input rotary & PWM.",
   "difficulty": "Menengah",
@@ -2989,6 +3028,7 @@ const WOKWI_TEMPLATES = [
 },
 {
   "id": "tpl-esp32-web-led",
+    "wokwi_id": "473338591560793089",
   "title": "Web Server LED ESP32",
   "desc": "ESP32 membuat web server WiFi — buka alamat IP-nya di browser, klik tombol untuk menyalakan/mematikan LED. Tanpa library tambahan!",
   "difficulty": "Menengah",
@@ -3041,6 +3081,7 @@ const WOKWI_TEMPLATES = [
 },
 {
   "id": "tpl-esp32-oled-weather",
+    "wokwi_id": "473338591560793089",
   "title": "Stasiun Cuaca OLED ESP32",
   "desc": "ESP32 membaca DHT22 lalu menampilkan suhu & kelembaban di layar OLED SSD1306 (I2C) — tanpa cloud, data langsung di layar.",
   "difficulty": "Menengah",
@@ -3103,6 +3144,7 @@ const WOKWI_TEMPLATES = [
   ]
 }, {
   "id": "tpl-rfid-door-lock",
+    "wokwi_id": "473338591560793089",
   "title": "Kunci Pintu RFID (MFRC522 + Servo)",
   "desc": "Kunci pintu RFID: tempelkan kartu yang terdaftar, servo membuka kunci selama 3 detik. LED hijau = akses diterima, LED merah = ditolak. UID kartu master bisa diganti di kode.",
   "difficulty": "Sulit",
@@ -3171,6 +3213,7 @@ const WOKWI_TEMPLATES = [
 }
 , {
   "id": "tpl-i2c-oled-demo",
+    "wokwi_id": "473338591560793089",
   "title": "OLED I2C Interaktif (SSD1306 + Tombol)",
   "desc": "Latihan dasar OLED I2C: tampilkan logo animasi, gambar bentuk geometris, dan counter yang diubah dengan 2 tombol. Cocok untuk memahami library Adafruit SSD1306 dan Adafruit GFX.",
   "difficulty": "Mudah",
@@ -3233,6 +3276,7 @@ const WOKWI_TEMPLATES = [
 }
 , {
   "id": "tpl-sd-data-logger",
+    "wokwi_id": "473338591560793089",
   "title": "Data Logger Suhu ke SD Card",
   "desc": "Data logger sederhana: DHT22 membaca suhu & kelembaban lalu menuliskannya ke file log.csv di kartu microSD setiap 5 detik. LED berkedip setiap kali data tersimpan. Bisa dibuka di Excel.",
   "difficulty": "Menengah",
@@ -3298,6 +3342,7 @@ const WOKWI_TEMPLATES = [
 }
 , {
   "id": "tpl-led-strip-effects",
+    "wokwi_id": "473338591560793089",
   "title": "Efek LED Strip WS2812 + Potensiometer",
   "desc": "Efek lampu WS2812: strip 12 LED menjalankan animasi rainbow dan chase secara bergantian. Potensiometer mengatur kecepatan animasi secara real-time.",
   "difficulty": "Mudah",
@@ -3346,6 +3391,7 @@ const WOKWI_TEMPLATES = [
 }
 , {
   "id": "tpl-neopixel-matrix-draw",
+    "wokwi_id": "473338591560793089",
   "title": "Lukis di Matrix LED 8x8 + Joystick",
   "desc": "Lukis di matrix LED 8x8: joystick menggerakkan kursor, tekan tombol joystick untuk menyalakan/mematikan pixel. Latihan pemetaan koordinat 2D dan pembacaan joystick analog.",
   "difficulty": "Menengah",
@@ -3403,6 +3449,7 @@ const WOKWI_TEMPLATES = [
 }
 , {
   "id": "tpl-lcd2004-keypad-menu",
+    "wokwi_id": "473338591560793089",
   "title": "Menu LCD 20x4 + Keypad",
   "desc": "Menu interaktif LCD 20x4 dengan keypad: navigasi menu A (LED), B (Kecepatan PWM), C (Info). Tombol 2 dan 8 mengubah nilai. Latihan state machine menu sederhana.",
   "difficulty": "Menengah",
@@ -3467,6 +3514,7 @@ const WOKWI_TEMPLATES = [
 }
 , {
   "id": "tpl-nokia5110-encoder",
+    "wokwi_id": "473338591560793089",
   "title": "Menu Nokia 5110 + Rotary Encoder",
   "desc": "Menu di layar Nokia 5110: rotary encoder untuk scroll dan klik untuk memilih menu. Latihan library Adafruit PCD8544 dan pembacaan rotary encoder KY-040.",
   "difficulty": "Menengah",
@@ -3540,6 +3588,7 @@ const WOKWI_TEMPLATES = [
 }
 , {
   "id": "tpl-esp32-web-servo",
+    "wokwi_id": "473338591560793089",
   "title": "Servo Kendali Web (ESP32 Web Server)",
   "desc": "Kendalikan servo dari browser: ESP32 jadi web server, buka alamat IP-nya lalu geser slider untuk menggerakkan servo 0-180 derajat. LED berkedip tiap kali menerima perintah.",
   "difficulty": "Menengah",
@@ -3600,6 +3649,7 @@ const WOKWI_TEMPLATES = [
 }
 , {
   "id": "tpl-esp32-web-dht",
+    "wokwi_id": "473338591560793089",
   "title": "Dashboard Suhu Web (ESP32 + DHT22)",
   "desc": "Dashboard cuaca mini di browser: ESP32 membaca DHT22 dan mengirim suhu & kelembaban via HTTP JSON, halaman web auto-refresh tiap 2 detik tanpa reload.",
   "difficulty": "Menengah",
@@ -3660,6 +3710,7 @@ const WOKWI_TEMPLATES = [
 }
 , {
   "id": "tpl-esp32-web-neopixel",
+    "wokwi_id": "473338591560793089",
   "title": "Lampu RGB Web (ESP32 + Strip WS2812)",
   "desc": "Lampu RGB pintar: pilih warna dari color picker di browser, seluruh strip WS2812 langsung berubah warna. Gateway menuju proyek IoT lampu rumah.",
   "difficulty": "Menengah",
@@ -3709,6 +3760,7 @@ const WOKWI_TEMPLATES = [
 },
 {
   "id": "tpl-neopixel-rainbow",
+    "wokwi_id": "473338591560793089",
   "title": "Lampu RGB Animasi NeoPixel (WS2812)",
   "desc": "Strip LED WS2812 (NeoPixel) menampilkan animasi pelangi dan chase dengan library Adafruit NeoPixel - pelajaran dasar LED addressable: satu pin data mengendalikan banyak LED.",
   "difficulty": "Mudah",
@@ -3757,6 +3809,7 @@ const WOKWI_TEMPLATES = [
 },
 {
   "id": "tpl-vu-meter",
+    "wokwi_id": "473338591560793089",
   "title": "VU Meter LED Bar Graph",
   "desc": "Potensiometer mengatur level yang ditampilkan pada bar graph 10 LED - latihan analogRead, map(), dan output digital sekaligus.",
   "difficulty": "Mudah",
@@ -3806,6 +3859,7 @@ const WOKWI_TEMPLATES = [
 },
 {
   "id": "tpl-shift-in-8button",
+    "wokwi_id": "473338591560793089",
   "title": "Baca 8 Tombol dengan Shift Register 74HC165",
   "desc": "8 tombol dibaca hanya dengan 3 pin Arduino menggunakan shift register PISO 74HC165 - kebalikan dari 74HC595 yang sudah dipakai untuk output.",
   "difficulty": "Menengah",
@@ -3874,6 +3928,7 @@ const WOKWI_TEMPLATES = [
 },
 {
   "id": "tpl-bmp180-barometer",
+    "wokwi_id": "473338591560793089",
   "title": "Barometer & Altimeter BMP180",
   "desc": "Sensor tekanan BMP180 mengukur tekanan udara, suhu, dan estimasi ketinggian - hasilnya ditampilkan di OLED SSD1306.",
   "difficulty": "Menengah",
@@ -3932,6 +3987,7 @@ const WOKWI_TEMPLATES = [
 },
 {
   "id": "tpl-tft-thermograph",
+    "wokwi_id": "473338591560793089",
   "title": "Termometer Grafik TFT ILI9341",
   "desc": "Suhu dari DS18B20 digambar sebagai grafik bergulir real-time di layar TFT 240x320 (ILI9341, SPI) - latihan OneWire, DallasTemperature, dan grafik dengan Adafruit GFX.",
   "difficulty": "Sulit",
@@ -3991,6 +4047,7 @@ const WOKWI_TEMPLATES = [
 },
 {
   "id": "tpl-attiny85-nightlight",
+    "wokwi_id": "473338591560793089",
   "title": "Lampu Malam Otomatis ATtiny85",
   "desc": "Photoresistor membaca cahaya sekitar; saat gelap LED menyala otomatis. Belajar MCU 8-pin ATtiny85, ADC, dan hemat daya.",
   "difficulty": "Mudah",
@@ -4045,6 +4102,7 @@ const WOKWI_TEMPLATES = [
 },
 {
   "id": "tpl-grove-oled-dashboard",
+    "wokwi_id": "473338591560793089",
   "title": "Dashboard Cuaca Mini OLED 128x128",
   "desc": "DHT22 mengukur suhu & kelembaban, ditampilkan rapi di OLED Grove SH1107 128x128 dengan library U8g2 - layar besar cocok untuk dashboard mini.",
   "difficulty": "Menengah",
@@ -4098,6 +4156,7 @@ const WOKWI_TEMPLATES = [
 },
 {
   "id": "tpl-dpdt-power-switch",
+    "wokwi_id": "473338591560793089",
   "title": "Alih Sumber Daya dengan Relay DPDT",
   "desc": "Relay DPDT (KS2E-M-DC5) mengalihkan beban antara kontak NO dan NC - memahami prinsip normally-open, normally-closed, dan kontrol coil dengan pin digital.",
   "difficulty": "Menengah",
@@ -4152,6 +4211,7 @@ const WOKWI_TEMPLATES = [
 ,
   {
     "id": "tpl-esp32-rtc-clock",
+    "wokwi_id": "473338591560793089",
     "title": "Jam Digital RTC + OLED",
     "desc": "RTC DS1307 (I2C) menjaga waktu real walau listrik mati — ESP32 membaca register BCD dan menampilkan jam digital di OLED SSD1306.",
     "difficulty": "Menengah",
@@ -4219,6 +4279,7 @@ const WOKWI_TEMPLATES = [
   },
   {
     "id": "tpl-esp32-i2c-scanner",
+    "wokwi_id": "473338591560793089",
     "title": "Peta Alamat I2C",
     "desc": "ESP32 memindai bus I2C (alamat 0x01-0x7F) dan menampilkan alamat device yang ditemukan di OLED — latihan protokol I2C & notasi heksadesimal.",
     "difficulty": "Mudah",
@@ -4285,6 +4346,7 @@ const WOKWI_TEMPLATES = [
   },
   {
     "id": "tpl-esp32-serial-plotter",
+    "wokwi_id": "473338591560793089",
     "title": "Gelombang Sinus Serial Plotter",
     "desc": "Tanpa sensor apa pun: ESP32 mengirim gelombang sin & cos ke Serial Plotter Wokwi. Putar potensiometer untuk mengubah frekuensi — latihan visualisasi data & matematika.",
     "difficulty": "Mudah",
@@ -4329,6 +4391,7 @@ const WOKWI_TEMPLATES = [
   },
   {
     "id": "tpl-esp32-ntp-clock",
+    "wokwi_id": "473338591560793089",
     "title": "Jam Internet NTP",
     "desc": "ESP32 sinkron waktu dari server NTP via WiFi (tanpa library tambahan) lalu menampilkan jam & tanggal WIB di OLED — konsep IoT time sync.",
     "difficulty": "Menengah",
@@ -4385,6 +4448,7 @@ const WOKWI_TEMPLATES = [
   },
   {
     "id": "tpl-esp32-web-server",
+    "wokwi_id": "473338591560793089",
     "title": "Web Server Kendali LED",
     "desc": "ESP32 menjadi server web mini: buka alamat IP-nya di browser, klik tombol untuk menyalakan/mematikan LED — IoT tanpa cloud dan tanpa Firebase.",
     "difficulty": "Menengah",
@@ -4436,6 +4500,7 @@ const WOKWI_TEMPLATES = [
 ,
   {
     "id": "tpl-esp32-adc-averaging",
+    "wokwi_id": "473338591560793089",
     "title": "ADC Multi-Sampling — Membaca & Menyaring Noise",
     "desc": "ESP32 membaca tegangan potensiometer lalu membandingkan nilai ADC mentah dengan rata-rata 100 sampel — teknik dasar filter noise yang dipakai di industri.",
     "difficulty": "Menengah",
@@ -4503,6 +4568,7 @@ const WOKWI_TEMPLATES = [
   },
   {
     "id": "tpl-esp32-pwm-dimmer",
+    "wokwi_id": "473338591560793089",
     "title": "LED Dimmer dengan PWM",
     "desc": "Potensiometer mengatur kecerahan LED lewat sinyal PWM (LEDC bawaan ESP32) — konsep dasar pengendalian kecepatan motor & kecerahan lampu.",
     "difficulty": "Mudah",
@@ -4563,6 +4629,7 @@ const WOKWI_TEMPLATES = [
   },
   {
     "id": "tpl-esp32-neopixel-rainbow",
+    "wokwi_id": "473338591560793089",
     "title": "NeoPixel Rainbow — Animasi WS2812",
     "desc": "Strip LED WS2812 menampilkan animasi pelangi bergulir dengan library Adafruit NeoPixel — ESP32 mengirim data serial 1 kawat (RMT bawaan).",
     "difficulty": "Menengah",
@@ -4619,6 +4686,7 @@ const WOKWI_TEMPLATES = [
   },
   {
     "id": "tpl-esp32-joystick-oled",
+    "wokwi_id": "473338591560793089",
     "title": "Joystick 2 Sumbu + Tombol ke OLED",
     "desc": "Joystick analog (2 sumbu + tombol) digambar sebagai titik 2D di OLED — latihan ADC multi-channel, mapping, dan input digital dengan pull-up.",
     "difficulty": "Menengah",
@@ -4692,6 +4760,7 @@ const WOKWI_TEMPLATES = [
 ,
   {
     "id": "tpl-gate-and",
+    "wokwi_id": "473338591560793089",
     "title": "Gerbang AND (7408)",
     "desc": "Dua saklar masukan dihubungkan ke gerbang AND: LED hanya menyala jika KEDUA saklar dalam keadaan 1 (HIDUP). Cocok untuk memahami logika 'semua syarat harus terpenuhi'.",
     "difficulty": "Mudah",
@@ -4754,6 +4823,7 @@ const WOKWI_TEMPLATES = [
   },
   {
     "id": "tpl-gate-or",
+    "wokwi_id": "473338591560793089",
     "title": "Gerbang OR (7432)",
     "desc": "Dua saklar masukan ke gerbang OR: LED menyala jika setidaknya SATU saklar dalam keadaan 1 (HIDUP). Logika 'salah satu syarat cukup'.",
     "difficulty": "Mudah",
@@ -4816,6 +4886,7 @@ const WOKWI_TEMPLATES = [
   },
   {
     "id": "tpl-gate-not",
+    "wokwi_id": "473338591560793089",
     "title": "Gerbang NOT / Inverter (7404)",
     "desc": "Satu saklar masukan di-inverter: LED menyala SAAT saklar OFF (0), dan mati SAAT saklar ON (1). Gerbang paling dasar — membalik logika.",
     "difficulty": "Mudah",
@@ -4878,6 +4949,7 @@ const WOKWI_TEMPLATES = [
   },
   {
     "id": "tpl-gate-nand",
+    "wokwi_id": "473338591560793089",
     "title": "Gerbang NAND (7400)",
     "desc": "Kebalikan AND: LED menyala kecuali KEDUA saklar 1. NAND adalah gerbang universal — semua gerbang lain bisa dibangun dari NAND.",
     "difficulty": "Mudah",
@@ -4940,6 +5012,7 @@ const WOKWI_TEMPLATES = [
   },
   {
     "id": "tpl-gate-nor",
+    "wokwi_id": "473338591560793089",
     "title": "Gerbang NOR (7402)",
     "desc": "Kebalikan OR: LED menyala HANYA saat semua saklar 0. NOR juga gerbang universal — basis komputer Apollo (AGC) dibangun dari NOR saja.",
     "difficulty": "Mudah",
@@ -5002,6 +5075,7 @@ const WOKWI_TEMPLATES = [
   },
   {
     "id": "tpl-gate-xor",
+    "wokwi_id": "473338591560793089",
     "title": "Gerbang XOR (7486)",
     "desc": "Dua saklar ke gerbang XOR: LED menyala jika jumlah input 1 berjumlah GANJIL (berbeda). XOR = dasar penjumlahan biner dan pengecekan paritas.",
     "difficulty": "Mudah",
@@ -5064,6 +5138,7 @@ const WOKWI_TEMPLATES = [
   },
   {
     "id": "tpl-gate-xnor",
+    "wokwi_id": "473338591560793089",
     "title": "Gerbang XNOR (74266)",
     "desc": "Kebalikan XOR: LED menyala jika kedua input SAMA. XNOR = 1-bit equality check (pembanding kesamaan).",
     "difficulty": "Mudah",
@@ -5126,6 +5201,7 @@ const WOKWI_TEMPLATES = [
   },
   {
     "id": "tpl-gate-mux",
+    "wokwi_id": "473338591560793089",
     "title": "Multiplexer 2-ke-1 (MUX)",
     "desc": "Tiga saklar: A dan B adalah dua sumber data, SEL memilih mana yang diteruskan ke LED. MUX = pemilih jalur data, dipakai pada keyboard & komunikasi serial.",
     "difficulty": "Menengah",
@@ -5188,6 +5264,7 @@ const WOKWI_TEMPLATES = [
   },
   {
     "id": "tpl-gate-half-adder",
+    "wokwi_id": "473338591560793089",
     "title": "Half Adder 1-bit (Penjumlahan Biner)",
     "desc": "Dua saklar (A + B) dijumlahkan secara biner: LED S (Sum) = hasil bit, LED C (Carry) = sisa bawaan. Inilah unit dasar semua penjumlahan di komputer!",
     "difficulty": "Menengah",
@@ -5261,6 +5338,7 @@ const WOKWI_TEMPLATES = [
   },
   {
     id: "tpl-esp-now-sender",
+    "wokwi_id": "473338591560793089",
     title: "ESP-NOW Sender — Kirim Data Tanpa Router",
     desc: "ESP32 mengirim data suhu (simulasi) ke ESP32 lain via ESP-NOW setiap 2 detik tanpa perlu WiFi router — cocok untuk mesh sensor.",
     difficulty: "Menengah",
@@ -5289,6 +5367,7 @@ const WOKWI_TEMPLATES = [
   },
   {
     id: "tpl-esp-now-receiver",
+    "wokwi_id": "473338591560793089",
     title: "ESP-NOW Receiver — Terima Data Peer-to-Peer",
     desc: "Pasangan dari Sender — ESP32 menerima data via ESP-NOW dan menampilkan suhu/kelembaban di Serial Monitor.",
     difficulty: "Menengah",
@@ -5317,6 +5396,7 @@ const WOKWI_TEMPLATES = [
   },
   {
     id: "tpl-ble-server",
+    "wokwi_id": "473338591560793089",
     title: "BLE Server — Notifikasi Sensor via Bluetooth",
     desc: "ESP32 sebagai BLE GATT Server, broadcast nilai ADC sebagai karakteristik yang bisa dibaca/dinotifikasi smartphone (nRF Connect).",
     difficulty: "Menengah",
@@ -5350,6 +5430,7 @@ const WOKWI_TEMPLATES = [
   },
   {
     id: "tpl-lora-sender",
+    "wokwi_id": "473338591560793089",
     title: "LoRa Sender — Transmisi Data Jarak Jauh",
     desc: "ESP32 + modul LoRa SX1276 mengirim paket data setiap 5 detik hingga jarak kilometer — tampil di Serial Monitor.",
     difficulty: "Lanjut",
@@ -5393,6 +5474,7 @@ const WOKWI_TEMPLATES = [
   },
   {
     id: "tpl-nrf24-transceiver",
+    "wokwi_id": "473338591560793089",
     title: "NRF24L01 — Transceiver 2.4 GHz (Arduino Uno)",
     desc: "Arduino Uno + NRF24L01 mengirim string pesan; pasangan unit penerima mem-print ke Serial Monitor — dasar komunikasi RF 2,4 GHz.",
     difficulty: "Menengah",
@@ -5434,6 +5516,7 @@ const WOKWI_TEMPLATES = [
   },
   {
     id: "tpl-freertos-multitask",
+    "wokwi_id": "473338591560793089",
     title: "FreeRTOS — Dua Task Berjalan Paralel",
     desc: "Dua task FreeRTOS berjalan bersamaan: Task 1 kedipkan LED tiap 500ms, Task 2 print counter ke Serial tiap 1 detik — buktikan scheduler paralel.",
     difficulty: "Lanjut",
@@ -5467,6 +5550,7 @@ const WOKWI_TEMPLATES = [
   },
   {
     id: "tpl-interrupt-button",
+    "wokwi_id": "473338591560793089",
     title: "Hardware Interrupt — Tombol Tanpa Polling",
     desc: "Tombol push-button memicu interrupt (bukan polling), menghitung berapa kali tombol ditekan tanpa delay() — respons instan.",
     difficulty: "Menengah",
@@ -5505,6 +5589,7 @@ const WOKWI_TEMPLATES = [
   },
   {
     id: "tpl-deep-sleep-timer",
+    "wokwi_id": "473338591560793089",
     title: "ESP32 Deep Sleep — Wake-Up Timer 10 Detik",
     desc: "ESP32 baca ADC, print ke Serial, lalu masuk deep sleep 10 detik, bangun otomatis, ulang lagi — hemat daya maksimal (~10 µA saat tidur).",
     difficulty: "Menengah",
@@ -5538,6 +5623,7 @@ const WOKWI_TEMPLATES = [
   },
   {
     id: "tpl-timer-interrupt",
+    "wokwi_id": "473338591560793089",
     title: "Timer Hardware — Interrupt Tiap 1 Detik (Uno)",
     desc: "Gunakan Timer1 ATmega328P dalam mode CTC untuk generate interrupt tepat setiap 1 detik, tanpa delay() atau millis() — presisi hardware.",
     difficulty: "Lanjut",
@@ -5571,6 +5657,7 @@ const WOKWI_TEMPLATES = [
   },
   {
     id: "tpl-buck-monitor",
+    "wokwi_id": "473338591560793089",
     title: "Buck Converter Monitor — Baca Tegangan Output via ADC",
     desc: "Simulasi monitoring tegangan output konverter Buck menggunakan voltage divider + ADC Arduino. Tampilkan tegangan terukur di Serial Monitor, alert jika diluar 4.8V–5.2V.",
     difficulty: "Menengah",

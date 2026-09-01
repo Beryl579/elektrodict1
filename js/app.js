@@ -2983,10 +2983,24 @@ function renderProjectDetail(prj) {
   const isNoCode = prj.noCode === true;
   const boardName = isNoCode ? 'Rangkaian Digital (tanpa MCU)' : (boardLabel.includes('esp32') ? 'ESP32' : 'Arduino Uno');
 
-  // Step 3 kondisional: pasang library (hanya jika template butuh library pihak ketiga)
+  // === OPSI A: Wokwi Embed Project ID (Rekomendasi) — Simulator di BAWAH ===
+  // Jika template memiliki wokwi_id (dari js/data.js) pakai embed proyek tersebut; fallback ke board baru
+  const DEFAULT_WOKWI_ID_APP = "473338591560793089";
+  const rawWokwiIdApp = prj.wokwi_id || prj.wokwiId || '';
+  let wokwiIdApp = '';
+  if (rawWokwiIdApp) {
+    const mApp = String(rawWokwiIdApp).match(/projects\/([^?\/]+)/);
+    // Wokwi ID bisa numeric panjang atau alphanumeric; ambil grup 1 jika ada
+    wokwiIdApp = mApp ? mApp[1] : String(rawWokwiIdApp).trim();
+  }
+  const hasWokwiIdApp = !!wokwiIdApp;
+  const effectiveWokwiIdApp = hasWokwiIdApp ? wokwiIdApp : DEFAULT_WOKWI_ID_APP;
+  const wokwiEmbedUrlApp = `https://wokwi.com/projects/${effectiveWokwiIdApp}?embed=1`;
+  const wokwiExternalUrlApp = `https://wokwi.com/projects/${effectiveWokwiIdApp}`;
+
+  // Tetap siapkan libsStep info untuk fallback manual jika dibutuhkan (tidak ditampilkan di embed utama)
   const libsStepHtml = (libsList && libsList.length) ? `
           <div style="height:1px;background:var(--line2);opacity:.5;"></div>
-
           <div style="display:flex;gap:14px;align-items:flex-start;">
             <div style="background:var(--accent);color:var(--bg);font-weight:700;font-size:13px;min-width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">3</div>
             <div style="flex:1;">
@@ -2995,96 +3009,40 @@ function renderProjectDetail(prj) {
               <p style="font-size:11px;color:var(--text3);margin-top:7px;line-height:1.5;">Di tab Wokwi, buat file baru bernama <b>libraries.txt</b> (satu nama library per baris), lalu <b>PASTE</b> isinya. Wokwi otomatis menginstall library saat start.</p>
             </div>
           </div>` : '';
-  const sketchStepNum = (libsList && libsList.length) ? 4 : 3;
-  const stepIntroText = isNoCode
-    ? '2 langkah: buka Wokwi, tempel <b>diagram.json</b>. Proyek ini <b>TANPA KODE</b> — murni rangkaian gerbang logika: geser saklar input lalu amati LED output. Wokwi tidak lagi menerima impor otomatis via URL.'
-    : (libsList && libsList.length)
-    ? '4 langkah: buka Wokwi, tempel <b>diagram.json</b>, tempel <b>libraries.txt</b>, tempel <b>sketch.ino</b>. Wokwi tidak lagi menerima impor otomatis via URL.'
-    : '3 langkah: buka Wokwi, tempel <b>diagram.json</b>, tempel <b>sketch.ino</b>. Wokwi tidak lagi menerima impor otomatis via URL.';
 
-  const wokwiSectionHtml = wokwiPretty ? `
-    <div class="pd-section">
-      <h3 class="pd-section-h">🛠️ Jalankan di Simulator
-        ${prj.wokwi_verified === false ? `<span style="font-size:10px;font-weight:600;color:#f59e0b;background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.35);padding:2px 8px;border-radius:99px;vertical-align:middle;">⚠️ Skema belum lolos validasi — cek manual</span>` : ''}
-      </h3>
-
-      <!-- Pasang manual (alur utama) -->
-      <div style="border:1px solid rgba(22,163,74,.35);border-radius:14px;padding:18px;background:linear-gradient(135deg,rgba(22,163,74,.10),rgba(22,163,74,.03));margin-bottom:14px;">
-        <div style="font-weight:700;font-size:14px;color:var(--text);margin-bottom:4px;">🧰 Pasang Manual ke Wokwi (${boardName})</div>
-        <div style="font-size:12px;color:var(--text2);line-height:1.5;margin-bottom:12px;">
-          ${stepIntroText}
+  // Simulator Live di PALING BAWAH (setelah Langkah Perakitan) — desain modern sesuai coba2.md poin 3 & 4
+  const wokwiSectionHtml = `
+    <div class="pd-section pd-simulator-section" style="margin-top:28px;">
+      <div class="pd-section-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
+        <h3 class="pd-section-h" style="margin:0; display:flex; align-items:center; gap:8px;">
+          <span style="background:var(--accent); color:#fff; width:26px; height:26px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-size:13px; font-weight:800;">⚡</span>
+          Simulasi Interaktif (Wokwi Live)
+          ${prj.wokwi_verified === false ? `<span style="font-size:10px;font-weight:600;color:#f59e0b;background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.35);padding:2px 8px;border-radius:99px;vertical-align:middle;margin-left:8px;">⚠️ Belum tervalidasi</span>` : ''}
+        </h3>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button class="pd-code-copy" onclick="copyPrjCode(this, 'cpp')" style="padding:6px 12px; font-size:12px;">📋 Copy Sketch</button>
+          <button class="pd-code-copy" onclick="copyPrjCode(this, 'wokwi')" style="padding:6px 12px; font-size:12px;">📋 Copy Wiring JSON</button>
+          <a href="${wokwiExternalUrlApp}" target="_blank" rel="noopener" class="pdf-btn" style="text-decoration:none; padding:6px 14px; font-size:12px; display:inline-flex; align-items:center; gap:4px; background:var(--accent); color:#fff; border-radius:8px; font-weight:700;">↗ Buka Tab Baru</a>
         </div>
-
-        <details class="wk-manual-details" open>
-        <summary class="wk-manual-summary">🛠️ Lihat langkah (buka) / sembunyikan</summary>
-        <div style="border:1px solid rgba(99,102,241,.25);border-radius:12px;padding:18px;background:rgba(99,102,241,.04);display:flex;flex-direction:column;gap:14px;margin-top:10px;">
-
-          <div style="display:flex;gap:14px;align-items:flex-start;">
-            <div style="background:var(--accent);color:var(--bg);font-weight:700;font-size:13px;min-width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">1</div>
-            <div style="flex:1;">
-              <div style="font-weight:700;font-size:13px;color:var(--text);margin-bottom:6px;">Buka Simulator</div>
-              <a href="https://wokwi.com/projects/new/${boardLabel.includes('esp32') ? 'esp32' : 'arduino-uno'}" target="_blank" rel="noopener"
-                style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:linear-gradient(135deg,#4ade80,#16a34a);color:#fff;border-radius:7px;text-decoration:none;font-weight:600;font-size:12px;box-shadow:0 3px 12px rgba(22,163,74,.3);">
-                🌐 Buka Wokwi (${boardName})
-              </a>
-            </div>
-          </div>
-
-          <div style="height:1px;background:var(--line2);opacity:.5;"></div>
-
-          <div style="display:flex;gap:14px;align-items:flex-start;">
-            <div style="background:var(--accent);color:var(--bg);font-weight:700;font-size:13px;min-width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">2</div>
-            <div style="flex:1;">
-              <div style="font-weight:700;font-size:13px;color:var(--text);margin-bottom:6px;">Pasang Komponen (Wiring)</div>
-              <button class="pd-code-copy" onclick="copyPrjCode(this,'wokwi')">📋 Salin Data Wiring (JSON)</button>
-              <p style="font-size:11px;color:var(--text3);margin-top:7px;line-height:1.5;">Di tab Wokwi, buka file <b>diagram.json</b>, hapus semua isinya, lalu <b>PASTE</b> data ini.</p>
-            </div>
-          </div>
-
-          <div style="height:1px;background:var(--line2);opacity:.5;"></div>
-
-          ${libsStepHtml}
-
-          ${libsStepHtml ? '<div style="height:1px;background:var(--line2);opacity:.5;"></div>' : ''}
-
-          ${isNoCode ? `
-          <div style="display:flex;gap:14px;align-items:flex-start;">
-            <div style="background:var(--accent);color:var(--bg);font-weight:700;font-size:13px;min-width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">3</div>
-            <div style="flex:1;">
-              <div style="font-weight:700;font-size:13px;color:var(--text);margin-bottom:6px;">Jalankan Simulasi</div>
-              <p style="font-size:11px;color:var(--text3);margin-top:7px;line-height:1.5;">Proyek gerbang logika <b>tidak memerlukan kode</b> — diagram.json sudah lengkap. Cukup tekan <b>Start Simulation</b> lalu geser saklar input.</p>
-            </div>
-          </div>
-
-          <div style="background:rgba(22,163,74,.08);border:1px solid rgba(22,163,74,.25);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--text2);line-height:1.6;margin-top:2px;">
-            ℹ️ <b>Tips:</b> Saklar kiri = logika 1 (VCC), saklar kanan = logika 0 (GND). Isi tabel kebenaran dengan menggeser saklar ke semua kombinasi.
-          </div>` : `
-          <div style="display:flex;gap:14px;align-items:flex-start;">
-            <div style="background:var(--accent);color:var(--bg);font-weight:700;font-size:13px;min-width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">${sketchStepNum}</div>
-            <div style="flex:1;">
-              <div style="font-weight:700;font-size:13px;color:var(--text);margin-bottom:6px;">Masukkan Program (Sketch)</div>
-              <button class="pd-code-copy" onclick="copyPrjCode(this,'cpp')">📋 Salin Kode Program (INO)</button>
-              <p style="font-size:11px;color:var(--text3);margin-top:7px;line-height:1.5;">Di tab Wokwi, buka file <b>sketch.ino</b>, hapus semua isinya, lalu <b>PASTE</b> kode ini.</p>
-            </div>
-          </div>
-
-          <div style="background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.2);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--text2);line-height:1.6;margin-top:2px;">
-            ⚠️ <b>Penting:</b> Pastikan menghapus kode bawaan Wokwi sebelum mem-paste data dari ElektroDict.
-            Jika komponen asli tidak tersedia, AI menggunakan <b>Potensiometer</b> sebagai pengganti input sensor analog.
-          </div>`}
-
-        </div>
-      </details>
-
-      <!-- diagram.json preview (collapsible feel via max-height) -->
-      <div class="pd-code-wrap" style="margin-top:14px;">
-        <div class="pd-code-header">
-          <div class="pd-code-lang">diagram.json — Preview</div>
-          <button class="pd-code-copy" onclick="copyPrjCode(this,'wokwi')">📋 Salin</button>
-        </div>
-        <pre class="pd-code-pre" style="max-height:220px;"><code id="code-content-wokwi">${safeWokwi}</code></pre>
       </div>
-    </div>` : '';
+      <div style="background:rgba(99,102,241,.06); border:1px solid rgba(99,102,241,.2); border-radius:10px; padding:12px 16px; margin-bottom:14px; font-size:12.5px; color:var(--text2); line-height:1.5;">
+        ${hasWokwiIdApp ?
+          '▶ <b>Instruksi:</b> Hapus dulu isi <code>sketch.ino</code> dan <code>diagram.json</code> di simulator, ganti dengan sketch dan rangkaian terbaru dari proyek ini, lalu tekan tombol <b>▶ Play (Segitiga Hijau)</b> untuk memulai simulasi interaktif.' :
+          '▶ <b>Instruksi:</b> Hapus dulu isi <code>sketch.ino</code> dan <code>diagram.json</code> pada base simulasi <code>473338591560793089</code>, ganti dengan sketch dan rangkaian di atas, lalu tekan <b>▶ Play (Segitiga Hijau)</b> untuk menjalankan. Base bisa diganti via <code>wokwi_id</code> di <code>js/data.js</code>.'}
+      </div>
+      <div class="wokwi-iframe-container" style="position:relative; width:100%; height:540px; border-radius:12px; overflow:hidden; border:1px solid var(--line2); background:#0c0e13; box-shadow:0 8px 30px rgba(0,0,0,0.35);">
+        <iframe
+          id="wokwi-simulator-frame-app"
+          src="${wokwiEmbedUrlApp}"
+          style="width:100%; height:100%; border:none;"
+          title="Wokwi Simulator"
+          loading="lazy"
+          sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-downloads"
+          allow="accelerometer; camera; microphone; vr">
+        </iframe>
+      </div>
+      ${wokwiPretty ? `<div class="pd-code-wrap" style="margin-top:14px;"><div class="pd-code-header"><div class="pd-code-lang">diagram.json — Preview</div><button class="pd-code-copy" onclick="copyPrjCode(this,'wokwi')">📋 Salin</button></div><pre class="pd-code-pre" style="max-height:220px;"><code id="code-content-wokwi">${safeWokwi}</code></pre></div>` : ''}
+    </div>`;
 
   // === Assembly Steps HTML ===
   const stepsData = prj.steps || [];
@@ -3172,8 +3130,8 @@ function renderProjectDetail(prj) {
     ${firebaseHtml}
     ${dashboardHtml}
     ${codeHtml}
-    ${wokwiSectionHtml}
     ${stepsHtml}
+    ${wokwiSectionHtml}
   `;
 
   // Store wokwi raw string for clipboard access + globals untuk launcher satu-klik
