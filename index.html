@@ -1099,6 +1099,23 @@
   }
 </script>
 
+<!-- Neubrutalism Reload Confirm (ganti native "Reload site?") -->
+<div id="nbReloadOverlay" class="nb-reload-overlay" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="nbReloadTitle">
+  <div class="nb-reload-modal" role="document">
+    <div class="nb-reload-header">
+      <div class="nb-reload-icon">⚡</div>
+      <div class="nb-reload-title-wrap">
+        <h3 id="nbReloadTitle" class="nb-reload-title">Reload site?</h3>
+        <p class="nb-reload-msg">Changes you made may not be saved.</p>
+      </div>
+    </div>
+    <div class="nb-reload-actions">
+      <button class="nb-btn nb-btn-cancel" id="nbReloadCancel" type="button">Cancel</button>
+      <button class="nb-btn nb-btn-reload" id="nbReloadConfirm" type="button">Reload</button>
+    </div>
+  </div>
+</div>
+
 <!-- Neubrutalism Toast Container (pengganti alert) -->
 <div id="toastWrap" class="toast-wrap" aria-live="polite" aria-atomic="true"></div>
 
@@ -1115,6 +1132,196 @@
       }, 250);
     });
   });
+</script>
+
+<!-- Neobrutalism Reload Guard — ganti native "Reload site?" -->
+<script>
+(function(){
+  const overlay = document.getElementById('nbReloadOverlay');
+  const btnReload = document.getElementById('nbReloadConfirm');
+  const btnCancel = document.getElementById('nbReloadCancel');
+  let pendingAction = null; // 'reload' | 'switchTab' | 'navigate'
+  let pendingTab = null;
+  let pendingHref = null;
+  let allowReload = false;
+
+  function openNbReload(opts){
+    const titleEl = document.getElementById('nbReloadTitle');
+    const msgEl = overlay.querySelector('.nb-reload-msg');
+    if(opts && opts.title) titleEl.textContent = opts.title;
+    if(opts && opts.message) msgEl.textContent = opts.message;
+    pendingAction = (opts && opts.action) || 'reload';
+    pendingTab = opts && opts.tab;
+    pendingHref = opts && opts.href;
+    overlay.classList.add('on');
+    overlay.setAttribute('aria-hidden','false');
+    document.body.style.overflow = 'hidden';
+    // focus reload button for keyboard
+    setTimeout(()=> btnReload.focus(), 50);
+    // simpan callback
+    window.__nbReloadOnConfirm = opts && opts.onConfirm;
+    window.__nbReloadOnCancel = opts && opts.onCancel;
+  }
+  function closeNbReload(){
+    overlay.classList.remove('on');
+    overlay.setAttribute('aria-hidden','true');
+    document.body.style.overflow = '';
+    pendingAction = null;
+    pendingTab = null;
+    pendingHref = null;
+  }
+  window.showNbReloadModal = openNbReload;
+  window.hideNbReloadModal = closeNbReload;
+  // Helper global: cek apakah simulator sedang aktif (ada iframe wokwi di DOM dan page detail terbuka)
+  function hasUnsavedWokwi(){
+    const detailPage = document.getElementById('page-project-detail');
+    const isDetailVisible = detailPage && detailPage.classList.contains('on');
+    const hasFrame = !!(document.getElementById('wokwi-simulator-frame') || document.getElementById('wokwi-simulator-frame-app'));
+    // anggap selalu ada perubahan yang belum disimpan ketika detail terbuka (sesuai screenshot Image 1)
+    return isDetailVisible && hasFrame;
+  }
+  // Klik Reload -> eksekusi pending (simpan dulu sebelum close, karena close reset pendingAction)
+  btnReload.addEventListener('click', ()=>{
+    const onConfirm = window.__nbReloadOnConfirm;
+    const action = pendingAction;
+    const tab = pendingTab;
+    const href = pendingHref;
+    const frame = window.__nbPendingFrame;
+    closeNbReload();
+    // Confirm = jangan restore iframe, bersihkan prevSrc
+    if(frame && frame.dataset.prevSrc) delete frame.dataset.prevSrc;
+    window.__nbPendingFrame = null;
+    if(typeof onConfirm === 'function'){ onConfirm(); return; }
+    if(action === 'reload'){
+      allowReload = true;
+      // pakai timeout kecil biar overlay sempat hilang sebelum reload
+      setTimeout(()=> location.reload(), 50);
+    } else if(action === 'switchTab' && tab){
+      allowReload = true;
+      // panggil switchTab asli tanpa guard
+      if(window._nbOrigSwitchTab) window._nbOrigSwitchTab(tab);
+      else if(typeof switchTab === 'function') switchTab(tab);
+    } else if(action === 'navigate' && href){
+      allowReload = true;
+      location.href = href;
+    } else {
+      // fallback: jika action kosong (mis. beforeunload) tetap reload
+      allowReload = true;
+      setTimeout(()=> location.reload(), 50);
+    }
+  });
+  btnCancel.addEventListener('click', ()=>{
+    const onCancel = window.__nbReloadOnCancel;
+    const frame = window.__nbPendingFrame;
+    closeNbReload();
+    if(typeof onCancel === 'function') onCancel();
+    // Fallback restore jika onCancel tidak handle frame
+    if(frame && frame.dataset.prevSrc){
+      frame.src = frame.dataset.prevSrc;
+      delete frame.dataset.prevSrc;
+    }
+    window.__nbPendingFrame = null;
+  });
+  overlay.addEventListener('click', (e)=>{
+    if(e.target === overlay){
+      const onCancel = window.__nbReloadOnCancel;
+      const frame = window.__nbPendingFrame;
+      closeNbReload();
+      if(typeof onCancel === 'function') onCancel();
+      else if(frame && frame.dataset.prevSrc){
+        frame.src = frame.dataset.prevSrc;
+        delete frame.dataset.prevSrc;
+        window.__nbPendingFrame = null;
+      }
+    }
+  });
+  document.addEventListener('keydown', (e)=>{
+    if(!overlay.classList.contains('on')) return;
+    if(e.key === 'Escape'){
+      e.preventDefault();
+      const onCancel = window.__nbReloadOnCancel;
+      const frame = window.__nbPendingFrame;
+      closeNbReload();
+      if(typeof onCancel === 'function') onCancel();
+      else if(frame && frame.dataset.prevSrc){
+        frame.src = frame.dataset.prevSrc;
+        delete frame.dataset.prevSrc;
+        window.__nbPendingFrame = null;
+      }
+    }
+    if(e.key === 'Enter'){ e.preventDefault(); btnReload.click(); }
+  });
+  // Intercept switchTab agar tidak langsung pindah ketika ada perubahan wokwi
+  // Simpan src iframe agar bisa restore jika Cancel, dan cegah native beforeunload dari iframe
+  if(typeof switchTab === 'function' && !window._nbOrigSwitchTab){
+    window._nbOrigSwitchTab = switchTab;
+    window.switchTab = function(t){
+      if(hasUnsavedWokwi() && t !== 'project-detail'){
+        const frame = document.getElementById('wokwi-simulator-frame') || document.getElementById('wokwi-simulator-frame-app');
+        if(frame && frame.src && frame.src !== 'about:blank'){
+          frame.dataset.prevSrc = frame.src;
+          // Kosongkan src untuk mencegah iframe trigger native "Reload site?" (cross-origin)
+          frame.src = 'about:blank';
+        }
+        openNbReload({
+          title: 'Reload site?',
+          message: 'Changes you made may not be saved.',
+          action: 'switchTab',
+          tab: t,
+          onCancel: function(){
+            // Restore iframe jika user Cancel
+            if(frame && frame.dataset.prevSrc){
+              frame.src = frame.dataset.prevSrc;
+              delete frame.dataset.prevSrc;
+            }
+          },
+          onConfirm: null
+        });
+        // Override onCancel untuk switchTab sudah di-handle via closeNbReload? kita set manual di openNbReload opts
+        // Simpan frame untuk restore di btnCancel handler
+        window.__nbPendingFrame = frame;
+        return;
+      }
+      return window._nbOrigSwitchTab(t);
+    };
+  }
+  // Intercept klik link internal yang akan navigasi
+  document.addEventListener('click', (e)=>{
+    const a = e.target.closest('a[href]');
+    if(!a) return;
+    if(a.target === '_blank' || a.href.includes('wokwi.com') || a.href.startsWith('javascript:')) return;
+    // hanya untuk navigasi full-page (bukan hash)
+    const url = new URL(a.href, location.href);
+    if(url.origin !== location.origin) return;
+    if(hasUnsavedWokwi()){
+      e.preventDefault();
+      openNbReload({
+        title: 'Reload site?',
+        message: 'Changes you made may not be saved.',
+        action: 'navigate',
+        href: a.href
+      });
+    }
+  }, true);
+  // beforeunload: JANGAN trigger native dark "Reload site?" — pakai neobrutalism putih untuk SPA
+  // Wokwi iframe cross-origin tidak bisa di-styling, jadi kita cegah native dengan sandbox + tidak set returnValue
+  // Untuk browser reload (F5), biarkan reload tanpa confirm karena embed ?embed=1 tidak punya unsaved yang perlu disimpan
+  window.addEventListener('beforeunload', (e)=>{
+    if(allowReload) return;
+    // Non-aktifkan native dark dialog — andalkan guard switchTab/link di atas untuk neobrutalism putih
+    // Jika tetap ingin native untuk browser reload, uncomment di bawah:
+    // if(hasUnsavedWokwi()){
+    //   e.preventDefault();
+    //   e.returnValue = '';
+    //   return '';
+    // }
+    return;
+  });
+  // Expose untuk dipanggil manual dari console atau tombol reload custom
+  window.confirmNbReload = function(){
+    openNbReload({title:'Reload site?', message:'Changes you made may not be saved.', action:'reload'});
+  };
+})();
 </script>
 </body>
 </html>

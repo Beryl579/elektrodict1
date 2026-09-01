@@ -4447,3 +4447,102 @@ body.light .dash-hero-tagline{ background:rgba(10,10,10,.06); border-color:var(-
 .resist-svg-wrap{ box-shadow:var(--nb-blue) !important; }
 .aiv-upload{ border:2px dashed var(--line2) !important; }
 .aiv-upload:hover{ border-color:var(--accent) !important; box-shadow:3px 3px 0 var(--accent) !important; }
+
+/* ═══════════════════════════════════════════════════════════
+   NEOBRUTALISM RELOAD SITE? — ganti native "Reload site?"
+   ═══════════════════════════════════════════════════════════ */
+.nb-reload-overlay{
+  position:fixed; inset:0; z-index:9999;
+  background:rgba(0,0,0,.78);
+  backdrop-filter:none;
+  display:none; align-items:center; justify-content:center;
+  padding:16px;
+  opacity:0; pointer-events:none;
+  transition:opacity .2s ease;
+}
+.nb-reload-overlay.on{
+  display:flex; opacity:1; pointer-events:all;
+}
+.nb-reload-modal{
+  width:100%; max-width:380px;
+  background:#FFFFFF;
+  border:3px solid #0A0A0A;
+  border-radius:8px;
+  box-shadow:8px 8px 0 #0A0A0A;
+  padding:20px 18px 16px;
+  transform:translate(-2px,-2px) scale(.96);
+  transition:transform .25s cubic-bezier(.175,.885,.32,1.275);
+}
+.nb-reload-overlay.on .nb-reload-modal{
+  transform:translate(0,0) scale(1);
+}
+.nb-reload-header{
+  display:flex; align-items:flex-start; gap:12px;
+  margin-bottom:16px;
+}
+.nb-reload-icon{
+  width:44px; height:44px; flex-shrink:0;
+  background:#0A0A0A;
+  border:3px solid #0A0A0A;
+  border-radius:6px;
+  box-shadow:3px 3px 0 #0A0A0A;
+  display:flex; align-items:center; justify-content:center;
+  font-size:20px; line-height:1;
+  color:#FFEA00; font-weight:800;
+}
+.nb-reload-title-wrap{ flex:1; min-width:0; }
+.nb-reload-title{
+  font-family:var(--font-h); font-size:17px; font-weight:800;
+  color:#0A0A0A; line-height:1.2; letter-spacing:-.02em;
+  margin:0 0 4px;
+}
+.nb-reload-msg{
+  font-size:13px; color:#5A5A5A; line-height:1.5;
+  margin:0; font-weight:500;
+}
+.nb-reload-actions{
+  display:flex; gap:10px; justify-content:flex-end;
+  margin-top:18px;
+}
+.nb-btn{
+  font-family:var(--font-h); font-size:13px; font-weight:800;
+  padding:10px 18px; border-radius:6px;
+  cursor:pointer; transition:transform .1s, box-shadow .1s, background .1s, border-color .1s, color .1s;
+  min-width:88px; text-align:center;
+  letter-spacing:.02em;
+}
+.nb-btn-cancel{
+  background:#FFFFFF; color:#0A0A0A;
+  border:2.5px solid #0A0A0A;
+  box-shadow:4px 4px 0 #0A0A0A;
+}
+.nb-btn-cancel:hover{
+  background:#F5F5F5; color:#0A0A0A;
+  border-color:#0A0A0A;
+  transform:translate(-1px,-1px);
+  box-shadow:5px 5px 0 #0A0A0A;
+}
+.nb-btn-cancel:active{ transform:translate(2px,2px); box-shadow:2px 2px 0 #0A0A0A; }
+.nb-btn-reload{
+  background:#FFEA00 !important; color:#0A0A0A !important;
+  border:3px solid #0A0A0A !important;
+  box-shadow:4px 4px 0 #0A0A0A !important;
+  opacity:1 !important;
+}
+.nb-btn-reload:hover{
+  background:#FFD500 !important; color:#0A0A0A !important;
+  transform:translate(-1px,-1px);
+  box-shadow:5px 5px 0 #0A0A0A !important;
+}
+.nb-btn-reload:active{ transform:translate(2px,2px); box-shadow:2px 2px 0 #0A0A0A !important; }
+.nb-btn:focus-visible{
+  outline:3px solid #FFEA00;
+  outline-offset:2px;
+}
+@media(max-width:480px){
+  .nb-reload-modal{ padding:18px 16px 16px; max-width:92vw; }
+  .nb-reload-title{ font-size:16px; }
+  .nb-reload-msg{ font-size:12.5px; }
+  .nb-btn{ flex:1; }
+  .nb-reload-actions{ justify-content:stretch; }
+}
