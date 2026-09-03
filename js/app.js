@@ -3714,7 +3714,8 @@ function renderMateri() {
   const cards = (typeof MATERI_MODULES !== 'undefined' ? MATERI_MODULES : []).map(m => {
     const p = prog[m.id] || {};
     const done = p.done ? '<span class="mt-badge-done">✓ Selesai</span>' : '';
-    const quizTxt = p.quizBest != null ? `Kuis terbaik: ${p.quizBest}/${m.soal.length}` : 'Kuis: belum dikerjakan';
+    const soalLen = Array.isArray(m.soal) ? m.soal.length : 0;
+    const quizTxt = p.quizBest != null ? `Kuis terbaik: ${p.quizBest}/${soalLen}` : 'Kuis: belum dikerjakan';
     return `<div class="mt-card" onclick="openMateriModule('${m.id}')">
       <div class="mt-card-emoji">${m.emoji}</div>
       <div class="mt-card-body">
@@ -3739,6 +3740,9 @@ function renderMateri() {
 function openMateriModule(id) {
   const m = (typeof MATERI_MODULES !== 'undefined' ? MATERI_MODULES : []).find(x => x.id === id);
   if (!m) return;
+  if(!Array.isArray(m.soal)) m.soal = [];
+  if(!Array.isArray(m.contoh)) m.contoh = [];
+  if(!Array.isArray(m.sections)) m.sections = [];
   materiState = { moduleId: id, qIdx: 0, qScore: 0, qAnswered: Array(m.soal.length).fill(null), quizDone: false };
   if(window.ElektroDash && window.ElektroDash.addMateriDone) window.ElektroDash.addMateriDone(id);
   const detail = document.getElementById('materi-detail');
@@ -3763,7 +3767,8 @@ function openMateriModule(id) {
       <div class="mt-sec-body">${n.body}</div>${n.referensi ? '<div class="mt-ref">📚 <b>Referensi:</b> ' + n.referensi + '</div>' : ''}
     </div>`;
   }).join('');
-  const contoh = m.contoh.map((c, i) => {
+  const contohArr = Array.isArray(m.contoh) ? m.contoh : [];
+  const contoh = contohArr.map((c, i) => {
     const n = normContoh(c);
     return `
     <div class="mt-contoh">
@@ -3771,7 +3776,7 @@ function openMateriModule(id) {
       <div class="mt-contoh-soal">${n.soal}</div>
       <ol class="mt-contoh-steps">${n.langkah.map(l => `<li>${l}</li>`).join('')}</ol>
     </div>`;
-  }).join('');
+  }).join('') || '<div class="mt-tip">📌 Belum ada contoh soal untuk modul ini.</div>';
   detail.innerHTML = `
     <button class="mt-back" onclick="closeMateriModule()">← Daftar Materi</button>
     <div class="mt-hero">
@@ -3793,7 +3798,7 @@ function openMateriModule(id) {
     <div class="mt-section">
       <div class="mt-sec-head"><span class="mt-sec-emoji">🎯</span><h3>Kuis Mini</h3></div>
       <div class="mt-sec-body">
-        <div id="mt-quiz"></div>
+        <div id="mt-quiz">${!Array.isArray(m.soal) || m.soal.length===0 ? '<div class="mt-tip">📌 Kuis untuk modul ini sedang disiapkan.</div>' : '<div id="mt-quiz-inner"></div>'}</div>
       </div>
     </div>
     <div style="text-align:center;margin:24px 0 48px">
@@ -3868,8 +3873,13 @@ function renderMateriQuiz() {
   const m = getMateriModule();
   const box = document.getElementById('mt-quiz');
   if (!m || !box) return;
+  if(!Array.isArray(m.soal) || m.soal.length===0){
+    box.innerHTML = '<div class="mt-tip">📌 Kuis untuk modul ini sedang disiapkan. Silakan lanjut ke modul lain.</div>';
+    return;
+  }
   if (materiState.quizDone) { showMateriResult(m); return; }
   const q = m.soal[materiState.qIdx];
+  if(!q){ box.innerHTML = '<div class="mt-tip">📌 Soal tidak tersedia.</div>'; return; }
   box.innerHTML = `
     <div class="q-num">SOAL ${materiState.qIdx+1} / ${m.soal.length} · Kuis Mini</div>
     <div class="q-text">${q.q}</div>
@@ -3901,14 +3911,14 @@ function answerMateriQ(i) {
   }
 }
 function nextMateriQ() {
-  const m = getMateriModule(); if (!m) return;
+  const m = getMateriModule(); if (!m || !Array.isArray(m.soal)) return;
   materiState.qIdx++;
   if (materiState.qIdx >= m.soal.length) { materiState.quizDone = true; renderMateriQuiz(); }
   else renderMateriQuiz();
 }
 function showMateriResult(m) {
   const box = document.getElementById('mt-quiz');
-  if (!box) return;
+  if (!box || !Array.isArray(m.soal)) return;
   const total = m.soal.length, correct = materiState.qScore;
   const pct = Math.round(correct/total*100);
   const emoji = pct===100 ? '🏆' : pct>=80 ? '🎉' : pct>=60 ? '👍' : '📚';
@@ -3937,7 +3947,7 @@ function showMateriResult(m) {
   if (correct === total) markMateriDone();
 }
 function retryMateriQuiz() {
-  const m = getMateriModule(); if (!m) return;
+  const m = getMateriModule(); if (!m || !Array.isArray(m.soal)) return;
   materiState.qIdx=0; materiState.qScore=0; materiState.qAnswered=Array(m.soal.length).fill(null); materiState.quizDone=false;
   renderMateriQuiz();
 }
