@@ -3,7 +3,7 @@
 // KaTeX: inline \(...\), display $$...$$
 // ═══════════════════════════════════════════════════════════
 const MATERI_MODULES = [
-  {
+{
     "id": "dasar-listrik",
     "emoji": "⚡",
     "title": "Dasar Listrik",
@@ -148,7 +148,7 @@ const MATERI_MODULES = [
       }
     ]
   },
-  {
+{
     "id": "komponen-elektronika",
     "emoji": "🔧",
     "title": "Komponen Elektronika",
@@ -299,7 +299,7 @@ const MATERI_MODULES = [
       }
     ]
   },
-  {
+{
     "id": "mikrokontroler",
     "emoji": "🤖",
     "title": "Mikrokontroler",
@@ -464,7 +464,7 @@ const MATERI_MODULES = [
       }
     ]
   },
-  {
+{
     "id": "mcu-lanjut",
     "emoji": "🧠",
     "title": "Pemrograman MCU Lanjut",
@@ -597,7 +597,7 @@ const MATERI_MODULES = [
       }
     ]
   },
-  {
+{
     "id": "instalasi-k3",
     "emoji": "🛡️",
     "title": "Instalasi Listrik & K3",
@@ -753,7 +753,7 @@ const MATERI_MODULES = [
       }
     ]
   },
-  {
+{
     "id": "rangkaian-ac-daya",
     "emoji": "⚡",
     "title": "Rangkaian AC & Daya",
@@ -884,7 +884,7 @@ const MATERI_MODULES = [
       }
     ]
   },
-  {
+{
     "id": "elektronika-daya",
     "emoji": "⚡",
     "title": "Elektronika Daya",
@@ -1027,7 +1027,7 @@ const MATERI_MODULES = [
       }
     ]
   },
-  {
+{
     "id": "sistem-digital",
     "emoji": "🔀",
     "title": "Sistem Digital & Gerbang Logika",
@@ -1162,7 +1162,7 @@ const MATERI_MODULES = [
       }
     ]
   },
-  {
+{
     "id": "motor-listrik",
     "emoji": "🏭",
     "title": "Motor Listrik & Pengendalian",
@@ -1299,7 +1299,7 @@ const MATERI_MODULES = [
       }
     ]
   },
-  {
+{
     "id": "plc-otomasi",
     "emoji": "🛠️",
     "title": "PLC & Otomasi Industri",
@@ -1444,7 +1444,7 @@ const MATERI_MODULES = [
       }
     ]
   },
-  {
+{
     "id": "iot-intro",
     "emoji": "🌐",
     "title": "Introduction to Internet of Things",
@@ -1561,7 +1561,7 @@ const MATERI_MODULES = [
       }
     ]
   },
-  {
+{
     "id": "iot-esp32",
     "emoji": "⚡",
     "title": "Microcontroller (ESP32)",
@@ -1692,7 +1692,7 @@ const MATERI_MODULES = [
       }
     ]
   },
-  {
+{
     "id": "iot-sensors-actuators",
     "emoji": "🕹️",
     "title": "Sensors and Actuators",
@@ -1823,7 +1823,7 @@ const MATERI_MODULES = [
       }
     ]
   },
-  {
+{
     "id": "iot-connectivity",
     "emoji": "📡",
     "title": "IoT Connectivity",
@@ -1946,7 +1946,7 @@ const MATERI_MODULES = [
       }
     ]
   },
-  {
+{
     "id": "iot-platform",
     "emoji": "☁️",
     "title": "IoT Platform & Cloud",
@@ -2092,7 +2092,7 @@ const MATERI_MODULES = [
       }
     ]
   },
-  {
+{
     "id": "komunikasi-nirkabel",
     "emoji": "📡",
     "title": "Komunikasi Nirkabel & RF",
@@ -2236,7 +2236,7 @@ const MATERI_MODULES = [
       }
     ]
   },
-  {
+{
     "id": "ebt-surya",
     "emoji": "☀️",
     "title": "PLTS — Energi Surya",
@@ -2375,7 +2375,7 @@ const MATERI_MODULES = [
       }
     ]
   },
-  {
+{
     "id": "ebt-angin",
     "emoji": "🌬️",
     "title": "PLTB — Energi Angin",
@@ -2513,7 +2513,7 @@ const MATERI_MODULES = [
       }
     ]
   },
-  {
+{
     "id": "ebt-air",
     "emoji": "💧",
     "title": "PLTA & Micro-Hydro",
@@ -2650,7 +2650,7 @@ const MATERI_MODULES = [
       }
     ]
   },
-  {
+{
     "id": "ebt-biomassa",
     "emoji": "🌿",
     "title": "Biomassa & Biogas",
@@ -2789,7 +2789,7 @@ const MATERI_MODULES = [
       }
     ]
   },
-  {
+{
     "id": "ebt-panasbumi",
     "emoji": "🌋",
     "title": "Panas Bumi — Geothermal",
@@ -2918,7 +2918,7 @@ const MATERI_MODULES = [
       }
     ]
   },
-  {
+{
     "id": "ebt-hibrida",
     "emoji": "🔋",
     "title": "Hibrida & Penyimpanan",
@@ -3055,9 +3055,8 @@ const MATERI_MODULES = [
         "exp": "Hybrid LCOE ~1200, BEP 8–10th dengan 4000 cycle."
       }
     ]
-  }
-,
-  {
+  },
+{
     "id": "instrumentasi",
     "emoji": "🔬",
     "title": "Instrumentasi & Alat Ukur",
@@ -3253,7 +3252,7 @@ const MATERI_MODULES = [
       }
     ]
   },
-  {
+{
     "id": "sistem-ketenagalistrikan",
     "emoji": "⚡",
     "title": "Sistem Ketenagalistrikan",
@@ -3393,7 +3392,7 @@ const MATERI_MODULES = [
       }
     ]
   },
-  {
+{
     "id": "sistem-kendali",
     "emoji": "🎛️",
     "title": "Sistem Kendali (Control Systems)",
@@ -3527,7 +3526,7 @@ const MATERI_MODULES = [
       }
     ]
   },
-  {
+{
     "id": "desain-pcb",
     "emoji": "🖥️",
     "title": "Desain PCB & Hardware",
@@ -3670,7 +3669,7 @@ const MATERI_MODULES = [
       }
     ]
   },
-  {
+{
     "id": "analisis-rangkaian",
     "emoji": "🧮",
     "title": "Analisis Rangkaian Lanjut",
@@ -3830,7 +3829,7 @@ const MATERI_MODULES = [
       }
     ]
   },
-  {
+{
     "id": "elektronika-analog",
     "emoji": "🎛️",
     "title": "Elektronika Analog & Op-Amp",
@@ -3991,119 +3990,38 @@ const MATERI_MODULES = [
     ]
   },
 {
-    "id": "arduino-pemula",
-    "emoji": "🤖",
-    "title": "Arduino Pemula",
-    "subtitle": "Setup, pemrograman dasar, digital & analog I/O",
-    "level": "Pemula",
-    "durasi": "±4-6 minggu",
-    "materi": [
-      "Setup Arduino IDE",
-      "Struktur Program",
-      "Digital I/O",
-      "Analog I/O",
-      "Serial Communication"
-    ],
-    "sections": [
-      {
-        "id": "apa-itu-arduino",
-        "emoji": "🎯",
-        "title": "Apa itu Arduino?",
-        "body": "<p><strong>Arduino</strong> adalah platform pengembangan berbasis mikrokontroler yang mudah digunakan. Terdiri dari:</p>\n<ul>\n<li><strong>Hardware</strong>: Board Arduino (Uno, Nano, ESP32, dll.)</li>\n<li><strong>Software</strong>: Arduino IDE untuk menulis dan upload program</li>\n<li><strong>Community</strong>: Jutaan maker di seluruh dunia yang saling berbagi</li>\n</ul>\n<p><strong>Mengapa Arduino populer?</strong></p>\n<ul>\n<li>Open source dan gratis</li>\n<li>Mudah dipelajari pemula</li>\n<li>Komunitas besar dan dokumentasi lengkap</li>\n<li>Banyak sensor dan modul kompatibel</li>\n<li>Cocok untuk prototyping cepat</li>\n</ul>\n<div class=\"mt-tip\">💡 Arduino Uno menggunakan mikrokontroler ATmega328P dengan 14 pin digital dan 6 pin analog.</div>"
-      },
-      {
-        "id": "setup-arduino",
-        "emoji": "💻",
-        "title": "Setup Arduino IDE",
-        "body": "<p><strong>Langkah 1: Download Arduino IDE</strong></p>\n<ol>\n<li>Kunjungi <a href=\"https://www.arduino.cc/en/software\" target=\"_blank\">https://www.arduino.cc/en/software</a></li>\n<li>Pilih version untuk OS kamu (Windows/Mac/Linux)</li>\n<li>Install dengan mengikuti wizard</li>\n</ol>\n<p><strong>Langkah 2: Test Connection</strong></p>\n<ol>\n<li>Hubungkan Arduino ke komputer via USB</li>\n<li>Buka Arduino IDE</li>\n<li>Pilih <strong>Tools > Board > Arduino Uno</strong></li>\n<li>Pilih <strong>Tools > Port > COM_X</strong> (Windows)</li>\n<li>Upload program Blink: <strong>File > Examples > 01.Basics > Blink</strong></li>\n</ol>\n<div class=\"mt-warn\">⚠️ Pastikan driver Arduino ter-install dengan benar. Di Windows biasanya otomatis, di Linux perlu tambahkan user ke grup dialout.</div>"
-      },
-      {
-        "id": "struktur-program",
-        "emoji": "🏗️", 
-        "title": "Struktur Program Arduino",
-        "body": "<p>Setiap program Arduino (disebut <strong>sketch</strong>) minimal memiliki 2 fungsi:</p>\n<pre><code>void setup() {\n  // Kode yang dijalankan SEKALI saat Arduino start\n  // Inisialisasi pin, serial, library, dsb.\n}\n\nvoid loop() {\n  // Kode yang dijalankan BERULANG selamanya\n  // Logic utama program\n}</code></pre>\n<p><strong>Contoh Program Pertama:</strong></p>\n<pre><code>void setup() {\n  Serial.begin(9600);        // Mulai komunikasi serial\n  Serial.println(\"Hello Arduino!\");\n}\n\nvoid loop() {\n  Serial.println(\"Program berjalan...\");\n  delay(1000);               // Tunggu 1 detik\n}</code></pre>\n<div class=\"mt-tip\">💡 setup() dijalankan sekali saat Arduino di-reset atau pertama kali menyala. loop() berjalan terus menerus seperti while(true).</div>"
-      }
-    ]
-  },
-{
-  "id": "kurikulum-arduino-iot",
-  "emoji": "🗺️",
-  "title": "Kurikulum Arduino & IoT",
-  "subtitle": "4 Level progresif dari pemula hingga mahir (24-36 minggu)",
-  "level": "Semua Level",
-  "durasi": "±24-36 minggu",
-  "materi": [
-    "Level 1 Pemula",
-    "Level 2 Menengah",
-    "Level 3 Lanjutan",
-    "Level 4 Mahir"
-  ],
-  "sections": [
-    {
-      "id": "intro",
-      "emoji": "📖",
-      "title": "Pendahuluan",
-      "body": "<h2>Kurikulum Lengkap: Dasar Pemrograman Arduino dan IoT</h2>\n"
-    },
-    {
-      "id": "dari-pemula-hingga-mahir",
-      "emoji": "💡",
-      "title": "Dari Pemula hingga Mahir",
-      "body": "\n<h3>🎯 <strong>Tujuan Pembelajaran</strong></h3>\n<p>Peserta akan menguasai pemrograman Arduino dan IoT mulai dari konsep dasar hingga mampu membuat proyek IoT yang kompleks dengan konektivitas wireless dan manajemen data.</p>\n\n<p>---</p>\n\n"
-    },
-    {
-      "id": "struktur-kurikulum",
-      "emoji": "📘",
-      "title": "📋 **Struktur Kurikulum**",
-      "body": "\n<h3><strong>LEVEL 1: PEMULA</strong> ⭐</h3>\n<p><strong>Durasi: 4-6 minggu</strong></p>\n\n<h4><strong>Modul 1.1: Pengenalan Arduino &amp; Setup</strong></h4>\n<ul>\n<li>Apa itu Arduino dan mikrokontroler</li>\n<li>Arduino IDE installation dan setup</li>\n<li>Mengenal Arduino Uno (pinout, spesifikasi)</li>\n<li>Breadboard dan komponen dasar</li>\n<li>Program pertama: Blink LED</li>\n<li>Serial Monitor untuk debugging</li>\n</ul>\n\n<h4><strong>Modul 1.2: Pemrograman Dasar Arduino</strong></h4>\n<ul>\n<li>Struktur program: <code>setup()</code> dan <code>loop()</code></li>\n<li>Tipe data: int, byte, boolean, char, String</li>\n<li>Variabel dan konstanta</li>\n<li>Operator aritmatika dan logika</li>\n<li>Control structures: if/else, for, while</li>\n<li>Functions dan parameter</li>\n</ul>\n\n<h4><strong>Modul 1.3: Digital I/O</strong></h4>\n<ul>\n<li>pinMode, digitalWrite, digitalRead</li>\n<li>Pull-up dan pull-down resistors</li>\n<li>Debouncing untuk tombol</li>\n<li>Kontrol LED dengan push button</li>\n<li>Multiple LEDs dan button arrays</li>\n</ul>\n\n<h4><strong>Modul 1.4: Analog I/O</strong></h4>\n<ul>\n<li>analogRead untuk sensor analog</li>\n<li>analogWrite untuk PWM</li>\n<li>Menggunakan potensiometer</li>\n<li>Light Dependent Resistor (LDR)</li>\n<li>Mengukur tegangan dengan Arduino</li>\n</ul>\n\n<h4><strong>Modul 1.5: Proyek Level Pemula</strong></h4>\n<ul>\n<li>Traffic light simulator</li>\n<li>Automatic night light (LDR + LED)</li>\n<li>Simple burglar alarm</li>\n<li>PWM motor speed control</li>\n</ul>\n\n<p>---</p>\n\n<h3><strong>LEVEL 2: MENENGAH</strong> ⭐⭐</h3>\n<p><strong>Durasi: 6-8 minggu</strong></p>\n\n<h4><strong>Modul 2.1: Sensor dan Aktuator</strong></h4>\n<ul>\n<li>Sensor suhu (DHT22, DS18B20)</li>\n<li>Sensor jarak (HC-SR04 ultrasonic)</li>\n<li>Sensor gas dan asap (MQ series)</li>\n<li>Servo motor control</li>\n<li>Stepper motor basics</li>\n<li>DC motor dengan driver L298N</li>\n</ul>\n\n<h4><strong>Modul 2.2: Display dan Interface</strong></h4>\n<ul>\n<li>LCD 16x2 dengan I2C</li>\n<li>7-segment display</li>\n<li>LED matrix dengan MAX7219</li>\n<li>OLED display (SSD1306)</li>\n<li>Rotary encoder</li>\n</ul>\n\n<h4><strong>Modul 2.3: Komunikasi Serial</strong></h4>\n<ul>\n<li>UART/Serial communication</li>\n<li>I2C protocol dan multiple devices</li>\n<li>SPI communication</li>\n<li>Komunikasi antar Arduino</li>\n<li>Software Serial</li>\n</ul>\n\n<h4><strong>Modul 2.4: Memory Management</strong></h4>\n<ul>\n<li>EEPROM untuk penyimpanan data</li>\n<li>Optimasi penggunaan SRAM</li>\n<li>Flash memory dan PROGMEM</li>\n<li>Handling large data</li>\n</ul>\n\n<h4><strong>Modul 2.5: Timer dan Interrupt</strong></h4>\n<ul>\n<li>millis() vs delay()</li>\n<li>Timer-based programming</li>\n<li>External interrupts</li>\n<li>Timer interrupts</li>\n<li>Real-time applications</li>\n</ul>\n\n<h4><strong>Modul 2.6: Proyek Level Menengah</strong></h4>\n<ul>\n<li>Weather monitoring station</li>\n<li>Smart door lock dengan keypad</li>\n<li>Robot mobil dengan obstacle avoidance</li>\n<li>Data logger dengan SD card</li>\n</ul>\n\n<p>---</p>\n\n<h3><strong>LEVEL 3: LANJUTAN</strong> ⭐⭐⭐</h3>\n<p><strong>Durasi: 6-10 minggu</strong></p>\n\n<h4><strong>Modul 3.1: Pengenalan IoT dan ESP32</strong></h4>\n<ul>\n<li>Konsep Internet of Things</li>\n<li>ESP32 vs Arduino Uno comparison</li>\n<li>ESP32 pinout dan capabilities</li>\n<li>Arduino IDE setup untuk ESP32</li>\n<li>WiFi connectivity basics</li>\n</ul>\n\n<h4><strong>Modul 3.2: WiFi Programming</strong></h4>\n<ul>\n<li>WiFi connection dan reconnection</li>\n<li>Access Point (AP) mode</li>\n<li>Station (STA) mode</li>\n<li>WiFi Manager library</li>\n<li>Over-The-Air (OTA) updates</li>\n</ul>\n\n<h4><strong>Modul 3.3: Web Server dan HTTP</strong></h4>\n<ul>\n<li>Creating web servers</li>\n<li>Serving HTML pages</li>\n<li>REST API development</li>\n<li>JSON data handling</li>\n<li>HTTP requests (GET, POST)</li>\n<li>WebSocket communication</li>\n</ul>\n\n<h4><strong>Modul 3.4: IoT Protocols</strong></h4>\n<ul>\n<li>MQTT protocol dan broker</li>\n<li>CoAP (Constrained Application Protocol)</li>\n<li>HTTP vs MQTT comparison</li>\n<li>Publishing sensor data</li>\n<li>Subscribing to control commands</li>\n</ul>\n\n<h4><strong>Modul 3.5: Cloud Integration</strong></h4>\n<ul>\n<li>Arduino IoT Cloud</li>\n<li>ThingSpeak integration</li>\n<li>Firebase Realtime Database</li>\n<li>AWS IoT Core basics</li>\n<li>Google Cloud IoT</li>\n</ul>\n\n<h4><strong>Modul 3.6: Bluetooth dan BLE</strong></h4>\n<ul>\n<li>Bluetooth Classic vs BLE</li>\n<li>ESP32 Bluetooth programming</li>\n<li>Smartphone app communication</li>\n<li>BLE characteristics dan services</li>\n<li>Beacon technology</li>\n</ul>\n\n<p>---</p>\n\n<h3><strong>LEVEL 4: MAHIR</strong> ⭐⭐⭐⭐</h3>\n<p><strong>Durasi: 8-12 minggu</strong></p>\n\n<h4><strong>Modul 4.1: Advanced Sensors</strong></h4>\n<ul>\n<li>IMU (MPU6050) untuk orientasi</li>\n<li>GPS module untuk tracking</li>\n<li>Camera modules (OV2640)</li>\n<li>Environmental sensors suite</li>\n<li>Industrial sensor integration</li>\n</ul>\n\n<h4><strong>Modul 4.2: Power Management</strong></h4>\n<ul>\n<li>Deep sleep modes</li>\n<li>Battery optimization</li>\n<li>Solar power systems</li>\n<li>Power consumption analysis</li>\n<li>Wake-up triggers</li>\n</ul>\n\n<h4><strong>Modul 4.3: Security</strong></h4>\n<ul>\n<li>Data encryption</li>\n<li>Secure communication</li>\n<li>Authentication protocols</li>\n<li>Certificate management</li>\n<li>Secure boot</li>\n</ul>\n\n<h4><strong>Modul 4.4: Advanced Communication</strong></h4>\n<ul>\n<li>LoRaWAN untuk long range</li>\n<li>Ethernet connectivity</li>\n<li>GSM/LTE modules</li>\n<li>Mesh networking</li>\n<li>Gateway development</li>\n</ul>\n\n<h4><strong>Modul 4.5: Edge Computing</strong></h4>\n<ul>\n<li>Local data processing</li>\n<li>Machine learning di edge</li>\n<li>TensorFlow Lite untuk MCU</li>\n<li>Computer vision basics</li>\n<li>Real-time analytics</li>\n</ul>\n\n<h4><strong>Modul 4.6: Professional Development</strong></h4>\n<ul>\n<li>Version control (Git)</li>\n<li>Unit testing untuk embedded</li>\n<li>Continuous Integration</li>\n<li>Documentation best practices</li>\n<li>Code review process</li>\n</ul>\n\n<h4><strong>Modul 4.7: Proyek Capstone</strong></h4>\n<ul>\n<li>Smart home automation system</li>\n<li>Industrial IoT monitoring</li>\n<li>Agricultural monitoring system</li>\n<li>Smart city applications</li>\n<li>Custom IoT platform</li>\n</ul>\n\n<p>---</p>\n\n"
-    },
-    {
-      "id": "tools-dan-perangkat",
-      "emoji": "💡",
-      "title": "🛠️ **Tools dan Perangkat**",
-      "body": "\n<h3><strong>Hardware Requirements:</strong></h3>\n<ul>\n<li>Arduino Uno R3</li>\n<li>ESP32 DevKitC v4</li>\n<li>Breadboards dan jumper wires</li>\n<li>Resistors, LEDs, capacitors</li>\n<li>Sensors: DHT22, HC-SR04, MQ-2, LDR</li>\n<li>Displays: LCD 16x2, OLED SSD1306</li>\n<li>Motors: Servo, stepper, DC motor</li>\n<li>Communication: ESP32-CAM, LoRa modules</li>\n</ul>\n\n<h3><strong>Software Requirements:</strong></h3>\n<ul>\n<li>Arduino IDE 2.x</li>\n<li>PlatformIO (optional)</li>\n<li>Serial monitor/plotter</li>\n<li>MQTT broker (Mosquitto)</li>\n<li>Cloud accounts (Arduino Cloud, ThingSpeak)</li>\n</ul>\n\n<p>---</p>\n\n"
-    },
-    {
-      "id": "sumber-referensi",
-      "emoji": "📘",
-      "title": "📚 **Sumber Referensi**",
-      "body": "\n<h3><strong>Dokumentasi Resmi:</strong></h3>\n<ul>\n<li><a href=\"https://www.arduino.cc/reference/en/\" target=\"_blank\" rel=\"noopener\">Arduino Reference</a></li>\n<li><a href=\"https://github.com/espressif/arduino-esp32\" target=\"_blank\" rel=\"noopener\">ESP32 Arduino Core</a></li>\n<li><a href=\"https://docs.espressif.com/projects/esp-idf/\" target=\"_blank\" rel=\"noopener\">ESP-IDF Programming Guide</a></li>\n</ul>\n\n<h3><strong>Buku Referensi:</strong></h3>\n<ul>\n<li>&quot;Arduino Cookbook&quot; by Michael Margolis</li>\n<li>&quot;Programming Arduino Next Steps&quot; by Simon Monk</li>\n<li>&quot;Internet of Things with ESP32&quot; by Marco Schwartz</li>\n<li>&quot;Practical Arduino Engineering&quot; by Harold Timmis</li>\n</ul>\n\n<h3><strong>Online Resources:</strong></h3>\n<ul>\n<li>Arduino Project Hub</li>\n<li>ESP32.com community forum</li>\n<li>GitHub repositories dengan contoh kode</li>\n<li>YouTube tutorials dari maker terkenal</li>\n</ul>\n\n<h3><strong>Tools dan Simulasi:</strong></h3>\n<ul>\n<li>Wokwi online simulator</li>\n<li>Tinkercad circuits</li>\n<li>Fritzing untuk circuit design</li>\n<li>EasyEDA untuk PCB design</li>\n</ul>\n\n<p>---</p>\n\n"
-    },
-    {
-      "id": "assessment-dan-evaluasi",
-      "emoji": "💡",
-      "title": "🎯 **Assessment dan Evaluasi**",
-      "body": "\n<h3><strong>Per Level:</strong></h3>\n<ul>\n<li>Quiz online untuk teori</li>\n<li>Praktik hands-on projects</li>\n<li>Code review dan peer evaluation</li>\n<li>Dokumentasi proyek</li>\n</ul>\n\n<h3><strong>Sertifikasi:</strong></h3>\n<ul>\n<li>Level 1: &quot;Arduino Programming Fundamentals&quot;</li>\n<li>Level 2: &quot;Arduino Advanced Applications&quot;</li>\n<li>Level 3: &quot;IoT Development with ESP32&quot;</li>\n<li>Level 4: &quot;Professional IoT Systems&quot;</li>\n</ul>\n\n<p>---</p>\n\n"
-    },
-    {
-      "id": "timeline-pembelajaran",
-      "emoji": "📘",
-      "title": "⏱️ **Timeline Pembelajaran**",
-      "body": "<ul>\n<li><strong>Total durasi</strong>: 24-36 minggu (6-9 bulan)</li>\n<li><strong>Intensitas</strong>: 3-4 jam per minggu</li>\n<li><strong>Format</strong>: 2 sesi teori + 1 sesi praktik per minggu</li>\n<li><strong>Fleksibilitas</strong>: Self-paced dengan deadline milestone</li>\n</ul>\n\n<p>---</p>\n\n"
-    },
-    {
-      "id": "career-path-setelah-menyelesai",
-      "emoji": "💡",
-      "title": "🚀 **Career Path Setelah Menyelesaikan**",
-      "body": "<ul>\n<li><strong>Embedded Systems Engineer</strong></li>\n<li><strong>IoT Developer</strong></li>\n<li><strong>Hardware Engineer</strong></li>\n<li><strong>Automation Engineer</strong></li>\n<li><strong>Smart Systems Consultant</strong></li>\n<li><strong>Maker/Entrepreneur</strong> dalam bidang IoT</li>\n</ul>\n\n<p>Kurikulum ini dirancang progresif dengan hands-on approach, memastikan peserta tidak hanya memahami teori tetapi juga mampu mengimplementasikan dalam proyek nyata.</p>"
-    }
-  ]
-},
-{
-  "id": "arduino-pemula-lengkap",
+  "id": "arduino-pemula",
   "emoji": "🤖",
-  "title": "Arduino Pemula Lengkap",
-  "subtitle": "Dasar Arduino, pemrograman, digital & analog I/O + proyek",
+  "title": "Arduino Pemula",
+  "subtitle": "Setup, pemrograman dasar, digital & analog I/O + proyek",
   "level": "Pemula",
   "durasi": "±4-6 minggu",
   "materi": [
-    "Pengenalan Arduino",
-    "Pemrograman Dasar",
+    "Setup Arduino IDE",
+    "Struktur Program",
     "Digital I/O",
     "Analog I/O",
     "Proyek Pemula"
   ],
   "sections": [
+    {
+      "id": "apa-itu-arduino",
+      "emoji": "🎯",
+      "title": "Apa itu Arduino?",
+      "body": "<p><strong>Arduino</strong> adalah platform pengembangan berbasis mikrokontroler yang mudah digunakan. Terdiri dari:</p>\n<ul>\n<li><strong>Hardware</strong>: Board Arduino (Uno, Nano, ESP32, dll.)</li>\n<li><strong>Software</strong>: Arduino IDE untuk menulis dan upload program</li>\n<li><strong>Community</strong>: Jutaan maker di seluruh dunia yang saling berbagi</li>\n</ul>\n<p><strong>Mengapa Arduino populer?</strong></p>\n<ul>\n<li>Open source dan gratis</li>\n<li>Mudah dipelajari pemula</li>\n<li>Komunitas besar dan dokumentasi lengkap</li>\n<li>Banyak sensor dan modul kompatibel</li>\n<li>Cocok untuk prototyping cepat</li>\n</ul>\n<div class=\"mt-tip\">💡 Arduino Uno menggunakan mikrokontroler ATmega328P dengan 14 pin digital dan 6 pin analog.</div>"
+    },
+    {
+      "id": "setup-arduino",
+      "emoji": "💻",
+      "title": "Setup Arduino IDE",
+      "body": "<p><strong>Langkah 1: Download Arduino IDE</strong></p>\n<ol>\n<li>Kunjungi <a href=\"https://www.arduino.cc/en/software\" target=\"_blank\">https://www.arduino.cc/en/software</a></li>\n<li>Pilih version untuk OS kamu (Windows/Mac/Linux)</li>\n<li>Install dengan mengikuti wizard</li>\n</ol>\n<p><strong>Langkah 2: Test Connection</strong></p>\n<ol>\n<li>Hubungkan Arduino ke komputer via USB</li>\n<li>Buka Arduino IDE</li>\n<li>Pilih <strong>Tools > Board > Arduino Uno</strong></li>\n<li>Pilih <strong>Tools > Port > COM_X</strong> (Windows)</li>\n<li>Upload program Blink: <strong>File > Examples > 01.Basics > Blink</strong></li>\n</ol>\n<div class=\"mt-warn\">⚠️ Pastikan driver Arduino ter-install dengan benar. Di Windows biasanya otomatis, di Linux perlu tambahkan user ke grup dialout.</div>"
+    },
+    {
+      "id": "struktur-program",
+      "emoji": "🏗️",
+      "title": "Struktur Program Arduino",
+      "body": "<p>Setiap program Arduino (disebut <strong>sketch</strong>) minimal memiliki 2 fungsi:</p>\n<pre><code>void setup() {\n  // Kode yang dijalankan SEKALI saat Arduino start\n  // Inisialisasi pin, serial, library, dsb.\n}\n\nvoid loop() {\n  // Kode yang dijalankan BERULANG selamanya\n  // Logic utama program\n}</code></pre>\n<p><strong>Contoh Program Pertama:</strong></p>\n<pre><code>void setup() {\n  Serial.begin(9600);        // Mulai komunikasi serial\n  Serial.println(\"Hello Arduino!\");\n}\n\nvoid loop() {\n  Serial.println(\"Program berjalan...\");\n  delay(1000);               // Tunggu 1 detik\n}</code></pre>\n<div class=\"mt-tip\">💡 setup() dijalankan sekali saat Arduino di-reset atau pertama kali menyala. loop() berjalan terus menerus seperti while(true).</div>"
+    },
     {
       "id": "intro",
       "emoji": "📖",
@@ -4140,13 +4058,96 @@ const MATERI_MODULES = [
       "title": "**🏃‍♂️ Latihan & Tantangan Level 1**",
       "body": "\n<h3><strong>Latihan Mandiri:</strong></h3>\n\n<p><strong>1. RGB LED Controller</strong></p>\n<ul>\n<li>Gunakan 3 potensiometer untuk kontrol Red, Green, Blue</li>\n<li>Tampilkan nilai RGB di Serial Monitor</li>\n<li>Bonus: Buat mode auto-color cycling</li>\n</ul>\n\n<p><strong>2. Security Alarm</strong></p>\n<ul>\n<li>LDR sebagai light sensor</li>\n<li>Buzzer berbunyi jika ada perubahan cahaya mendadak</li>\n<li>LED indikator status (hijau=aman, merah=alarm)</li>\n<li>Button untuk reset alarm</li>\n</ul>\n\n<p><strong>3. Simple Weather Station</strong></p>\n<ul>\n<li>LM35 untuk suhu</li>\n<li>LDR untuk level cahaya</li>\n<li>Tampilkan data setiap 10 detik</li>\n<li>LED blink sesuai suhu (cepat=panas, lambat=dingin)</li>\n</ul>\n\n<h3><strong>Quiz Pemahaman:</strong></h3>\n\n<p><strong>1. Apa perbedaan <code>digitalWrite(13, HIGH)</code> dan <code>analogWrite(9, 255)</code>?</strong></p>\n\n<p><strong>2. Mengapa perlu <code>delay(50)</code> setelah baca button?</strong></p>\n\n<p><strong>3. Pin mana saja di Arduino Uno yang mendukung PWM?</strong></p>\n\n<p><strong>4. Jika <code>analogRead(A0)</code> menghasilkan 512, berapa voltage-nya?</strong></p>\n\n<p><strong>5. Kapan sebaiknya menggunakan <code>INPUT_PULLUP</code> vs <code>INPUT</code>?</strong></p>\n\n<h3><strong>Project Challenge:</strong></h3>\n<p><strong>&quot;Smart Room Controller&quot;</strong></p>\n<ul>\n<li>2 potensiometer: brightness control &amp; temperature setpoint</li>\n<li>LDR: auto-brightness saat gelap</li>\n<li>LM35: temperature monitoring</li>\n<li>2 LED: room light &amp; heater indicator</li>\n<li>Buzzer: alarm jika suhu terlalu tinggi/rendah</li>\n<li>Serial interface untuk monitoring</li>\n</ul>\n\n<p><strong>Kriteria Penilaian:</strong></p>\n<ul>\n<li>✅ Kode bersih dan terstruktur</li>\n<li>✅ Komentar yang jelas</li>\n<li>✅ Handling error/edge cases</li>\n<li>✅ User experience (serial output yang informatif)</li>\n<li>✅ Kreativitas fitur tambahan</li>\n</ul>\n\n<p>---</p>\n\n<p><strong>🎉 Selamat! Anda telah menyelesaikan Level 1</strong></p>\n\n<p><strong>Yang telah dikuasai:</strong></p>\n<ul>\n<li>✅ Setup Arduino IDE dan hardware</li>\n<li>✅ Struktur program dan syntax C/C++</li>\n<li>✅ Variables, functions, control structures</li>\n<li>✅ Digital I/O (button, LED)</li>\n<li>✅ Analog I/O (sensor, PWM)</li>\n<li>✅ Serial communication untuk debugging</li>\n</ul>\n\n<p><strong>Selanjutnya ke Level 2:</strong></p>\n<ul>\n<li>Sensor dan aktuator lanjutan</li>\n<li>Display LCD dan interface</li>\n<li>Timer dan interrupt</li>\n<li>Komunikasi I2C/SPI</li>\n<li>Memory management</li>\n</ul>"
     }
+  ],
+  "contoh": [
+    {
+      "judul": "Blink LED Pertama",
+      "soal": "Membuat LED di pin 13 berkedip setiap 1 detik",
+      "langkah": [
+        "Hubungkan LED ke pin 13 Arduino (sudah ada built-in LED)",
+        "Tulis kode untuk set pin 13 sebagai OUTPUT",
+        "Gunakan digitalWrite(13, HIGH) untuk nyalakan",
+        "Gunakan delay(1000) untuk tunggu 1 detik",
+        "digitalWrite(13, LOW) untuk matikan LED",
+        "<strong>Upload ke Arduino dan lihat LED berkedip!</strong>"
+      ]
+    },
+    {
+      "judul": "Button Control LED",
+      "soal": "LED menyala ketika button ditekan, mati ketika dilepas",
+      "langkah": [
+        "Hubungkan button ke pin 2 dengan pull-up resistor",
+        "Hubungkan LED ke pin 13",
+        "Set pinMode(2, INPUT_PULLUP) dan pinMode(13, OUTPUT)",
+        "Baca digitalRead(2) dalam loop()",
+        "Jika button LOW (ditekan), LED HIGH",
+        "<strong>Test dengan menekan button!</strong>"
+      ]
+    }
+  ],
+  "soal": [
+    {
+      "q": "Fungsi setup() pada Arduino dijalankan...",
+      "opts": [
+        "Berkali-kali selama program berjalan",
+        "Sekali saat Arduino pertama kali menyala",
+        "Setiap 1 detik sekali",
+        "Hanya saat tombol reset ditekan"
+      ],
+      "ans": 1,
+      "exp": "setup() dijalankan sekali saat Arduino di-reset atau pertama kali mendapat power."
+    },
+    {
+      "q": "Pin digital Arduino yang mendukung PWM ditandai dengan...",
+      "opts": [
+        "Tanda bintang (*)",
+        "Tanda tilde (~)",
+        "Tanda plus (+)",
+        "Tanda minus (-)"
+      ],
+      "ans": 1,
+      "exp": "Pin PWM Arduino Uno (3, 5, 6, 9, 10, 11) ditandai dengan simbol ~ di sebelah nomornya."
+    },
+    {
+      "q": "Untuk membaca sensor analog, fungsi yang digunakan adalah...",
+      "opts": [
+        "digitalRead()",
+        "analogRead()",
+        "pinMode()",
+        "analogWrite()"
+      ],
+      "ans": 1,
+      "exp": "analogRead() digunakan untuk membaca nilai dari pin analog (A0-A5) dengan hasil 0-1023."
+    },
+    {
+      "q": "Apa perbedaan digitalWrite(13, HIGH) dan analogWrite(9, 255)?",
+      "opts": [
+        "Tidak ada, sama saja",
+        "digitalWrite hanya ON/OFF, analogWrite PWM 0-255 untuk atur kecerahan/kecepatan",
+        "analogWrite untuk baca sensor",
+        "digitalWrite untuk PWM"
+      ],
+      "ans": 1,
+      "exp": "digitalWrite HIGH/LOW, analogWrite PWM 0-255."
+    },
+    {
+      "q": "Mengapa perlu delay(50) setelah baca button?",
+      "opts": [
+        "Agar LED lebih terang",
+        "Untuk debouncing, hindari pantulan kontak",
+        "Agar program lebih cepat",
+        "Tidak perlu"
+      ],
+      "ans": 1,
+      "exp": "Debouncing hindari deteksi ganda akibat pantulan mekanik."
+    }
   ]
 },
 {
   "id": "arduino-menengah",
   "emoji": "🔧",
   "title": "Arduino Menengah",
-  "subtitle": "Sensor lanjutan, display, komunikasi, memory & timer",
+  "subtitle": "Sensor lanjutan, display, komunikasi & timer",
   "level": "Menengah",
   "durasi": "±6-8 minggu",
   "materi": [
@@ -4192,18 +4193,76 @@ const MATERI_MODULES = [
       "emoji": "💡",
       "title": "**⏰ Modul 2.5: Timer dan Interrupt**",
       "body": "\n<h3><strong>⏱️ millis() vs delay() - Non-blocking Programming</strong></h3>\n\n<p><code>delay()</code> memblokir eksekusi program. Gunakan <code>millis()</code> untuk multitasking:</p>\n\n<pre><code class=\"lang-cpp\">// ❌ BURUK: Blocking code\n<p>void badBlink() {</p>\n<p>  digitalWrite(13, HIGH);</p>\n<p>  delay(1000);                    // Program terhenti 1 detik</p>\n<p>  digitalWrite(13, LOW);</p>\n<p>  delay(1000);                    // Program terhenti 1 detik lagi</p>\n<p>}</p>\n\n<p>// ✅ BAIK: Non-blocking code</p>\n<p>unsigned long previousMillis = 0;</p>\n<p>const long interval = 1000;</p>\n<p>bool ledState = false;</p>\n\n<p>void goodBlink() {</p>\n<p>  unsigned long currentMillis = millis();</p>\n\n<p>  if (currentMillis - previousMillis &gt;= interval) {</p>\n<p>    previousMillis = currentMillis;</p>\n<p>    ledState = !ledState;</p>\n<p>    digitalWrite(13, ledState);</p>\n<p>  }</p>\n<p>}</p>\n\n<p>// Multi-task example</p>\n<p>unsigned long led1Previous = 0;</p>\n<p>unsigned long led2Previous = 0;</p>\n<p>unsigned long sensorPrevious = 0;</p>\n\n<p>const long led1Interval = 500;    // LED 1 blink fast</p>\n<p>const long led2Interval = 1500;   // LED 2 blink slow</p>\n<p>const long sensorInterval = 2000; // Read sensor every 2s</p>\n\n<p>void setup() {</p>\n<p>  Serial.begin(9600);</p>\n<p>  pinMode(12, OUTPUT);  // LED 1</p>\n<p>  pinMode(13, OUTPUT);  // LED 2</p>\n<p>}</p>\n\n<p>void loop() {</p>\n<p>  unsigned long currentMillis = millis();</p>\n\n<p>  // Task 1: Fast LED blink</p>\n<p>  if (currentMillis - led1Previous &gt;= led1Interval) {</p>\n<p>    led1Previous = currentMillis;</p>\n<p>    digitalWrite(12, !digitalRead(12));</p>\n<p>  }</p>\n\n<p>  // Task 2: Slow LED blink</p>\n<p>  if (currentMillis - led2Previous &gt;= led2Interval) {</p>\n<p>    led2Previous = currentMillis;</p>\n<p>    digitalWrite(13, !digitalRead(13));</p>\n<p>  }</p>\n\n<p>  // Task 3: Read sensor</p>\n<p>  if (currentMillis - sensorPrevious &gt;= sensorInterval) {</p>\n<p>    sensorPrevious = currentMillis;</p>\n<p>    int sensorValue = analogRead(A0);</p>\n<p>    Serial.println(&quot;Sensor: &quot; + String(sensorValue));</p>\n<p>  }</p>\n\n<p>  // Task 4: Check serial commands</p>\n<p>  if (Serial.available()) {</p>\n<p>    String command = Serial.readString();</p>\n<p>    Serial.println(&quot;Command received: &quot; + command);</p>\n<p>  }</p>\n\n<p>  // All tasks run &quot;simultaneously&quot;!</p>\n<p>}</p>\n</code></pre>\n\n<h3><strong>⚡ External Interrupts</strong></h3>\n\n<p>Interrupt memungkinkan respons instan terhadap event eksternal:</p>\n\n<pre><code class=\"lang-cpp\">volatile bool buttonPressed = false;\n<p>volatile unsigned long lastInterruptTime = 0;</p>\n\n<p>void setup() {</p>\n<p>  Serial.begin(9600);</p>\n<p>  pinMode(2, INPUT_PULLUP);       // Interrupt pin</p>\n<p>  pinMode(13, OUTPUT);            // LED</p>\n\n<p>  // Attach interrupt: pin 2 (INT0), falling edge, call ISR function</p>\n<p>  attachInterrupt(digitalPinToInterrupt(2), buttonISR, FALLING);</p>\n\n<p>  Serial.println(&quot;External Interrupt Example&quot;);</p>\n<p>  Serial.println(&quot;Press button on pin 2&quot;);</p>\n<p>}</p>\n\n<p>// Interrupt Service Routine (ISR)</p>\n<p>void buttonISR() {</p>\n<p>  unsigned long interruptTime = millis();</p>\n\n<p>  // Simple debouncing</p>\n<p>  if (interruptTime - lastInterruptTime &gt; 200) {</p>\n<p>    buttonPressed = true;</p>\n<p>    lastInterruptTime = interruptTime;</p>\n<p>  }</p>\n<p>}</p>\n\n<p>void loop() {</p>\n<p>  // Check if button was pressed (in interrupt)</p>\n<p>  if (buttonPressed) {</p>\n<p>    buttonPressed = false;        // Reset flag</p>\n\n<p>    Serial.println(&quot;⚡ Button pressed! (via interrupt)&quot;);</p>\n\n<p>    // Toggle LED</p>\n<p>    digitalWrite(13, !digitalRead(13));</p>\n\n<p>    // Do some time-critical task immediately</p>\n<p>    for (int i = 0; i &lt; 5; i++) {</p>\n<p>      digitalWrite(13, HIGH);</p>\n<p>      delay(50);</p>\n<p>      digitalWrite(13, LOW);</p>\n<p>      delay(50);</p>\n<p>    }</p>\n<p>  }</p>\n\n<p>  // Main program continues normally</p>\n<p>  static unsigned long lastPrint = 0;</p>\n<p>  if (millis() - lastPrint &gt;= 1000) {</p>\n<p>    lastPrint = millis();</p>\n<p>    Serial.println(&quot;Main loop running... &quot; + String(millis()));</p>\n<p>  }</p>\n<p>}</p>\n</code></pre>\n\n<h3><strong>⏲️ Timer Interrupts (Advanced)</strong></h3>\n\n<p>Timer interrupt untuk eksekusi berkala yang presisi:</p>\n\n<pre><code class=\"lang-cpp\">// Timer interrupt untuk sampling sensor presisi\n<p>volatile bool sampleSensor = false;</p>\n<p>volatile int sampleCount = 0;</p>\n\n<p>void setup() {</p>\n<p>  Serial.begin(9600);</p>\n\n<p>  // Setup Timer1 for 1Hz interrupt (1 second)</p>\n<p>  noInterrupts();           // Disable interrupts</p>\n\n<p>  TCCR1A = 0;               // Clear Timer1 registers</p>\n<p>  TCCR1B = 0;</p>\n<p>  TCNT1 = 0;                // Initialize counter value to 0</p>\n\n<p>  // Set compare match register for 1Hz increments</p>\n<p>  OCR1A = 15624;            // = (16<em>10^6) / (1</em>1024) - 1 (1Hz with 1024 prescaler)</p>\n\n<p>  TCCR1B |= (1 &lt;&lt; WGM12);   // Turn on CTC mode</p>\n<div style='overflow-x:auto'><pre style='font-size:12px; background:var(--bg3); padding:8px; border-radius:6px;'>  TCCR1B |= (1 &lt;&lt; CS12) | (1 &lt;&lt; CS10);  // Set 1024 prescaler</pre></div>\n<p>  TIMSK1 |= (1 &lt;&lt; OCIE1A);  // Enable timer compare interrupt</p>\n\n<p>  interrupts();             // Enable interrupts</p>\n\n<p>  Serial.println(&quot;Timer interrupt setup complete&quot;);</p>\n<p>}</p>\n\n<p>// Timer1 interrupt service routine</p>\n<p>ISR(TIMER1_COMPA_vect) {</p>\n<p>  sampleSensor = true;</p>\n<p>  sampleCount++;</p>\n<p>}</p>\n\n<p>void loop() {</p>\n<p>  // Check if timer triggered sensor sampling</p>\n<p>  if (sampleSensor) {</p>\n<p>    sampleSensor = false;   // Reset flag</p>\n\n<p>    // Time-critical sensor reading</p>\n<p>    int sensorValue = analogRead(A0);</p>\n<p>    float voltage = (sensorValue / 1023.0) * 5.0;</p>\n\n<p>    Serial.print(&quot;Sample #&quot;);</p>\n<p>    Serial.print(sampleCount);</p>\n<p>    Serial.print(&quot;: &quot;);</p>\n<p>    Serial.print(voltage);</p>\n<p>    Serial.println(&quot;V&quot;);</p>\n<p>  }</p>\n\n<p>  // Other non-time-critical tasks</p>\n<p>  if (Serial.available()) {</p>\n<p>    String command = Serial.readString();</p>\n<p>    command.trim();</p>\n\n<p>    if (command == &quot;RESET&quot;) {</p>\n<p>      sampleCount = 0;</p>\n<p>      Serial.println(&quot;Sample counter reset&quot;);</p>\n<p>    }</p>\n<p>  }</p>\n<p>}</p>\n</code></pre>\n\n<p>---</p>\n\n"
+    }
+  ],
+  "soal": [
+    {
+      "q": "Mengapa DHT22 perlu delay 2 detik antar pembacaan?",
+      "opts": [
+        "Karena sensor butuh stabilisasi dan sampling max 0.5Hz",
+        "Karena Arduino lambat",
+        "Karena kabel panjang",
+        "Tidak perlu delay"
+      ],
+      "ans": 0,
+      "exp": "DHT22 max 0.5Hz, butuh 2 detik antar baca."
     },
     {
-      "id": "proyek-level-2-weather-monitor",
-      "emoji": "📘",
-      "title": "**🎯 Proyek Level 2: Weather Monitoring Station**",
-      "body": "\n<pre><code class=\"lang-cpp\">/*\n<ul>\n<li>Advanced Weather Monitoring Station</li>\n<li>Components:</li>\n<li>- DHT22 (temp/humidity)</li>\n<li>- BMP180 (pressure/altitude)</li>\n<li>- LDR (light level)</li>\n<li>- LCD 20x4 I2C display</li>\n<li>- SD card logging</li>\n<li>- Real-time clock (RTC)</li>\n<li>- WiFi data upload (optional)</li>\n</ul>\n<p> */</p>\n\n<p>#include &lt;DHT.h&gt;</p>\n<p>#include &lt;Wire.h&gt;</p>\n<p>#include &lt;LiquidCrystal_I2C.h&gt;</p>\n<p>#include &lt;SD.h&gt;</p>\n<p>#include &lt;SPI.h&gt;</p>\n<p>#include &lt;RTClib.h&gt;</p>\n\n<p>// Pin definitions</p>\n<p>#define DHT_PIN 2</p>\n<p>#define DHT_TYPE DHT22</p>\n<p>#define LDR_PIN A0</p>\n<p>#define SD_CS_PIN 10</p>\n<p>#define BUZZER_PIN 8</p>\n<p>#define STATUS_LED 13</p>\n\n<p>// Component initialization</p>\n<p>DHT dht(DHT_PIN, DHT_TYPE);</p>\n<p>LiquidCrystal_I2C lcd(0x27, 20, 4);</p>\n<p>RTC_DS1307 rtc;</p>\n<p>File dataFile;</p>\n\n<p>// Variables</p>\n<p>struct WeatherData {</p>\n<p>  float temperature;</p>\n<p>  float humidity;</p>\n<p>  float heatIndex;</p>\n<p>  int lightLevel;</p>\n<p>  unsigned long timestamp;</p>\n<p>};</p>\n\n<p>WeatherData currentData;</p>\n<p>unsigned long lastReading = 0;</p>\n<p>unsigned long lastDisplay = 0;</p>\n<p>unsigned long lastLog = 0;</p>\n\n<p>const unsigned long READING_INTERVAL = 2000;   // 2 seconds</p>\n<p>const unsigned long DISPLAY_INTERVAL = 1000;   // 1 second</p>\n<p>const unsigned long LOG_INTERVAL = 60000;      // 1 minute</p>\n\n<p>// Thresholds for alerts</p>\n<p>const float TEMP_HIGH = 35.0;</p>\n<p>const float TEMP_LOW = 5.0;</p>\n<p>const float HUMIDITY_HIGH = 80.0;</p>\n<p>const int LIGHT_LOW = 100;</p>\n\n<p>void setup() {</p>\n<p>  Serial.begin(9600);</p>\n\n<p>  // Initialize pins</p>\n<p>  pinMode(STATUS_LED, OUTPUT);</p>\n<p>  pinMode(BUZZER_PIN, OUTPUT);</p>\n\n<p>  // Initialize components</p>\n<p>  dht.begin();</p>\n<p>  lcd.init();</p>\n<p>  lcd.backlight();</p>\n\n<p>  // Initialize SD card</p>\n<p>  if (!SD.begin(SD_CS_PIN)) {</p>\n<p>    Serial.println(&quot;❌ SD card initialization failed!&quot;);</p>\n<p>    errorBlink();</p>\n<p>  } else {</p>\n<p>    Serial.println(&quot;✅ SD card initialized&quot;);</p>\n<p>  }</p>\n\n<p>  // Initialize RTC</p>\n<p>  if (!rtc.begin()) {</p>\n<p>    Serial.println(&quot;❌ RTC not found!&quot;);</p>\n<p>    errorBlink();</p>\n<p>  } else {</p>\n<p>    Serial.println(&quot;✅ RTC initialized&quot;);</p>\n<p>  }</p>\n\n<p>  // Check if RTC lost power</p>\n<p>  if (!rtc.isrunning()) {</p>\n<p>    Serial.println(&quot;⚠️ RTC lost power, setting time...&quot;);</p>\n<p>    rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));</p>\n<p>  }</p>\n\n<p>  // Welcome message</p>\n<p>  lcd.setCursor(0, 0);</p>\n<p>  lcd.print(&quot;Weather Station v2.0&quot;);</p>\n<p>  lcd.setCursor(0, 1);</p>\n<p>  lcd.print(&quot;Initializing...&quot;);</p>\n<p>  delay(2000);</p>\n<p>  lcd.clear();</p>\n\n<p>  Serial.println(&quot;🌤️ Weather Station Started&quot;);</p>\n<p>  digitalWrite(STATUS_LED, HIGH);</p>\n<p>}</p>\n\n<p>void loop() {</p>\n<p>  unsigned long currentTime = millis();</p>\n\n<p>  // Read sensors</p>\n<p>  if (currentTime - lastReading &gt;= READING_INTERVAL) {</p>\n<p>    lastReading = currentTime;</p>\n<p>    readSensors();</p>\n<p>  }</p>\n\n<p>  // Update display</p>\n<p>  if (currentTime - lastDisplay &gt;= DISPLAY_INTERVAL) {</p>\n<p>    lastDisplay = currentTime;</p>\n<p>    updateDisplay();</p>\n<p>  }</p>\n\n<p>  // Log data</p>\n<p>  if (currentTime - lastLog &gt;= LOG_INTERVAL) {</p>\n<p>    lastLog = currentTime;</p>\n<p>    logData();</p>\n<p>  }</p>\n\n<p>  // Check for alerts</p>\n<p>  checkAlerts();</p>\n\n<p>  // Handle serial commands</p>\n<p>  handleSerial();</p>\n<p>}</p>\n\n<p>void readSensors() {</p>\n<p>  currentData.temperature = dht.readTemperature();</p>\n<p>  currentData.humidity = dht.readHumidity();</p>\n<p>  currentData.lightLevel = analogRead(LDR_PIN);</p>\n<p>  currentData.timestamp = millis();</p>\n\n<p>  // Calculate heat index</p>\n<p>  if (!isnan(currentData.temperature) &amp;&amp; !isnan(currentData.humidity)) {</p>\n<p>    currentData.heatIndex = dht.computeHeatIndex(currentData.temperature, currentData.humidity, false);</p>\n<p>  }</p>\n\n<p>  // Debug output</p>\n<p>  Serial.println(&quot;--- Sensor Readings ---&quot;);</p>\n<p>  Serial.println(&quot;Temperature: &quot; + String(currentData.temperature) + &quot;°C&quot;);</p>\n<p>  Serial.println(&quot;Humidity: &quot; + String(currentData.humidity) + &quot;%&quot;);</p>\n<p>  Serial.println(&quot;Heat Index: &quot; + String(currentData.heatIndex) + &quot;°C&quot;);</p>\n<p>  Serial.println(&quot;Light Level: &quot; + String(currentData.lightLevel));</p>\n<p>  Serial.println(&quot;Timestamp: &quot; + String(currentData.timestamp));</p>\n<p>}</p>\n\n<p>void updateDisplay() {</p>\n<p>  lcd.clear();</p>\n\n<p>  // Line 1: Date &amp; Time</p>\n<p>  DateTime now = rtc.now();</p>\n<p>  lcd.setCursor(0, 0);</p>\n<p>  lcd.print(now.day());</p>\n<p>  lcd.print(&quot;/&quot;);</p>\n<p>  lcd.print(now.month());</p>\n<p>  lcd.print(&quot;/&quot;);</p>\n<p>  lcd.print(now.year());</p>\n<p>  lcd.print(&quot; &quot;);</p>\n<p>  if (now.hour() &lt; 10) lcd.print(&quot;0&quot;);</p>\n<p>  lcd.print(now.hour());</p>\n<p>  lcd.print(&quot;:&quot;);</p>\n<p>  if (now.minute() &lt; 10) lcd.print(&quot;0&quot;);</p>\n<p>  lcd.print(now.minute());</p>\n\n<p>  // Line 2: Temperature</p>\n<p>  lcd.setCursor(0, 1);</p>\n<p>  lcd.print(&quot;Temp: &quot;);</p>\n<p>  if (!isnan(currentData.temperature)) {</p>\n<p>    lcd.print(currentData.temperature, 1);</p>\n<p>    lcd.print((char)223);  // Degree symbol</p>\n<p>    lcd.print(&quot;C&quot;);</p>\n<p>  } else {</p>\n<p>    lcd.print(&quot;Error&quot;);</p>\n<p>  }</p>\n\n<p>  // Line 3: Humidity</p>\n<p>  lcd.setCursor(0, 2);</p>\n<p>  lcd.print(&quot;Humidity: &quot;);</p>\n<p>  if (!isnan(currentData.humidity)) {</p>\n<p>    lcd.print(currentData.humidity, 1);</p>\n<p>    lcd.print(&quot;%&quot;);</p>\n<p>  } else {</p>\n<p>    lcd.print(&quot;Error&quot;);</p>\n<p>  }</p>\n\n<p>  // Line 4: Light &amp; Heat Index</p>\n<p>  lcd.setCursor(0, 3);</p>\n<p>  lcd.print(&quot;Light:&quot;);</p>\n<p>  lcd.print(currentData.lightLevel);</p>\n<p>  lcd.print(&quot; HI:&quot;);</p>\n<p>  if (!isnan(currentData.heatIndex)) {</p>\n<p>    lcd.print(currentData.heatIndex, 0);</p>\n<p>    lcd.print(&quot;C&quot;);</p>\n<p>  } else {</p>\n<p>    lcd.print(&quot;--&quot;);</p>\n<p>  }</p>\n<p>}</p>\n\n<p>void logData() {</p>\n<p>  DateTime now = rtc.now();</p>\n\n<p>  dataFile = SD.open(&quot;weather.csv&quot;, FILE_WRITE);</p>\n<p>  if (dataFile) {</p>\n<p>    // CSV format: timestamp,temperature,humidity,heatindex,light</p>\n<p>    dataFile.print(now.unixtime());</p>\n<p>    dataFile.print(&quot;,&quot;);</p>\n<p>    dataFile.print(currentData.temperature);</p>\n<p>    dataFile.print(&quot;,&quot;);</p>\n<p>    dataFile.print(currentData.humidity);</p>\n<p>    dataFile.print(&quot;,&quot;);</p>\n<p>    dataFile.print(currentData.heatIndex);</p>\n<p>    dataFile.print(&quot;,&quot;);</p>\n<p>    dataFile.println(currentData.lightLevel);</p>\n<p>    dataFile.close();</p>\n\n<p>    Serial.println(&quot;✅ Data logged to SD card&quot;);</p>\n<p>  } else {</p>\n<p>    Serial.println(&quot;❌ Error opening data file&quot;);</p>\n<p>  }</p>\n<p>}</p>\n\n<p>void checkAlerts() {</p>\n<p>  bool alertTriggered = false;</p>\n\n<p>  // Temperature alerts</p>\n<p>  if (currentData.temperature &gt; TEMP_HIGH) {</p>\n<p>    Serial.println(&quot;🔥 HIGH TEMPERATURE ALERT: &quot; + String(currentData.temperature) + &quot;°C&quot;);</p>\n<p>    alertTriggered = true;</p>\n<p>  } else if (currentData.temperature &lt; TEMP_LOW) {</p>\n<p>    Serial.println(&quot;🧊 LOW TEMPERATURE ALERT: &quot; + String(currentData.temperature) + &quot;°C&quot;);</p>\n<p>    alertTriggered = true;</p>\n<p>  }</p>\n\n<p>  // Humidity alert</p>\n<p>  if (currentData.humidity &gt; HUMIDITY_HIGH) {</p>\n<p>    Serial.println(&quot;💧 HIGH HUMIDITY ALERT: &quot; + String(currentData.humidity) + &quot;%&quot;);</p>\n<p>    alertTriggered = true;</p>\n<p>  }</p>\n\n<p>  // Light alert</p>\n<p>  if (currentData.lightLevel &lt; LIGHT_LOW) {</p>\n<p>    Serial.println(&quot;🌙 LOW LIGHT ALERT: &quot; + String(currentData.lightLevel));</p>\n<p>    alertTriggered = true;</p>\n<p>  }</p>\n\n<p>  // Sound buzzer if any alert</p>\n<p>  if (alertTriggered) {</p>\n<p>    tone(BUZZER_PIN, 1000, 200);  // 1kHz for 200ms</p>\n<p>  }</p>\n<p>}</p>\n\n<p>void handleSerial() {</p>\n<p>  if (Serial.available()) {</p>\n<p>    String command = Serial.readString();</p>\n<p>    command.trim();</p>\n\n<p>    if (command == &quot;STATUS&quot;) {</p>\n<p>      printStatus();</p>\n<p>    } else if (command == &quot;RESET&quot;) {</p>\n<p>      // Reset system</p>\n<p>      Serial.println(&quot;🔄 System reset requested&quot;);</p>\n<p>      asm volatile (&quot;  jmp 0&quot;);  // Software reset</p>\n<p>    } else if (command == &quot;DOWNLOAD&quot;) {</p>\n<p>      downloadData();</p>\n<p>    } else {</p>\n<p>      Serial.println(&quot;Unknown command: &quot; + command);</p>\n<p>      Serial.println(&quot;Available: STATUS, RESET, DOWNLOAD&quot;);</p>\n<p>    }</p>\n<p>  }</p>\n<p>}</p>\n\n<p>void printStatus() {</p>\n<p>  Serial.println(&quot;=== WEATHER STATION STATUS ===&quot;);</p>\n<p>  Serial.println(&quot;Uptime: &quot; + String(millis() / 1000) + &quot; seconds&quot;);</p>\n<p>  Serial.println(&quot;Free RAM: &quot; + String(freeRAM()) + &quot; bytes&quot;);</p>\n<p>  Serial.println(&quot;Current readings:&quot;);</p>\n<p>  Serial.println(&quot;  Temperature: &quot; + String(currentData.temperature) + &quot;°C&quot;);</p>\n<p>  Serial.println(&quot;  Humidity: &quot; + String(currentData.humidity) + &quot;%&quot;);</p>\n<p>  Serial.println(&quot;  Heat Index: &quot; + String(currentData.heatIndex) + &quot;°C&quot;);</p>\n<p>  Serial.println(&quot;  Light Level: &quot; + String(currentData.lightLevel));</p>\n\n<p>  DateTime now = rtc.now();</p>\n<p>  Serial.println(&quot;RTC Time: &quot; + String(now.day()) + &quot;/&quot; + String(now.month()) + &quot;/&quot; + String(now.year()) + &quot; &quot; + String(now.hour()) + &quot;:&quot; + String(now.minute()));</p>\n<p>  Serial.println(&quot;==============================&quot;);</p>\n<p>}</p>\n\n<p>void downloadData() {</p>\n<p>  Serial.println(&quot;=== DOWNLOADING WEATHER DATA ===&quot;);</p>\n<p>  dataFile = SD.open(&quot;weather.csv&quot;);</p>\n<p>  if (dataFile) {</p>\n<p>    while (dataFile.available()) {</p>\n<p>      Serial.write(dataFile.read());</p>\n<p>    }</p>\n<p>    dataFile.close();</p>\n<p>  } else {</p>\n<p>    Serial.println(&quot;❌ Error opening data file&quot;);</p>\n<p>  }</p>\n<p>  Serial.println(&quot;=== END OF DATA ===&quot;);</p>\n<p>}</p>\n\n<p>void errorBlink() {</p>\n<p>  while (true) {</p>\n<p>    digitalWrite(STATUS_LED, HIGH);</p>\n<p>    delay(200);</p>\n<p>    digitalWrite(STATUS_LED, LOW);</p>\n<p>    delay(200);</p>\n<p>  }</p>\n<p>}</p>\n\n<p>int freeRAM() {</p>\n<p>  extern int __heap_start, *__brkval;</p>\n<p>  int v;</p>\n<p>  return (int) &amp;v - (__brkval == 0 ? (int) &amp;__heap_start : (int) __brkval);</p>\n<p>}</p>\n</code></pre>\n\n<p>---</p>\n\n"
+      "q": "Apa perbedaan I2C dan SPI dalam hal kecepatan dan wiring?",
+      "opts": [
+        "I2C 2 kabel 100kHz-3.4MHz, SPI 4 kabel hingga puluhan Mbps",
+        "Sama saja",
+        "I2C lebih cepat",
+        "SPI hanya 1 kabel"
+      ],
+      "ans": 0,
+      "exp": "I2C 2 kabel, SPI 4 kabel high-speed."
     },
     {
-      "id": "latihan-evaluasi-level-2",
-      "emoji": "💡",
-      "title": "**🏆 Latihan & Evaluasi Level 2**",
-      "body": "\n<h3><strong>📝 Quiz Pemahaman:</strong></h3>\n\n<ol>\n<li><strong>Mengapa DHT22 perlu delay 2 detik antar pembacaan?</strong></li>\n<li><strong>Apa perbedaan I2C dan SPI dalam hal kecepatan dan kompleksitas wiring?</strong></li>\n<li><strong>Kapan sebaiknya menggunakan EEPROM vs variables biasa?</strong></li>\n<li><strong>Mengapa <code>millis()</code> lebih baik dari <code>delay()</code> untuk multitasking?</strong></li>\n<li><strong>Apa keuntungan menggunakan interrupt untuk button handling?</strong></li>\n</ol>\n\n<h3><strong>🛠️ Project Challenges:</strong></h3>\n\n<p><strong>1. Smart Garden Monitor</strong> (Menengah)</p>\n<ul>\n<li>DHT22 untuk suhu/kelembaban udara</li>\n<li>Soil moisture sensor</li>\n<li>LCD display</li>\n<li>Relay untuk water pump</li>\n<li>Data logging ke SD card</li>\n<li>Alert system dengan LED dan buzzer</li>\n</ul>\n\n<p><strong>2. Home Security System</strong> (Lanjutan)</p>\n<ul>\n<li>HC-SR04 untuk motion detection</li>\n<li>OLED display untuk status</li>\n<li>Keypad untuk arming/disarming</li>\n<li>EEPROM untuk menyimpan PIN</li>\n<li>Serial communication untuk monitoring</li>\n<li>Multiple sensor zones</li>\n</ul>\n\n<h3><strong>⭐ Sertifikasi Level 2:</strong></h3>\n<p>Untuk mendapatkan sertifikat Level 2, buatlah proyek yang mengintegrasikan minimal:</p>\n<ul>\n<li>2 sensor analog/digital</li>\n<li>1 aktuator (motor/relay/servo)</li>\n<li>1 display (LCD/OLED)</li>\n<li>Komunikasi serial (I2C/SPI/UART)</li>\n<li>Non-blocking programming dengan millis()</li>\n<li>Data persistent dengan EEPROM</li>\n</ul>\n\n<p>---</p>\n\n<p><strong>🎉 Selamat! Level 2 Selesai</strong></p>\n\n<p><strong>Yang telah dikuasai:</strong></p>\n<ul>\n<li>✅ Sensor lanjutan (DHT22, HC-SR04, dll.)</li>\n<li>✅ Motor control (servo, stepper, DC motor)</li>\n<li>✅ Display interfaces (LCD, OLED, 7-segment)</li>\n<li>✅ Serial communication protocols</li>\n<li>✅ Memory management dan optimization</li>\n<li>✅ Timer dan interrupt programming</li>\n</ul>\n\n<p><strong>🚀 Siap ke Level 3: IoT dengan ESP32!</strong></p>"
+      "q": "Kapan sebaiknya menggunakan EEPROM vs variabel biasa?",
+      "opts": [
+        "Untuk data yang harus tahan saat mati",
+        "Untuk data sementara",
+        "Tidak pernah",
+        "Hanya untuk String"
+      ],
+      "ans": 0,
+      "exp": "EEPROM untuk data persisten."
+    },
+    {
+      "q": "Mengapa millis() lebih baik dari delay() untuk multitasking?",
+      "opts": [
+        "millis() non-blocking, delay() blokir CPU",
+        "delay() lebih akurat",
+        "Sama saja",
+        "millis() boros memory"
+      ],
+      "ans": 0,
+      "exp": "millis() non-blocking."
+    },
+    {
+      "q": "Apa keuntungan interrupt untuk button?",
+      "opts": [
+        "Respons instan tanpa polling",
+        "Lebih boros daya",
+        "Tidak ada keuntungan",
+        "Hanya untuk LED"
+      ],
+      "ans": 0,
+      "exp": "Interrupt respons instan."
+    }
+  ],
+  "contoh": [
+    {
+      "judul": "Weather Station",
+      "soal": "Bagaimana membangun stasiun cuaca dengan DHT22, BMP180, LCD dan SD card logger?",
+      "langkah": [
+        "Siapkan DHT22 di pin 2, BMP180 via I2C (A4/A5), LCD 20x4 I2C 0x27",
+        "Inisialisasi library DHT, Wire, LiquidCrystal_I2C, SD, RTClib",
+        "Baca sensor tiap 2 detik, hitung heat index",
+        "Tampilkan di LCD baris 1: tanggal, baris 2-4: suhu/lembab/light",
+        "Log ke SD card tiap menit format CSV, cek alert suhu/lembab/cahaya"
+      ]
     }
   ]
 },
@@ -4246,33 +4305,53 @@ const MATERI_MODULES = [
       "title": "**🌐 Modul 3.3: Web Server dan HTTP**",
       "body": "\n<h3><strong>🖥️ Basic Web Server</strong></h3>\n\n<p>ESP32 bisa menjadi web server untuk kontrol dan monitoring:</p>\n\n<pre><code class=\"lang-cpp\">#include &quot;WiFi.h&quot;\n<p>#include &quot;WebServer.h&quot;</p>\n\n<p>const char* ssid = &quot;YOUR_WIFI_SSID&quot;;</p>\n<p>const char* password = &quot;YOUR_WIFI_PASSWORD&quot;;</p>\n\n<p>WebServer server(80);</p>\n\n<p>// GPIO pins</p>\n<p>const int LED_PIN = 2;</p>\n<p>const int SENSOR_PIN = 34;</p>\n\n<p>bool ledState = false;</p>\n\n<p>void setup() {</p>\n<p>  Serial.begin(115200);</p>\n<p>  pinMode(LED_PIN, OUTPUT);</p>\n<p>  pinMode(SENSOR_PIN, INPUT);</p>\n\n<p>  // Connect to WiFi</p>\n<p>  WiFi.begin(ssid, password);</p>\n<p>  while (WiFi.status() != WL_CONNECTED) {</p>\n<p>    delay(1000);</p>\n<p>    Serial.println(&quot;Connecting to WiFi...&quot;);</p>\n<p>  }</p>\n\n<p>  Serial.println(&quot;WiFi connected!&quot;);</p>\n<p>  Serial.print(&quot;IP address: &quot;);</p>\n<p>  Serial.println(WiFi.localIP());</p>\n\n<p>  // Setup server routes</p>\n<p>  server.on(&quot;/&quot;, handleRoot);</p>\n<p>  server.on(&quot;/led/on&quot;, handleLedOn);</p>\n<p>  server.on(&quot;/led/off&quot;, handleLedOff);</p>\n<p>  server.on(&quot;/led/toggle&quot;, handleLedToggle);</p>\n<p>  server.on(&quot;/sensor&quot;, handleSensor);</p>\n<p>  server.on(&quot;/api/status&quot;, handleAPIStatus);</p>\n\n<p>  server.begin();</p>\n<p>  Serial.println(&quot;🌐 Web server started&quot;);</p>\n<p>}</p>\n\n<p>void loop() {</p>\n<p>  server.handleClient();</p>\n<p>}</p>\n\n<p>void handleRoot() {</p>\n<p>  String html = R&quot;(</p>\n<p>&lt;!DOCTYPE html&gt;</p>\n<p>&lt;html&gt;</p>\n<p>&lt;head&gt;</p>\n<p>    &lt;title&gt;ESP32 Control Panel&lt;/title&gt;</p>\n<p>    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;</p>\n<p>    &lt;style&gt;</p>\n<p>        body { font-family: Arial; margin: 20px; }</p>\n<p>        .button { </p>\n<p>            background-color: #4CAF50; </p>\n<p>            color: white; </p>\n<p>            padding: 15px 25px; </p>\n<p>            text-decoration: none; </p>\n<p>            display: inline-block; </p>\n<p>            margin: 5px;</p>\n<p>            border-radius: 5px;</p>\n<p>        }</p>\n<p>        .button.off { background-color: #f44336; }</p>\n<p>        .sensor-data { </p>\n<p>            background-color: #f0f0f0; </p>\n<p>            padding: 10px; </p>\n<p>            margin: 10px 0;</p>\n<p>            border-radius: 5px;</p>\n<p>        }</p>\n<p>    &lt;/style&gt;</p>\n<p>    &lt;script&gt;</p>\n<p>        function updateSensor() {</p>\n<p>            fetch(&#39;/sensor&#39;)</p>\n<p>                .then(response =&gt; response.text())</p>\n<p>                .then(data =&gt; {</p>\n<p>                    document.getElementById(&#39;sensorValue&#39;).innerHTML = data;</p>\n<p>                });</p>\n<p>        }</p>\n<p>        setInterval(updateSensor, 2000);</p>\n<p>    &lt;/script&gt;</p>\n<p>&lt;/head&gt;</p>\n<p>&lt;body&gt;</p>\n<p>    &lt;h1&gt;ESP32 Control Panel&lt;/h1&gt;</p>\n\n<p>    &lt;h2&gt;LED Control&lt;/h2&gt;</p>\n<p>    &lt;a href=&quot;/led/on&quot; class=&quot;button&quot;&gt;LED ON&lt;/a&gt;</p>\n<p>    &lt;a href=&quot;/led/off&quot; class=&quot;button off&quot;&gt;LED OFF&lt;/a&gt;</p>\n<p>    &lt;a href=&quot;/led/toggle&quot; class=&quot;button&quot;&gt;TOGGLE&lt;/a&gt;</p>\n\n<p>    &lt;h2&gt;Sensor Data&lt;/h2&gt;</p>\n<p>    &lt;div class=&quot;sensor-data&quot;&gt;</p>\n<p>        &lt;p&gt;Sensor Value: &lt;span id=&quot;sensorValue&quot;&gt;Loading...&lt;/span&gt;&lt;/p&gt;</p>\n<p>    &lt;/div&gt;</p>\n\n<p>    &lt;p&gt;&lt;a href=&quot;/api/status&quot;&gt;API Status (JSON)&lt;/a&gt;&lt;/p&gt;</p>\n<p>&lt;/body&gt;</p>\n<p>&lt;/html&gt;</p>\n<p>)&quot;;</p>\n\n<p>  server.send(200, &quot;text/html&quot;, html);</p>\n<p>}</p>\n\n<p>void handleLedOn() {</p>\n<p>  digitalWrite(LED_PIN, HIGH);</p>\n<p>  ledState = true;</p>\n<p>  server.send(200, &quot;text/plain&quot;, &quot;LED turned ON&quot;);</p>\n<p>}</p>\n\n<p>void handleLedOff() {</p>\n<p>  digitalWrite(LED_PIN, LOW);</p>\n<p>  ledState = false;</p>\n<p>  server.send(200, &quot;text/plain&quot;, &quot;LED turned OFF&quot;);</p>\n<p>}</p>\n\n<p>void handleLedToggle() {</p>\n<p>  ledState = !ledState;</p>\n<p>  digitalWrite(LED_PIN, ledState);</p>\n<p>  server.send(200, &quot;text/plain&quot;, &quot;LED toggled: &quot; + String(ledState ? &quot;ON&quot; : &quot;OFF&quot;));</p>\n<p>}</p>\n\n<p>void handleSensor() {</p>\n<p>  int sensorValue = analogRead(SENSOR_PIN);</p>\n<p>  float voltage = (sensorValue / 4095.0) * 3.3;  // ESP32 ADC: 12-bit, 3.3V ref</p>\n\n<p>  server.send(200, &quot;text/plain&quot;, String(sensorValue) + &quot; (&quot; + String(voltage, 2) + &quot;V)&quot;);</p>\n<p>}</p>\n\n<p>void handleAPIStatus() {</p>\n<p>  String json = &quot;{&quot;;</p>\n<p>  json += &quot;\\&quot;device\\&quot;:\\&quot;ESP32\\&quot;,&quot;;</p>\n<p>  json += &quot;\\&quot;uptime\\&quot;:&quot; + String(millis()) + &quot;,&quot;;</p>\n<p>  json += &quot;\\&quot;wifi_rssi\\&quot;:&quot; + String(WiFi.RSSI()) + &quot;,&quot;;</p>\n<p>  json += &quot;\\&quot;free_heap\\&quot;:&quot; + String(ESP.getFreeHeap()) + &quot;,&quot;;</p>\n<p>  json += &quot;\\&quot;led_state\\&quot;:&quot; + String(ledState ? &quot;true&quot; : &quot;false&quot;) + &quot;,&quot;;</p>\n<p>  json += &quot;\\&quot;sensor_value\\&quot;:&quot; + String(analogRead(SENSOR_PIN));</p>\n<p>  json += &quot;}&quot;;</p>\n\n<p>  server.send(200, &quot;application/json&quot;, json);</p>\n<p>}</p>\n</code></pre>"
     }
-  ]
-},
-{
-  "id": "resources-arduino-iot",
-  "emoji": "📦",
-  "title": "Resources Arduino & IoT",
-  "subtitle": "Daftar gambar Wikimedia & 20 proyek praktik",
-  "level": "Semua Level",
-  "durasi": "Referensi",
-  "materi": [
-    "Gambar & Diagram",
-    "Daftar Proyek",
-    "Template",
-    "Sertifikasi"
   ],
-  "sections": [
+  "soal": [
     {
-      "id": "gambar-wikimedia",
-      "emoji": "🖼️",
-      "title": "Gambar & Visual",
-      "body": "<h2>Daftar Gambar dari Wikimedia Commons untuk Materi Arduino/IoT</h2>\n\n<h3>📌 <strong>Arduino &amp; Mikrokontroler</strong></h3>\n\n<h3><strong>Arduino Uno</strong></h3>\n<ul>\n<li><strong>File:Arduino-uno-pinout.png</strong></li>\n<li>URL: https://commons.wikimedia.org/wiki/File:Arduino-uno-pinout.png</li>\n<li>Lisensi: CC BY-SA 4.0</li>\n<li>Deskripsi: Pinout diagram Arduino Uno R3 lengkap dengan label pin digital, analog, power</li>\n<li>Penggunaan: Modul pengenalan Arduino, referensi pinout</li>\n</ul>\n\n<ul>\n<li><strong>File:Pinout of ARDUINO Board and ATMega328PU.svg</strong></li>\n<li>URL: https://commons.wikimedia.org/wiki/File:Pinout_of_ARDUINO_Board_and_ATMega328PU.svg</li>\n<li>Lisensi: Public Domain</li>\n<li>Deskripsi: Pinout Arduino Uno dan ATmega328P dalam format SVG</li>\n<li>Penggunaan: Materi arsitektur mikrokontroler</li>\n</ul>\n\n<h3><strong>Breadboard &amp; Prototype</strong></h3>\n<ul>\n<li><strong>File:Atmega 28-pin on a breadboard, arduino-like circuit.svg</strong></li>\n<li>URL: https://commons.wikimedia.org/wiki/File:Atmega_28-pin_on_a_breadboard,_arduino-like_circuit.svg</li>\n<li>Lisensi: CC BY-SA 4.0</li>\n<li>Deskripsi: Rangkaian Arduino-like dengan ATmega di breadboard</li>\n<li>Penggunaan: Tutorial build Arduino on breadboard</li>\n</ul>\n\n<ul>\n<li><strong>File:Breadboard.svg</strong></li>\n<li>URL: https://commons.wikimedia.org/wiki/File:Breadboard.svg</li>\n<li>Lisensi: Public Domain</li>\n<li>Deskripsi: Diagram breadboard kosong</li>\n<li>Penggunaan: Pengenalan prototyping, tutorial breadboard</li>\n</ul>\n\n<p>---</p>\n\n<h3>🔧 <strong>Komponen Elektronika</strong></h3>\n\n<h3><strong>LED &amp; Resistor</strong></h3>\n<ul>\n<li><strong>File:LED circuit.svg</strong></li>\n<li>URL: https://commons.wikimedia.org/wiki/File:LED_circuit.svg</li>\n<li>Lisensi: CC BY-SA 2.5</li>\n<li>Deskripsi: Rangkaian LED sederhana dengan power supply, LED, dan resistor</li>\n<li>Penggunaan: Tutorial dasar LED, perhitungan resistor pembatas</li>\n</ul>\n\n<ul>\n<li><strong>File:LED in simple Direct Current Circuit.JPG</strong></li>\n<li>URL: https://commons.wikimedia.org/wiki/File:LED_in_simple_Direct_Current_Circuit.JPG</li>\n<li>Lisensi: CC BY-SA 4.0</li>\n<li>Deskripsi: Foto rangkaian LED DC sederhana</li>\n<li>Penggunaan: Praktik rangkaian LED</li>\n</ul>\n\n<ul>\n<li><strong>File:LED strip circuit diagram.svg</strong></li>\n<li>URL: https://commons.wikimedia.org/wiki/File:LED_strip_circuit_diagram.svg</li>\n<li>Lisensi: CC BY-SA 4.0</li>\n<li>Deskripsi: Diagram rangkaian LED strip dengan 3 LED dan resistor seri</li>\n<li>Penggunaan: Materi LED array, power management</li>\n</ul>\n\n<h3><strong>Resistor</strong></h3>\n<ul>\n<li><strong>File:Light-dependent resistor schematic symbol.svg</strong></li>\n<li>URL: https://commons.wikimedia.org/wiki/File:Light-dependent_resistor_schematic_symbol.svg</li>\n<li>Lisensi: Public Domain</li>\n<li>Deskripsi: Simbol skematik Light Dependent Resistor (LDR)</li>\n<li>Penggunaan: Sensor cahaya, automatic lighting project</li>\n</ul>\n\n<ul>\n<li><strong>File:Resistor diagram.jpg</strong></li>\n<li>URL: https://commons.wikimedia.org/wiki/File:Resistor_diagram.jpg</li>\n<li>Lisensi: CC BY-SA 4.0</li>\n<li>Deskripsi: Diagram resistor dengan kode warna</li>\n<li>Penggunaan: Tutorial membaca kode warna resistor</li>\n</ul>\n\n<h3><strong>Circuit Examples</strong></h3>\n<ul>\n<li><strong>File:SimpleCircuit.SVG</strong></li>\n<li>URL: https://commons.wikimedia.org/wiki/File:SimpleCircuit.SVG</li>\n<li>Lisensi: CC BY-SA 4.0</li>\n<li>Deskripsi: Rangkaian sederhana dengan baterai, fuse, resistor, LED, voltmeter, amperemeter</li>\n<li>Penggunaan: Pengenalan komponen dasar, multimeter</li>\n</ul>\n\n<p>---</p>\n\n<h3>📡 <strong>Komunikasi Serial</strong></h3>\n\n<h3><strong>I2C Protocol</strong></h3>\n<ul>\n<li><strong>File:I2c.png</strong></li>\n<li>URL: https://commons.wikimedia.org/wiki/File:I2c.png</li>\n<li>Lisensi: Public Domain</li>\n<li>Deskripsi: Diagram komunikasi I2C</li>\n<li>Penggunaan: Tutorial protokol I2C, multiple device communication</li>\n</ul>\n\n<h3><strong>SPI &amp; Communication</strong></h3>\n<ul>\n<li><strong>File:ESPI and LPC bus diagram.svg</strong></li>\n<li>URL: https://commons.wikimedia.org/wiki/File:ESPI_and_LPC_bus_diagram.svg</li>\n<li>Lisensi: Public Domain</li>\n<li>Deskripsi: Diagram bus eSPI dan LPC</li>\n<li>Penggunaan: Advanced communication protocols</li>\n</ul>\n\n<p>---</p>\n\n<h3>📊 <strong>Gambar Tambahan yang Direkomendasikan</strong></h3>\n\n<h3><strong>Sensor &amp; Module</strong> (Perlu dicari lebih lanjut)</h3>\n<ul>\n<li>DHT22 Temperature/Humidity sensor diagram</li>\n<li>HC-SR04 Ultrasonic sensor pinout</li>\n<li>Servo motor connection diagram</li>\n<li>Motor driver L298N schematic</li>\n<li>LCD 16x2 with I2C backpack</li>\n</ul>\n\n<h3><strong>ESP32 &amp; IoT</strong> (Perlu dicari atau buat sendiri)</h3>\n<ul>\n<li>ESP32 DevKitC pinout diagram</li>\n<li>WiFi connection flowchart</li>\n<li>MQTT protocol diagram</li>\n<li>IoT architecture overview</li>\n</ul>\n\n<h3><strong>Power &amp; Electronics</strong></h3>\n<ul>\n<li>Voltage divider circuit</li>\n<li>Pull-up/pull-down resistor circuits</li>\n<li>Transistor switch circuit (NPN/PNP)</li>\n<li>Power supply regulation</li>\n<li>Battery management system</li>\n</ul>\n\n<p>---</p>\n\n<h3>📝 <strong>Catatan Penggunaan</strong></h3>\n\n<h3><strong>Format yang Dibutuhkan:</strong></h3>\n<ol>\n<li><strong>SVG</strong> - untuk diagram yang bisa di-edit dan scalable</li>\n<li><strong>PNG/JPG</strong> - untuk foto komponen atau rangkaian nyata</li>\n<li><strong>High Resolution</strong> - minimal 1024px untuk kejelasan</li>\n</ol>\n\n<h3><strong>Atribusi yang Diperlukan:</strong></h3>\n<pre><code class=\"lang-html\">&lt;!-- Contoh atribusi --&gt;\n<p>&lt;div class=&quot;image-attribution&quot;&gt;</p>\n<p>  &lt;small&gt;</p>\n<p>    Sumber: &lt;a href=&quot;URL_WIKIMEDIA&quot;&gt;Nama File&lt;/a&gt; oleh Author, </p>\n<p>    &lt;a href=&quot;LISENSI_URL&quot;&gt;CC BY-SA 4.0&lt;/a&gt;</p>\n<p>  &lt;/small&gt;</p>\n<p>&lt;/div&gt;</p>\n</code></pre>\n\n<h3><strong>Alternatif Sumber Gambar:</strong></h3>\n<ul>\n<li><strong>Circuit diagrams</strong>: Dapat dibuat dengan KiCad, Fritzing, atau draw.io</li>\n<li><strong>Component photos</strong>: Dapat diambil sendiri atau dari manufacturer datasheet</li>\n<li><strong>Flow charts</strong>: Dapat dibuat dengan Lucidchart, Miro, atau draw.io</li>\n<li><strong>Simulation screenshots</strong>: Wokwi, Tinkercad Circuits</li>\n</ul>\n\n<h3><strong>Action Items:</strong></h3>\n<ol>\n<li>✅ Download gambar dari Wikimedia Commons yang sudah ditemukan</li>\n<li>❓ Cari ESP32 pinout diagram (mungkin perlu buat sendiri)</li>\n<li>❓ Cari diagram sensor DHT22, HC-SR04 di Wikimedia</li>\n<li>❓ Buat diagram komunikasi MQTT, WiFi connection</li>\n<li>✅ Siapkan template atribusi untuk setiap gambar</li>\n<li>✅ Pastikan semua gambar memiliki resolusi cukup untuk web dan print</li>\n</ol>\n\n<p>---</p>\n\n<h3>🔄 <strong>Status Update:</strong></h3>\n<ul>\n<li><strong>Ditemukan</strong>: 10+ gambar relevan dari Wikimedia Commons</li>\n<li><strong>Masih dibutuhkan</strong>: ESP32 pinout, sensor diagrams, IoT protocols</li>\n<li><strong>Ready to use</strong>: Arduino pinout, basic circuits, breadboard, LED circuits</li>\n</ul>"
+      "q": "ESP32 vs Arduino Uno, perbedaan RAM?",
+      "opts": [
+        "2KB vs 520KB",
+        "Sama",
+        "ESP32 2KB",
+        "Uno 520KB"
+      ],
+      "ans": 0,
+      "exp": "Uno 2KB SRAM, ESP32 520KB."
     },
     {
-      "id": "daftar-proyek",
-      "emoji": "🚀",
-      "title": "20 Proyek Praktik",
-      "body": "<h2>🚀 <strong>Daftar Proyek Arduino &amp; IoT - Dari Pemula hingga Mahir</strong></h2>\n\n<h3><strong>📋 LEVEL 1: PROYEK PEMULA</strong></h3>\n<p><em>Target: Menguasai dasar Arduino dan elektronika</em></p>\n\n<h3><strong>🔰 Proyek Wajib (Must Do)</strong></h3>\n\n<p><strong>1. LED Blink Controller</strong> ⭐</p>\n<ul>\n<li><strong>Komponen</strong>: Arduino Uno, LED, resistor, push button</li>\n<li><strong>Konsep</strong>: digitalWrite, digitalRead, pinMode</li>\n<li><strong>Fitur</strong>: LED nyala/mati dengan button, mode blink</li>\n<li><strong>Durasi</strong>: 1-2 jam</li>\n<li><strong>File</strong>: <code>projects/01-led-controller/</code></li>\n</ul>\n\n<p><strong>2. Automatic Night Light</strong> 🌙</p>\n<ul>\n<li><strong>Komponen</strong>: Arduino Uno, LDR, LED, resistor</li>\n<li><strong>Konsep</strong>: analogRead, PWM, sensor cahaya</li>\n<li><strong>Fitur</strong>: LED menyala otomatis saat gelap</li>\n<li><strong>Durasi</strong>: 2-3 jam</li>\n<li><strong>File</strong>: <code>projects/02-night-light/</code></li>\n</ul>\n\n<p><strong>3. Temperature Monitor</strong> 🌡️</p>\n<ul>\n<li><strong>Komponen</strong>: Arduino Uno, LM35, LCD 16x2, LED</li>\n<li><strong>Konsep</strong>: Sensor analog, konversi ADC ke suhu</li>\n<li><strong>Fitur</strong>: Tampil suhu di LCD, alert LED jika panas</li>\n<li><strong>Durasi</strong>: 3-4 jam</li>\n<li><strong>File</strong>: <code>projects/03-temp-monitor/</code></li>\n</ul>\n\n<h3><strong>🎯 Proyek Tantangan (Challenge)</strong></h3>\n\n<p><strong>4. Traffic Light Simulator</strong> 🚦</p>\n<ul>\n<li><strong>Komponen</strong>: 3 LED (merah, kuning, hijau), Arduino</li>\n<li><strong>Konsep</strong>: Timer, state machine, millis()</li>\n<li><strong>Fitur</strong>: Siklus lampu lalu lintas realistis</li>\n<li><strong>Bonus</strong>: Pedestrian crossing button</li>\n<li><strong>Durasi</strong>: 2-3 jam</li>\n</ul>\n\n<p><strong>5. Security Alarm System</strong> 🚨</p>\n<ul>\n<li><strong>Komponen</strong>: PIR sensor, buzzer, LED, button</li>\n<li><strong>Konsep</strong>: Interrupt, debouncing, system states</li>\n<li><strong>Fitur</strong>: Deteksi gerakan, alarm, arm/disarm</li>\n<li><strong>Durasi</strong>: 4-5 jam</li>\n</ul>\n\n<p>---</p>\n\n<h3><strong>📋 LEVEL 2: PROYEK MENENGAH</strong></h3>\n<p><em>Target: Sensor lanjutan, komunikasi, display</em></p>\n\n<h3><strong>🔰 Proyek Wajib (Must Do)</strong></h3>\n\n<p><strong>6. Weather Station</strong> 🌤️</p>\n<ul>\n<li><strong>Komponen</strong>: DHT22, BMP180, LCD I2C, SD card</li>\n<li><strong>Konsep</strong>: I2C, SPI, data logging, RTC</li>\n<li><strong>Fitur</strong>: Suhu, kelembaban, tekanan, log ke SD</li>\n<li><strong>Durasi</strong>: 1-2 hari</li>\n<li><strong>File</strong>: <code>projects/06-weather-station/</code></li>\n</ul>\n\n<p><strong>7. Smart Plant Monitor</strong> 🌱</p>\n<ul>\n<li><strong>Komponen</strong>: Soil moisture, relay pump, OLED display</li>\n<li><strong>Konsep</strong>: Analog sensors, relay control, automation</li>\n<li><strong>Fitur</strong>: Monitor tanah, auto-watering, data display</li>\n<li><strong>Durasi</strong>: 1-2 hari</li>\n<li><strong>File</strong>: <code>projects/07-plant-monitor/</code></li>\n</ul>\n\n<p><strong>8. Robot Car Basic</strong> 🚗</p>\n<ul>\n<li><strong>Komponen</strong>: L298N, DC motors, HC-SR04, joystick</li>\n<li><strong>Konsep</strong>: Motor control, PWM speed, obstacle avoidance</li>\n<li><strong>Fitur</strong>: Remote control, avoid obstacle</li>\n<li><strong>Durasi</strong>: 2-3 hari</li>\n<li><strong>File</strong>: <code>projects/08-robot-car/</code></li>\n</ul>\n\n<h3><strong>🎯 Proyek Tantangan (Challenge)</strong></h3>\n\n<p><strong>9. Digital Clock with Alarm</strong> ⏰</p>\n<ul>\n<li><strong>Komponen</strong>: RTC DS1307, LCD, buzzer, buttons</li>\n<li><strong>Konsep</strong>: Real-time clock, EEPROM, user interface</li>\n<li><strong>Fitur</strong>: Jam digital, set alarm, snooze</li>\n<li><strong>Durasi</strong>: 1-2 hari</li>\n</ul>\n\n<p><strong>10. Data Logger Advanced</strong> 📊</p>\n<ul>\n<li><strong>Komponen</strong>: Multiple sensors, SD card, Ethernet shield</li>\n<li><strong>Konsep</strong>: Multi-sensor, networking, remote monitoring</li>\n<li><strong>Fitur</strong>: Log banyak sensor, web interface</li>\n<li><strong>Durasi</strong>: 2-3 hari</li>\n</ul>\n\n<p>---</p>\n\n<h3><strong>📋 LEVEL 3: PROYEK IoT &amp; ESP32</strong></h3>\n<p><em>Target: Konektifitas wireless, cloud integration</em></p>\n\n<h3><strong>🔰 Proyek Wajib (Must Do)</strong></h3>\n\n<p><strong>11. IoT Temperature Monitor</strong> 🌡️📱</p>\n<ul>\n<li><strong>Komponen</strong>: ESP32, DHT22, OLED display</li>\n<li><strong>Konsep</strong>: WiFi connection, web server, REST API</li>\n<li><strong>Fitur</strong>: Monitor suhu via web browser</li>\n<li><strong>Durasi</strong>: 1 hari</li>\n<li><strong>File</strong>: <code>projects/11-iot-temp-monitor/</code></li>\n</ul>\n\n<p><strong>12. Smart Home Controller</strong> 🏠</p>\n<ul>\n<li><strong>Komponen</strong>: ESP32, relays, sensors, smartphone</li>\n<li><strong>Konsep</strong>: MQTT, mobile app, remote control</li>\n<li><strong>Fitur</strong>: Control lampu, AC, security via app</li>\n<li><strong>Durasi</strong>: 2-3 hari</li>\n<li><strong>File</strong>: <code>projects/12-smart-home/</code></li>\n</ul>\n\n<p><strong>13. ESP32 Camera Surveillance</strong> 📹</p>\n<ul>\n<li><strong>Komponen</strong>: ESP32-CAM, PIR sensor, microSD</li>\n<li><strong>Konsep</strong>: Camera streaming, motion detection</li>\n<li><strong>Fitur</strong>: Live streaming, photo capture on motion</li>\n<li><strong>Durasi</strong>: 2-3 hari</li>\n<li><strong>File</strong>: <code>projects/13-esp32-cam/</code></li>\n</ul>\n\n<h3><strong>🎯 Proyek Tantangan (Challenge)</strong></h3>\n\n<p><strong>14. IoT Environmental Station</strong> 🌍</p>\n<ul>\n<li><strong>Komponen</strong>: ESP32, multiple sensors, solar panel</li>\n<li><strong>Konsep</strong>: Multi-sensor IoT, power management, cloud</li>\n<li><strong>Fitur</strong>: Monitor environment, upload to cloud, low power</li>\n<li><strong>Durasi</strong>: 3-5 hari</li>\n</ul>\n\n<p><strong>15. Smart Agriculture System</strong> 🚜</p>\n<ul>\n<li><strong>Komponen</strong>: ESP32, soil sensors, pumps, LoRa</li>\n<li><strong>Konsep</strong>: Long range communication, automation</li>\n<li><strong>Fitur</strong>: Remote farm monitoring, auto irrigation</li>\n<li><strong>Durasi</strong>: 1 minggu</li>\n</ul>\n\n<p>---</p>\n\n<h3><strong>📋 LEVEL 4: PROYEK MAHIR</strong></h3>\n<p><em>Target: Advanced IoT, edge computing, professional</em></p>\n\n<h3><strong>🔰 Proyek Wajib (Must Do)</strong></h3>\n\n<p><strong>16. Industrial IoT Gateway</strong> 🏭</p>\n<ul>\n<li><strong>Komponen</strong>: ESP32, RS485, Ethernet, HMI</li>\n<li><strong>Konsep</strong>: Industrial protocols, gateway, SCADA</li>\n<li><strong>Fitur</strong>: Collect industrial data, protocol conversion</li>\n<li><strong>Durasi</strong>: 1-2 minggu</li>\n<li><strong>File</strong>: <code>projects/16-industrial-iot/</code></li>\n</ul>\n\n<p><strong>17. Edge AI Smart Camera</strong> 🤖📷</p>\n<ul>\n<li><strong>Komponen</strong>: ESP32-S3, camera, TensorFlow Lite</li>\n<li><strong>Konsep</strong>: Edge computing, computer vision, AI</li>\n<li><strong>Fitur</strong>: Object detection, classification on device</li>\n<li><strong>Durasi</strong>: 2-3 minggu</li>\n<li><strong>File</strong>: <code>projects/17-edge-ai-camera/</code></li>\n</ul>\n\n<p><strong>18. Mesh Network Sensor</strong> 🕸️</p>\n<ul>\n<li><strong>Komponen</strong>: Multiple ESP32, sensors, gateway</li>\n<li><strong>Konsep</strong>: Mesh networking, distributed systems</li>\n<li><strong>Fitur</strong>: Self-healing sensor network</li>\n<li><strong>Durasi</strong>: 2-3 minggu</li>\n<li><strong>File</strong>: <code>projects/18-mesh-network/</code></li>\n</ul>\n\n<h3><strong>🎯 Proyek Capstone (Final)</strong></h3>\n\n<p><strong>19. Smart City Traffic Management</strong> 🚦🏙️</p>\n<ul>\n<li><strong>Komponen</strong>: Multiple ESP32, cameras, sensors, cloud</li>\n<li><strong>Konsep</strong>: Distributed IoT, real-time processing</li>\n<li><strong>Fitur</strong>: Traffic monitoring, adaptive control</li>\n<li><strong>Durasi</strong>: 1 bulan</li>\n</ul>\n\n<p><strong>20. Personal IoT Platform</strong> ☁️</p>\n<ul>\n<li><strong>Komponen</strong>: Custom hardware, cloud backend, mobile app</li>\n<li><strong>Konsep</strong>: Full-stack IoT development</li>\n<li><strong>Fitur</strong>: Complete IoT ecosystem dari hardware sampai app</li>\n<li><strong>Durasi</strong>: 2-3 bulan</li>\n</ul>\n\n<p>---</p>\n\n<h3><strong>📂 Struktur File Proyek</strong></h3>\n\n<pre><code class=\"lang-\">projects/\n<p>├── 01-led-controller/</p>\n<p>│   ├── README.md</p>\n<p>│   ├── circuit-diagram.png</p>\n<p>│   ├── arduino-code/</p>\n<p>│   │   └── led_controller.ino</p>\n<p>│   ├── parts-list.md</p>\n<p>│   └── troubleshooting.md</p>\n<p>├── 02-night-light/</p>\n<p>│   ├── README.md</p>\n<p>│   ├── circuit-diagram.png</p>\n<p>│   ├── arduino-code/</p>\n<p>│   │   └── night_light.ino</p>\n<p>│   └── ...</p>\n<p>└── ...</p>\n</code></pre>\n\n<h3><strong>🛠️ Template README Proyek</strong></h3>\n\n<pre><code class=\"lang-markdown\"># Project [Nomor]: [Nama Proyek]\n\n<h3>🎯 Tujuan Pembelajaran</h3>\n<ul>\n<li>[Konsep 1]</li>\n<li>[Konsep 2]</li>\n<li>[Konsep 3]</li>\n</ul>\n\n<h3>📦 Komponen Dibutuhkan</h3>\n<div style='overflow-x:auto'><pre style='font-size:12px; background:var(--bg3); padding:8px; border-radius:6px;'>| Qty | Komponen | Spesifikasi |</pre></div>\n<div style='overflow-x:auto'><pre style='font-size:12px; background:var(--bg3); padding:8px; border-radius:6px;'>|-----|----------|-------------|</pre></div>\n<div style='overflow-x:auto'><pre style='font-size:12px; background:var(--bg3); padding:8px; border-radius:6px;'>| 1   | Arduino Uno | R3 |</pre></div>\n<div style='overflow-x:auto'><pre style='font-size:12px; background:var(--bg3); padding:8px; border-radius:6px;'>| 1   | LED | 5mm, any color |</pre></div>\n<div style='overflow-x:auto'><pre style='font-size:12px; background:var(--bg3); padding:8px; border-radius:6px;'>| 1   | Resistor | 220Ω |</pre></div>\n\n<h3>🔌 Diagram Rangkaian</h3>\n<p>!<a href=\"circuit-diagram.png\" target=\"_blank\" rel=\"noopener\">Circuit Diagram</a></p>\n\n<h3>💻 Kode Program</h3>\n</code></pre>cpp\n<p>// Code here</p>\n<pre><code class=\"lang-\">\n<h3>⚡ Cara Kerja</h3>\n<ol>\n<li>[Langkah 1]</li>\n<li>[Langkah 2]</li>\n<li>[Langkah 3]</li>\n</ol>\n\n<h3>🎮 Cara Penggunaan</h3>\n<ol>\n<li>Upload kode ke Arduino</li>\n<li>[Instruksi penggunaan]</li>\n</ol>\n\n<h3>🚨 Troubleshooting</h3>\n<p><strong>Q: LED tidak nyala</strong></p>\n<p>A: Cek polaritas LED dan nilai resistor</p>\n\n<h3>🎯 Tantangan Lanjutan</h3>\n<ul>\n<li>[Enhancement 1]</li>\n<li>[Enhancement 2]</li>\n</ul>\n\n<h3>📚 Referensi</h3>\n<ul>\n<li>[Link dokumentasi]</li>\n<li>[Tutorial video]</li>\n</ul>\n</code></pre>\n\n<h3><strong>🏆 Sistem Penilaian Proyek</strong></h3>\n\n<h3><strong>Kriteria Evaluasi:</strong></h3>\n<ul>\n<li>✅ <strong>Functionality (40%)</strong>: Proyek berfungsi sesuai spesifikasi</li>\n<li>✅ <strong>Code Quality (25%)</strong>: Kode bersih, terstruktur, terdokumentasi</li>\n<li>✅ <strong>Innovation (20%)</strong>: Fitur tambahan dan kreativitas</li>\n<li>✅ <strong>Documentation (15%)</strong>: README, komentar, diagram rangkaian</li>\n</ul>\n\n<h3><strong>Level Sertifikasi:</strong></h3>\n<ul>\n<li><strong>Bronze</strong>: Menyelesaikan semua proyek wajib per level</li>\n<li><strong>Silver</strong>: Menyelesaikan proyek wajib + 1 tantangan</li>\n<li><strong>Gold</strong>: Menyelesaikan semua proyek + tambahan fitur inovatif</li>\n<li><strong>Platinum</strong>: Kontribusi proyek open source / tutorial</li>\n</ul>\n\n<p>---</p>\n\n<h3><strong>📈 Progress Tracking</strong></h3>\n\n<pre><code class=\"lang-\">Level 1: Arduino Pemula\n<p>□ LED Blink Controller</p>\n<p>□ Automatic Night Light  </p>\n<p>□ Temperature Monitor</p>\n<p>□ Traffic Light Simulator (Challenge)</p>\n<p>□ Security Alarm System (Challenge)</p>\n\n<p>Level 2: Arduino Menengah  </p>\n<p>□ Weather Station</p>\n<p>□ Smart Plant Monitor</p>\n<p>□ Robot Car Basic</p>\n<p>□ Digital Clock with Alarm (Challenge)</p>\n<p>□ Data Logger Advanced (Challenge)</p>\n\n<p>Level 3: ESP32 &amp; IoT</p>\n<p>□ IoT Temperature Monitor</p>\n<p>□ Smart Home Controller</p>\n<p>□ ESP32 Camera Surveillance</p>\n<p>□ IoT Environmental Station (Challenge)</p>\n<p>□ Smart Agriculture System (Challenge)</p>\n\n<p>Level 4: Advanced IoT</p>\n<p>□ Industrial IoT Gateway</p>\n<p>□ Edge AI Smart Camera</p>\n<p>□ Mesh Network Sensor</p>\n<p>□ Smart City Traffic Management (Capstone)</p>\n<p>□ Personal IoT Platform (Capstone)</p>\n</code></pre>\n\n<p><strong>🎉 Total: 20 Proyek Komprehensif</strong></p>\n<p><strong>⏱️ Estimasi waktu total: 6-12 bulan</strong></p>\n<p><strong>🚀 Dari pemula hingga professional IoT developer!</strong></p>"
+      "q": "GPIO ESP32 yang input-only?",
+      "opts": [
+        "GPIO 34-39",
+        "GPIO 0-5",
+        "GPIO 6-11",
+        "Semua"
+      ],
+      "ans": 0,
+      "exp": "GPIO 34-39 input-only."
+    },
+    {
+      "q": "Mode WiFi ESP32 untuk buat hotspot?",
+      "opts": [
+        "Access Point (AP)",
+        "Station",
+        "BLE",
+        "Tidak ada"
+      ],
+      "ans": 0,
+      "exp": "AP mode buat hotspot."
+    }
+  ],
+  "contoh": [
+    {
+      "judul": "WiFi Web Server",
+      "soal": "Bagaimana membuat ESP32 jadi web server untuk kontrol LED via browser?",
+      "langkah": [
+        "Include WiFi.h dan WebServer.h, define ssid/password",
+        "WiFi.begin, tunggu WL_CONNECTED, print IP",
+        "Buat route server.on('/', handleRoot) dengan HTML control",
+        "Implement handleLedOn/Off/Toggle dan handleSensor",
+        "loop: server.handleClient()"
+      ]
     }
   ]
 }
