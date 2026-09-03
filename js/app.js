@@ -112,7 +112,8 @@ function doRenderMath(el) {
     delimiters:[
       {left:"$$",right:"$$",display:true},
       {left:"\\(",right:"\\)",display:false},
-      {left:"\\[",right:"\\]",display:true}
+      {left:"\\[",right:"\\]",display:true},
+      {left:"$",right:"$",display:false}
     ],
     throwOnError:false
   });
@@ -381,8 +382,8 @@ function toggleMoreMenu(){
 // maxWidth: lebar thumbnail dalam piksel (default 600).
 function wikiImgUrl(filename, maxWidth = 600) {
   const clean = filename.replace(/ /g, '_');
-  const md5 = clean; // Wikimedia path pakai nama file langsung untuk URL thumb
-  return `https://upload.wikimedia.org/wikipedia/commons/thumb/${md5.charAt(0).toLowerCase()}/${md5.charAt(0).toLowerCase()}${md5.charAt(1).toLowerCase()}/${encodeURIComponent(md5)}/${maxWidth}px-${encodeURIComponent(md5)}`;
+  // Use Special:FilePath which handles thumb without MD5 hash (avoids 404 from wrong hash calc)
+  return `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(clean)}?width=${maxWidth}`;
 }
 
 // Render blok gambar Wikimedia CDN — dipakai di modul baru yang tidak punya file lokal.
@@ -420,6 +421,7 @@ function showToast(msg, duration=2600){
 let kat='Semua';
 let sortMode='default';
 let suggestIndex=-1;
+function _esc(s){ return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
 
 const KAT_ICONS = {
   dasar:'⚡', komponen:'🧩', rangkaian:'🔗', daya:'🔋', elektronika:'💻',
@@ -449,7 +451,12 @@ function getSorted(data){
     });
   }
   if(sortMode==='tingkat'){
-    return [...data].sort((a,b)=> KAT_ORDER.indexOf(a.kat) - KAT_ORDER.indexOf(b.kat));
+    return [...data].sort((a,b)=>{
+      const ai=KAT_ORDER.indexOf(a.kat); const bi=KAT_ORDER.indexOf(b.kat);
+      const av=ai===-1? Infinity: ai; const bv=bi===-1? Infinity: bi;
+      if(av!==bv) return av-bv;
+      return a.en.localeCompare(b.en,'id',{sensitivity:'base'});
+    });
   }
   return data;
 }
@@ -491,13 +498,15 @@ function showSuggest(){
   if(!q){ box.classList.remove('show'); box.innerHTML=''; suggestIndex=-1; return; }
   const matches=KAMUS.filter(i=> i.en.toLowerCase().includes(q) || i.id.toLowerCase().includes(q) || (i.tags&&i.tags.some(t=>t.toLowerCase().includes(q))) ).slice(0,6);
   if(!matches.length){ box.classList.remove('show'); box.innerHTML=''; return; }
-  box.innerHTML=matches.map((m,idx)=>`
-    <div class="suggest-item" role="option" data-idx="${idx}" onclick="selectSuggest('${m.en.replace(/'/g,"\\'").replace(/"/g,'&quot;')}')">
-      <div class="suggest-ico">${KAT_ICONS[m.kat]||'🔍'}</div>
-      <div class="suggest-main"><div class="suggest-en">${m.en}</div><div class="suggest-id">${m.id}</div></div>
-      <div class="suggest-cat">${m.kat}</div>
+  box.innerHTML=matches.map((m,idx)=>{
+    const _js2 = s=> String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/"/g,'\\"');
+    return `
+    <div class="suggest-item" role="option" data-idx="${idx}" onclick="selectSuggest('${_js2(m.en)}')">
+      <div class="suggest-ico">${_esc(KAT_ICONS[m.kat]||'🔍')}</div>
+      <div class="suggest-main"><div class="suggest-en">${_esc(m.en)}</div><div class="suggest-id">${_esc(m.id)}</div></div>
+      <div class="suggest-cat">${_esc(m.kat)}</div>
     </div>
-  `).join('');
+  `;}).join('');
   box.classList.add('show');
   suggestIndex=-1;
 }
@@ -532,7 +541,7 @@ function renderGrid(data){
     if (query) {
       emptyMsg.innerHTML = `
         <div class="empty-ico">🔍</div>
-        <div class="empty-title">Tidak ada hasil untuk "<strong>${query}</strong>"</div>
+        <div class="empty-title">Tidak ada hasil untuk "<strong>${_esc(query)}</strong>"</div>
         <div class="empty-desc">Coba ubah kata kunci, periksa ejaan, atau pilih kategori lain. Kamu juga bisa cari di Google atau lihat semua istilah.</div>
       `;
       googleWrap.innerHTML = `
@@ -552,7 +561,7 @@ function renderGrid(data){
       emptyMsg.innerHTML = `
         <div class="empty-ico">📭</div>
         <div class="empty-title">Tidak ada istilah di kategori ini</div>
-        <div class="empty-desc">Kategori "<strong>${kat}</strong>" belum memiliki istilah. Coba pilih kategori lain atau ubah urutan.</div>
+        <div class="empty-desc">Kategori "<strong>${_esc(kat)}</strong>" belum memiliki istilah. Coba pilih kategori lain atau ubah urutan.</div>
       `;
       googleWrap.innerHTML = `
         <div class="empty-actions">
@@ -584,15 +593,16 @@ function renderGrid(data){
 
   g.innerHTML = html;
 
-  // render KaTeX formulas (full + mini preview)
-  data.forEach((d,i)=>{
+  // render KaTeX formulas (full + mini preview) — use orderedData to match html ids
+  const orderedData = [...core, ...regular];
+  orderedData.forEach((d,i)=>{
     if(!d.formula) return;
     const el=document.getElementById(`ef${i}`);
     if(el){
       if(typeof katex!=='undefined'){
         try{katex.render(d.formula,el,{throwOnError:false,displayMode:false});}catch(e){el.textContent=d.formula;}
       } else {
-        pendingMathEls.push({el,latex:d.formula,mode:'render'});
+        pendingMathEls.push({el,latex:d.formula});
       }
     }
     const mini=document.getElementById(`cfm${i}`);
@@ -600,7 +610,7 @@ function renderGrid(data){
       if(typeof katex!=='undefined'){
         try{katex.render(d.formula,mini,{throwOnError:false,displayMode:false});}catch(e){ /* keep plain */ }
       } else {
-        pendingMathEls.push({el:mini,latex:d.formula,mode:'render'});
+        pendingMathEls.push({el:mini,latex:d.formula});
       }
     }
   });
@@ -610,32 +620,33 @@ function renderCard(d, i, isFeature) {
   const key=String(d.id||'').toLowerCase();
   const icon = getCardIcon(d, isFeature);
   const visited = (()=>{ try{ const v=JSON.parse(localStorage.getItem('ed_visited')||'[]'); return Array.isArray(v) && v.includes(key);}catch{return false} })();
-  const plainFormula = d.formula ? d.formula.replace(/"/g,'&quot;') : '';
-  const miniFormula = d.formula ? `<span class="cformula-mini" id="cfm${i}" data-latex="${plainFormula}" title="${plainFormula}">${d.formula.slice(0,28).replace(/</g,'&lt;')}</span>` : '';
+  const plainFormula = d.formula ? _esc(d.formula) : '';
+  const miniFormula = d.formula ? `<span class="cformula-mini" id="cfm${i}" data-latex="${plainFormula}" title="${plainFormula}">${_esc(d.formula.slice(0,28))}</span>` : '';
+  const _js = s => String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/"/g,'\\"').replace(/</g,'\\x3c').replace(/>/g,'\\x3e');
   
   if (isFeature) {
     return `
-    <div class="card core-card ${visited?'visited':''}" id="c${i}" data-id="${d.id.replace(/"/g,'&quot;')}" onclick="tog(${i})" style="animation-delay:${i * 0.03}s">
+    <div class="card core-card ${visited?'visited':''}" id="c${i}" data-id="${_esc(d.id)}" onclick="tog(${i})" style="animation-delay:${i * 0.03}s">
       <div class="card-progress"></div><div class="card-visited"></div>
       <div class="ccore-body">
         <div class="cicon-core">${icon}</div>
         <div class="ccore-content">
-          <div class="ccore-title">${d.en}</div>
-          <div class="ccore-sub">${d.id}</div>
+          <div class="ccore-title">${_esc(d.en)}</div>
+          <div class="ccore-sub">${_esc(d.id)}</div>
         </div>
-        <div class="ctag t-${d.kat}">${d.kat}</div>
+        <div class="ctag t-${_esc(d.kat)}">${_esc(d.kat)}</div>
       </div>
-      <div class="cdesc" style="margin-top:10px;font-size:12.5px;color:var(--text2);display:-webkit-box;-webkit-line-clamp:1;line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;">${d.desc||d.detail.slice(0,72)+'...'}</div>
+      <div class="cdesc" style="margin-top:10px;font-size:12.5px;color:var(--text2);display:-webkit-box;-webkit-line-clamp:1;line-clamp:1;-webkit-box-orient:vertical;overflow:hidden;">${_esc(d.desc||d.detail.slice(0,72)+'...')}</div>
       ${d.formula?`<div class="cpreview-row">${miniFormula}<span style="font-size:11px;color:var(--text3);font-family:var(--mono)">rumus</span></div>`:''}
       <div class="cexp" id="cx${i}">
         <div class="expbody">
           <div class="elabel">PENJELASAN</div>
-          <div class="etext">${d.detail}</div>
+          <div class="etext">${_esc(d.detail)}</div>
           ${d.formula?`<div class="elabel">RUMUS</div><div class="eformula" id="ef${i}" data-latex="${plainFormula}"></div>`:''}
-          <div class="etags">${(d.tags||[]).map(t=>`<span class="etag">#${t}</span>`).join('')}</div>
+          <div class="etags">${(d.tags||[]).map(t=>`<span class="etag">#${_esc(t)}</span>`).join('')}</div>
           <div class="card-actions">
-            <button class="eask" onclick="askCard(event,'${d.en.replace(/'/g,'\\\'').replace(/"/g,'')}','${d.id.replace(/'/g,'\\\'').replace(/"/g,'')}')"><span>💬</span> Tanya AI</button>
-            <button class="ewiki" id="wb${i}" onclick="getWikiInfo(event, ${i}, '${d.id.replace(/'/g,'\\\'').replace(/"/g,'')}')"><span>📖</span> Wikipedia</button>
+            <button class="eask" onclick="askCard(event,'${_js(d.en)}','${_js(d.id)}')"><span>💬</span> Tanya AI</button>
+            <button class="ewiki" id="wb${i}" onclick="getWikiInfo(event, ${i}, '${_js(d.id)}')"><span>📖</span> Wikipedia</button>
           </div>
           <div class="wiki-res" id="wr${i}"></div>
         </div>
@@ -644,24 +655,24 @@ function renderCard(d, i, isFeature) {
   }
 
   return `
-    <div class="card ${visited?'visited':''}" id="c${i}" data-id="${d.id.replace(/"/g,'&quot;')}" onclick="tog(${i})" style="animation-delay:${i * 0.03}s">
+    <div class="card ${visited?'visited':''}" id="c${i}" data-id="${_esc(d.id)}" onclick="tog(${i})" style="animation-delay:${i * 0.03}s">
       <div class="card-progress"></div><div class="card-visited"></div>
       <div class="ctop">
         <div class="cicon">${icon}</div>
-        <div class="cleft"><div class="cen">${d.en}</div><div class="cid">${d.id}</div></div>
-        <div class="ctag t-${d.kat}">${d.kat}</div>
+        <div class="cleft"><div class="cen">${_esc(d.en)}</div><div class="cid">${_esc(d.id)}</div></div>
+        <div class="ctag t-${_esc(d.kat)}">${_esc(d.kat)}</div>
       </div>
-      <div class="cdesc">${d.desc}</div>
+      <div class="cdesc">${_esc(d.desc)}</div>
       ${d.formula?`<div class="cpreview-row">${miniFormula}</div>`:''}
       <div class="cexp" id="cx${i}">
         <div class="expbody">
           <div class="elabel">PENJELASAN</div>
-          <div class="etext">${d.detail}</div>
+          <div class="etext">${_esc(d.detail)}</div>
           ${d.formula?`<div class="elabel">RUMUS</div><div class="eformula" id="ef${i}" data-latex="${plainFormula}"></div>`:''}
-          <div class="etags">${(d.tags||[]).map(t=>`<span class="etag">#${t}</span>`).join('')}</div>
+          <div class="etags">${(d.tags||[]).map(t=>`<span class="etag">#${_esc(t)}</span>`).join('')}</div>
           <div class="card-actions">
-            <button class="eask" onclick="askCard(event,'${d.en.replace(/'/g,'\\\'').replace(/"/g,'')}','${d.id.replace(/'/g,'\\\'').replace(/"/g,'')}')"><span>💬</span> Tanya AI</button>
-            <button class="ewiki" id="wb${i}" onclick="getWikiInfo(event, ${i}, '${d.id.replace(/'/g,'\\\'').replace(/"/g,'')}')"><span>📖</span> Wikipedia</button>
+            <button class="eask" onclick="askCard(event,'${_js(d.en)}','${_js(d.id)}')"><span>💬</span> Tanya AI</button>
+            <button class="ewiki" id="wb${i}" onclick="getWikiInfo(event, ${i}, '${_js(d.id)}')"><span>📖</span> Wikipedia</button>
           </div>
           <div class="wiki-res" id="wr${i}"></div>
         </div>
@@ -1801,12 +1812,15 @@ function initCalc(){
       </div>`;
   }).join('');
 
-  // render KaTeX formulas
+  // render KaTeX formulas (queue if not yet loaded)
   CALCS.forEach(c => {
     const el = document.getElementById(`ccf-${c.id}`);
-    if (el && typeof katex !== 'undefined') {
+    if (!el) return;
+    if (typeof katex !== 'undefined') {
       try { katex.render(c.formula, el, {throwOnError:false, displayMode:false}); }
       catch(e) { el.textContent = c.formula; }
+    } else {
+      pendingMathEls.push({el, latex:c.formula});
     }
   });
 }
