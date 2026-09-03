@@ -5,6 +5,19 @@
 
 let currentAIProject = null;
 
+function _escHtml(s){ return String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+function _sanitizeWokwiId(raw){
+  if(!raw) return '';
+  const str = String(raw).trim();
+  // if numeric directly
+  if(/^\d{5,}$/.test(str)) return str;
+  const m = str.match(/projects\/(\d{5,})/);
+  if(m) return m[1];
+  // fallback: extract any long digit sequence
+  const digits = str.match(/\d{5,}/);
+  return digits ? digits[0] : '';
+}
+
 const ElektroProject = {
   init() {
     // Dynamic project hub initialization
@@ -39,7 +52,9 @@ const ElektroProject = {
 
       try {
         const prj = JSON.parse(cleanContent);
-        prj.id = 'ai-' + (prj.title || 'proyek').toLowerCase().replace(/\s+/g, '-').slice(0, 20);
+        const rawSlug = String(prj.title || 'proyek').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,20) || 'proyek';
+        const uniq = Date.now().toString(36).slice(-4);
+        prj.id = 'ai-' + rawSlug + '-' + uniq;
 
         // Normalize schema
         if (!prj.bom && prj.components) prj.bom = prj.components;
@@ -98,15 +113,16 @@ const ElektroProject = {
     if(!content) return;
     
     window.currentPrjForExport = prj;
-    const progress = JSON.parse(localStorage.getItem(`ed_prj_progress_${prj.id}`) || '[]');
+    let progress = [];
+    try { const raw = localStorage.getItem(`ed_prj_progress_${prj.id}`); progress = raw ? JSON.parse(raw) : []; if(!Array.isArray(progress)) progress=[]; } catch(e){ progress=[]; }
 
     const disclaimerHtml = `<div class="pd-disclaimer"><div class="pd-disclaimer-icon">⚠️</div><div class="pd-disclaimer-text">Catatan: Panduan proyek ini di-generate oleh AI. Harap periksa kembali skema rangkaian, datasheet komponen, dan batas tegangan sebelum merakit.</div></div>`;
 
     const componentList = prj.bom || prj.components || [];
-    const bomHtml = componentList.length ? `<div class="pd-section"><h3 class="pd-section-h">📦 Bill of Materials (BOM)</h3><div class="pd-components"><ul class="pd-comp-list">${componentList.map(c => `<li class="pd-comp-item">${c}</li>`).join('')}</ul></div></div>` : '';
+    const bomHtml = componentList.length ? `<div class="pd-section"><h3 class="pd-section-h">📦 Bill of Materials (BOM)</h3><div class="pd-components"><ul class="pd-comp-list">${componentList.map(c => `<li class="pd-comp-item">${_escHtml(c)}</li>`).join('')}</ul></div></div>` : '';
 
     const wiringData = prj.wiring_guide || prj.wiring_table || prj.wiring || [];
-    const wiringHtml = wiringData.length ? `<div class="pd-section"><h3 class="pd-section-h">🔌 Tabel Koneksi Kabel (Wiring Guide)</h3><div class="pd-table-wrap"><table class="pd-table"><thead><tr><th>Komponen</th><th>Pin Komponen</th><th>Koneksi ke Board</th></tr></thead><tbody>${wiringData.map(w => `<tr><td><b>${w.komponen}</b></td><td><code>${w.pin_komponen || w.koneksi_pin || '-'}</code></td><td><code>${w.koneksi_arduino || w.koneksi_board || '-'}</code></td></tr>`).join('')}</tbody></table></div></div>` : '';
+    const wiringHtml = wiringData.length ? `<div class="pd-section"><h3 class="pd-section-h">🔌 Tabel Koneksi Kabel (Wiring Guide)</h3><div class="pd-table-wrap"><table class="pd-table"><thead><tr><th>Komponen</th><th>Pin Komponen</th><th>Koneksi ke Board</th></tr></thead><tbody>${wiringData.map(w => `<tr><td><b>${_escHtml(w.komponen||'-')}</b></td><td><code>${_escHtml(w.pin_komponen || w.koneksi_pin || '-')}</code></td><td><code>${_escHtml(w.koneksi_arduino || w.koneksi_board || '-')}</code></td></tr>`).join('')}</tbody></table></div></div>` : '';
 
     const cppCode = String(prj.cpp_code || (Array.isArray(prj.code) ? prj.code.join('\n') : (typeof prj.code === 'string' ? prj.code : '')))
       .replace(/\r\n/g, '\n').replace(/\\n/g, '\n');
@@ -124,28 +140,20 @@ const ElektroProject = {
     const safeWokwi = wokwiPretty.replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
     // === OPSI A: Wokwi Embed Project ID — base editable ===
-    // Base simulation milik user (screenshot Image 1 pakai .py, diganti jadi base Arduino/Wokwi ini)
     const DEFAULT_WOKWI_ID = "473338591560793089";
-    // Deteksi board untuk fallback jika prj tidak punya wokwi_id (tetap pakai DEFAULT base)
     const isEsp32Board = (prj.board && String(prj.board).toLowerCase().includes('esp32')) || document.querySelector('.prj-board-opt.on')?.dataset.board === 'esp32';
     const boardSlug = isEsp32Board ? 'esp32' : 'arduino-uno';
-    // Jika template sudah memiliki wokwi_id khusus (dari WOKWI_TEMPLATES) atau prj hasil AI sudah di-assign, pakai ID tsb; fallback ke DEFAULT base yang bisa diubah-ubah
     const rawWokwiId = prj.wokwi_id || prj.wokwi_url || '';
-    // Ekstrak ID jika berisi URL lengkap
-    let wokwiId = '';
-    if (rawWokwiId) {
-      const m = String(rawWokwiId).match(/projects\/([^?\/]+)/);
-      wokwiId = m ? m[1] : String(rawWokwiId).trim();
-      // Normalisasi: jika masih mengandung non-ID, bersihkan
-      if (wokwiId.length < 5) wokwiId = String(rawWokwiId).trim();
-    }
-    const hasWokwiId = !!wokwiId;
+    const wokwiId = _sanitizeWokwiId(rawWokwiId);
+    const hasWokwiId = !!wokwiId && /^\d{5,}$/.test(wokwiId);
     const effectiveWokwiId = hasWokwiId ? wokwiId : DEFAULT_WOKWI_ID;
     const wokwiEmbedUrl = `https://wokwi.com/projects/${effectiveWokwiId}?embed=1`;
     const wokwiExternalUrl = `https://wokwi.com/projects/${effectiveWokwiId}`;
 
     const stepsData = prj.steps || [];
-    const stepsHtml = stepsData.length ? `<div class="pd-section"><h3 class="pd-section-h">📝 Langkah Perakitan</h3><div class="pd-table-wrap"><table class="pd-table"><thead><tr><th style="width: 50px;">Check</th><th>Alur Perakitan</th></tr></thead><tbody>${stepsData.map((step, i) => `<tr id="step-${prj.id}-${i}" class="${progress.includes(i) ? 'completed' : ''}"><td class="pd-check"><input type="checkbox" class="pd-check-input" ${progress.includes(i) ? 'checked' : ''} onchange="ElektroProject.toggleStep('${prj.id}', ${i})"></td><td><span class="pd-step-txt">${step.alur_perakitan || step}</span></td></tr>`).join('')}</tbody></table></div></div>` : '';
+    const safePrjId = _escHtml(prj.id);
+    const safePrjIdAttr = safePrjId.replace(/'/g,'&#39;');
+    const stepsHtml = stepsData.length ? `<div class="pd-section"><h3 class="pd-section-h">📝 Langkah Perakitan</h3><div class="pd-table-wrap"><table class="pd-table"><thead><tr><th style="width: 50px;">Check</th><th>Alur Perakitan</th></tr></thead><tbody>${stepsData.map((step, i) => `<tr id="step-${_escHtml(prj.id)}-${i}" class="${progress.includes(i) ? 'completed' : ''}"><td class="pd-check"><input type="checkbox" class="pd-check-input" ${progress.includes(i) ? 'checked' : ''} onchange="ElektroProject.toggleStep('${safePrjIdAttr}', ${i})"></td><td><span class="pd-step-txt">${_escHtml(step.alur_perakitan || step)}</span></td></tr>`).join('')}</tbody></table></div></div>` : '';
 
     // Komponen Simulator Live ditaruh di PALING BAWAH (di bawah Langkah Perakitan) — sesuai coba2.md poin 1 & 3
     const simulatorHtml = `
@@ -171,23 +179,24 @@ const ElektroProject = {
         <div class="wokwi-iframe-container" style="position:relative; width:100%; height:540px; border-radius:12px; overflow:hidden; border:1px solid var(--line2); background:#0c0e13; box-shadow:0 8px 30px rgba(0,0,0,0.35);">
           <iframe
             id="wokwi-simulator-frame"
-            src="${wokwiEmbedUrl}"
+            src="${_escHtml(wokwiEmbedUrl)}"
+            data-wokwi-src="${_escHtml(wokwiEmbedUrl)}"
             style="width:100%; height:100%; border:none;"
             title="Wokwi Simulator"
             loading="lazy"
-            sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-downloads"
-            allow="accelerometer; camera; microphone; vr">
+            sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-downloads allow-modals"
+            allow="accelerometer; camera; microphone; vr; clipboard-read; clipboard-write">
           </iframe>
         </div>
         ${wokwiPretty ? `<div class="pd-code-wrap" style="margin-top:14px;"><div class="pd-code-header"><div class="pd-code-lang">diagram.json — Preview</div><button class="pd-code-copy" onclick="ElektroProject.copyCode(this,'wokwi')">📋 Salin</button></div><pre class="pd-code-pre" style="max-height:220px;"><code id="code-content-wokwi">${safeWokwi}</code></pre></div>` : ''}
       </div>`;
 
-    const diffLabel = prj.difficulty || 'AI Generated';
+    const diffLabel = _escHtml(prj.difficulty || 'AI Generated');
     const diffClass = diffLabel.toLowerCase().replace(/\s+/g, '-');
 
     content.innerHTML = `
-      <div class="pd-header"><div style="display:flex; justify-content:space-between; align-items:flex-start; gap:16px; margin-bottom:12px;"><h1 class="pd-title" style="margin:0">${prj.title}</h1><button class="pdf-btn" onclick="ElektroProject.exportToPdf()" style="background:var(--accent); color:white; border:none; padding:8px 16px; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:6px; flex-shrink:0;">📄 Export PDF</button></div><div class="pd-meta"><div class="prj-card-diff diff-${diffClass}">${diffLabel}</div><div style="font-size: 12px; color: var(--text2); font-family: var(--mono);">${prj.id}</div></div></div>
-      <div class="pd-section"><h3 class="pd-section-h">📖 Deskripsi</h3><p style="color:var(--text2); font-size:14px; line-height:1.6;">${prj.description}</p></div>
+      <div class="pd-header"><div style="display:flex; justify-content:space-between; align-items:flex-start; gap:16px; margin-bottom:12px;"><h1 class="pd-title" style="margin:0">${_escHtml(prj.title)}</h1><button class="pdf-btn" onclick="ElektroProject.exportToPdf()" style="background:var(--accent); color:white; border:none; padding:8px 16px; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:6px; flex-shrink:0;">📄 Export PDF</button></div><div class="pd-meta"><div class="prj-card-diff diff-${diffClass}">${diffLabel}</div><div style="font-size: 12px; color: var(--text2); font-family: var(--mono);">${_escHtml(prj.id)}</div></div></div>
+      <div class="pd-section"><h3 class="pd-section-h">📖 Deskripsi</h3><p style="color:var(--text2); font-size:14px; line-height:1.6;">${_escHtml(prj.description)}</p></div>
       ${bomHtml}${disclaimerHtml}${wiringHtml}${codeHtml}${stepsHtml}${simulatorHtml}`;
 
     if(wokwiPretty) content.dataset.wokwi = wokwiPretty;
@@ -212,13 +221,15 @@ const ElektroProject = {
   },
 
   toggleStep(id, idx) {
-    const row = document.getElementById(`step-${id}-${idx}`);
+    const safeId = String(id||'').replace(/[^a-z0-9\-_]/gi,'-');
+    const row = document.getElementById(`step-${safeId}-${idx}`);
     if(!row) return;
     const isChecked = row.querySelector('input').checked;
     isChecked ? row.classList.add('completed') : row.classList.remove('completed');
-    let progress = JSON.parse(localStorage.getItem(`ed_prj_progress_${id}`) || '[]');
-    isChecked ? (!progress.includes(idx) && progress.push(idx)) : (progress = progress.filter(i => i !== idx));
-    localStorage.setItem(`ed_prj_progress_${id}`, JSON.stringify(progress));
+    let progress = [];
+    try { const raw=localStorage.getItem(`ed_prj_progress_${safeId}`); progress = raw?JSON.parse(raw):[]; if(!Array.isArray(progress)) progress=[]; }catch(e){ progress=[]; }
+    if(isChecked){ if(!progress.includes(idx)) progress.push(idx); } else { progress = progress.filter(i => i !== idx); }
+    try { localStorage.setItem(`ed_prj_progress_${safeId}`, JSON.stringify(progress)); } catch(e){}
   },
 
   exportToPdf() {

@@ -67,9 +67,17 @@ function enhanceRes(res) {
   return res;
 }
 
+const CSP_VALUE = "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com https://cdn.jsdelivr.net; img-src 'self' data: blob: https://*; frame-src https://www.youtube.com https://www.youtube-nocookie.com https://wokwi.com https://*.wokwi.com; connect-src 'self' https://api.groq.com https://newsapi.org https://id.wikipedia.org https://en.wikipedia.org https://cdnjs.cloudflare.com https://cjikzpxhqstvgnblxfpv.supabase.co https://cdn.jsdelivr.net https://script.google.com https://script.googleusercontent.com https://openrouter.ai https://*.firebaseio.com https://*.firebasedatabase.app; object-src 'none'; base-uri 'self'; form-action 'self'";
+
 const server = http.createServer(async (req, res) => {
   try {
     const urlPath = decodeURIComponent((req.url || '/').split('?')[0]);
+    // Block dotfiles & sensitive paths (prevent /.env leak)
+    if (/\/\.(env|git|vercel)(\/|$)/.test(urlPath) || urlPath === '/.env' || urlPath === '/.env.local' || urlPath.startsWith('/.git/') || urlPath.startsWith('/.vercel/')) {
+      res.statusCode = 403;
+      res.setHeader('Content-Type','text/plain; charset=utf-8');
+      return res.end('Forbidden');
+    }
 
     // ── API routes (emulasi serverless Vercel) ──
     if (urlPath === '/api/chat') {
@@ -103,6 +111,11 @@ const server = http.createServer(async (req, res) => {
     }
     const ext = path.extname(filePath).toLowerCase();
     res.setHeader('Content-Type', MIME[ext] || 'application/octet-stream');
+    // CSP parity with vercel.json for dev debugging
+    res.setHeader('Content-Security-Policy', CSP_VALUE);
+    res.setHeader('X-Frame-Options', 'DENY');
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
     if (req.method === 'HEAD') return res.end();
     fs.createReadStream(filePath).pipe(res);
   } catch (err) {

@@ -609,7 +609,7 @@ function renderGrid(data){
 function renderCard(d, i, isFeature) {
   const key=String(d.id||'').toLowerCase();
   const icon = getCardIcon(d, isFeature);
-  const visited = (()=>{ try{ const v=JSON.parse(localStorage.getItem('ed_visited')||'[]'); return v.includes(key);}catch{return false} })();
+  const visited = (()=>{ try{ const v=JSON.parse(localStorage.getItem('ed_visited')||'[]'); return Array.isArray(v) && v.includes(key);}catch{return false} })();
   const plainFormula = d.formula ? d.formula.replace(/"/g,'&quot;') : '';
   const miniFormula = d.formula ? `<span class="cformula-mini" id="cfm${i}" data-latex="${plainFormula}" title="${plainFormula}">${d.formula.slice(0,28).replace(/</g,'&lt;')}</span>` : '';
   
@@ -671,7 +671,9 @@ function renderCard(d, i, isFeature) {
 }
 
 function tog(i){
-  const c=document.getElementById(`c${i}`),isOpen=c.classList.contains('open');
+  const c=document.getElementById(`c${i}`);
+  if(!c) return;
+  const isOpen=c.classList.contains('open');
   document.querySelectorAll('.card.open').forEach(x=>x.classList.remove('open'));
   if(!isOpen){
     c.classList.add('open');
@@ -680,6 +682,7 @@ function tog(i){
       const id=(c.dataset.id||'').toLowerCase();
       if(id){
         let v=JSON.parse(localStorage.getItem('ed_visited')||'[]');
+        if(!Array.isArray(v)) v=[];
         if(!v.includes(id)){ v.push(id); localStorage.setItem('ed_visited', JSON.stringify(v)); }
         c.classList.add('visited');
       }
@@ -1058,9 +1061,16 @@ function copyScore(){
 // ═══════════════════════════════════════════════════════════
 function closeOnboard(){
   const ov = document.getElementById('onboardOverlay');
-  ov.classList.add('hide');
-  setTimeout(()=>ov.remove(), 300);
-  localStorage.setItem('ed_visited','1');
+  if(ov){ ov.classList.add('hide'); setTimeout(()=>ov.remove(), 300); }
+  try { localStorage.setItem('ed_onboard_seen','1'); } catch(e){}
+  // repair corrupted ed_visited if needed (legacy bug where it was overwritten with "1")
+  try {
+    const raw = localStorage.getItem('ed_visited');
+    if(raw!==null){
+      const v = JSON.parse(raw);
+      if(!Array.isArray(v)) localStorage.setItem('ed_visited', JSON.stringify([]));
+    }
+  } catch(e){ try{ localStorage.setItem('ed_visited', JSON.stringify([])); }catch(_){ } }
 }
 
 // ═══════════════════════════════════════════════════════════
