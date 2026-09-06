@@ -556,9 +556,9 @@ module.exports = async function handler(req, res) {
           return resp;
         };
 
-        response = await callGroq("openai/gpt-oss-120b");
+        response = await callGroq("llama-3.3-70b-versatile");
         if ([429, 413, 500].includes(response.status)) {
-          response = await callGroq("openai/gpt-oss-20b");
+          response = await callGroq("llama-3.1-8b-instant");
         }
       }
 

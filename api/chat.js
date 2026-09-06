@@ -42,8 +42,11 @@ module.exports = async function handler(req, res) {
       return res.status(400).json({ error: { message: "Payload tidak valid." } });
     }
 
-    // Model ditentukan di backend — frontend tidak perlu tahu nama model.
-    const DEFAULT_MODEL = 'qwen/qwen3.6-27b';
+    // Deteksi apakah ada input gambar (multimodal)
+    const hasImage = messages.some(m => Array.isArray(m.content) && m.content.some(c => c.type === 'image_url'));
+
+    // Model ditentukan di backend — default ke Llama 3.3 70B (atau Vision jika ada gambar)
+    const DEFAULT_MODEL = hasImage ? 'llama-3.2-11b-vision-preview' : 'llama-3.3-70b-versatile';
     let targetModel = DEFAULT_MODEL;
     let messages = Array.isArray(payload.messages) ? [...payload.messages] : [];
     
@@ -84,7 +87,7 @@ ATURAN:
 
     let response;
     
-    // 1. Try OpenRouter first (jika key tersedia) — model OpenRouter seperti glm/gemma
+    // 1. Try OpenRouter first (jika key tersedia)
     if (openRouterKey) {
       try {
         response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
@@ -104,22 +107,14 @@ ATURAN:
 
     // 2. Groq fallback — model harus model Groq yang valid (bukan model OpenRouter)
     if ((!response || !response.ok) && groqKeys.length > 0) {
-      // Model ini harus berupa nama model valid Groq API — jangan pakai prefix openai/ (itu format OpenRouter)
-      const GROQ_MODELS = ['moonshotai/kimi-k2-instruct', 'llama-3.3-70b-versatile', 'qwen/qwen3.6-27b'];
-      const groqModel = GROQ_MODELS.includes(targetModel) ? targetModel : 'qwen/qwen3.6-27b';
+      const GROQ_MODELS = ['llama-3.3-70b-versatile', 'llama-3.1-8b-instant', 'llama-3.2-11b-vision-preview', 'llama-3.2-90b-vision-preview'];
+      const groqModel = hasImage
+        ? 'llama-3.2-11b-vision-preview'
+        : (GROQ_MODELS.includes(targetModel) ? targetModel : 'llama-3.3-70b-versatile');
 
       const callGroq = async (model) => {
         const currentKey = groqKeys[Math.floor(Math.random() * groqKeys.length)];
         const groqBody = { ...aiPayload, model };
-        // reasoning_effort + include_reasoning: sembunyikan thinking dari semua model.
-        // gpt-oss: reasoning_effort 'low' + include_reasoning false (field reasoning tidak dikirim).
-        // qwen3.6-27b: reasoning_effort 'none' = matikan thinking sepenuhnya dari sumbernya.
-        if (model.startsWith('openai/gpt-oss')) {
-          groqBody.reasoning_effort = 'low';
-          groqBody.include_reasoning = false;
-        } else if (model === 'qwen/qwen3.6-27b') {
-          groqBody.reasoning_effort = 'none';
-        }
         return await fetch("https://api.groq.com/openai/v1/chat/completions", {
           method: "POST",
           headers: {
@@ -130,10 +125,12 @@ ATURAN:
         });
       };
 
-      // gpt-oss-20b: konten bersih tanpa <think>, reasoning_effort low = hemat token
       response = await callGroq(groqModel);
       if (response.status === 429 || response.status === 500) {
-        response = await callGroq(groqModel === 'moonshotai/kimi-k2-instruct' ? 'llama-3.3-70b-versatile' : 'moonshotai/kimi-k2-instruct');
+        const fallbackModel = hasImage
+          ? 'llama-3.2-90b-vision-preview'
+          : (groqModel === 'llama-3.3-70b-versatile' ? 'llama-3.1-8b-instant' : 'llama-3.3-70b-versatile');
+        response = await callGroq(fallbackModel);
       }
     }
 

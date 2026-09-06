@@ -77,12 +77,8 @@ module.exports = async function handler(req, res) {
     const visionPayload = { ...payload };
     // Pastikan output tidak terpotong — default Groq 1024 terlalu kecil untuk analisis gambar.
     if (!visionPayload.max_tokens) visionPayload.max_tokens = 2048;
-    const visionModel = String(visionPayload.model || '');
-    if (visionModel === 'qwen/qwen3.6-27b' || visionModel.startsWith('qwen/')) {
-      visionPayload.reasoning_effort = 'none';
-    } else if (visionModel.startsWith('openai/gpt-oss')) {
-      visionPayload.reasoning_effort = 'low';
-      visionPayload.include_reasoning = false;
+    if (!visionPayload.model || visionPayload.model === 'qwen/qwen3.6-27b' || !visionPayload.model.includes('vision')) {
+      visionPayload.model = 'llama-3.2-11b-vision-preview';
     }
 
     const response = await fetch(GROQ_URL, {
