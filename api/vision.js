@@ -80,15 +80,23 @@ module.exports = async function handler(req, res) {
     visionPayload.model = 'qwen/qwen3.6-27b';
     visionPayload.reasoning_effort = 'none';
 
-    const response = await fetch(GROQ_URL, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${GROQ_API_KEY}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(visionPayload),
-      signal: controller.signal
-    });
+    const callVisionGroq = async (model) => {
+      const p = { ...visionPayload, model, reasoning_effort: 'none' };
+      return await fetch(GROQ_URL, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${GROQ_API_KEY}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(p),
+        signal: controller.signal
+      });
+    };
+
+    let response = await callVisionGroq('qwen/qwen3.6-27b');
+    if (response.status === 503 || response.status === 429 || response.status === 500) {
+      response = await callVisionGroq('qwen/qwen3.8-27b');
+    }
 
     const text = await response.text();
 
@@ -110,7 +118,9 @@ module.exports = async function handler(req, res) {
         for (const ch of j.choices) {
           if (ch.message) {
             if (ch.message.reasoning) delete ch.message.reasoning;
-            if (typeof ch.message.content === 'string') ch.message.content = ch.message.content.replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
+            if (typeof ch.message.content === 'string') {
+              ch.message.content = ch.message.content.replace(/<think>[\s\S]*?(<\/think>|$)/gi, '').trim();
+            }
           }
         }
       }

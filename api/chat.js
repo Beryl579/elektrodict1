@@ -63,10 +63,9 @@ ATURAN:
 6. Rangkaian rusak: pandu pengecekan bertahap (tegangan, kontinuitas), jangan langsung jawab.`;
 
     // --- PERSONA LOGIC ---
-    // Only apply the default persona if no system prompt is provided by the frontend.
-    // This allows the Homepage bot and Main Chatbot to have different personalities.
+    // Only apply the default persona if no system prompt is provided by the frontend and not vision.
     const hasSystemPrompt = messages.some(m => m.role === 'system');
-    if (!hasSystemPrompt) {
+    if (!hasSystemPrompt && !hasImage) {
       messages.unshift({ role: 'system', content: elektroBotPersona });
       // Batas 200 karakter hanya untuk percakapan chat bebas (tanpa system prompt dari frontend)
       const lastUserMsg = [...messages].reverse().find(m => m.role === 'user');
@@ -109,7 +108,9 @@ ATURAN:
     // 2. Groq fallback — model harus model Groq yang valid
     if ((!response || !response.ok) && groqKeys.length > 0) {
       const GROQ_MODELS = ['qwen/qwen3.6-27b', 'qwen/qwen3.8-27b', 'openai/gpt-oss-20b', 'openai/gpt-oss-120b'];
-      const groqModel = GROQ_MODELS.includes(targetModel) ? targetModel : 'qwen/qwen3.6-27b';
+      const groqModel = hasImage
+        ? 'qwen/qwen3.6-27b'
+        : (GROQ_MODELS.includes(targetModel) ? targetModel : 'qwen/qwen3.6-27b');
 
       const callGroq = async (model) => {
         const currentKey = groqKeys[Math.floor(Math.random() * groqKeys.length)];
@@ -131,8 +132,10 @@ ATURAN:
       };
 
       response = await callGroq(groqModel);
-      if (response.status === 429 || response.status === 500) {
-        const fallbackModel = (groqModel === 'qwen/qwen3.6-27b' ? 'openai/gpt-oss-20b' : 'qwen/qwen3.6-27b');
+      if (response.status === 429 || response.status === 500 || response.status === 503) {
+        const fallbackModel = hasImage
+          ? (groqModel === 'qwen/qwen3.6-27b' ? 'qwen/qwen3.8-27b' : 'qwen/qwen3.6-27b')
+          : (groqModel === 'qwen/qwen3.6-27b' ? 'openai/gpt-oss-20b' : 'qwen/qwen3.6-27b');
         response = await callGroq(fallbackModel);
       }
     }
@@ -150,7 +153,7 @@ ATURAN:
           if (ch.message) {
             if (ch.message.reasoning) delete ch.message.reasoning;
             if (typeof ch.message.content === 'string') {
-              ch.message.content = ch.message.content.replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
+              ch.message.content = ch.message.content.replace(/<think>[\s\S]*?(<\/think>|$)/gi, '').trim();
             }
           }
         }
