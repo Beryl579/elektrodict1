@@ -47,8 +47,8 @@ module.exports = async function handler(req, res) {
     // Deteksi apakah ada input gambar (multimodal)
     const hasImage = messages.some(m => Array.isArray(m.content) && m.content.some(c => c.type === 'image_url'));
 
-    // Model ditentukan di backend — default ke Llama 3.3 70B (atau Vision jika ada gambar)
-    const DEFAULT_MODEL = hasImage ? 'llama-3.2-11b-vision-preview' : 'llama-3.3-70b-versatile';
+    // Model ditentukan di backend — default ke Qwen 3.6 27B (multimodal)
+    const DEFAULT_MODEL = 'qwen/qwen3.6-27b';
     let targetModel = DEFAULT_MODEL;
     
     const latexRules = "Rumus wajib LaTeX: inline $...$, blok $$...$$. Contoh: $V = IR$. Dilarang memakai kurung biasa (...) untuk rumus.";
@@ -106,16 +106,20 @@ ATURAN:
       }
     }
 
-    // 2. Groq fallback — model harus model Groq yang valid (bukan model OpenRouter)
+    // 2. Groq fallback — model harus model Groq yang valid
     if ((!response || !response.ok) && groqKeys.length > 0) {
-      const GROQ_MODELS = ['llama-3.3-70b-versatile', 'llama-3.1-8b-instant', 'llama-3.2-11b-vision-preview', 'llama-3.2-90b-vision-preview'];
-      const groqModel = hasImage
-        ? 'llama-3.2-11b-vision-preview'
-        : (GROQ_MODELS.includes(targetModel) ? targetModel : 'llama-3.3-70b-versatile');
+      const GROQ_MODELS = ['qwen/qwen3.6-27b', 'qwen/qwen3.8-27b', 'openai/gpt-oss-20b', 'openai/gpt-oss-120b'];
+      const groqModel = GROQ_MODELS.includes(targetModel) ? targetModel : 'qwen/qwen3.6-27b';
 
       const callGroq = async (model) => {
         const currentKey = groqKeys[Math.floor(Math.random() * groqKeys.length)];
         const groqBody = { ...aiPayload, model };
+        if (model.startsWith('openai/gpt-oss')) {
+          groqBody.reasoning_effort = 'low';
+          groqBody.include_reasoning = false;
+        } else if (model.startsWith('qwen/')) {
+          groqBody.reasoning_effort = 'none';
+        }
         return await fetch("https://api.groq.com/openai/v1/chat/completions", {
           method: "POST",
           headers: {
@@ -128,9 +132,7 @@ ATURAN:
 
       response = await callGroq(groqModel);
       if (response.status === 429 || response.status === 500) {
-        const fallbackModel = hasImage
-          ? 'llama-3.2-90b-vision-preview'
-          : (groqModel === 'llama-3.3-70b-versatile' ? 'llama-3.1-8b-instant' : 'llama-3.3-70b-versatile');
+        const fallbackModel = (groqModel === 'qwen/qwen3.6-27b' ? 'openai/gpt-oss-20b' : 'qwen/qwen3.6-27b');
         response = await callGroq(fallbackModel);
       }
     }
