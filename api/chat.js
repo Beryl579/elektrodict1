@@ -42,13 +42,14 @@ module.exports = async function handler(req, res) {
       return res.status(400).json({ error: { message: "Payload tidak valid." } });
     }
 
+    let messages = Array.isArray(payload.messages) ? [...payload.messages] : [];
+
     // Deteksi apakah ada input gambar (multimodal)
     const hasImage = messages.some(m => Array.isArray(m.content) && m.content.some(c => c.type === 'image_url'));
 
     // Model ditentukan di backend — default ke Llama 3.3 70B (atau Vision jika ada gambar)
     const DEFAULT_MODEL = hasImage ? 'llama-3.2-11b-vision-preview' : 'llama-3.3-70b-versatile';
     let targetModel = DEFAULT_MODEL;
-    let messages = Array.isArray(payload.messages) ? [...payload.messages] : [];
     
     const latexRules = "Rumus wajib LaTeX: inline $...$, blok $$...$$. Contoh: $V = IR$. Dilarang memakai kurung biasa (...) untuk rumus.";
     const elektroBotPersona = `Kamu ElektroBot, asisten ilmiah teknik elektro & elektronika. Formal, sopan, profesional. Panggil pengguna "Kak".
