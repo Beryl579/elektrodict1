@@ -3609,6 +3609,18 @@ body.fade-out {
   .puil-lbl{width:auto;}
 }
 
+/* ── PUIL highlight & filter ── */
+.puil-hl td{ background:rgba(255,234,0,0.08) !important; }
+.std-card{ transition:opacity .25s, transform .25s; }
+#std-filter .chip{ cursor:pointer; }
+#std-filter .chip.on{ background:var(--accent); color:var(--bg); border-color:var(--line); }
+.apd-item{ transition:all .2s; }
+.golden-item input:checked + span{ text-decoration:line-through; opacity:.7; }
+@media print{
+  #std-filter, .puil-hl{ print-color-adjust:exact; -webkit-print-color-adjust:exact; }
+  .std-card{ break-inside:avoid; }
+}
+
 /* ═══ WOKWI HARDWARE & GUIDES (dari wokwi-docs) ═══ */
 .wk-hw-wrap{display:flex;flex-direction:column;gap:14px;}
 .wk-hw-cat{background:var(--bg3);border:1px solid var(--line);border-radius:12px;padding:14px 16px;}

@@ -9,7 +9,8 @@
 <meta name="description" content="Kamus teknik elektro premium dengan kalkulator, latihan soal AI, dan ElektroBot.">
 
 <!-- Apple Touch Icons (fallback kalau belum ada file icon) -->
-<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" sizes="192x192" href="icons/icon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png">
 <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
 <link rel="icon" type="image/png" sizes="128x128" href="icons/icon-128.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -791,8 +792,31 @@
 <div class="page" id="page-standards">
   <div class="projects-wrap">
     <div class="projects-header">
-      <h2>🛡️ Standar & K3 Listrik</h2>
-      <p>Pedoman Keselamatan & Standarisasi Teknik Elektro (PUIL/IEC)</p>
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px; flex-wrap:wrap;">
+        <div>
+          <h2>🛡️ Standar & K3 Listrik</h2>
+          <p>Pedoman Keselamatan & Standarisasi Teknik Elektro (PUIL/IEC) — interaktif, hitung & cek langsung.</p>
+        </div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button onclick="exportPUILPdf()" style="padding:8px 14px; border-radius:8px; background:var(--accent); border:1px solid var(--line); color:var(--bg); font-weight:700; font-size:12px; cursor:pointer; box-shadow:2px 2px 0 var(--line);">📄 Export PDF</button>
+          <button onclick="window.print()" style="padding:8px 14px; border-radius:8px; background:var(--bg3); border:1px solid var(--line); color:var(--text2); font-weight:600; font-size:12px; cursor:pointer;">🖨️ Print</button>
+        </div>
+      </div>
+    </div>
+    <!-- Sticky Filter + Search -->
+    <div id="std-filter" style="position:sticky; top:54px; z-index:10; background:var(--bg); border:1px solid var(--line); border-radius:12px; padding:12px; margin-top:16px; display:flex; flex-wrap:wrap; gap:8px; align-items:center;">
+      <div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center;">
+        <span style="font-size:11px; font-family:var(--mono); color:var(--text3); font-weight:700;">FILTER:</span>
+        <button class="chip on" data-filter="semua" onclick="filterStandards('semua')">Semua</button>
+        <button class="chip" data-filter="puil" onclick="filterStandards('puil')">PUIL</button>
+        <button class="chip" data-filter="ip" onclick="filterStandards('ip')">IP/NEMA</button>
+        <button class="chip" data-filter="k3" onclick="filterStandards('k3')">K3</button>
+        <button class="chip" data-filter="komponen" onclick="filterStandards('komponen')">Komponen</button>
+      </div>
+      <div style="flex:1; min-width:160px; position:relative;">
+        <input id="std-search" type="text" placeholder="Cari: KHA, IP44, LOTO, grounding..." oninput="filterStandards()" style="width:100%; padding:8px 12px 8px 32px; background:var(--bg3); border:1px solid var(--line); border-radius:8px; color:var(--text); font-size:12px; outline:none;">
+        <span style="position:absolute; left:10px; top:50%; transform:translateY(-50%); color:var(--text3); font-size:12px;">🔍</span>
+      </div>
     </div>
 
     <div class="std-grid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:20px; margin-top:30px;">
@@ -842,8 +866,61 @@
           <span class="puil-lbl">Faktor Daya (cos φ)</span>
           <input class="puil-inp" id="puil-cosphi" type="number" inputmode="decimal" min="0.1" max="1" step="0.01" value="0.85" oninput="hitungPUIL()">
         </div>
+        <div class="puil-field">
+          <span class="puil-lbl">Jenis Sirkuit</span>
+          <select class="puil-inp" id="puil-jenis" onchange="hitungPUIL()">
+            <option value="tenaga" selected>Tenaga (stopkontak) — min 2,5 mm²</option>
+            <option value="penerangan">Penerangan — min 1,5 mm²</option>
+          </select>
+        </div>
+        <div class="puil-field">
+          <span class="puil-lbl">Suhu Lingkungan (°C)</span>
+          <select class="puil-inp" id="puil-suhu" onchange="hitungPUIL()">
+            <option value="30" selected>30°C (referensi)</option>
+            <option value="35">35°C (+ derating)</option>
+            <option value="40">40°C (+ derating)</option>
+            <option value="45">45°C (+ derating)</option>
+          </select>
+        </div>
+        <div class="puil-field">
+          <span class="puil-lbl">Metode Pasang</span>
+          <select class="puil-inp" id="puil-metode" onchange="hitungPUIL()">
+            <option value="B1" selected>B1 — dalam pipa di dinding (ref)</option>
+            <option value="A1">A1 — dalam isolasi termal</option>
+            <option value="C">C — menempel dinding</option>
+          </select>
+        </div>
         <div class="puil-result" id="puil-result"></div>
+        <div id="puil-hist" style="margin-top:10px; display:none;">
+          <div style="font-size:11px; color:var(--text3); font-family:var(--mono); margin-bottom:6px;">Riwayat hitungan:</div>
+          <div id="puil-hist-chips" style="display:flex; flex-wrap:wrap; gap:6px;"></div>
+        </div>
         <div style="margin-top:12px; font-size:12px; color:var(--text3);"><i>Referensi praktis — instalasi wajib mengikuti PUIL 2011 dan dikerjakan tenaga ahli listrik bersertifikat.</i></div>
+        <div style="margin-top:12px; display:flex; gap:8px; flex-wrap:wrap;">
+          <a onclick="switchTab('materi'); setTimeout(()=>{ if(window.openMateri) openMateri('instalasi-k3','kha'); }, 500)" style="font-size:11px; color:var(--accent); cursor:pointer; text-decoration:underline;">📖 Pelajari di Materi → KHA & PUIL</a>
+          <span style="font-size:11px; color:var(--text3);">|</span>
+          <a onclick="document.getElementById('std-drop').scrollIntoView({behavior:'smooth'})" style="font-size:11px; color:var(--accent); cursor:pointer; text-decoration:underline;">↓ Cek Susut Tegangan</a>
+        </div>
+      </div>
+
+      <!-- SUSUT TEGANGAN Calculator (TASK2) -->
+      <div class="std-card" id="std-drop" data-cat="puil" style="background:var(--bg2); border:1px solid var(--line); border-radius:16px; padding:24px;">
+        <div style="font-size:12px; color:var(--accent); font-family:var(--mono); margin-bottom:8px;">PUIL 2011 Pasal 2.3 — Batas 4%</div>
+        <h3 style="font-size:18px; margin-bottom:6px;">⚡ KALKULATOR SUSUT TEGANGAN</h3>
+        <p style="color:var(--text2); font-size:13px; margin-bottom:14px;">Hitung drop tegangan — pastikan tidak melebihi <b>4% (8,8 V di 220 V)</b>. Rumus: <code style="background:var(--bg3); padding:2px 6px; border-radius:4px;">ΔV = 2·I·ρ·L/A</code> (1 fasa) atau <code style="background:var(--bg3); padding:2px 6px; border-radius:4px;">√3·I·ρ·L/A</code> (3 fasa), ρCu = 0,0175 Ω·mm²/m.</p>
+        <div class="puil-field"><span class="puil-lbl">Arus Beban (A)</span><input class="puil-inp" id="drop-i" type="number" inputmode="decimal" min="0.1" step="0.1" placeholder="contoh: 10" oninput="hitungDrop()"></div>
+        <div class="puil-field"><span class="puil-lbl">Panjang Sirkuit (m)</span><input class="puil-inp" id="drop-l" type="number" inputmode="decimal" min="1" step="1" placeholder="contoh: 20 (satu arah)" oninput="hitungDrop()"></div>
+        <div class="puil-field"><span class="puil-lbl">Luas Penampang (mm²)</span><select class="puil-inp" id="drop-a" onchange="hitungDrop()"><option value="1.5">1.5 mm²</option><option value="2.5" selected>2.5 mm²</option><option value="4">4 mm²</option><option value="6">6 mm²</option><option value="10">10 mm²</option><option value="16">16 mm²</option><option value="25">25 mm²</option></select></div>
+        <div class="puil-field"><span class="puil-lbl">Sistem</span><select class="puil-inp" id="drop-sys" onchange="hitungDrop()"><option value="1f">1 Fasa — 220 V (×2)</option><option value="3f">3 Fasa — 380 V (×√3)</option></select></div>
+        <div class="puil-field"><span class="puil-lbl">Bahan</span><select class="puil-inp" id="drop-mat" onchange="hitungDrop()"><option value="0.0175">Tembaga Cu (0,0175)</option><option value="0.028">Aluminium Al (0,028)</option></select></div>
+        <div class="puil-result" id="drop-result" style="display:none;"></div>
+        <div style="margin-top:12px; height:8px; background:var(--bg3); border-radius:99px; overflow:hidden; border:1px solid var(--line); display:none;" id="drop-bar-wrap"><div id="drop-bar" style="height:100%; width:0%; background:var(--green); transition:width .4s, background .4s;"></div></div>
+        <div style="margin-top:8px; font-size:11px; color:var(--text3); display:none;" id="drop-hint"></div>
+        <div style="margin-top:12px; display:flex; gap:8px; flex-wrap:wrap;">
+          <button onclick="usePUILForDrop()" style="font-size:11px; padding:6px 10px; border-radius:99px; background:var(--bg3); border:1px solid var(--line); color:var(--accent); cursor:pointer;">← Gunakan hasil PUIL</button>
+          <button onclick="document.getElementById('drop-i').value='10'; document.getElementById('drop-l').value='20'; hitungDrop()" style="font-size:11px; padding:6px 10px; border-radius:99px; background:var(--bg3); border:1px solid var(--line); color:var(--text2); cursor:pointer;">Contoh: 10A / 20m / 2.5mm²</button>
+        </div>
+        <div style="margin-top:10px; font-size:12px; color:var(--text3);"><i>Sumber: PUIL 2011 Pasal 2.3 — susut tegangan instalasi akhir ≤4%.</i></div>
       </div>
 
       <!-- KHA Table -->
@@ -904,74 +981,161 @@
         <div style="margin-top:10px; font-size:12px; color:var(--text3);"><i>Sumber: IEC 60898 & kebiasaan instalasi Indonesia. Rating MCB utama PLN disesuaikan daya tersambung.</i></div>
       </div>
 
-      <!-- IP Ratings -->
-      <div class="std-card" style="background:var(--bg2); border:1px solid var(--line); border-radius:16px; padding:24px;">
-        <div style="font-size:12px; color:var(--accent); font-family:var(--mono); margin-bottom:8px;">IEC 60529</div>
-        <h3 style="font-size:18px; margin-bottom:12px;">INGRESS PROTECTION (IP)</h3>
-        <p style="color:var(--text2); font-size:13px; margin-bottom:10px;">Kode perlindungan peralatan dari benda padat (angka 1) dan benda cair (angka 2).</p>
-        <div style="display:flex; flex-direction:column; gap:8px;">
-          <div style="padding:8px 12px; background:var(--bg3); border-radius:8px; font-size:12px;"><strong style="color:var(--primary)">IP20:</strong> Aman dari sentuhan jari (Alat indoor).</div>
-          <div style="padding:8px 12px; background:var(--bg3); border-radius:8px; font-size:12px;"><strong style="color:var(--primary)">IP44:</strong> Tahan benda >1mm & percikan air (Kamar mandi).</div>
-          <div style="padding:8px 12px; background:var(--bg3); border-radius:8px; font-size:12px;"><strong style="color:var(--primary)">IP65:</strong> Kedap debu total & semprotan air (Outdoor).</div>
-          <div style="padding:8px 12px; background:var(--bg3); border-radius:8px; font-size:12px;"><strong style="color:var(--primary)">IP68:</strong> Kedap debu & tahan terendam terus-menerus.</div>
-        </div>
-        <div style="margin-top:15px; font-size:12px; color:var(--text3);"><i>Sumber: International Electrotechnical Commission (IEC 60529).</i></div>
-      </div>
-
-      <!-- PPE PPE -->
-      <div class="std-card" style="background:var(--bg2); border:1px solid var(--line); border-radius:16px; padding:24px;">
-        <h3 style="font-size:18px; margin-bottom:12px;">APD / K3 LISTRIK</h3>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-          <div style="text-align:center; padding:10px; background:var(--bg3); border-radius:10px;">
-            <div style="font-size:20px;">⛑️</div>
-            <div style="font-size:10px; margin-top:5px; font-weight:bold;">Helm Class E (Tahan 20kV)</div>
+      <!-- IP Ratings — Interactive Explorer -->
+      <div class="std-card" id="std-ip" data-cat="ip" style="background:var(--bg2); border:1px solid var(--line); border-radius:16px; padding:24px;">
+        <div style="font-size:12px; color:var(--accent); font-family:var(--mono); margin-bottom:8px;">IEC 60529 — Interactive</div>
+        <h3 style="font-size:18px; margin-bottom:6px;">💧 INGRESS PROTECTION EXPLORER</h3>
+        <p style="color:var(--text2); font-size:13px; margin-bottom:14px;">Pilih digit pertama (padat/debu 0–6) & digit kedua (air 0–8) untuk lihat arti & contoh penggunaan.</p>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;">
+          <div class="puil-field" style="flex-direction:column; align-items:stretch; gap:6px;">
+            <span class="puil-lbl" style="width:auto;">Digit 1 — Padat/Debu (0–6)</span>
+            <select id="ip-d1" class="puil-inp" onchange="updateIP()">
+              <option value="0">0 — Tanpa proteksi</option>
+              <option value="1">1 — >50mm</option>
+              <option value="2" selected>2 — >12.5mm (jari)</option>
+              <option value="3">3 — >2.5mm</option>
+              <option value="4">4 — >1mm</option>
+              <option value="5">5 — Debu terbatas</option>
+              <option value="6">6 — Kedap debu</option>
+            </select>
           </div>
-          <div style="text-align:center; padding:10px; background:var(--bg3); border-radius:10px;">
-            <div style="font-size:20px;">🧤</div>
-            <div style="font-size:10px; margin-top:5px; font-weight:bold;">Sarung Isolasi (VDE)</div>
-          </div>
-          <div style="text-align:center; padding:10px; background:var(--bg3); border-radius:10px;">
-            <div style="font-size:20px;">🥾</div>
-            <div style="font-size:10px; margin-top:5px; font-weight:bold;">Sepatu Dielektrik</div>
-          </div>
-          <div style="text-align:center; padding:10px; background:var(--bg3); border-radius:10px;">
-            <div style="font-size:20px;">🛡️</div>
-            <div style="font-size:10px; margin-top:5px; font-weight:bold;">Arc Flash Suit</div>
+          <div class="puil-field" style="flex-direction:column; align-items:stretch; gap:6px;">
+            <span class="puil-lbl" style="width:auto;">Digit 2 — Air (0–8)</span>
+            <select id="ip-d2" class="puil-inp" onchange="updateIP()">
+              <option value="0" selected>0 — Tanpa proteksi</option>
+              <option value="1">1 — Tetes vertikal</option>
+              <option value="2">2 — Tetes 15°</option>
+              <option value="3">3 — Semprotan 60°</option>
+              <option value="4">4 — Cipratan</option>
+              <option value="5">5 — Pancaran</option>
+              <option value="6">6 — Pancaran kuat</option>
+              <option value="7">7 — Rendam sementara</option>
+              <option value="8">8 — Rendam menerus</option>
+            </select>
           </div>
         </div>
-        <div style="margin-top:15px; font-size:12px; color:var(--text3);"><i>Sumber: NFPA 70E - Standard for Electrical Safety in the Workplace.</i></div>
-      </div>
-
-      <!-- NEMA vs IP -->
-      <div class="std-card" style="background:var(--bg2); border:1px solid var(--line); border-radius:16px; padding:24px;">
-        <div style="font-size:12px; color:var(--accent); font-family:var(--mono); margin-bottom:8px;">NEMA vs IEC</div>
-        <h3 style="font-size:18px; margin-bottom:12px;">NEMA ENCLOSURE RATINGS</h3>
-        <p style="color:var(--text2); font-size:13px; margin-bottom:10px;">Standar Amerika (NEMA) yang sering setara dengan IP rating Eropa.</p>
-        <div style="display:flex; flex-direction:column; gap:8px;">
-          <div style="padding:8px 12px; background:var(--bg3); border-radius:8px; font-size:12px;"><strong style="color:var(--primary)">NEMA 1:</strong> Indoor umum (Setara IP20).</div>
-          <div style="padding:8px 12px; background:var(--bg3); border-radius:8px; font-size:12px;"><strong style="color:var(--primary)">NEMA 3R:</strong> Outdoor, tahan hujan/es (Setara IP24).</div>
-          <div style="padding:8px 12px; background:var(--bg3); border-radius:8px; font-size:12px;"><strong style="color:var(--primary)">NEMA 4X:</strong> Kedap air & anti korosi (Setara IP66).</div>
-          <div style="padding:8px 12px; background:var(--bg3); border-radius:8px; font-size:12px;"><strong style="color:var(--primary)">NEMA 12:</strong> Industrial indoor, tahan debu/oli (Setara IP54).</div>
+        <div id="ip-preview" style="padding:16px; background:var(--bg3); border:1px solid var(--line); border-radius:12px; text-align:center;">
+          <div style="font-size:22px; font-weight:800; font-family:var(--mono); color:var(--accent);" id="ip-code">IP20</div>
+          <div style="font-size:13px; color:var(--text); margin-top:4px;" id="ip-desc">Aman dari sentuhan jari — tanpa proteksi air</div>
+          <div style="font-size:11px; color:var(--text2); margin-top:6px; padding:6px 10px; background:var(--bg4); border-radius:6px; display:inline-block;" id="ip-use">Contoh: stopkontak indoor, panel dalam ruangan</div>
         </div>
-        <div style="margin-top:15px; font-size:12px; color:var(--text3);"><i>Sumber: National Electrical Manufacturers Association (NEMA 250).</i></div>
+        <details style="margin-top:12px;">
+          <summary style="font-size:12px; font-weight:600; cursor:pointer; color:var(--accent);">📋 Lihat tabel lengkap IPXX</summary>
+          <div style="margin-top:10px; overflow-x:auto;">
+            <table class="puil-table" style="font-size:11px;">
+              <thead><tr><th>Kode</th><th>Padat</th><th>Air</th><th>Contoh</th><th>Aksi</th></tr></thead>
+              <tbody id="ip-full-table">
+                <!-- filled by JS -->
+              </tbody>
+            </table>
+          </div>
+        </details>
+        <div style="margin-top:12px; display:flex; gap:8px; flex-wrap:wrap;">
+          <button onclick="quizIP()" style="font-size:11px; padding:6px 12px; border-radius:99px; background:var(--accent); border:1px solid var(--line); color:var(--bg); font-weight:700; cursor:pointer;">🎯 Kuis IP acak</button>
+          <a onclick="switchTab('materi'); setTimeout(()=>openMateri('instalasi-k3','ip'),500)" style="font-size:11px; color:var(--accent); cursor:pointer; text-decoration:underline; padding:6px;">📖 Materi IP Rating</a>
+        </div>
+        <div style="margin-top:10px; font-size:12px; color:var(--text3);"><i>Sumber: IEC 60529 — Degrees of protection (IP Code).</i></div>
       </div>
 
-      <!-- Insulation Class -->
-      <div class="std-card" style="background:var(--bg2); border:1px solid var(--line); border-radius:16px; padding:24px;">
-        <h3 style="font-size:18px; margin-bottom:12px;">KELAS ISOLASI MOTOR (NEMA/IEC)</h3>
-        <p style="color:var(--text2); font-size:13px; margin-bottom:10px;">Batas suhu operasional maksimal untuk kumparan motor listrik.</p>
-        <table style="width:100%; border-collapse:collapse; font-size:13px;">
-          <tr style="border-bottom:1px solid var(--line);">
-            <th style="text-align:left; padding:6px 0;">Kelas</th>
-            <th style="text-align:center; padding:6px 0;">Suhu Maks (°C)</th>
-          </tr>
-          <tr style="border-bottom:1px solid var(--border);"><td style="padding:6px 0;">Kelas A</td><td style="text-align:center; color:var(--text2)">105°C</td></tr>
-          <tr style="border-bottom:1px solid var(--border);"><td style="padding:6px 0;">Kelas B</td><td style="text-align:center; color:var(--text2)">130°C</td></tr>
-          <tr style="border-bottom:1px solid var(--border);"><td style="padding:6px 0;">Kelas F</td><td style="text-align:center; color:var(--text2)">155°C (Umum di industri)</td></tr>
-          <tr><td style="padding:6px 0;">Kelas H</td><td style="text-align:center; color:var(--text2)">180°C (Heavy Duty)</td></tr>
+      <!-- APD Selector — Interactive (TASK8) -->
+      <div class="std-card" id="std-apd" data-cat="k3" style="background:var(--bg2); border:1px solid var(--line); border-radius:16px; padding:24px;">
+        <h3 style="font-size:18px; margin-bottom:6px;">🦺 APD / K3 LISTRIK — Selector Skenario</h3>
+        <p style="color:var(--text2); font-size:13px; margin-bottom:12px;">Pilih skenario kerja — lihat APD wajib menyala, yang lain redup.</p>
+        <div style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:14px;" id="apd-chips">
+          <button class="chip on" data-scen="panel" onclick="selectAPD('panel')">Panel 380V</button>
+          <button class="chip" data-scen="sutr" onclick="selectAPD('sutr')">SUTR 20kV</button>
+          <button class="chip" data-scen="lab" onclick="selectAPD('lab')">Lab 12V</button>
+          <button class="chip" data-scen="gardu" onclick="selectAPD('gardu')">Gardu Induk</button>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;" id="apd-grid">
+          <div class="apd-item" data-apd="helm" style="text-align:center; padding:12px; background:var(--bg3); border-radius:10px; border:1px solid var(--line); transition:all .2s;">
+            <div style="font-size:22px;">⛑️</div>
+            <div style="font-size:11px; margin-top:6px; font-weight:700;">Helm Class E</div>
+            <div style="font-size:10px; color:var(--text3);">Tahan 20kV</div>
+            <div style="font-size:10px; color:var(--green); font-weight:700; margin-top:4px;" class="apd-req">● WAJIB</div>
+          </div>
+          <div class="apd-item" data-apd="sarung" style="text-align:center; padding:12px; background:var(--bg3); border-radius:10px; border:1px solid var(--line); transition:all .2s;">
+            <div style="font-size:22px;">🧤</div>
+            <div style="font-size:11px; margin-top:6px; font-weight:700;">Sarung VDE 1000V</div>
+            <div style="font-size:10px; color:var(--text3);">Kelas 00–4</div>
+            <div style="font-size:10px; color:var(--green); font-weight:700; margin-top:4px;" class="apd-req">● WAJIB</div>
+          </div>
+          <div class="apd-item" data-apd="sepatu" style="text-align:center; padding:12px; background:var(--bg3); border-radius:10px; border:1px solid var(--line); transition:all .2s;">
+            <div style="font-size:22px;">🥾</div>
+            <div style="font-size:11px; margin-top:6px; font-weight:700;">Sepatu Dielektrik</div>
+            <div style="font-size:10px; color:var(--text3);">ASTM F2413</div>
+            <div style="font-size:10px; color:var(--green); font-weight:700; margin-top:4px;" class="apd-req">● WAJIB</div>
+          </div>
+          <div class="apd-item" data-apd="arc" style="text-align:center; padding:12px; background:var(--bg3); border-radius:10px; border:1px solid var(--line); transition:all .2s;">
+            <div style="font-size:22px;">🛡️</div>
+            <div style="font-size:11px; margin-top:6px; font-weight:700;">Arc Flash Suit</div>
+            <div style="font-size:10px; color:var(--text3);">CAT 2–4</div>
+            <div style="font-size:10px; color:var(--text3); font-weight:600; margin-top:4px;" class="apd-req">○ Opsional</div>
+          </div>
+        </div>
+        <div id="apd-detail" style="margin-top:12px; padding:10px; background:var(--accent-d); border:1px solid var(--line); border-radius:8px; font-size:12px; color:var(--text2);">Panel 380V: Helm + Sarung + Sepatu wajib. Arc suit opsional kecuali busbar terbuka.</div>
+        <div style="margin-top:12px; display:flex; gap:8px; flex-wrap:wrap;">
+          <button onclick="quizAPD()" style="font-size:11px; padding:6px 12px; border-radius:99px; background:var(--accent); border:none; color:var(--bg); font-weight:700; cursor:pointer;">🎯 Kuis APD</button>
+          <span style="font-size:11px; color:var(--text3); align-self:center;" id="apd-quiz-result"></span>
+        </div>
+        <div style="margin-top:12px; font-size:12px; color:var(--text3);"><i>Sumber: NFPA 70E — Standard for Electrical Safety in the Workplace.</i></div>
+      </div>
+
+      <!-- NEMA vs IP — Enhanced -->
+      <div class="std-card" id="std-nema" data-cat="ip" style="background:var(--bg2); border:1px solid var(--line); border-radius:16px; padding:24px;">
+        <div style="font-size:12px; color:var(--accent); font-family:var(--mono); margin-bottom:8px;">NEMA 250 vs IEC 60529</div>
+        <h3 style="font-size:18px; margin-bottom:12px;">🏭 NEMA ENCLOSURE RATINGS</h3>
+        <p style="color:var(--text2); font-size:13px; margin-bottom:10px;">Standar Amerika — klik baris untuk highlight padanan IP di explorer di atas.</p>
+        <div style="display:flex; flex-direction:column; gap:8px;" id="nema-list">
+          <div onclick="syncNemaToIP('IP20')" style="padding:8px 12px; background:var(--bg3); border-radius:8px; font-size:12px; cursor:pointer; border:1px solid transparent; transition:all .15s;" class="nema-item"><strong style="color:var(--accent)">NEMA 1:</strong> Indoor umum — tanpa gasket. <span style="color:var(--text3)">→ IP20</span></div>
+          <div onclick="syncNemaToIP('IP24')" style="padding:8px 12px; background:var(--bg3); border-radius:8px; font-size:12px; cursor:pointer; border:1px solid transparent;" class="nema-item"><strong style="color:var(--accent)">NEMA 3R:</strong> Outdoor hujan/es, ventilasi. <span style="color:var(--text3)">→ IP14 / IP24</span></div>
+          <div onclick="syncNemaToIP('IP66')" style="padding:8px 12px; background:var(--bg3); border-radius:8px; font-size:12px; cursor:pointer; border:1px solid transparent;" class="nema-item"><strong style="color:var(--accent)">NEMA 4:</strong> Kedap air, tahan selang. <span style="color:var(--text3)">→ IP66</span></div>
+          <div onclick="syncNemaToIP('IP66')" style="padding:8px 12px; background:var(--bg3); border-radius:8px; font-size:12px; cursor:pointer; border:1px solid var(--accent); background:var(--accent-d);" class="nema-item"><strong style="color:var(--accent)">NEMA 4X:</strong> 4 + anti korosi (stainless). <span style="color:var(--text3)">→ IP66</span> ⭐ paling umum outdoor industri</div>
+          <div onclick="syncNemaToIP('IP54')" style="padding:8px 12px; background:var(--bg3); border-radius:8px; font-size:12px; cursor:pointer; border:1px solid transparent;" class="nema-item"><strong style="color:var(--accent)">NEMA 12:</strong> Indoor debu/oli, tanpa lubang. <span style="color:var(--text3)">→ IP54</span></div>
+          <div onclick="syncNemaToIP('IP67')" style="padding:8px 12px; background:var(--bg3); border-radius:8px; font-size:12px; cursor:pointer; border:1px solid transparent;" class="nema-item"><strong style="color:var(--accent)">NEMA 6P:</strong> Submersible, rendam dalam. <span style="color:var(--text3)">→ IP67/IP68</span></div>
+        </div>
+        <div style="margin-top:10px; font-size:11px; color:var(--text3); padding:8px; background:var(--bg3); border-radius:6px;">💡 NEMA menambahkan uji korosi, gasket & icing — tidak 1:1 dengan IP. Selalu cek datasheet.</div>
+        <div style="margin-top:15px; font-size:12px; color:var(--text3);"><i>Sumber: NEMA 250 — Enclosures for Electrical Equipment.</i></div>
+      </div>
+
+      <!-- Insulation Class — Enhanced with chart & calculator -->
+      <div class="std-card" id="std-isolasi" data-cat="puil" style="background:var(--bg2); border:1px solid var(--line); border-radius:16px; padding:24px;">
+        <h3 style="font-size:18px; margin-bottom:12px;">🔥 KELAS ISOLASI MOTOR (NEMA/IEC 60085)</h3>
+        <p style="color:var(--text2); font-size:13px; margin-bottom:12px;">Batas suhu hot-spot kumparan. Pilih kelas sesuai suhu operasi.</p>
+        <div style="display:flex; flex-direction:column; gap:6px; margin-bottom:14px;" id="iso-bars">
+          <div style="display:flex; align-items:center; gap:8px;"><span style="width:48px; font-size:11px; font-weight:700; font-family:var(--mono);">A 105°</span><div style="flex:1; height:14px; background:var(--bg3); border-radius:99px; overflow:hidden; border:1px solid var(--line);"><div style="width:58%; height:100%; background:linear-gradient(90deg,#22c55e,#16a34a);"></div></div><span style="font-size:10px; color:var(--text3);">58%</span></div>
+          <div style="display:flex; align-items:center; gap:8px;"><span style="width:48px; font-size:11px; font-weight:700; font-family:var(--mono);">B 130°</span><div style="flex:1; height:14px; background:var(--bg3); border-radius:99px; overflow:hidden; border:1px solid var(--line);"><div style="width:72%; height:100%; background:linear-gradient(90deg,#eab308,#ca8a04);"></div></div><span style="font-size:10px; color:var(--text3);">72%</span></div>
+          <div style="display:flex; align-items:center; gap:8px;"><span style="width:48px; font-size:11px; font-weight:700; font-family:var(--mono);">F 155°</span><div style="flex:1; height:14px; background:var(--bg3); border-radius:99px; overflow:hidden; border:1px solid var(--accent);"><div style="width:86%; height:100%; background:linear-gradient(90deg,#f97316,#ea580c);"></div></div><span style="font-size:10px; color:var(--text3);">86% ⭐</span></div>
+          <div style="display:flex; align-items:center; gap:8px;"><span style="width:48px; font-size:11px; font-weight:700; font-family:var(--mono);">H 180°</span><div style="flex:1; height:14px; background:var(--bg3); border-radius:99px; overflow:hidden; border:1px solid var(--line);"><div style="width:100%; height:100%; background:linear-gradient(90deg,#ef4444,#dc2626);"></div></div><span style="font-size:10px; color:var(--text3);">100%</span></div>
+        </div>
+        <div class="puil-field" style="margin-bottom:10px;"><span class="puil-lbl">Suhu operasi (°C)</span><input class="puil-inp" id="iso-temp" type="number" placeholder="mis. 140" oninput="checkIsolasi()"><button onclick="checkIsolasi()" style="padding:8px 12px; border-radius:8px; background:var(--accent); border:none; color:var(--bg); font-weight:700; cursor:pointer; font-size:12px;">Cek</button></div>
+        <div id="iso-result" style="display:none; padding:10px; background:var(--bg3); border-radius:8px; font-size:12px; border:1px solid var(--line);"></div>
+        <table style="width:100%; border-collapse:collapse; font-size:13px; margin-top:12px;">
+          <tr style="border-bottom:1px solid var(--line);"><th style="text-align:left; padding:6px 0;">Kelas</th><th style="text-align:center; padding:6px 0;">Suhu Maks</th><th style="text-align:center; padding:6px 0;">Umum</th></tr>
+          <tr style="border-bottom:1px solid var(--border);" id="iso-row-A"><td style="padding:6px 0;">Kelas A</td><td style="text-align:center;">105°C</td><td style="text-align:center; font-size:11px; color:var(--text3)">Lawas</td></tr>
+          <tr style="border-bottom:1px solid var(--border);" id="iso-row-B"><td style="padding:6px 0;">Kelas B</td><td style="text-align:center;">130°C</td><td style="text-align:center; font-size:11px; color:var(--text3)">Kipas kecil</td></tr>
+          <tr style="border-bottom:1px solid var(--border); background:rgba(255,234,0,0.06);" id="iso-row-F"><td style="padding:6px 0;"><b>Kelas F</b></td><td style="text-align:center;"><b>155°C</b></td><td style="text-align:center; font-size:11px; color:var(--accent)">⭐ Industri</td></tr>
+          <tr id="iso-row-H"><td style="padding:6px 0;">Kelas H</td><td style="text-align:center;">180°C</td><td style="text-align:center; font-size:11px; color:var(--text3)">Heavy duty</td></tr>
         </table>
-        <div style="margin-top:10px; font-size:12px; color:var(--text3);"><i>Penting: Operasional di atas batas suhu akan memotong umur motor ±50% setiap kenaikan 10°C.</i></div>
+        <div style="margin-top:10px; font-size:11px; color:var(--rose); background:rgba(239,68,68,0.08); border:1px solid rgba(239,68,68,0.2); padding:8px; border-radius:8px;">⚠️ Setiap <b>+10°C</b> di atas batas → umur isolasi <b>-50%</b> (aturan Arrhenius). Jaga margin 10–15°C.</div>
       </div>
+
+      <!-- Grounding Simulator (TASK6) -->
+      <div class="std-card" id="std-ground" data-cat="puil" style="background:var(--bg2); border:1px solid var(--line); border-radius:16px; padding:24px;">
+        <div style="font-size:12px; color:var(--accent); font-family:var(--mono); margin-bottom:8px;">SPLN — Tahanan ≤5Ω</div>
+        <h3 style="font-size:18px; margin-bottom:6px;">🌍 SIMULATOR PENTANAHAN (Grounding)</h3>
+        <p style="color:var(--text2); font-size:13px; margin-bottom:14px;">Estimasi tahanan pentanahan — input kondisi tanah & elektroda. Target <b>≤5Ω</b> (praktik SPLN).</p>
+        <div class="puil-field"><span class="puil-lbl">Jenis Tanah</span><select class="puil-inp" id="gnd-soil" onchange="hitungGround()"><option value="50">Lembab / sawah (ρ≈50 Ω·m)</option><option value="100" selected>Tanah biasa (ρ≈100)</option><option value="300">Kering / pasir (ρ≈300)</option><option value="500">Berbatu (ρ≈500)</option><option value="1000">Batu keras (ρ≈1000)</option></select></div>
+        <div class="puil-field"><span class="puil-lbl">Panjang Elektroda (m)</span><input class="puil-inp" id="gnd-len" type="number" min="1" max="6" step="0.5" value="2" oninput="hitungGround()"></div>
+        <div class="puil-field"><span class="puil-lbl">Diameter (mm)</span><input class="puil-inp" id="gnd-dia" type="number" min="10" max="30" value="16" oninput="hitungGround()"></div>
+        <div class="puil-field"><span class="puil-lbl">Jumlah Batang (paralel)</span><select class="puil-inp" id="gnd-n" onchange="hitungGround()"><option value="1" selected>1 batang</option><option value="2">2 batang (jarak &gt; panjang)</option><option value="3">3 batang</option><option value="4">4 batang</option></select></div>
+        <div class="puil-result" id="gnd-result" style="display:none;"></div>
+        <div style="margin-top:10px; height:8px; background:var(--bg3); border-radius:99px; overflow:hidden; border:1px solid var(--line); display:none;" id="gnd-bar-wrap"><div id="gnd-bar" style="height:100%; width:0%; transition:width .4s, background .4s;"></div></div>
+        <div style="margin-top:8px; font-size:11px; color:var(--text3); display:none;" id="gnd-hint"></div>
+        <div style="margin-top:12px; font-size:11px; color:var(--text3); padding:8px; background:var(--bg3); border-radius:8px;">💡 Rumus pendekatan: <code>R ≈ ρ/(2πL)·ln(4L/d)</code>. Nilai real ukur dengan earth tester. <br> Konduktor PE warna <b>hijau-kuning</b> — jangan pakai untuk fasa/netral.</div>
+        <div style="margin-top:10px; font-size:12px; color:var(--text3);"><i>Sumber: PUIL Bab 3 — sistem pembumian; praktik SPLN ≤5Ω.</i></div>
+      </div>
+
       <!-- Perundang-undangan K3 -->
       <style>
         .k3-acc { margin-bottom: 8px; border-radius: 8px; background: var(--bg3); transition: all 0.2s ease; overflow: hidden; }
@@ -1037,16 +1201,42 @@
       </div>
     </div>
     
-    <div style="margin-top:30px; padding:20px; background:rgba(255,158,11,0.05); border:1px solid var(--amber); border-radius:12px;">
-      <h4 style="color:var(--amber); margin-bottom:8px;">⚠️ 5 Aturan Emas Keselamatan Listrik (EN 50110)</h4>
-      <ol style="font-size:13px; color:var(--text2); line-height:1.6; margin-left:20px;">
-        <li>Putuskan koneksi sepenuhnya (Disconnect completely).</li>
-        <li>Amankan dari re-koneksi tak sengaja (LOTO - Lock Out Tag Out).</li>
-        <li>Verifikasi bahwa instalasi sudah tanpa tegangan (Gunakan voltage tester).</li>
-        <li>Laksanakan pembumian (Grounding) dan hubung singkat (Short-circuiting).</li>
-        <li>Berikan proteksi/perlindungan pada komponen di sekitarnya yang masih bertegangan.</li>
-      </ol>
-      <div style="margin-top:8px; font-size:12px; color:var(--text3);"><i>Sumber: CENELEC EN 50110 - Operation of electrical installations.</i></div>
+    <!-- 5 Aturan Emas — Interactive Checklist (TASK7) -->
+    <div style="margin-top:30px; padding:20px; background:var(--bg2); border:1px solid var(--line); border-radius:16px;" id="std-golden" data-cat="k3">
+      <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:12px;">
+        <h4 style="color:var(--amber);">⚠️ 5 Aturan Emas Keselamatan Listrik (EN 50110)</h4>
+        <span style="font-size:11px; font-family:var(--mono); padding:4px 10px; background:var(--bg3); border:1px solid var(--line); border-radius:99px; color:var(--text2);" id="golden-progress">0/5 selesai</span>
+      </div>
+      <div style="height:6px; background:var(--bg3); border-radius:99px; overflow:hidden; border:1px solid var(--line); margin-bottom:14px;"><div id="golden-bar" style="height:100%; width:0%; background:var(--green); transition:width .4s;"></div></div>
+      <div style="display:flex; flex-direction:column; gap:8px;" id="golden-list">
+        <label style="display:flex; align-items:center; gap:10px; padding:10px 12px; background:var(--bg3); border-radius:10px; border:1px solid var(--line); cursor:pointer; transition:all .15s;" class="golden-item">
+          <input type="checkbox" onchange="toggleGolden(0,this.checked)" style="width:18px; height:18px; accent-color:var(--green);">
+          <span style="flex:1; font-size:13px; color:var(--text);"><b>1. Putuskan</b> — Lepas sumber tegangan (buka MCB utama, cabut steker).</span>
+        </label>
+        <label style="display:flex; align-items:center; gap:10px; padding:10px 12px; background:var(--bg3); border-radius:10px; border:1px solid var(--line); cursor:pointer;" class="golden-item">
+          <input type="checkbox" onchange="toggleGolden(1,this.checked)" style="width:18px; height:18px; accent-color:var(--green);">
+          <span style="flex:1; font-size:13px; color:var(--text);"><b>2. Kunci LOTO</b> — Lock Out Tag Out, gembok + label "Jangan dihidupkan".</span>
+        </label>
+        <label style="display:flex; align-items:center; gap:10px; padding:10px 12px; background:var(--bg3); border-radius:10px; border:1px solid var(--line); cursor:pointer;" class="golden-item">
+          <input type="checkbox" onchange="toggleGolden(2,this.checked)" style="width:18px; height:18px; accent-color:var(--green);">
+          <span style="flex:1; font-size:13px; color:var(--text);"><b>3. Verifikasi</b> — Tes dengan voltage tester/testpen yang tervalidasi.</span>
+        </label>
+        <label style="display:flex; align-items:center; gap:10px; padding:10px 12px; background:var(--bg3); border-radius:10px; border:1px solid var(--line); cursor:pointer;" class="golden-item">
+          <input type="checkbox" onchange="toggleGolden(3,this.checked)" style="width:18px; height:18px; accent-color:var(--green);">
+          <span style="flex:1; font-size:13px; color:var(--text);"><b>4. Grounding</b> — Hubungkan & hubung singkat penghantar ke tanah.</span>
+        </label>
+        <label style="display:flex; align-items:center; gap:10px; padding:10px 12px; background:var(--bg3); border-radius:10px; border:1px solid var(--line); cursor:pointer;" class="golden-item">
+          <input type="checkbox" onchange="toggleGolden(4,this.checked)" style="width:18px; height:18px; accent-color:var(--green);">
+          <span style="flex:1; font-size:13px; color:var(--text);"><b>5. Proteksi area</b> — Pasang barrier, isolasi, rambu di sekitar bagian bertegangan.</span>
+        </label>
+      </div>
+      <div style="margin-top:12px; display:flex; gap:8px; flex-wrap:wrap;">
+        <button onclick="resetGolden()" style="font-size:11px; padding:6px 12px; border-radius:99px; background:var(--bg3); border:1px solid var(--line); color:var(--text2); cursor:pointer;">🔄 Reset</button>
+        <button onclick="exportK3Checklist()" style="font-size:11px; padding:6px 12px; border-radius:99px; background:var(--accent); border:1px solid var(--line); color:var(--bg); font-weight:700; cursor:pointer;">📄 Export Checklist</button>
+        <span style="font-size:11px; color:var(--text3); align-self:center;" id="golden-msg">Centang satu per satu sebelum kerja — tersimpan otomatis.</span>
+      </div>
+      <div style="margin-top:10px; font-size:11px; color:var(--text3); padding:8px; background:rgba(255,234,0,0.06); border-radius:8px; border:1px solid rgba(255,234,0,0.2);">💡 Jika semua 5 dicentang, progress hijau — aman mulai kerja. Data tersimpan di <code>ed_k3_golden5</code> (localStorage).</div>
+      <div style="margin-top:8px; font-size:12px; color:var(--text3);"><i>Sumber: CENELEC EN 50110 — Operation of electrical installations (5 Golden Rules).</i></div>
     </div>
   </div>
 </div>
@@ -1092,6 +1282,7 @@
 <script src="js/data-materi.js"></script>
 <script src="js/api.js"></script>
 <script src="js/modules/dashboard.js"></script>
+<script src="js/modules/standards.js"></script>
 <script src="js/app.js"></script>
 <script src="js/modules/firebase-dashboard.js"></script>
 

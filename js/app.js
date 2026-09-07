@@ -358,6 +358,8 @@ function switchTab(t){
     }
   }, 60);
   if(t === 'dashboard' && window.ElektroDash) window.ElektroDash.init();
+  if(t === 'standards' && window.ElektroStandards) window.ElektroStandards.init();
+  if(t === 'standards'){ try{ updateIP(); hitungGround(); loadGolden(); renderPUILHist(); }catch(e){} }
   if(t === 'news') { videoChips(); renderVideos(); }
   if(t === 'about') loadAbout();
   if(t === 'materi') renderMateri();
@@ -1870,46 +1872,431 @@ function toggleCosPhi(){
   if(wrap) wrap.style.display = (sel && sel.value === '3f') ? '' : 'none';
 }
 
+// Enhanced PUIL calculator with jenis sirkuit, derating suhu/metode, highlight & history
+let _puilLast = null;
 function hitungPUIL(){
   const res = document.getElementById('puil-result');
   if(!res) return;
-  const P   = parseFloat(document.getElementById('puil-daya').value);
-  const sys = document.getElementById('puil-sistem').value;
-  const cos = parseFloat(document.getElementById('puil-cosphi').value);
+  const P   = parseFloat(document.getElementById('puil-daya')?.value);
+  const sys = document.getElementById('puil-sistem')?.value || '1f';
+  const cos = parseFloat(document.getElementById('puil-cosphi')?.value) || 0.85;
+  const jenis = document.getElementById('puil-jenis')?.value || 'tenaga';
+  const suhu = parseInt(document.getElementById('puil-suhu')?.value || '30',10);
+  const metode = document.getElementById('puil-metode')?.value || 'B1';
   if(!P || P <= 0){
     res.innerHTML = '<div class="puil-err">⚠ Masukkan daya beban dalam Watt terlebih dahulu, Kak.</div>';
-    return;
+    clearPUILHighlight(); return;
   }
   if(sys === '3f' && (!cos || cos <= 0 || cos > 1)){
     res.innerHTML = '<div class="puil-err">⚠ Faktor daya (cos φ) harus antara 0,1 dan 1.</div>';
     return;
   }
-  const I     = sys === '3f' ? P / (Math.sqrt(3) * 380 * cos) : P / 220;
-  const khaMin = I * 1.25;
+  let I     = sys === '3f' ? P / (Math.sqrt(3) * 380 * cos) : P / 220;
+  let khaMin = I * 1.25;
+  // derating suhu & metode (simplified)
+  let deratingNote = '';
+  let factor = 1;
+  if(suhu===35) factor*=1.1;
+  else if(suhu===40) factor*=1.2;
+  else if(suhu===45) factor*=1.35;
+  if(metode==='A1') factor*=1.15; // lebih panas dalam isolasi
+  if(metode==='C') factor*=0.95; // sedikit lebih baik
+  if(factor!==1){
+    khaMin *= factor;
+    deratingNote = ` (+derating ×${factor.toFixed(2)} suhu ${suhu}°C / ${metode})`;
+  }
   if(I > 225){
     res.innerHTML = `<div class="puil-err">⚠ Arus beban ${I.toFixed(0)} A melebihi tabel (maks 225 A). Gunakan kabel khusus / perhitungan teknis tersendiri, Kak.</div>`;
     return;
   }
-  // PUIL: kabel minimum untuk sirkuit daya = 2,5 mm² (1,5 mm² hanya untuk penerangan)
+  const minMm = jenis==='penerangan' ? 1.5 : 2.5;
   let cable = null;
-  for(const c of PUIL_KHA){ if(c.mm >= 2.5 && c.kha >= khaMin){ cable = c; break; } }
+  for(const c of PUIL_KHA){ if(c.mm >= minMm && c.kha >= khaMin){ cable = c; break; } }
   let mcb = null;
   for(const r of PUIL_MCB){ if(r >= I){ mcb = r; break; } }
-  // Pastikan rating MCB tidak melebihi KHA kabel (PUIL: In ≤ KHA)
   while(cable && mcb && mcb > cable.kha){
     const i = PUIL_KHA.indexOf(cable);
     cable = PUIL_KHA[i+1] || null;
   }
   const fmt  = (n,d=1) => n.toLocaleString('id-ID',{minimumFractionDigits:d, maximumFractionDigits:d});
   const pmax = mcb ? (sys === '3f' ? Math.sqrt(3)*380*mcb*(cos||1) : 220*mcb) : 0;
+  const jenisWarn = (jenis==='penerangan' && cable && cable.mm>=2.5) ? '<div style="font-size:11px; color:var(--text3); margin-top:4px;">ℹ️ Untuk stopkontak/tenaga, PUIL wajib minimal 2.5 mm² — sudah sesuai.</div>' : (jenis==='penerangan' ? '' : '');
+  const tenagaWarn = (jenis==='tenaga' && cable && cable.mm<2.5) ? '<div style="font-size:11px; color:var(--rose); margin-top:4px;">⚠️ Sirkuit tenaga minimal 2.5 mm² (PUIL) — perhitungan menyesuaikan.</div>' : '';
   res.innerHTML = `
     <div class="pr-row"><span class="pr-lbl">Arus Beban (I)</span><span class="pr-val">${fmt(I)} A</span></div>
-    <div class="pr-row"><span class="pr-lbl">KHA Minimum (I × 1,25)</span><span class="pr-val">${fmt(khaMin)} A</span></div>
+    <div class="pr-row"><span class="pr-lbl">KHA Minimum (I × 1,25)</span><span class="pr-val">${fmt(khaMin)} A <span style="font-size:10px; color:var(--text3);">${deratingNote}</span></span></div>
     ${cable
       ? `<div class="pr-row pr-hi"><span class="pr-lbl">Ukuran Kabel (NYA/NYM)</span><span class="pr-val pr-big">${cable.mm} mm² · KHA ${cable.kha} A</span></div>`
       : '<div class="pr-row pr-hi"><span class="pr-lbl">Ukuran Kabel</span><span class="pr-val pr-big">Di luar tabel</span></div>'}
     <div class="pr-row pr-hi"><span class="pr-lbl">MCB Rekomendasi</span><span class="pr-val pr-big">${mcb} A</span></div>
-    <div class="pr-row"><span class="pr-lbl">Daya Maks yang Dilayani</span><span class="pr-val">${fmt(pmax,0)} W</span></div>`;
+    <div class="pr-row"><span class="pr-lbl">Daya Maks yang Dilayani</span><span class="pr-val">${fmt(pmax,0)} W</span></div>
+    <div class="pr-row"><span class="pr-lbl">ELCB/RCD</span><span class="pr-val">30 mA <span style="font-size:11px; color:var(--text3);">(proteksi manusia)</span></span></div>
+    ${jenisWarn}${tenagaWarn}
+    <div style="margin-top:8px; font-size:11px; color:var(--text3);">💡 Koordinasi: In MCB (${mcb}A) ≤ KHA kabel (${cable?cable.kha:'-'}A) ✓</div>
+  `;
+  _puilLast = {P, sys, cos, I, khaMin, cable, mcb};
+  highlightPUILTable(cable, mcb);
+  savePUILHist(P, sys, cable, mcb);
+  // auto-sync drop input
+  const dip = document.getElementById('drop-i');
+  if(dip && !dip.value) dip.value = I.toFixed(1);
+}
+
+function clearPUILHighlight(){
+  document.querySelectorAll('.puil-table tr.puil-hl').forEach(tr=>{ tr.classList.remove('puil-hl'); tr.style.background=''; tr.style.outline=''; });
+}
+function highlightPUILTable(cable, mcb){
+  clearPUILHighlight();
+  // KHA table highlight
+  document.querySelectorAll('.puil-table tbody tr').forEach(tr=>{
+    const mm = parseFloat(tr.children[0]?.textContent);
+    const a  = parseInt(tr.children[1]?.textContent,10);
+    if(cable && mm===cable.mm){
+      tr.classList.add('puil-hl');
+      tr.style.background='rgba(255,234,0,0.12)';
+      tr.style.outline='1px solid var(--accent)';
+      tr.scrollIntoView({behavior:'smooth', block:'nearest'});
+    }
+    if(mcb && tr.children[0] && tr.children[1] && !tr.children[2]?.textContent.includes('Stop') ){
+      // MCB table: first col is A
+      const mcbVal = parseInt(tr.children[0]?.textContent,10);
+      if(mcbVal===mcb && tr.closest('table')?.querySelector('th')?.textContent.includes('MCB')){
+        tr.classList.add('puil-hl');
+        tr.style.background='rgba(255,234,0,0.12)';
+        tr.style.outline='1px solid var(--accent)';
+      }
+    }
+  });
+  // more precise MCB highlight: find MCB table specifically
+  const tables = document.querySelectorAll('.puil-table');
+  tables.forEach(tbl=>{
+    const th = tbl.querySelector('th')?.textContent||'';
+    if(th.includes('MCB')){
+      tbl.querySelectorAll('tbody tr').forEach(tr=>{
+        const v = parseInt(tr.children[0]?.textContent,10);
+        if(v===mcb){ tr.style.background='rgba(255,234,0,0.14)'; tr.style.outline='1px solid var(--accent)'; }
+      });
+    }
+  });
+}
+function savePUILHist(P, sys, cable, mcb){
+  try{
+    const key='ed_puil_hist';
+    let h = JSON.parse(localStorage.getItem(key)||'[]');
+    const entry = {P, sys, cable: cable? cable.mm+'mm²':'-', mcb: mcb+'A', t: Date.now()};
+    h = [entry, ...h.filter(x=> !(x.P===P && x.sys===sys))].slice(0,5);
+    localStorage.setItem(key, JSON.stringify(h));
+    renderPUILHist();
+  }catch(e){}
+}
+function renderPUILHist(){
+  const wrap = document.getElementById('puil-hist');
+  const chips = document.getElementById('puil-hist-chips');
+  if(!wrap||!chips) return;
+  try{
+    const h = JSON.parse(localStorage.getItem('ed_puil_hist')||'[]');
+    if(!h.length){ wrap.style.display='none'; return; }
+    wrap.style.display='block';
+    chips.innerHTML = h.map(x=> `<span style="padding:4px 8px; background:var(--bg3); border:1px solid var(--line); border-radius:99px; font-size:11px; font-family:var(--mono); cursor:pointer;" onclick="document.getElementById('puil-daya').value='${x.P}'; document.getElementById('puil-sistem').value='${x.sys}'; toggleCosPhi(); hitungPUIL()">${x.P}W ${x.sys} → ${x.cable}/${x.mcb}</span>`).join('');
+  }catch(e){}
+}
+setTimeout(renderPUILHist, 600);
+
+// ── SUSUT TEGANGAN (TASK2) ──
+function hitungDrop(){
+  const res = document.getElementById('drop-result');
+  const barWrap = document.getElementById('drop-bar-wrap');
+  const bar = document.getElementById('drop-bar');
+  const hint = document.getElementById('drop-hint');
+  if(!res||!barWrap) return;
+  const I = parseFloat(document.getElementById('drop-i')?.value);
+  const L = parseFloat(document.getElementById('drop-l')?.value);
+  const A = parseFloat(document.getElementById('drop-a')?.value);
+  const sys = document.getElementById('drop-sys')?.value || '1f';
+  const rho = parseFloat(document.getElementById('drop-mat')?.value) || 0.0175;
+  if(!I||!L||!A){ res.style.display='none'; barWrap.style.display='none'; hint.style.display='none'; return; }
+  const R = rho * L / A; // per conductor
+  const dV = sys==='3f' ? Math.sqrt(3)*I*R : 2*I*R;
+  const Vbase = sys==='3f'? 380 : 220;
+  const pct = dV / Vbase * 100;
+  const ok = pct <= 4;
+  res.style.display='block';
+  barWrap.style.display='block';
+  hint.style.display='block';
+  const pctClamped = Math.min(100, pct*8); // visual scale
+  bar.style.width = Math.min(100, pctClamped* (pct>4? 1.2:1)) + '%';
+  bar.style.background = ok ? 'var(--green)' : pct>6 ? 'var(--rose)' : 'var(--amber)';
+  hint.textContent = ok ? '✅ LULUS — masih di bawah batas PUIL 4%' : (pct>6? '❌ GAGAL — susut terlalu besar, naikkan penampang atau pendekkan jalur' : '⚠️ Mendekati batas 4% — pertimbangkan naikkan penampang');
+  hint.style.color = ok ? 'var(--green)' : 'var(--rose)';
+  res.innerHTML = `
+    <div class="pr-row"><span class="pr-lbl">ΔV (drop)</span><span class="pr-val" style="color:${ok?'var(--green)':'var(--rose)'}">${dV.toFixed(2)} V (${pct.toFixed(2)}%)</span></div>
+    <div class="pr-row"><span class="pr-lbl">Tegangan Ujung</span><span class="pr-val">${(Vbase - dV).toFixed(1)} V</span></div>
+    <div class="pr-row"><span class="pr-lbl">Batas PUIL 4%</span><span class="pr-val">${(Vbase*0.04).toFixed(1)} V</span></div>
+    <div style="font-size:11px; color:var(--text3); margin-top:6px;">R penghantar = ${R.toFixed(4)} Ω (ρ=${rho}) ${sys==='1f'?'×2 (fasa+netral)': '×√3 (3f)'} • Panjang total ${sys==='1f'? L*2 : L} m</div>
+  `;
+}
+function usePUILForDrop(){
+  if(!_puilLast){ showToast('Hitung PUIL dulu, Kak ⚡'); return; }
+  const dip = document.getElementById('drop-i');
+  const dap = document.getElementById('drop-a');
+  if(dip) dip.value = _puilLast.I.toFixed(1);
+  if(dap && _puilLast.cable) dap.value = String(_puilLast.cable.mm);
+  hitungDrop();
+  document.getElementById('std-drop').scrollIntoView({behavior:'smooth'});
+}
+
+// ── GROUNDING SIMULATOR (TASK6) ──
+function hitungGround(){
+  const res = document.getElementById('gnd-result');
+  const barWrap = document.getElementById('gnd-bar-wrap');
+  const bar = document.getElementById('gnd-bar');
+  const hint = document.getElementById('gnd-hint');
+  if(!res) return;
+  const rho = parseFloat(document.getElementById('gnd-soil')?.value) || 100;
+  const L = parseFloat(document.getElementById('gnd-len')?.value) || 2;
+  const diaMm = parseFloat(document.getElementById('gnd-dia')?.value) || 16;
+  const n = parseInt(document.getElementById('gnd-n')?.value || '1',10);
+  const d = diaMm/1000;
+  // R single ≈ ρ/(2πL) * ln(4L/d)
+  let Rsingle = rho/(2*Math.PI*L) * Math.log(4*L/d);
+  let R = Rsingle / (n * 0.85); // paralel factor kasar 0.85 untuk jarak ideal
+  if(n>1) R = Rsingle / (n*0.7 + 0.3); // adjustment
+  else R = Rsingle;
+  const ok = R <= 5;
+  res.style.display='block';
+  barWrap.style.display='block';
+  hint.style.display='block';
+  bar.style.width = Math.min(100, (5/R)*100 ) + '%';
+  // inverse: lower R better, so bar fills when good
+  // fallback width calc for visual
+  if(R<=5) bar.style.width = Math.min(100, 100 - (R/5)*30) + '%';
+  else bar.style.width = Math.max(10, 100 - (R/10)*50) + '%';
+  bar.style.background = ok ? 'var(--green)' : R<10 ? 'var(--amber)' : 'var(--rose)';
+  hint.textContent = ok ? '✅ MEMENUHI — ≤5Ω (SPLN). Sudah aman.' : '❌ BELUM — >5Ω. Tambah panjang, tambah batang paralel, atau tambah bentonit/garam.';
+  hint.style.color = ok ? 'var(--green)' : 'var(--rose)';
+  res.innerHTML = `
+    <div class="pr-row"><span class="pr-lbl">Tahanan Estimasi</span><span class="pr-val" style="color:${ok?'var(--green)':'var(--rose)'}">${R.toFixed(2)} Ω ${ok?'✓':'✗'}</span></div>
+    <div class="pr-row"><span class="pr-lbl">Single rod</span><span class="pr-val">${Rsingle.toFixed(2)} Ω</span></div>
+    <div class="pr-row"><span class="pr-lbl">Target SPLN</span><span class="pr-val">≤5 Ω</span></div>
+    <div style="font-size:11px; color:var(--text3); margin-top:6px;">ρ=${rho} Ω·m, L=${L}m, d=${diaMm}mm, n=${n} • Paralel: R≈R1 / n (jarak > L)</div>
+  `;
+}
+setTimeout(()=>{ if(document.getElementById('gnd-result')) hitungGround(); }, 800);
+
+// ── IP EXPLORER (TASK4) ──
+const IP_D1 = ['Tanpa proteksi','>50mm (tangan)','>12.5mm (jari)','>2.5mm (alat)','>1mm (kawat)','Debu terbatas','Kedap debu'];
+const IP_D2 = ['Tanpa proteksi','Tetes vertikal','Tetes 15°','Semprotan 60°','Cipratan','Pancaran','Pancaran kuat','Rendam sementara','Rendam menerus'];
+const IP_EXAMPLES = {
+  'IP20':['Aman sentuh jari — tanpa air','stopkontak indoor, panel dalam ruangan'],
+  'IP44':['>1mm & cipratan','kamar mandi, teras, saklar luar tertutup'],
+  'IP54':['Debu terbatas & cipratan','panel tertutup outdoor, box distribusi'],
+  'IP65':['Kedap debu & pancaran','lampu taman, fitting outdoor hujan'],
+  'IP66':['Kedap debu & pancaran kuat','jet water, industri pencucian'],
+  'IP67':['Kedap debu & rendam sementara','sensor terendam, lampu kolam'],
+  'IP68':['Kedap debu & rendam menerus','pompa submersible, kabel bawah air']
+};
+function updateIP(){
+  const d1 = document.getElementById('ip-d1')?.value || '2';
+  const d2 = document.getElementById('ip-d2')?.value || '0';
+  const code = `IP${d1}${d2}`;
+  const descEl = document.getElementById('ip-desc');
+  const useEl = document.getElementById('ip-use');
+  const codeEl = document.getElementById('ip-code');
+  if(codeEl) codeEl.textContent = code;
+  if(descEl) descEl.textContent = `${IP_D1[parseInt(d1)]||''} — ${IP_D2[parseInt(d2)]||''}`;
+  if(useEl){
+    const ex = IP_EXAMPLES[code];
+    if(ex) useEl.textContent = `Contoh: ${ex[1]}`;
+    else useEl.textContent = `Kombinasi ${code} — cek tabel untuk contoh real`;
+    useEl.style.background = IP_EXAMPLES[code] ? 'var(--accent-d)' : 'var(--bg4)';
+  }
+  // also fill full table once
+  const tbody = document.getElementById('ip-full-table');
+  if(tbody && !tbody.dataset.filled){
+    const codes = ['IP20','IP31','IP44','IP54','IP55','IP65','IP66','IP67','IP68'];
+    tbody.innerHTML = codes.map(c=>{
+      const a=c[2], b=c[3];
+      const ex = IP_EXAMPLES[c]||[IP_D1[a]+' — '+IP_D2[b], 'umum'];
+      return `<tr><td style="font-family:var(--mono); font-weight:700;">${c}</td><td style="font-size:11px;">${IP_D1[parseInt(a)]}</td><td style="font-size:11px;">${IP_D2[parseInt(b)]}</td><td style="font-size:11px;">${ex[1]}</td><td><button onclick="syncIP('${a}','${b}')" style="font-size:11px; padding:4px 8px; border-radius:6px; background:var(--bg3); border:1px solid var(--line); color:var(--accent); cursor:pointer;">Pilih</button></td></tr>`;
+    }).join('');
+    tbody.dataset.filled='1';
+  }
+}
+function syncIP(d1,d2){
+  const e1=document.getElementById('ip-d1'), e2=document.getElementById('ip-d2');
+  if(e1) e1.value=d1; if(e2) e2.value=d2; updateIP(); document.getElementById('std-ip').scrollIntoView({behavior:'smooth'});
+}
+function syncNemaToIP(code){
+  const d1=code[2], d2=code[3];
+  syncIP(d1,d2);
+  showToast(`NEMA → ${code} disinkron ke explorer 💧`);
+}
+function quizIP(){
+  const codes = ['IP20','IP44','IP54','IP65','IP67','IP68'];
+  const q = codes[Math.floor(Math.random()*codes.length)];
+  const d1=q[2], d2=q[3];
+  const ask = `IP berapa untuk: ${IP_EXAMPLES[q][1]} ?`;
+  const ans = prompt(`🧠 KUIS IP — ${ask}\n\nKetik kode (mis. IP65):`);
+  if(!ans) return;
+  if(ans.trim().toUpperCase()===q) { showToast('✅ Benar! '+q+' — '+IP_EXAMPLES[q][0]); if(window.ElektroDash) ElektroDash.addQuizDone(); }
+  else showToast(`❌ Jawaban: ${q} — ${IP_EXAMPLES[q][0]}. Kamu jawab ${ans}`);
+}
+setTimeout(updateIP, 600);
+
+// ── ISOLASI CHECK (TASK5) ──
+function checkIsolasi(){
+  const v = parseFloat(document.getElementById('iso-temp')?.value);
+  const res = document.getElementById('iso-result');
+  if(!res) return;
+  if(!v){ res.style.display='none'; document.querySelectorAll('[id^="iso-row-"]').forEach(r=>{r.style.background=''; r.style.outline='';}); return; }
+  let kelas='H', need=180;
+  if(v<=105){kelas='A'; need=105;}
+  else if(v<=130){kelas='B'; need=130;}
+  else if(v<=155){kelas='F'; need=155;}
+  const ok = v <= need;
+  // highlight row
+  document.querySelectorAll('[id^="iso-row-"]').forEach(r=>{r.style.background=''; r.style.outline='';});
+  const row = document.getElementById('iso-row-'+kelas);
+  if(row){ row.style.background='rgba(255,234,0,0.12)'; row.style.outline='1px solid var(--accent)'; }
+  res.style.display='block';
+  if(v<=155){
+    const margin = need - v;
+    res.innerHTML = `<span style="color:var(--green)">✅ Cocok Kelas ${kelas} (${need}°C)</span> — margin ${margin}°C. ${margin<10? '<span style="color:var(--amber)">⚠️ Margin tipis, pertimbangkan naik kelas.</span>': ''} ${v>130? '<br><span style="font-size:11px; color:var(--text3)">Kelas F adalah standar industri — aman untuk 155°C.</span>':''}`;
+  } else if(v<=180){
+    res.innerHTML = `<span style="color:var(--amber)">⚠️ Butuh Kelas H (180°C)</span> — suhu ${v}°C di atas F (155°C).`;
+  } else {
+    res.innerHTML = `<span style="color:var(--rose)">❌ Melebihi H (180°C)</span> — suhu ${v}°C terlalu tinggi, butuh pendinginan atau redesign. Umur isolasi -50% tiap +10°C!`;
+  }
+}
+
+// ── APD SELECTOR (TASK8) ──
+const APD_MAP = {
+  panel:{helm:true,sarung:true,sepatu:true,arc:false, detail:'Panel 380V: Helm + Sarung VDE + Sepatu wajib. Arc suit opsional kecuali busbar terbuka / hubung singkat tinggi.'},
+  sutr:{helm:true,sarung:true,sepatu:true,arc:true, detail:'SUTR 20kV (Tiang): SEMUA wajib — Helm Class E 20kV + Sarung Kelas 2 + Sepatu + Arc Suit CAT 4 + harness.'},
+  lab:{helm:false,sarung:false,sepatu:false,arc:false, detail:'Lab 12V: APD minimal — cukup kacamata & alas isolasi. Helm/sarung/sepatu tidak wajib (tegangan rendah).'},
+  gardu:{helm:true,sarung:true,sepatu:true,arc:true, detail:'Gardu Induk: SEMUA wajib + prosedur LOTO ketat + grounding. Arc flash tinggi — pakai face shield & suit lengkap.'}
+};
+function selectAPD(scen){
+  const map = APD_MAP[scen];
+  if(!map) return;
+  document.querySelectorAll('#apd-chips .chip').forEach(c=>{ c.classList.toggle('on', c.dataset.scen===scen); });
+  document.querySelectorAll('.apd-item').forEach(el=>{
+    const k = el.dataset.apd;
+    const req = map[k];
+    el.style.opacity = req ? '1' : '0.35';
+    el.style.borderColor = req ? 'var(--accent)' : 'var(--line)';
+    el.style.background = req ? 'var(--accent-d)' : 'var(--bg3)';
+    const badge = el.querySelector('.apd-req');
+    if(badge){ badge.textContent = req ? '● WAJIB' : '○ Tidak perlu'; badge.style.color = req ? 'var(--green)' : 'var(--text3)'; }
+  });
+  const d = document.getElementById('apd-detail');
+  if(d) d.textContent = map.detail;
+}
+function quizAPD(){
+  const q = [
+    {q:'Kerja di SUTR 20kV butuh helm tahan berapa?', opts:['5kV','20kV','100V'], ans:1},
+    {q:'Sarung VDE untuk panel 380V wajib?', opts:['Ya','Tidak'], ans:0},
+    {q:'Lab 12V butuh arc suit?', opts:['Ya','Tidak'], ans:1}
+  ];
+  const pick = q[Math.floor(Math.random()*q.length)];
+  const a = prompt(`🦺 KUIS APD — ${pick.q}\n${pick.opts.map((o,i)=> `${i+1}. ${o}`).join('\n')}\n\nKetik nomor jawaban:`);
+  if(!a) return;
+  const idx = parseInt(a,10)-1;
+  const resEl = document.getElementById('apd-quiz-result');
+  if(idx===pick.ans){ if(resEl) resEl.textContent='✅ Benar!'; showToast('✅ Benar!'); }
+  else { if(resEl) resEl.textContent='❌ Salah, coba lagi'; showToast('❌ Salah — jawaban: '+pick.opts[pick.ans]); }
+  setTimeout(()=>{ if(resEl) resEl.textContent=''; }, 3000);
+}
+setTimeout(()=>selectAPD('panel'), 700);
+
+// ── 5 GOLDEN CHECKLIST (TASK7) ──
+function loadGolden(){
+  try{
+    const st = JSON.parse(localStorage.getItem('ed_k3_golden5')||'[false,false,false,false,false]');
+    document.querySelectorAll('#golden-list input[type="checkbox"]').forEach((cb,i)=>{ cb.checked=!!st[i]; cb.closest('label').style.background = st[i]? 'rgba(0,208,132,0.08)': 'var(--bg3)'; cb.closest('label').style.borderColor = st[i]? 'var(--green)':'var(--line)'; });
+    updateGoldenBar(st);
+  }catch(e){}
+}
+function toggleGolden(idx, checked){
+  let st;
+  try{ st=JSON.parse(localStorage.getItem('ed_k3_golden5')||'[false,false,false,false,false]'); }catch(e){ st=[false,false,false,false,false];}
+  st[idx]=checked;
+  localStorage.setItem('ed_k3_golden5', JSON.stringify(st));
+  const label = document.querySelectorAll('#golden-list .golden-item')[idx];
+  if(label){ label.style.background = checked? 'rgba(0,208,132,0.08)':'var(--bg3)'; label.style.borderColor = checked? 'var(--green)':'var(--line)'; }
+  updateGoldenBar(st);
+  if(st.every(Boolean)){ showToast('🛡️ 5 Aturan Emas LENGKAP — aman kerja, Kak! ✅'); if(window.ElektroDash) ElektroDash.addQuizScore(100); }
+}
+function updateGoldenBar(st){
+  const done = st.filter(Boolean).length;
+  const bar = document.getElementById('golden-bar');
+  const prog = document.getElementById('golden-progress');
+  const msg = document.getElementById('golden-msg');
+  if(bar) bar.style.width = (done/5*100)+'%';
+  if(prog) prog.textContent = `${done}/5 selesai`;
+  if(msg) msg.textContent = done===5? '✅ Semua dicentang — silakan mulai kerja dengan aman!' : 'Centang satu per satu sebelum kerja — tersimpan otomatis.';
+}
+function resetGolden(){
+  localStorage.setItem('ed_k3_golden5', JSON.stringify([false,false,false,false,false]));
+  loadGolden(); showToast('Checklist direset 🔄');
+}
+function exportK3Checklist(){
+  const st = JSON.parse(localStorage.getItem('ed_k3_golden5')||'[false,false,false,false,false]');
+  const txt = `Checklist 5 Aturan Emas — ElektroDict\n${st.map((v,i)=> `${i+1}. ${['Putuskan','Kunci LOTO','Verifikasi','Grounding','Proteksi'][i]} : ${v?'✅':'☐'}`).join('\n')}\nProgress: ${st.filter(Boolean).length}/5\n— Generated ${new Date().toLocaleString('id-ID')}`;
+  const blob = new Blob([txt], {type:'text/plain'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='checklist-5-aturan-emas.txt'; a.click(); URL.revokeObjectURL(a.href);
+  showToast('Checklist diunduh 📄');
+}
+setTimeout(loadGolden, 550);
+
+// ── FILTER & SEARCH (TASK9) ──
+function filterStandards(cat){
+  if(cat){
+    document.querySelectorAll('#std-filter .chip').forEach(c=> c.classList.toggle('on', c.dataset.filter===cat));
+    window._stdFilterCat = cat;
+  }
+  const c = window._stdFilterCat || 'semua';
+  const q = (document.getElementById('std-search')?.value||'').toLowerCase().trim();
+  document.querySelectorAll('.std-card, #std-golden').forEach(card=>{
+    const dc = (card.dataset.cat||'').toLowerCase();
+    const txt = card.textContent.toLowerCase();
+    const matchCat = (c==='semua') || dc===c || (c==='puil' && (dc==='puil'||txt.includes('puil')||txt.includes('kha')||txt.includes('mcb'))) || (c==='k3' && dc==='k3') || (c==='ip' && dc==='ip') || (c==='komponen' && dc==='komponen');
+    const matchQ = !q || txt.includes(q);
+    card.style.display = (matchCat && matchQ) ? '' : 'none';
+  });
+  // also filter static grid items without data-cat? keep visible if matches query
+  if(q){
+    document.querySelectorAll('.std-grid .std-card').forEach(card=>{
+      if(card.style.display==='none' && card.textContent.toLowerCase().includes(q)) card.style.display='';
+    });
+  }
+}
+
+// ── EXPORT PDF (TASK10) ──
+async function exportPUILPdf(){
+  const puil = _puilLast;
+  if(!puil){ showToast('Hitung PUIL dulu sebelum export 📐'); return; }
+  showToast('Menyiapkan PDF... 📄');
+  try{
+    await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js');
+    const {jsPDF} = window.jspdf;
+    const doc = new jsPDF({unit:'mm', format:'a4'});
+    doc.setFontSize(16); doc.text('Ringkasan PUIL 2011 — ElektroDict', 14, 18);
+    doc.setFontSize(10); doc.text(`Tanggal: ${new Date().toLocaleString('id-ID')}`, 14, 24);
+    doc.text(`Sistem: ${puil.sys==='3f'?'3 Fasa 380V':'1 Fasa 220V'}  |  Daya: ${puil.P} W`, 14, 30);
+    doc.text(`Arus beban: ${puil.I.toFixed(2)} A  |  KHA min: ${puil.khaMin.toFixed(2)} A`, 14, 36);
+    doc.text(`Kabel: ${puil.cable? puil.cable.mm+' mm² (KHA '+puil.cable.kha+'A)':'-'}`, 14, 42);
+    doc.text(`MCB: ${puil.mcb} A  |  ELCB: 30 mA (proteksi manusia)`, 14, 48);
+    doc.text(`Batas susut tegangan: 4% (PUIL Ps.2.3) — ukur dengan kalkulator drop`, 14, 56);
+    doc.setFontSize(9); doc.text('Catatan: instalasi wajib oleh tenaga ahli bersertifikat. Nilai KHA mengacu Tabel 7.3-1a PUIL 2011, metode B1 30°C.', 14, 66);
+    doc.text('5 Aturan Emas: Putuskan — Kunci LOTO — Verifikasi — Grounding — Proteksi area (EN 50110)', 14, 72);
+    doc.save(`PUIL-${puil.P}W-${puil.sys}.pdf`);
+    showToast('PDF diunduh ✅');
+  }catch(e){
+    showToast('Gagal buat PDF: '+e.message);
+    // fallback txt
+    exportK3Checklist();
+  }
 }
 
 // ═══════════════════════════════════════════════════════════
