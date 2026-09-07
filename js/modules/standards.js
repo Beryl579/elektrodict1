@@ -231,7 +231,7 @@ const ElektroStandards = {
         <div style="font-size:12px; color:var(--accent); font-family:var(--mono); margin-bottom:8px;">AWG ↔ mm²</div>
         <h3 style="font-size:18px; margin-bottom:12px;">🔢 KONVERTER AWG ↔ mm²</h3>
         <p style="color:var(--text2); font-size:13px; margin-bottom:14px;">Konversi American Wire Gauge ke luas penampang metrik + diameter & ampacity kasar.</p>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; align-items:end;">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; align-items:end; min-width:0;">
           <div class="puil-field" style="flex-direction:column; align-items:stretch;">
             <span class="puil-lbl" style="width:auto;">Pilih AWG</span>
             <select id="awg-select" class="puil-inp" onchange="ElektroStandards.convertAWG()">
@@ -243,7 +243,7 @@ const ElektroStandards = {
             <input id="awg-mm2-in" type="number" step="0.01" placeholder="mis. 2.5" class="puil-inp" oninput="ElektroStandards.convertFromMM2(this.value)">
           </div>
         </div>
-        <div style="margin-top:14px; padding:14px; background:var(--bg3); border:1px solid var(--line); border-radius:12px; text-align:center;">
+        <div style="margin-top:14px; padding:14px; background:var(--bg3); border:1px solid var(--line); border-radius:12px; text-align:center; overflow:hidden; min-width:0;">
           <div style="font-size:28px; font-weight:800; color:var(--accent); font-family:var(--mono);" id="awg-res-val">5.26</div>
           <div style="font-size:11px; color:var(--text3); font-family:var(--mono);">mm² — Luas Penampang</div>
           <div style="font-size:12px; color:var(--text2); margin-top:6px; font-family:var(--mono);" id="awg-res-extra">Ø 2.59 mm • ~30 A (kasar)</div>

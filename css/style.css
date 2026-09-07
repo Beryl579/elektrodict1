@@ -59,6 +59,8 @@
   --glow: 4px 4px 0 #FFEA00;
 }
 html{scroll-behavior:smooth}
+/* Pre-JS light theme applied via html class to prevent flash */
+html.light-pre body{background:#F5F0E8;color:#0A0A0A;}
 body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:100vh;overflow-x:hidden;transition:background .3s ease,color .3s ease}
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
@@ -1434,8 +1436,29 @@ body.light .mt-tip {
 }
 body.light .sk-diagram{filter:none}
 
-/* theme toggle button — DISABLED single light theme */
-#themeBtn{ display:none !important; }
+/* theme toggle button */
+.theme-toggle-btn{
+  width:34px; height:34px;
+  border-radius: var(--r2);
+  background: var(--bg3);
+  border: var(--nb-border);
+  box-shadow: var(--nb-shadow-sm);
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer;
+  color: var(--text);
+  flex-shrink:0;
+  margin-left:6px;
+  transition: transform .12s, box-shadow .12s;
+  line-height:1;
+}
+.theme-toggle-btn:hover{
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0 var(--accent);
+}
+.theme-toggle-btn:active{
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 var(--accent);
+}
 .theme-btn{
   width:34px; height:34px;
   border-radius: var(--r2);
@@ -3605,10 +3628,22 @@ body.fade-out {
 .puil-result .pr-hi{border-top:1px dashed var(--line2);margin-top:4px;padding-top:8px;}
 .puil-err{margin-top:12px;border-radius:12px;padding:14px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.3);color:var(--rose);font-size:13px;line-height:1.5;}
 .ip-digit-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+
+/* Fix visual overflow in IP Explorer & AWG Converter cards */
+.std-card{min-width:0;overflow:hidden;}
+.puil-inp{width:100%;max-width:100%;box-sizing:border-box;}
+#ip-preview,#awg-res-val{word-break:break-word;}
+#std-extra-awg .puil-field,
+#std-extra-awg > div[style*="grid"]{min-width:0;}
+
+/* Theme toggle button */
+#themeBtn:hover{border-color:var(--accent) !important;color:var(--accent) !important;}
+
 @media(max-width:480px){
   .puil-field{flex-direction:column;align-items:stretch;gap:5px;}
   .puil-lbl{width:auto;}
   .ip-digit-grid{grid-template-columns:1fr;}
+  #std-extra-awg > div[style*="grid"]{grid-template-columns:1fr !important;}
 }
 
 /* ── PUIL highlight & filter ── */
