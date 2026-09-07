@@ -3604,9 +3604,11 @@ body.fade-out {
 .puil-result .pr-big{font-size:15px;}
 .puil-result .pr-hi{border-top:1px dashed var(--line2);margin-top:4px;padding-top:8px;}
 .puil-err{margin-top:12px;border-radius:12px;padding:14px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.3);color:var(--rose);font-size:13px;line-height:1.5;}
+.ip-digit-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 @media(max-width:480px){
   .puil-field{flex-direction:column;align-items:stretch;gap:5px;}
   .puil-lbl{width:auto;}
+  .ip-digit-grid{grid-template-columns:1fr;}
 }
 
 /* ── PUIL highlight & filter ── */

@@ -2247,6 +2247,20 @@ function exportK3Checklist(){
   const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='checklist-5-aturan-emas.txt'; a.click(); URL.revokeObjectURL(a.href);
   showToast('Checklist diunduh 📄');
 }
+function openK3Video(id, title, channel){
+  const modal = document.getElementById('vidModal');
+  const frame = document.getElementById('vidFrame');
+  const titleEl = document.getElementById('vidModalTitle');
+  const channelEl = document.getElementById('vidModalChannel');
+  const ext = document.getElementById('vidExternal');
+  if(!modal||!frame) return;
+  if(titleEl) titleEl.textContent = title;
+  if(channelEl) channelEl.textContent = channel;
+  if(ext) ext.href = `https://www.youtube.com/watch?v=${id}`;
+  frame.src = `https://www.youtube.com/embed/${id}?autoplay=1&rel=0`;
+  modal.classList.add('on');
+  document.body.style.overflow='hidden';
+}
 setTimeout(loadGolden, 550);
 
 // ── FILTER & SEARCH (TASK9) ──
