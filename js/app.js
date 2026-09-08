@@ -358,6 +358,7 @@ function switchTab(t){
     }
   }, 60);
   if(t === 'toolkit' && window.Toolkit) window.Toolkit.initHub();
+  if(t === 'toolkit-reader' && window.Toolkit) window.Toolkit.initReader();
   if(t === 'toolkit-resizer' && window.Toolkit) window.Toolkit.initResizer();
   if(t === 'toolkit-cropper' && window.Toolkit) window.Toolkit.initCropper();
   if(t === 'toolkit-converter' && window.Toolkit) window.Toolkit.initConverter();

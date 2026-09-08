@@ -1,6 +1,6 @@
 /**
  * ElektroDict — Toolkit Module (FileKit port)
- * 6 alat client-side: Resizer, Cropper, Converter, Word→PDF, Merge, Split
+ * 7 alat client-side: Resizer, Cropper, Converter, Word→PDF, Merge, Split, Baca File AI (Qwen 3.6 27B Groq)
  * Semua proses 100% di browser, tidak upload server.
  */
 (function(){
@@ -15,7 +15,8 @@ const ICONS = {
   converter: '<path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/>',
   word2pdf: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/><line x1="10" x2="8" y1="9" y2="9"/>',
   merger: '<path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>',
-  splitter: '<rect x="3" y="3" width="8" height="18" rx="1"/><rect x="13" y="3" width="8" height="18" rx="1"/><line x1="12" x2="12" y1="8" y2="16"/>'
+  splitter: '<rect x="3" y="3" width="8" height="18" rx="1"/><rect x="13" y="3" width="8" height="18" rx="1"/><line x1="12" x2="12" y1="8" y2="16"/>',
+  aireader: '<path d="M12 7v14"/><path d="M16 7h.01"/><path d="M2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/><circle cx="12" cy="12" r="10"/>'
 };
 
 function svg(icon, size){
@@ -25,6 +26,7 @@ function svg(icon, size){
 
 // ── TOOL DEFINITIONS ──
 const TOOLS = [
+  { id:'toolkit-reader', label:'Baca File dengan AI', short:'Baca AI', icon:'aireader', color:'#B794F4', desc:'Upload TXT/PDF/DOCX — tanya AI Qwen 3.6 27B' },
   { id:'toolkit-resizer', label:'Image Resizer', short:'Resizer', icon:'resizer', color:'#FFDE59', desc:'Ubah dimensi gambar — preset IG, YT, HD, 4K' },
   { id:'toolkit-cropper', label:'Image Cropper', short:'Cropper', icon:'cropper', color:'#C1FF72', desc:'Pangkas dengan rasio 1:1, 4:3, 16:9, free' },
   { id:'toolkit-converter', label:'Format Converter', short:'Converter', icon:'converter', color:'#FF6B9D', desc:'PNG ↔ JPG ↔ WebP + kontrol kualitas' },
@@ -612,6 +614,124 @@ async function doSplit(){
 }
 function clearSplitter(){ splitFile=null; splitPages=0; splitResult=''; document.getElementById('split-drop').style.display='block'; document.getElementById('split-ctrls').style.display='none'; document.getElementById('split-result').innerHTML='<span class="toolkit-muted">Hasil split akan muncul di sini</span>'; }
 
+// ── BACA FILE DENGAN AI (Qwen 3.6 27B Groq) ──
+let readerFile=null, readerText='', readerMessages=[];
+async function extractReaderText(file){
+  const ext=file.name.split('.').pop().toLowerCase();
+  if(['txt','md','csv','json','log','js','ts','html','css','py'].includes(ext)){
+    return await file.text();
+  }
+  if(ext==='docx'){
+    await loadLib('https://cdn.jsdelivr.net/npm/mammoth@1.8.0/mammoth.browser.min.js').catch(()=> loadLib('https://unpkg.com/mammoth@1.8.0/mammoth.browser.min.js'));
+    const buf=await file.arrayBuffer();
+    const res=await window.mammoth.extractRawText({arrayBuffer: buf});
+    return res.value;
+  }
+  if(ext==='pdf'){
+    try{
+      if(!window.pdfjsLib){
+        await loadLib('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js');
+      }
+      const pdfjs=window.pdfjsLib;
+      pdfjs.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+      const buf=await file.arrayBuffer();
+      const pdf=await pdfjs.getDocument({data: buf}).promise;
+      let text='';
+      for(let i=1;i<=pdf.numPages;i++){
+        const page=await pdf.getPage(i);
+        const content=await page.getTextContent();
+        text+=content.items.map(it=> it.str).join(' ')+'\n\n';
+      }
+      return text;
+    }catch(e){
+      return `[PDF terdeteksi: ${file.name} — ekstraksi teks gagal, coba DOCX/TXT]`;
+    }
+  }
+  return await file.text().catch(()=> `[Tidak bisa baca ${file.name}]`);
+}
+function initReader(){
+  const c=document.getElementById('page-toolkit-reader');
+  if(!c || c.dataset.inited) return;
+  c.dataset.inited='1';
+  c.innerHTML=`
+    <div class="toolkit-wrap">
+      <button class="toolkit-back" onclick="switchTab('toolkit')">← Kembali ke Toolkit</button>
+      <div class="toolkit-tool-head"><div class="toolkit-tool-icon" style="background:#B794F4">${svg('aireader',24)}</div><div><h2>Baca File dengan AI</h2><p>Upload TXT/PDF/DOCX — tanya AI Qwen 3.6 27B (Groq)</p></div></div>
+      <div class="toolkit-privacy">🔒 File dibaca lokal, hanya teks yang dikirim ke AI — via ElektroAPI Groq</div>
+      <div id="reader-drop" class="toolkit-drop"><div style="font-size:36px">🤖</div><b>Drop file atau klik</b><span>TXT, MD, CSV, JSON, DOCX, PDF • maks 12K char</span><input id="reader-input" type="file" accept=".txt,.md,.csv,.json,.docx,.pdf,.log,.js,.ts" hidden></div>
+      <div id="reader-work" style="display:none">
+        <div class="toolkit-card-white"><div id="reader-info"></div><div id="reader-preview" style="max-height:160px;overflow:auto;border:2px solid #eee;padding:10px;font-size:12px;line-height:1.6;background:#f9f9f9;margin-top:10px;white-space:pre-wrap;word-break:break-word"></div><button id="reader-clear" class="toolkit-btn toolkit-btn-pink" style="width:100%;margin-top:10px">✕ Ganti File</button></div>
+        <div class="toolkit-card-white">
+          <b class="toolkit-small-title">Tanya tentang file ini</b>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px">
+            <button onclick="Toolkit.askReader('Ringkas file ini')" style="border:2px solid #000;padding:6px 10px;background:#fff;font-weight:700;font-size:11px;cursor:pointer">Ringkas</button>
+            <button onclick="Toolkit.askReader('Poin penting apa saja?')" style="border:2px solid #000;padding:6px 10px;background:#fff;font-weight:700;font-size:11px;cursor:pointer">Poin Penting</button>
+            <button onclick="Toolkit.askReader('Ada error / inkonsistensi?')" style="border:2px solid #000;padding:6px 10px;background:#fff;font-weight:700;font-size:11px;cursor:pointer">Cek Error</button>
+            <button onclick="Toolkit.askReader('Jelaskan untuk pemula')" style="border:2px solid #000;padding:6px 10px;background:#fff;font-weight:700;font-size:11px;cursor:pointer">Jelaskan Pemula</button>
+          </div>
+          <div style="display:flex;gap:8px"><input id="reader-q" type="text" placeholder="Ketik pertanyaan..." class="toolkit-input" style="flex:1"><button id="reader-send" class="toolkit-btn toolkit-btn-yellow" style="flex:none">Kirim</button></div>
+        </div>
+        <div class="toolkit-result" id="reader-chat" style="min-height:260px;align-items:stretch;justify-content:flex-start;text-align:left"><span class="toolkit-muted">Jawaban AI (Qwen 3.6 27B) akan muncul di sini</span></div>
+      </div>
+    </div>
+  `;
+  const drop=document.getElementById('reader-drop'), inp=document.getElementById('reader-input');
+  drop.addEventListener('click',()=> inp.click());
+  drop.addEventListener('dragover',e=>{e.preventDefault(); drop.classList.add('drag');});
+  drop.addEventListener('dragleave',()=> drop.classList.remove('drag'));
+  drop.addEventListener('drop',e=>{e.preventDefault(); drop.classList.remove('drag'); const f=e.dataTransfer.files[0]; if(f) handleReaderFile(f);});
+  inp.addEventListener('change',e=>{ const f=e.target.files[0]; if(f) handleReaderFile(f);});
+  document.getElementById('reader-clear').addEventListener('click', clearReader);
+  document.getElementById('reader-send').addEventListener('click', ()=> askReader());
+  document.getElementById('reader-q').addEventListener('keydown',e=>{ if(e.key==='Enter') askReader(); });
+}
+async function handleReaderFile(f){
+  readerFile=f;
+  document.getElementById('reader-drop').style.display='none';
+  document.getElementById('reader-work').style.display='block';
+  document.getElementById('reader-info').innerHTML=`<b>${f.name}</b><br><span style="font-size:12px;color:#666">${fmtSize(f.size)} • memuat...</span>`;
+  const text=await extractReaderText(f);
+  readerText=text.slice(0,12000);
+  document.getElementById('reader-preview').textContent=readerText.slice(0,800)+(readerText.length>800?'…':'');
+  document.getElementById('reader-info').innerHTML=`<b>${f.name}</b><br><span style="font-size:12px;color:#666">${fmtSize(f.size)} • ${readerText.length} chars</span>`;
+  readerMessages=[];
+  document.getElementById('reader-chat').innerHTML='<span class="toolkit-muted">Siap — ketik pertanyaan atau pilih preset di atas</span>';
+}
+async function askReader(q){
+  const input=document.getElementById('reader-q');
+  const prompt=(q || (input? input.value : '') || '').trim();
+  if(!prompt || !readerText) return;
+  if(input) input.value='';
+  const chat=document.getElementById('reader-chat');
+  // append user
+  readerMessages.push({role:'user', content: prompt});
+  const uDiv=document.createElement('div'); uDiv.style.cssText='align-self:flex-start;background:#FFEA00;border:2px solid #000;padding:10px;margin-bottom:8px;font-size:13px;font-weight:600;width:100%'; uDiv.innerHTML=`<div style="font-size:10px;font-weight:800;margin-bottom:4px">KAMU</div>${prompt}`; 
+  if(chat.querySelector('.toolkit-muted')) chat.innerHTML='';
+  chat.appendChild(uDiv);
+  const loading=document.createElement('div'); loading.textContent='⏳ Qwen 3.6 27B sedang membaca file...'; loading.style.cssText='background:#fff;border:2px solid #000;padding:10px;font-size:13px;width:100%;margin-bottom:8px'; loading.className='reader-loading'; chat.appendChild(loading);
+  chat.scrollTop=chat.scrollHeight;
+  try{
+    const sysPrompt=`Konteks file "${readerFile.name}":\n\n${readerText.slice(0,8000)}\n\nPertanyaan: ${prompt}\n\nJawab dalam bahasa Indonesia, ringkas, jelas, gunakan markdown jika perlu. Jika file berisi kode, jelaskan baris penting.`;
+    let answer='';
+    if(window.ElektroAPI && window.ElektroAPI.chat){
+      const data=await window.ElektroAPI.chat([{role:'user', content: sysPrompt}], {temperature:0.3, max_tokens:2048});
+      answer=(data.choices?.[0]?.message?.content || '').replace(/<think>[\s\S]*?<\/think>/gi,'').trim();
+    } else {
+      throw new Error('ElektroAPI tidak tersedia — buka via ElektroDict (Vercel) untuk pakai Groq proxy');
+    }
+    if(!answer) answer='(AI tidak memberi jawaban)';
+    loading.remove();
+    const aDiv=document.createElement('div'); aDiv.style.cssText='background:#fff;border:2px solid #000;padding:10px;margin-bottom:8px;font-size:13px;line-height:1.6;white-space:pre-wrap;word-break:break-word'; aDiv.innerHTML=`<div style="font-size:10px;font-weight:800;margin-bottom:4px">QWEN 3.6 27B</div>${answer.replace(/</g,'&lt;')}`;
+    chat.appendChild(aDiv);
+    readerMessages.push({role:'assistant', content: answer});
+  }catch(e){
+    loading.textContent='⚠️ Error: '+e.message;
+    loading.style.background='#FFE0E0';
+  }
+  chat.scrollTop=chat.scrollHeight;
+}
+function clearReader(){ readerFile=null; readerText=''; readerMessages=[]; document.getElementById('reader-drop').style.display='block'; document.getElementById('reader-work').style.display='none'; document.getElementById('reader-chat').innerHTML='<span class="toolkit-muted">Jawaban AI (Qwen 3.6 27B) akan muncul di sini</span>'; }
+
 // ── INIT HUB ──
 function initHub(){
   const c=document.getElementById('page-toolkit');
@@ -623,8 +743,8 @@ function initHub(){
 
 // ── PUBLIC API ──
 window.Toolkit={
-  initHub, initResizer, initCropper, initConverter, initWord2Pdf, initMerger, initSplitter,
-  applyResizerPreset, setCropAspect, removeMerger, clearMerger
+  initHub, initReader, initResizer, initCropper, initConverter, initWord2Pdf, initMerger, initSplitter,
+  applyResizerPreset, setCropAspect, removeMerger, clearMerger, askReader
 };
 
 // Auto-init hub when page-toolkit becomes visible (via switchTab)
