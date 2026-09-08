@@ -2035,6 +2035,19 @@ body.light .led-bulb.on .led-val { color:#fff; }
   border: 1px solid var(--line);
 }
 
+/* ── MARKDOWN ELEMENTS INSIDE .bbl (ElektroBot chat) ── */
+.bbl { overflow: hidden; }
+.bbl ul, .bbl ol { padding-left: 1.4em; margin: 6px 0; }
+.bbl li { margin-bottom: 3px; line-height: 1.55; }
+.bbl p { margin: 4px 0; }
+.bbl h1, .bbl h2, .bbl h3, .bbl h4 { margin: 10px 0 4px; font-family: var(--font-h, inherit); font-weight: 700; }
+.bbl code { background: var(--bg4, rgba(0,0,0,.25)); padding: 1px 5px; border-radius: 3px; font-size: .88em; font-family: var(--mono); }
+.bbl pre { background: var(--bg4, rgba(0,0,0,.25)); border: 1px solid var(--line); padding: 10px; overflow-x: auto; font-size: 12px; margin: 6px 0; border-radius: 4px; }
+.bbl pre code { background: none; padding: 0; }
+.bbl blockquote { border-left: 3px solid var(--accent); padding-left: 10px; margin: 6px 0; color: var(--text2); font-style: italic; }
+.bbl strong { font-weight: 700; }
+.bbl em { font-style: italic; }
+
 /* ── MARKDOWN TABLE STYLING ── */
 .bbl table {
   width: 100%;
@@ -2450,7 +2463,8 @@ body.fade-out {
 /* ── Markdown & Math Chat Enhancements ── */
 .chat-bubble p { margin: 0; }
 .chat-bubble p + p { margin-top: 10px; }
-.chat-bubble ul, .chat-bubble ol { margin: 10px 0; padding-left: 20px; }
+.chat-bubble ul, .chat-bubble ol { margin: 10px 0; padding-left: 1.4em; }
+.chat-bubble { overflow: hidden; }
 .chat-bubble li { margin-bottom: 4px; }
 .chat-bubble code {
   background: rgba(0,0,0,0.3);
@@ -4597,7 +4611,7 @@ body.light .dash-hero-tagline{ background:rgba(10,10,10,.06); border-color:var(-
 }
 
 /* -----------------------------------------------------------
-   TOOLKIT FILEKIT � 6 alat client-side (neobrutalism)
+   TOOLKIT FILEKIT � 6 alat client-side (neobrutalism)
    ----------------------------------------------------------- */
 .toolkit-wrap{ max-width:860px; margin:0 auto; padding:20px 16px 80px; display:flex; flex-direction:column; gap:18px; }
 @media(max-width:767px){ .toolkit-wrap{ padding:16px 12px 90px; gap:14px; } }
@@ -4660,3 +4674,42 @@ body.light .dash-hero-tagline{ background:rgba(10,10,10,.06); border-color:var(-
 .toolkit-crop-area{ position:relative; width:100%; height:340px; background:var(--bg); border:var(--nb-border); border-radius:var(--r); overflow:hidden; box-shadow:var(--nb-shadow-dark); }
 .toolkit-crop-area img{ width:100%; height:100%; object-fit:contain; }
 .toolkit-crop-box{ position:absolute; border:2px dashed #FFEA00; background:rgba(255,234,0,.15); box-shadow:0 0 0 9999px rgba(0,0,0,.3); cursor:move; }
+
+/* ── Reader chat: markdown rendered inside answer bubble ── */
+#reader-chat > div {
+  overflow: hidden;
+}
+#reader-chat > div ul,
+#reader-chat > div ol {
+  padding-left: 1.4em;
+  margin: 6px 0;
+}
+#reader-chat > div li {
+  margin-bottom: 3px;
+  line-height: 1.55;
+}
+#reader-chat > div h1,
+#reader-chat > div h2,
+#reader-chat > div h3,
+#reader-chat > div h4 {
+  margin: 10px 0 4px;
+  font-family: var(--font-h, inherit);
+}
+#reader-chat > div p {
+  margin: 4px 0;
+}
+#reader-chat > div code {
+  background: var(--bg3, #f3f3f3);
+  padding: 1px 4px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-family: var(--mono, monospace);
+}
+#reader-chat > div pre {
+  background: var(--bg3, #f3f3f3);
+  border: 1px solid var(--line, #ddd);
+  padding: 10px;
+  overflow-x: auto;
+  font-size: 11px;
+  margin: 6px 0;
+}

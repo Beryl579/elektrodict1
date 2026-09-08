@@ -344,6 +344,11 @@ function switchTab(t){
   document.querySelectorAll('.bnav-item').forEach(b=>b.classList.remove('on'));
   const bn=document.getElementById('bnav-'+t);
   if(bn) bn.classList.add('on');
+  // toolkit sub-routes fallback ke hub
+  if(t && t.startsWith('toolkit-')){
+    const hub=document.getElementById('bnav-toolkit');
+    if(hub) hub.classList.add('on');
+  }
   // juga highlight kedua tombol dashboard jika duplicate id (fallback)
   if(t === 'dashboard'){
     document.querySelectorAll('[id="bnav-dashboard"]').forEach(el=>el.classList.add('on'));

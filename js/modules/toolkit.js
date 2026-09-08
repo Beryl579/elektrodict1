@@ -79,6 +79,11 @@ function downloadBlob(blob, name){
   const a=document.createElement('a'); a.href=url; a.download=name; a.click();
   setTimeout(()=>URL.revokeObjectURL(url), 1000);
 }
+function _revoke(url){ try{ if(url) URL.revokeObjectURL(url); }catch(e){} }
+function _esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function _isImage(f){ return f && ((f.type && f.type.startsWith('image/')) || /\.(png|jpe?g|webp|gif|bmp)$/i.test(f.name||'')); }
+function _isPdf(f){ return f && ((f.type==='application/pdf') || /\.pdf$/i.test(f.name||'')); }
+function _isDocx(f){ return f && (f.name||'').toLowerCase().endsWith('.docx'); }
 function loadLib(url){
   // use global loadScript if exists, else dynamic
   if(typeof loadScript==='function') return loadScript(url);
@@ -156,7 +161,9 @@ function initResizer(){
   document.getElementById('resizer-clear').addEventListener('click', clearResizer);
 }
 function handleResizerFile(f){
-  if(!f.type.startsWith('image/')) return;
+  if(!_isImage(f)){ showToast && showToast('Hanya gambar (JPG/PNG/WebP)'); return; }
+  _revoke(resizerState.preview);
+  _revoke(resizerState.result);
   resizerState.file=f;
   const url=URL.createObjectURL(f);
   resizerState.preview=url;
@@ -166,14 +173,16 @@ function handleResizerFile(f){
   const img=new Image(); img.onload=()=>{ resizerState.w=img.naturalWidth; resizerState.h=img.naturalHeight; resizerState.ratio=img.naturalWidth/img.naturalHeight; document.getElementById('resizer-w').value=resizerState.w; document.getElementById('resizer-h').value=resizerState.h; }; img.src=url;
   document.getElementById('resizer-result').innerHTML='<span class="toolkit-muted">Klik RESIZE untuk proses</span><canvas id="resizer-canvas" hidden></canvas>';
 }
-function handleResizerW(v){ resizerState.w=v; if(resizerState.keep && resizerState.ratio) { resizerState.h=Math.round(v/resizerState.ratio); document.getElementById('resizer-h').value=resizerState.h; } }
-function handleResizerH(v){ resizerState.h=v; if(resizerState.keep && resizerState.ratio) { resizerState.w=Math.round(v*resizerState.ratio); document.getElementById('resizer-w').value=resizerState.w; } }
+function handleResizerW(v){ v=Math.max(1, Math.min(8000, Number(v)||1)); resizerState.w=v; if(resizerState.keep && resizerState.ratio) { resizerState.h=Math.round(v/resizerState.ratio); document.getElementById('resizer-h').value=resizerState.h; } }
+function handleResizerH(v){ v=Math.max(1, Math.min(8000, Number(v)||1)); resizerState.h=v; if(resizerState.keep && resizerState.ratio) { resizerState.w=Math.round(v*resizerState.ratio); document.getElementById('resizer-w').value=resizerState.w; } }
 function applyResizerPreset(w,h){ resizerState.w=w; resizerState.h=h; resizerState.keep=false; document.getElementById('resizer-w').value=w; document.getElementById('resizer-h').value=h; document.getElementById('resizer-keep').checked=false; }
 function doResizer(){
   const img=new Image(); img.onload=()=>{
     const canvas=document.getElementById('resizer-canvas'); canvas.width=resizerState.w; canvas.height=resizerState.h;
     const ctx=canvas.getContext('2d'); ctx.imageSmoothingEnabled=true; ctx.imageSmoothingQuality='high'; ctx.drawImage(img,0,0,resizerState.w,resizerState.h);
     canvas.toBlob(blob=>{
+      if(!blob){ showToast && showToast('Gagal proses gambar'); setProcessing && setProcessing(false); return; }
+      _revoke(resizerState.result);
       const url=URL.createObjectURL(blob); resizerState.result=url;
       document.getElementById('resizer-result').innerHTML=`<img src="${url}" alt="result" style="max-height:240px;object-fit:contain;margin-bottom:12px"><div class="toolkit-outmeta">${resizerState.w} × ${resizerState.h}px</div><button class="toolkit-btn toolkit-btn-green" id="resizer-dl">⬇ DOWNLOAD</button><canvas id="resizer-canvas" hidden></canvas>`;
       document.getElementById('resizer-dl').addEventListener('click', ()=>{
@@ -182,7 +191,7 @@ function doResizer(){
     }, resizerState.file.type, 0.95);
   }; img.src=resizerState.preview;
 }
-function clearResizer(){ resizerState={ file:null, preview:'', result:'', w:800, h:600, ratio:1, keep:true }; document.getElementById('resizer-controls').style.display='none'; document.getElementById('resizer-drop').style.display='block'; document.getElementById('resizer-result').innerHTML='<span class="toolkit-muted">Hasil akan muncul di sini</span><canvas id="resizer-canvas" hidden></canvas>'; }
+function clearResizer(){ _revoke(resizerState.preview); _revoke(resizerState.result); resizerState={ file:null, preview:'', result:'', w:800, h:600, ratio:1, keep:true }; document.getElementById('resizer-controls').style.display='none'; document.getElementById('resizer-drop').style.display='block'; document.getElementById('resizer-result').innerHTML='<span class="toolkit-muted">Hasil akan muncul di sini</span><canvas id="resizer-canvas" hidden></canvas>'; }
 
 // ── CROPPER (simple draggable overlay, no external lib) ──
 let cropState={ file:null, preview:'', result:'', aspect:0, zoom:1, x:0, y:0, imgW:0, imgH:0, drag:false, sx:0, sy:0, ox:0, oy:0 };
@@ -209,8 +218,12 @@ function initCropper(){
           </div>
         </div>
         <div class="toolkit-crop-area" id="crop-area">
-          <img id="crop-img" alt="crop">
+          <img id="crop-img" alt="crop" style="transition:transform 0.1s">
           <div id="crop-box" class="toolkit-crop-box"></div>
+        </div>
+        <div class="toolkit-card-white">
+          <label class="toolkit-small-title">ZOOM: <span id="crop-zoom-val">100</span>%</label>
+          <input id="crop-zoom" type="range" min="1" max="3" step="0.05" value="1" style="width:100%">
         </div>
         <div class="toolkit-actions" style="margin-top:12px">
           <button id="crop-do" class="toolkit-btn toolkit-btn-yellow">✂️ CROP IMAGE</button>
@@ -229,9 +242,19 @@ function initCropper(){
   inp.addEventListener('change',e=>{ const f=e.target.files[0]; if(f) handleCropperFile(f);});
   document.getElementById('crop-do').addEventListener('click', doCrop);
   document.getElementById('crop-clear').addEventListener('click', clearCropper);
+  const zoomInput=document.getElementById('crop-zoom');
+  if(zoomInput){
+    zoomInput.addEventListener('input',e=>{
+      cropState.zoom=Number(e.target.value);
+      document.getElementById('crop-zoom-val').textContent=Math.round(cropState.zoom*100);
+      const img=document.getElementById('crop-img');
+      if(img) img.style.transform=`scale(${cropState.zoom})`;
+    });
+  }
 }
 function handleCropperFile(f){
-  if(!f.type.startsWith('image/')) return;
+  if(!_isImage(f)){ showToast && showToast('Hanya gambar (JPG/PNG/WebP)'); return; }
+  _revoke(cropState.preview);
   cropState.file=f; cropState.preview=URL.createObjectURL(f);
   document.getElementById('cropper-drop').style.display='none';
   document.getElementById('cropper-work').style.display='block';
@@ -259,9 +282,12 @@ function updateCropBox(){
   const box=document.getElementById('crop-box'); if(!box) return;
   box.style.left=cropState.x+'px'; box.style.top=cropState.y+'px'; box.style.width=cropState.bw+'px'; box.style.height=cropState.bh+'px';
 }
+let _cropDragInited=false;
 function initCropDrag(){
   const box=document.getElementById('crop-box'); const area=document.getElementById('crop-area');
   if(!box||!area) return;
+  if(_cropDragInited) return;
+  _cropDragInited=true;
   let dragging=false;
   box.addEventListener('mousedown',e=>{dragging=true; cropState.sx=e.clientX; cropState.sy=e.clientY; cropState.ox=cropState.x; cropState.oy=cropState.y; e.preventDefault();});
   window.addEventListener('mousemove',e=>{
@@ -275,14 +301,14 @@ function initCropDrag(){
   window.addEventListener('mouseup',()=> dragging=false);
   // touch
   box.addEventListener('touchstart',e=>{ dragging=true; cropState.sx=e.touches[0].clientX; cropState.sy=e.touches[0].clientY; cropState.ox=cropState.x; cropState.oy=cropState.y; });
-  window.addEventListener('touchmove',e=>{ if(!dragging) return; const dx=e.touches[0].clientX-cropState.sx, dy=e.touches[0].clientY-cropState.sy; const rect=area.getBoundingClientRect(); cropState.x=Math.max(0, Math.min(rect.width-cropState.bw, cropState.ox+dx)); cropState.y=Math.max(0, Math.min(rect.height-cropState.bh, cropState.oy+dy)); updateCropBox(); });
+  window.addEventListener('touchmove',e=>{ if(!dragging) return; const dx=e.touches[0].clientX-cropState.sx, dy=e.touches[0].clientY-cropState.sy; const rect=area.getBoundingClientRect(); cropState.x=Math.max(0, Math.min(rect.width-cropState.bw, cropState.ox+dx)); cropState.y=Math.max(0, Math.min(rect.height-cropState.bh, cropState.oy+dy)); updateCropBox(); }, {passive:false});
   window.addEventListener('touchend',()=> dragging=false);
 }
 function doCrop(){
   const img=document.getElementById('crop-img'); const area=document.getElementById('crop-area');
   if(!img||!area) return;
-  const rect=area.getBoundingClientRect();
-  const scaleX=cropState.imgW/rect.width; const scaleY=cropState.imgH/rect.height;
+  const imgRect=document.getElementById('crop-img').getBoundingClientRect();
+  const scaleX=cropState.imgW/imgRect.width; const scaleY=cropState.imgH/imgRect.height;
   const sx=cropState.x*scaleX, sy=cropState.y*scaleY, sw=cropState.bw*scaleX, sh=cropState.bh*scaleY;
   const canvas=document.createElement('canvas'); canvas.width=sw; canvas.height=sh;
   const ctx=canvas.getContext('2d');
@@ -295,7 +321,7 @@ function doCrop(){
     }, 'image/png');
   }; tmp.src=cropState.preview;
 }
-function clearCropper(){ cropState={ file:null, preview:'', result:'', aspect:0, zoom:1, x:0, y:0, imgW:0, imgH:0 }; document.getElementById('cropper-drop').style.display='block'; document.getElementById('cropper-work').style.display='none'; }
+function clearCropper(){ _revoke(cropState.preview); cropState={ file:null, preview:'', result:'', aspect:0, zoom:1, x:0, y:0, imgW:0, imgH:0 }; document.getElementById('cropper-drop').style.display='block'; document.getElementById('cropper-work').style.display='none'; }
 
 // ── CONVERTER ──
 let convState={ file:null, preview:'', result:'', fmt:'image/webp', q:85, orig:0, rsize:0 };
@@ -334,7 +360,8 @@ function initConverter(){
   document.getElementById('conv-clear').addEventListener('click', clearConv);
 }
 function handleConvFile(f){
-  if(!f.type.startsWith('image/')) return;
+  if(!_isImage(f)){ showToast && showToast('Hanya gambar (JPG/PNG/WebP)'); return; }
+  _revoke(convState.preview); _revoke(convState.result);
   convState.file=f; convState.orig=f.size; convState.preview=URL.createObjectURL(f);
   document.getElementById('conv-preview').src=convState.preview;
   document.getElementById('conv-orig').textContent=`Original: ${fmtSize(f.size)} (${f.type})`;
@@ -343,9 +370,13 @@ function handleConvFile(f){
 function doConv(){
   const img=new Image(); img.onload=()=>{
     const canvas=document.createElement('canvas'); canvas.width=img.naturalWidth; canvas.height=img.naturalHeight;
-    const ctx=canvas.getContext('2d'); ctx.drawImage(img,0,0);
+    const ctx=canvas.getContext('2d');
+      if(convState.fmt==='image/jpeg'){ ctx.fillStyle='#fff'; ctx.fillRect(0,0,canvas.width,canvas.height); }
+      ctx.drawImage(img,0,0);
     canvas.toBlob(blob=>{
-      convState.rsize=blob.size; const url=URL.createObjectURL(blob);
+      if(!blob){ showToast && showToast('Format tidak didukung browser ini'); return; }
+      _revoke(convState.result);
+      convState.rsize=blob.size;
       const saving=Math.round((convState.orig - blob.size)/convState.orig*100);
       const color=saving>0?'#C1FF72':'#FF6B9D';
       document.getElementById('conv-result').innerHTML=`
@@ -364,7 +395,7 @@ function doConv(){
     }, convState.fmt, convState.q/100);
   }; img.src=convState.preview;
 }
-function clearConv(){ convState={ file:null, preview:'', result:'', fmt:'image/webp', q:85, orig:0, rsize:0 }; document.getElementById('conv-ctrls').style.display='none'; document.getElementById('conv-drop').style.display='block'; document.getElementById('conv-result').innerHTML='<span class="toolkit-muted">Hasil konversi akan muncul di sini</span>'; }
+function clearConv(){ _revoke(convState.preview); _revoke(convState.result); convState={ file:null, preview:'', result:'', fmt:'image/webp', q:85, orig:0, rsize:0 }; document.getElementById('conv-ctrls').style.display='none'; document.getElementById('conv-drop').style.display='block'; document.getElementById('conv-result').innerHTML='<span class="toolkit-muted">Hasil konversi akan muncul di sini</span>'; }
 
 // ── WORD TO PDF ──
 let wordState={ file:null, result:'' };
@@ -400,7 +431,7 @@ function initWord2Pdf(){
   document.getElementById('word-clear').addEventListener('click', clearWord);
 }
 function handleWordFile(f){
-  if(!f.name.endsWith('.docx')){ alert('Hanya .docx'); return; }
+  if(!_isDocx(f)){ showToast && showToast('Hanya .docx'); return; }
   wordState.file=f; document.getElementById('word-drop').style.display='none'; document.getElementById('word-ctrls').style.display='block';
   document.getElementById('word-info').innerHTML=`<b>${f.name}</b><br><span style="font-size:12px;color:#666">${fmtSize(f.size)}</span>`;
 }
@@ -422,13 +453,14 @@ async function doWord(){
     let y=m; const lh=6;
     for(let i=0;i<lines.length;i++){ if(y+lh>H-m){ pdf.addPage(); y=m; } pdf.text(lines[i], m, y); y+=lh; }
     document.body.removeChild(div);
+    _revoke(wordState.result);
     const blob=pdf.output('blob'); const url=URL.createObjectURL(blob); wordState.result=url;
     document.getElementById('word-result').innerHTML=`<div style="font-size:48px">✅</div><b>Conversion Complete!</b><p style="font-size:13px;color:#666;margin:8px 0">Siap download</p><button class="toolkit-btn toolkit-btn-green" id="word-dl">⬇ DOWNLOAD PDF</button>`;
     document.getElementById('word-dl').onclick=()=>{ const a=document.createElement('a'); a.href=url; a.download=wordState.file.name.replace('.docx','.pdf'); a.click(); };
   }catch(e){ console.error(e); alert('Error: '+e.message); }
   btn.textContent='📄 CONVERT TO PDF'; btn.disabled=false;
 }
-function clearWord(){ wordState={ file:null, result:'' }; document.getElementById('word-drop').style.display='block'; document.getElementById('word-ctrls').style.display='none'; document.getElementById('word-result').innerHTML='<span class="toolkit-muted">Hasil PDF akan muncul di sini</span>'; }
+function clearWord(){ _revoke(wordState.result); wordState={ file:null, result:'' }; document.getElementById('word-drop').style.display='block'; document.getElementById('word-ctrls').style.display='none'; document.getElementById('word-result').innerHTML='<span class="toolkit-muted">Hasil PDF akan muncul di sini</span>'; }
 
 // ── PDF MERGER ──
 let mergerFiles=[]; let mergerResult='';
@@ -462,11 +494,13 @@ async function initMerger(){
 async function handleMergeFiles(list){
   await loadLib('https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js').catch(()=> loadLib('https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js'));
   for(let i=0;i<list.length;i++){
-    const f=list[i]; if(f.type!=='application/pdf') continue;
+    const f=list[i]; if(!_isPdf(f)) continue;
     const buf=await f.arrayBuffer(); const pdf=await PDFLib.PDFDocument.load(buf);
     mergerFiles.push({ id:`${f.name}-${Date.now()}-${Math.random()}`, file:f, name:f.name, pages:pdf.getPageCount() });
   }
   renderMergeList();
+  // reset input to allow re-select same file
+  try{ document.getElementById('merge-input').value=''; }catch(e){}
 }
 function renderMergeList(){
   const el=document.getElementById('merge-list');
@@ -475,22 +509,23 @@ function renderMergeList(){
   const total=mergerFiles.reduce((s,f)=> s+f.pages,0);
   el.innerHTML=`<div style="display:flex;justify-content:space-between;margin-bottom:8px"><b>Files (${mergerFiles.length}) — ${total} pages</b><button onclick="Toolkit.clearMerger()" style="font-size:12px;color:#e11">Clear All</button></div>` + mergerFiles.map((f,i)=>`
     <div draggable="true" data-idx="${i}" class="toolkit-file-item" style="cursor:grab">
-      <span>☰</span><b style="flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${i+1}. ${f.name}</b><span style="font-size:11px;background:#eee;border:1px solid #000;padding:2px 6px">${f.pages}p</span><button onclick="Toolkit.removeMerger('${f.id}')" style="color:#e11;font-weight:700">✕</button>
+      <span>☰</span><b style="flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${i+1}. ${_esc(f.name)}</b><span style="font-size:11px;background:#eee;border:1px solid #000;padding:2px 6px">${f.pages}p</span><button onclick="Toolkit.removeMerger('${f.id}')" style="color:#e11;font-weight:700">✕</button>
     </div>
   `).join('');
   // drag reorder
   el.querySelectorAll('.toolkit-file-item').forEach(item=>{
-    item.addEventListener('dragstart',e=> e.dataTransfer.setData('idx', item.dataset.idx));
+    item.addEventListener('dragstart',e=>{ e.dataTransfer.effectAllowed='move'; e.dataTransfer.setData('text/plain', item.dataset.idx); });
     item.addEventListener('dragover',e=> e.preventDefault());
     item.addEventListener('drop',e=>{
-      const from=Number(e.dataTransfer.getData('idx')), to=Number(item.dataset.idx);
+      e.preventDefault();
+      const from=Number(e.dataTransfer.getData('text/plain')||e.dataTransfer.getData('idx')), to=Number(item.dataset.idx);
       if(from===to) return;
       const [moved]=mergerFiles.splice(from,1); mergerFiles.splice(to,0,moved); renderMergeList();
     });
   });
 }
 function removeMerger(id){ mergerFiles=mergerFiles.filter(f=> f.id!==id); renderMergeList(); }
-function clearMerger(){ mergerFiles=[]; renderMergeList(); document.getElementById('merge-result').innerHTML='<span class="toolkit-muted">Hasil gabungan akan muncul di sini</span>'; }
+function clearMerger(){ _revoke(mergerResult); mergerResult=''; mergerFiles=[]; renderMergeList(); document.getElementById('merge-result').innerHTML='<span class="toolkit-muted">Hasil gabungan akan muncul di sini</span>'; }
 async function doMerge(){
   if(mergerFiles.length<2){ alert('Minimal 2 PDF'); return; }
   const btn=document.getElementById('merge-do'); btn.textContent='⏳ Merging...'; btn.disabled=true;
@@ -501,7 +536,7 @@ async function doMerge(){
       const buf=await f.file.arrayBuffer(); const pdf=await PDFLib.PDFDocument.load(buf);
       const pages=await merged.copyPages(pdf, pdf.getPageIndices()); pages.forEach(p=> merged.addPage(p));
     }
-    const bytes=await merged.save(); const blob=new Blob([bytes],{type:'application/pdf'}); const url=URL.createObjectURL(blob); mergerResult=url;
+    const bytes=await merged.save(); const blob=new Blob([bytes],{type:'application/pdf'}); _revoke(mergerResult); const url=URL.createObjectURL(blob); mergerResult=url;
     document.getElementById('merge-result').innerHTML=`<div style="font-size:48px">✅</div><b>Merge Complete!</b><p style="font-size:13px;color:#666">${mergerFiles.length} files → ${mergerFiles.reduce((s,f)=>s+f.pages,0)} pages</p><button class="toolkit-btn toolkit-btn-green" id="merge-dl">⬇ DOWNLOAD MERGED PDF</button>`;
     document.getElementById('merge-dl').onclick=()=> downloadBlob(blob,'merged.pdf');
   }catch(e){ alert('Error: '+e.message); }
@@ -553,12 +588,13 @@ function initSplitter(){
 }
 function setSplitMode(m){ splitMode=m; document.getElementById('split-range-btn').classList.toggle('on', m==='range'); document.getElementById('split-each-btn').classList.toggle('on', m==='each'); document.getElementById('split-range-wrap').style.display=m==='range'?'block':'none'; document.getElementById('split-each-hint').style.display=m==='each'?'block':'none'; }
 async function handleSplitFile(f){
-  if(f.type!=='application/pdf'){ alert('Hanya PDF'); return; }
+  if(!_isPdf(f)){ showToast && showToast('Hanya PDF'); return; }
   await loadLib('https://unpkg.com/pdf-lib@1.17.1/dist/pdf-lib.min.js').catch(()=> loadLib('https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js'));
   const buf=await f.arrayBuffer(); const pdf=await PDFLib.PDFDocument.load(buf);
   splitFile=f; splitPages=pdf.getPageCount();
   document.getElementById('split-drop').style.display='none'; document.getElementById('split-ctrls').style.display='block';
-  document.getElementById('split-info').innerHTML=`<b>${f.name}</b><br><span style="font-size:12px;color:#666">${splitPages} pages • ${fmtSize(f.size)}</span>`;
+  try{ document.getElementById('split-input').value=''; }catch(e){}
+  document.getElementById('split-info').innerHTML=`<b>${_esc(f.name)}</b><br><span style="font-size:12px;color:#666">${splitPages} pages • ${fmtSize(f.size)}</span>`;
   document.getElementById('split-range').placeholder=`1-${splitPages}`;
 }
 function parseRanges(input, max){
@@ -587,16 +623,17 @@ async function doSplit(){
       for(let i=0;i<splitPages;i++){
         const np=await PDFLib.PDFDocument.create(); const [pg]=await np.copyPages(src,[i]); np.addPage(pg); const bytes=await np.save(); zip.file(`page_${i+1}.pdf`, bytes);
       }
+      _revoke(splitResult);
       const blob=await zip.generateAsync({type:'blob'}); const url=URL.createObjectURL(blob); splitResult=url; splitCount=splitPages;
       document.getElementById('split-result').innerHTML=`<div style="font-size:48px">✅</div><b>Split Complete!</b><p style="font-size:13px;color:#666">${splitCount} files (ZIP)</p><button class="toolkit-btn toolkit-btn-green" id="split-dl">⬇ DOWNLOAD ZIP</button>`;
-      document.getElementById('split-dl').onclick=()=> downloadBlob(blob, splitFile.name.replace('.pdf','_split.zip'));
+      document.getElementById('split-dl').onclick=()=> downloadBlob(blob, splitFile.name.replace(/\.pdf$/i,'_split.zip'));
     } else {
       const ranges=parseRanges(document.getElementById('split-range').value, splitPages);
       if(!ranges.length){ alert('Range tidak valid. Contoh: 1-3, 5, 7-10'); btn.textContent='📑 SPLIT PDF'; btn.disabled=false; return; }
       if(ranges.length===1){
         const np=await PDFLib.PDFDocument.create(); const pgs=await np.copyPages(src, ranges[0]); pgs.forEach(p=> np.addPage(p)); const bytes=await np.save(); const blob=new Blob([bytes],{type:'application/pdf'}); const url=URL.createObjectURL(blob); splitResult=url; splitCount=1;
         document.getElementById('split-result').innerHTML=`<div style="font-size:48px">✅</div><b>Split Complete!</b><p style="font-size:13px;color:#666">1 file</p><button class="toolkit-btn toolkit-btn-green" id="split-dl">⬇ DOWNLOAD PDF</button>`;
-        document.getElementById('split-dl').onclick=()=> downloadBlob(blob, splitFile.name.replace('.pdf','_split.pdf'));
+        document.getElementById('split-dl').onclick=()=> downloadBlob(blob, splitFile.name.replace(/\.pdf$/i,'_split.pdf'));
       } else {
         const zip=new JSZip();
         for(let i=0;i<ranges.length;i++){
@@ -604,15 +641,16 @@ async function doSplit(){
           const label=ranges[i].length===1? `page_${ranges[i][0]+1}` : `pages_${ranges[i][0]+1}-${ranges[i][ranges[i].length-1]+1}`;
           zip.file(`${label}.pdf`, bytes);
         }
+        _revoke(splitResult);
         const blob=await zip.generateAsync({type:'blob'}); const url=URL.createObjectURL(blob); splitResult=url; splitCount=ranges.length;
         document.getElementById('split-result').innerHTML=`<div style="font-size:48px">✅</div><b>Split Complete!</b><p style="font-size:13px;color:#666">${splitCount} files (ZIP)</p><button class="toolkit-btn toolkit-btn-green" id="split-dl">⬇ DOWNLOAD ZIP</button>`;
-        document.getElementById('split-dl').onclick=()=> downloadBlob(blob, splitFile.name.replace('.pdf','_split.zip'));
+        document.getElementById('split-dl').onclick=()=> downloadBlob(blob, splitFile.name.replace(/\.pdf$/i,'_split.zip'));
       }
     }
   }catch(e){ alert('Error: '+e.message); }
   btn.textContent='📑 SPLIT PDF'; btn.disabled=false;
 }
-function clearSplitter(){ splitFile=null; splitPages=0; splitResult=''; document.getElementById('split-drop').style.display='block'; document.getElementById('split-ctrls').style.display='none'; document.getElementById('split-result').innerHTML='<span class="toolkit-muted">Hasil split akan muncul di sini</span>'; }
+function clearSplitter(){ _revoke(splitResult); splitFile=null; splitPages=0; splitResult=''; document.getElementById('split-drop').style.display='block'; document.getElementById('split-ctrls').style.display='none'; document.getElementById('split-result').innerHTML='<span class="toolkit-muted">Hasil split akan muncul di sini</span>'; }
 
 // ── BACA FILE DENGAN AI (Qwen 3.6 27B Groq) ──
 let readerFile=null, readerText='', readerMessages=[];
@@ -622,7 +660,7 @@ async function extractReaderText(file){
     return await file.text();
   }
   if(ext==='docx'){
-    await loadLib('https://cdn.jsdelivr.net/npm/mammoth@1.8.0/mammoth.browser.min.js').catch(()=> loadLib('https://unpkg.com/mammoth@1.8.0/mammoth.browser.min.js'));
+    await loadLib('https://cdn.jsdelivr.net/npm/mammoth@1.12.0/mammoth.browser.min.js').catch(()=> loadLib('https://unpkg.com/mammoth@1.12.0/mammoth.browser.min.js'));
     const buf=await file.arrayBuffer();
     const res=await window.mammoth.extractRawText({arrayBuffer: buf});
     return res.value;
