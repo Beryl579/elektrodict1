@@ -292,6 +292,20 @@ const ElektroStandards = {
         </div>
       </div>
     `;
+    // ── PUIL 2011 PDF (5MB, text-selectable, 683 hal) ──
+    const puilHTML = `
+      <div class="std-card" id="std-puil-pdf" data-cat="puil" style="background:var(--bg2); border:1px solid var(--line); border-radius:16px; padding:24px;">
+        <div style="font-size:12px; color:var(--accent); font-family:var(--mono); margin-bottom:8px;">PUIL 2011 • Dokumen Lengkap</div>
+        <h3 style="font-size:18px; margin-bottom:8px;">📄 PUIL 2011 — Standar Instalasi Listrik</h3>
+        <p style="color:var(--text2); font-size:13px; margin-bottom:14px;">683 halaman, teks dapat dicopy, 4.99 MB — edisi resmi 2011. Buka langsung di browser atau download.</p>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <a href="Asset%20Materi/standardpuil2011.pdf" target="_blank" rel="noopener" class="toolkit-btn toolkit-btn-yellow" style="text-decoration:none; display:inline-flex; align-items:center; gap:8px; padding:10px 16px;">📖 Buka PDF</a>
+          <a href="Asset%20Materi/standardpuil2011.pdf" download="PUIL-2011.pdf" class="toolkit-btn" style="background:var(--bg3); border:2px solid #000; text-decoration:none; display:inline-flex; align-items:center; gap:8px; padding:10px 16px;">⬇️ Download</a>
+        </div>
+        <div style="margin-top:10px; font-size:11px; color:var(--text3);"><i>Sumber: PUIL 2011 (SNI) — untuk edukasi. Simpan lokal via tombol Download.</i></div>
+      </div>
+    `;
+    grid.insertAdjacentHTML('afterbegin', puilHTML);
     grid.insertAdjacentHTML('beforeend', extraHTML);
     this.convertAWG();
   },

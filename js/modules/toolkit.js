@@ -711,10 +711,10 @@ async function askReader(q){
   const loading=document.createElement('div'); loading.textContent='⏳ Qwen 3.6 27B sedang membaca file...'; loading.style.cssText='background:#fff;border:2px solid #000;padding:10px;font-size:13px;width:100%;margin-bottom:8px'; loading.className='reader-loading'; chat.appendChild(loading);
   chat.scrollTop=chat.scrollHeight;
   try{
-    const sysPrompt=`Konteks file "${readerFile.name}":\n\n${readerText.slice(0,8000)}\n\nPertanyaan: ${prompt}\n\nJawab dalam bahasa Indonesia, ringkas, jelas, gunakan markdown jika perlu. Jika file berisi kode, jelaskan baris penting.`;
+    const sysPrompt=`Kamu adalah asisten AI yang membantu membaca dan menganalisis file. Kamu diberikan isi file "${readerFile.name}" di bawah ini. Jawab pertanyaan user berdasarkan konten file tersebut. Jawab dalam bahasa Indonesia, ringkas, jelas, gunakan markdown jika perlu. Jika file berisi kode, jelaskan baris penting.\n\n--- ISI FILE ---\n${readerText.slice(0,8000)}\n--- AKHIR FILE ---`;
     let answer='';
     if(window.ElektroAPI && window.ElektroAPI.chat){
-      const data=await window.ElektroAPI.chat([{role:'user', content: sysPrompt}], {temperature:0.3, max_tokens:2048});
+      const data=await window.ElektroAPI.chat([{role:'system', content: sysPrompt},{role:'user', content: prompt}], {temperature:0.3, max_tokens:2048});
       answer=(data.choices?.[0]?.message?.content || '').replace(/<think>[\s\S]*?<\/think>/gi,'').trim();
     } else {
       throw new Error('ElektroAPI tidak tersedia — buka via ElektroDict (Vercel) untuk pakai Groq proxy');
