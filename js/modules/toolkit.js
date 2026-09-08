@@ -721,7 +721,9 @@ async function askReader(q){
     }
     if(!answer) answer='(AI tidak memberi jawaban)';
     loading.remove();
-    const aDiv=document.createElement('div'); aDiv.style.cssText='background:#fff;border:2px solid #000;padding:10px;margin-bottom:8px;font-size:13px;line-height:1.6;white-space:pre-wrap;word-break:break-word'; aDiv.innerHTML=`<div style="font-size:10px;font-weight:800;margin-bottom:4px">QWEN 3.6 27B</div>${answer.replace(/</g,'&lt;')}`;
+    const parsedAnswer = (window.ElektroUtils?.parseAIText || window.parseAIText || (t=>t.replace(/</g,'&lt;')))(answer);
+    const aDiv=document.createElement('div'); aDiv.style.cssText='background:#fff;border:2px solid #000;padding:10px;margin-bottom:8px;font-size:13px;line-height:1.6;word-break:break-word'; aDiv.innerHTML=`<div style="font-size:10px;font-weight:800;margin-bottom:4px">QWEN 3.6 27B</div>${parsedAnswer}`;
+    if(window.ElektroUtils?.renderMath) setTimeout(()=> ElektroUtils.renderMath(aDiv), 80);
     chat.appendChild(aDiv);
     readerMessages.push({role:'assistant', content: answer});
   }catch(e){
