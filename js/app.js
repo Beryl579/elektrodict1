@@ -357,6 +357,13 @@ function switchTab(t){
       requestAnimationFrame(()=>requestAnimationFrame(()=>pg.classList.add('visible')));
     }
   }, 60);
+  if(t === 'toolkit' && window.Toolkit) window.Toolkit.initHub();
+  if(t === 'toolkit-resizer' && window.Toolkit) window.Toolkit.initResizer();
+  if(t === 'toolkit-cropper' && window.Toolkit) window.Toolkit.initCropper();
+  if(t === 'toolkit-converter' && window.Toolkit) window.Toolkit.initConverter();
+  if(t === 'toolkit-word2pdf' && window.Toolkit) window.Toolkit.initWord2Pdf();
+  if(t === 'toolkit-merger' && window.Toolkit) window.Toolkit.initMerger();
+  if(t === 'toolkit-splitter' && window.Toolkit) window.Toolkit.initSplitter();
   if(t === 'dashboard' && window.ElektroDash) window.ElektroDash.init();
   if(t === 'standards' && window.ElektroStandards) window.ElektroStandards.init();
   if(t === 'standards'){ try{ updateIP(); hitungGround(); loadGolden(); renderPUILHist(); }catch(e){} }

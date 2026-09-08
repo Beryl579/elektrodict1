@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://elektrodict.vercel.app/sitemap.xml

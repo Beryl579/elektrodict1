@@ -1,0 +1,32 @@
+{
+  "name": "ElektroDict — Kamus Teknik Elektro",
+  "short_name": "ElektroDict",
+  "description": "Kamus, materi, kalkulator, simulasi & Lab Proyek teknik elektro — offline-ready",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone"],
+  "background_color": "#0A0A0A",
+  "theme_color": "#FFEA00",
+  "orientation": "any",
+  "lang": "id",
+  "icons": [
+    { "src": "/icons/icon-48.png", "sizes": "48x48", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-72.png", "sizes": "72x72", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-96.png", "sizes": "96x96", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-128.png", "sizes": "128x128", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-144.png", "sizes": "144x144", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-152.png", "sizes": "152x152", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/icons/icon-384.png", "sizes": "384x384", "type": "image/png", "purpose": "any" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Kamus", "short_name": "Kamus", "url": "/#kamus", "description": "Cari istilah elektro" },
+    { "name": "Materi", "short_name": "Materi", "url": "/#materi", "description": "Belajar materi terstruktur" },
+    { "name": "Lab Proyek", "short_name": "Lab", "url": "/#projects", "description": "Generate proyek Arduino/ESP32" },
+    { "name": "Tanya AI", "short_name": "AI", "url": "/#ai", "description": "Chat ElektroBot" }
+  ],
+  "categories": ["education", "utilities"],
+  "screenshots": []
+}

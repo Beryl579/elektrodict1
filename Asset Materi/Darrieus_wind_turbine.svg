@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450" viewBox="0 0 800 450" role="img" aria-labelledby="title desc">
+  <title>VAWT Darrieus</title>
+  <desc>Bilah vertikal melengkung, tidak perlu yaw — placeholder lokal, file asli Wikimedia tidak ditemukan (404)</desc>
+  <rect width="800" height="450" rx="16" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="2"/>
+  <rect x="24" y="24" width="752" height="402" rx="12" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5" stroke-dasharray="8 6"/>
+  <!-- icon -->
+  <g transform="translate(400,140)" text-anchor="middle">
+    <circle cx="0" cy="0" r="48" fill="#e0f2fe" stroke="#7dd3fc" stroke-width="2"/>
+    <text x="0" y="16" font-size="42" text-anchor="middle">🖼️</text>
+  </g>
+  <text x="400" y="220" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="22" font-weight="700" fill="#0f172a" text-anchor="middle">VAWT Darrieus</text>
+  <text x="400" y="250" font-family="system-ui, -apple-system, Segoe UI, Roboto, sans-serif" font-size="13" fill="#475569" text-anchor="middle">Bilah vertikal melengkung, tidak perlu yaw</text>
+  <text x="400" y="280" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11" fill="#94a3b8" text-anchor="middle">Darrieus_wind_turbine.svg</text>
+  <g transform="translate(400,320)">
+    <rect x="-160" y="-16" width="320" height="32" rx="16" fill="#fef3c7" stroke="#fcd34d" stroke-width="1"/>
+    <text x="0" y="5" font-family="system-ui, sans-serif" font-size="12" fill="#92400e" text-anchor="middle">⚠️ Gambar asli belum tersedia — placeholder lokal</text>
+  </g>
+  <text x="400" y="400" font-family="system-ui, sans-serif" font-size="10" fill="#94a3b8" text-anchor="middle">ElektroDict · Asset Materi · CC BY-SA placeholder</text>
+</svg>

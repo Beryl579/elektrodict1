@@ -40,3 +40,7 @@ assets/
 # Repo referensi lokal (jangan di-push)
 ref-repos/
 api/_dlimg2.js
+
+# Backup kompresi aset lokal — jangan push file .bak 5MB
+*.bak
+Asset Materi/*.bak
