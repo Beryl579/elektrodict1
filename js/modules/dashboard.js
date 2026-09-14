@@ -65,7 +65,9 @@
     mesin:'<circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 0-1.42 1.42"/><path d="M4.93 19.07a10 10 0 0 0 1.42-1.42"/><path d="M4.93 4.93a10 10 0 0 1 1.42 1.42"/><path d="M19.07 19.07a10 10 0 0 1-1.42-1.42"/>',
     kontrol:'<line x1="4" x2="20" y1="21" y2="21"/><line x1="4" x2="20" y1="7" y2="7"/><line x1="4" x2="20" y1="14" y2="14"/><path d="M9 6a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z"/><path d="M15 12a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z"/>',
     komunikasi:'<path d="M4.9 19.1C1 15.2 1 8.8 4.9 4.9"/><path d="M7.8 16.2c-2.3-2.3-2.3-6.1 0-8.5"/><circle cx="12" cy="12" r="2"/><path d="M16.2 7.8c2.3 2.3 2.3 6.1 0 8.5"/><path d="M19.1 4.9C23 8.8 23 15.1 19.1 19.1"/>',
-    distribusi:'<rect width="16" height="16" x="4" y="4" rx="2"/><path d="M4 8h16"/><path d="M8 4v16"/><path d="M16 12h.01"/><path d="M12 16h.01"/><path d="M8 12h.01"/>'
+    distribusi:'<rect width="16" height="16" x="4" y="4" rx="2"/><path d="M4 8h16"/><path d="M8 4v16"/><path d="M16 12h.01"/><path d="M12 16h.01"/><path d="M8 12h.01"/>',
+    motor3fasa:'<circle cx="12" cy="12" r="3"/><path d="M12 2v4"/><path d="M12 18v4"/><path d="M4.93 4.93l2.83 2.83"/><path d="M16.24 16.24l2.83 2.83"/><path d="M2 12h4"/><path d="M18 12h4"/><path d="M4.93 19.07l2.83-2.83"/><path d="M16.24 7.76l2.83-2.83"/>',
+    plc:'<rect width="18" height="14" x="3" y="5" rx="2"/><path d="M3 9h18"/><path d="M8 5V3"/><path d="M16 5V3"/><path d="M7 13h.01"/><path d="M11 13h.01"/><path d="M15 13h.01"/>'
   };
 
   const TAB_LABELS = {

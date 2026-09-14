@@ -188,6 +188,8 @@ const QUIZ_CATS = {
   kontrol:    { label:'Kontrol',     emoji:'', desc:'PLC, PID, feedback loop, robotik, otomasi' },
   komunikasi: { label:'Komunikasi',  emoji:'', desc:'I2C, SPI, UART, RS485, protokol IoT' },
   distribusi: { label:'Distribusi',  emoji:'', desc:'Gardu induk, transmisi SUTET, isolator, jaringan' },
+  motor3fasa: { label:'Motor 3 Fasa', emoji:'⚙️', desc:'Motor induksi 3 fasa di industri: konstruksi stator/rotor, slip, torsi, starting DOL/Y-Δ/soft starter, proteksi overload, efisiensi IE, pembalikan putaran, braking, aplikasi pompa/kompresor/conveyor, standar NEMA/IEC' },
+  plc:        { label:'Sistem PLC',   emoji:'🖥️', desc:'Programmable Logic Controller di industri: arsitektur CPU/I-O/power supply, ladder diagram, function block, instruksi timer/counter/compare, addressing I/O, komunikasi Modbus/Profibus, safety PLC, troubleshooting, aplikasi kontrol motor/conveyor/sistem sekuensial' },
 };
 
 const KAT = ['Semua','dasar','komponen','rangkaian','daya','elektronika','pengukuran','digital','sinyal','terbarukan','instalasi','mesin','kontrol','komunikasi','distribusi'];
