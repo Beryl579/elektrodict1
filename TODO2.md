@@ -566,3 +566,306 @@ Karena tombol `#bnav-kamus` tidak ada di mobile nav lagi, `switchTab` otomatis t
 
 
 
+
+---
+
+# TODO — Fitur Tambahan Dashboard (Batch 2)
+
+---
+
+## TASK 6 — Progress Materi di Dashboard
+
+> Data `ed_materi_progress` sudah ada di localStorage (diisi oleh `saveMateriProgress()` di `app.js`).
+> Setiap modul menyimpan `{ done, quizBest }`. Cukup baca dan hitung berapa section yang sudah dibuka.
+
+### 6A — Tracking section yang dibuka (update `js/app.js`)
+
+Saat ini `ed_materi_progress` hanya menyimpan `done` (boolean) dan `quizBest`. Perlu ditambahkan field `sectionsRead: []` — array berisi `id` section yang pernah dibuka.
+
+Cari fungsi `openMateriModule(id)` di `app.js`, di dalamnya ada logika render section list. Tambahkan pemanggilan helper di titik di mana section di-render atau diklik:
+
+```js
+// Di fungsi yang membuka section (misal onclick pada item section list),
+// tambahkan tracking:
+function markSectionRead(moduleId, sectionId) {
+  const prog = getMateriProgress();
+  if (!prog[moduleId]) prog[moduleId] = {};
+  const read = prog[moduleId].sectionsRead || [];
+  if (!read.includes(sectionId)) {
+    prog[moduleId].sectionsRead = [...read, sectionId];
+    saveMateriProgress(prog);
+  }
+}
+```
+
+Panggil `markSectionRead(materiState.moduleId, section.id)` saat section di-scroll ke view atau saat header section diklik.
+
+### 6B — Section: Progress Materi di `js/modules/dashboard.js`
+
+Tambahkan fungsi helper dan section baru di `ElektroDash`:
+
+```js
+function buildMateriProgressSection() {
+  const prog = getMateriProgress(); // baca dari localStorage
+  const modules = (window.MATERI_MODULES || []).map(m => {
+    const p = prog[m.id] || {};
+    const read = (p.sectionsRead || []).length;
+    const total = m.sections.length;
+    const pct = total > 0 ? Math.round((read / total) * 100) : 0;
+    const done = p.done || false;
+    return { id: m.id, emoji: m.emoji, title: m.title, read, total, pct, done };
+  });
+
+  // Tampilkan semua modul (atau 6 modul pertama jika terlalu panjang, sisanya lipat)
+  const items = modules.map(m => `
+    <div class="dash-prog-item" onclick="switchTab('materi'); setTimeout(()=>openMateriModule('${m.id}'),200)">
+      <div class="dash-prog-header">
+        <span class="dash-prog-emoji">${m.emoji}</span>
+        <span class="dash-prog-title">${m.title}</span>
+        <span class="dash-prog-count">${m.read}/${m.total}</span>
+        ${m.done ? '<span class="dash-prog-done">✓</span>' : ''}
+      </div>
+      <div class="dash-prog-bar-bg">
+        <div class="dash-prog-bar-fill" style="width:${m.pct}%"></div>
+      </div>
+    </div>`).join('');
+
+  return `
+    <h3 class="dash-section-title">📖 Progress Materi</h3>
+    <div class="dash-prog-list">${items}</div>`;
+}
+```
+
+Panggil `buildMateriProgressSection()` di dalam `ElektroDash.init()` dan render ke container dashboard.
+
+### 6C — CSS baru di `css/style.css`
+
+```css
+.dash-prog-list { display: flex; flex-direction: column; gap: 10px; }
+.dash-prog-item {
+  background: var(--card); border-radius: 10px; padding: 10px 14px;
+  cursor: pointer; transition: background .15s;
+}
+.dash-prog-item:hover { background: var(--hover); }
+.dash-prog-header {
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 6px; font-size: 13px;
+}
+.dash-prog-emoji { font-size: 16px; }
+.dash-prog-title { flex: 1; font-weight: 600; color: var(--text1); }
+.dash-prog-count { font-size: 12px; color: var(--text3); font-family: var(--mono); }
+.dash-prog-done {
+  font-size: 11px; background: var(--green-dim); color: var(--green);
+  padding: 1px 6px; border-radius: 20px;
+}
+.dash-prog-bar-bg {
+  height: 5px; background: var(--border); border-radius: 99px; overflow: hidden;
+}
+.dash-prog-bar-fill {
+  height: 100%; background: var(--accent); border-radius: 99px;
+  transition: width .4s ease;
+}
+```
+
+### 6D — localStorage key yang terlibat
+
+```
+ed_materi_progress  → { [moduleId]: { done, quizBest, sectionsRead: string[] } }
+```
+
+Tidak ada key baru. Hanya perlu extend schema yang sudah ada dengan field `sectionsRead`.
+
+---
+
+## TASK 7 — Notifikasi Streak (Toast)
+
+> Streak sudah direncanakan di TASK 1C/1H. Task ini menambahkan toast notification saat streak naik.
+
+### 7A — Update fungsi `ElektroDash.updateStreak()` di `js/modules/dashboard.js`
+
+`updateStreak()` sudah dibuat di TASK 1H untuk dipanggil saat app start. Tambahkan return value yang menandakan apakah streak baru naik:
+
+```js
+updateStreak() {
+  const today = new Date().toISOString().split('T')[0]; // "YYYY-MM-DD"
+  let s = JSON.parse(localStorage.getItem('ed_stat_streak') || '{"count":0,"lastDate":""}');
+  
+  const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+  let streakIncreased = false;
+
+  if (s.lastDate === today) {
+    // sudah buka hari ini, tidak ada perubahan
+  } else if (s.lastDate === yesterday) {
+    s.count += 1;
+    s.lastDate = today;
+    streakIncreased = true;
+  } else {
+    // lebih dari 1 hari absen, reset
+    s.count = 1;
+    s.lastDate = today;
+    // streak reset, bukan naik
+  }
+
+  localStorage.setItem('ed_stat_streak', JSON.stringify(s));
+  return { count: s.count, increased: streakIncreased };
+}
+```
+
+### 7B — Toast di `js/app.js` (saat app start)
+
+Di bagian init app (setelah splash screen selesai, di mana `ElektroDash.updateStreak()` dipanggil), gunakan return value-nya:
+
+```js
+const streakResult = window.ElektroDash.updateStreak();
+if (streakResult.increased && streakResult.count >= 2) {
+  // Tunda toast agar tidak tabrakan dengan splash screen
+  setTimeout(() => {
+    showToast(`🔥 Streak ${streakResult.count} hari! Terus semangat bro.`, 3500);
+  }, 1800);
+}
+```
+
+Pesan toast bervariasi berdasarkan count:
+- 2–4 hari: `"🔥 Streak {n} hari! Konsisten bro."`
+- 5–6 hari: `"🔥 Streak {n} hari! Hampir seminggu penuh!"`
+- 7+ hari: `"🏆 Streak {n} hari! Lo juara, satu minggu penuh!"`
+- 30+ hari: `"👑 Streak {n} hari! Legenda elektro."`
+
+### 7C — Pastikan `showToast()` menerima durasi custom
+
+Cek apakah `showToast(msg, duration)` di `app.js` sudah support parameter durasi kedua. Jika belum, update signature-nya:
+
+```js
+function showToast(msg, duration = 2500) {
+  // ... kode existing ...
+  setTimeout(() => toast.classList.remove('show'), duration);
+}
+```
+
+---
+
+## TASK 8 — Mode "Tantang Diri" (Kuis Kilat)
+
+> Entry point cepat ke kuis AI tanpa harus navigasi ke tab Latihan Soal.
+> Kategori dipilih random dari `QUIZ_CATS` (14 kategori, sudah ada di `data.js`).
+
+### 8A — Fungsi `startQuizKilat()` di `js/modules/dashboard.js`
+
+```js
+function startQuizKilat() {
+  // Pilih kategori random dari QUIZ_CATS
+  const cats = Object.keys(window.QUIZ_CATS || {});
+  if (!cats.length) { switchTab('quiz'); return; }
+  const randomCat = cats[Math.floor(Math.random() * cats.length)];
+
+  // Set state global kuis (qCat, qDiff) sebelum pindah tab
+  window._dashQuizKilat = { cat: randomCat, diff: 'mudah' };
+
+  // Pindah ke tab quiz lalu trigger start
+  switchTab('quiz');
+  setTimeout(() => {
+    if (window._dashQuizKilat) {
+      const { cat, diff } = window._dashQuizKilat;
+      window._dashQuizKilat = null;
+      // Simulasi pilih kategori + mulai
+      if (typeof selectQuizCat === 'function') {
+        // Set qCat dan qDiff langsung tanpa klik tombol
+        window._forceStartQuiz = { cat, diff };
+        initQuiz(); // re-render kategori jika perlu
+        selectQuizCat(null, cat); // null btn — update qCat tapi skip DOM classList
+        if (typeof setDiff === 'function') qDiff = diff;
+        startAIQuiz();
+      }
+    }
+  }, 400);
+}
+```
+
+**Catatan:** `selectQuizCat(btn, c)` di `app.js` saat ini memanggil `btn.classList.remove('on')` yang akan crash jika `btn` null. Perlu guard:
+
+```js
+// Update selectQuizCat di app.js — tambahkan null check:
+function selectQuizCat(btn, c){
+  qCat = c;
+  document.querySelectorAll('.qcat-btn').forEach(b=>b.classList.remove('on'));
+  if (btn) btn.classList.add('on');  // ← tambahkan guard ini
+  const startBtn = document.getElementById('quiz-start-btn');
+  if (startBtn) {
+    startBtn.disabled = false;
+    startBtn.textContent = `⚡ Mulai — ${QUIZ_CATS[c].label}`;
+  }
+}
+```
+
+### 8B — Tombol di Section Dashboard
+
+Di `js/modules/dashboard.js`, tambahkan section "Tantang Diri" di antara Quick Access dan Aktivitas Terakhir:
+
+```js
+function buildTantangDiriSection() {
+  const cats = Object.keys(window.QUIZ_CATS || {});
+  const randomCat = cats.length
+    ? window.QUIZ_CATS[cats[Math.floor(Math.random() * cats.length)]]
+    : { label: 'Random', emoji: '🎲' };
+
+  return `
+    <div class="dash-challenge-card">
+      <div class="dash-challenge-left">
+        <div class="dash-challenge-title">⚡ Tantang Diri</div>
+        <div class="dash-challenge-sub">Kuis kilat 5 soal · Kategori random · Level mudah</div>
+        <div class="dash-challenge-cat">Kategori: ${randomCat.emoji} ${randomCat.label}</div>
+      </div>
+      <button class="dash-challenge-btn" onclick="ElektroDash.startQuizKilat()">
+        Mulai →
+      </button>
+    </div>`;
+}
+```
+
+Expose `startQuizKilat` sebagai method di `window.ElektroDash`.
+
+### 8C — CSS di `css/style.css`
+
+```css
+.dash-challenge-card {
+  background: linear-gradient(135deg, var(--accent-dim) 0%, var(--card) 100%);
+  border: 1px solid var(--accent);
+  border-radius: 14px; padding: 16px 18px;
+  display: flex; align-items: center; gap: 16px;
+}
+.dash-challenge-left { flex: 1; }
+.dash-challenge-title { font-size: 16px; font-weight: 700; color: var(--text1); margin-bottom: 4px; }
+.dash-challenge-sub { font-size: 12px; color: var(--text3); margin-bottom: 4px; }
+.dash-challenge-cat { font-size: 12px; color: var(--accent); font-weight: 600; }
+.dash-challenge-btn {
+  background: var(--accent); color: #fff; border: none;
+  border-radius: 10px; padding: 10px 20px;
+  font-size: 14px; font-weight: 700; cursor: pointer;
+  white-space: nowrap; transition: opacity .15s;
+}
+.dash-challenge-btn:hover { opacity: .85; }
+```
+
+### 8D — Urutan section di Dashboard (final)
+
+1. Hero
+2. Statistik (4 stat cards)
+3. ⚡ **Tantang Diri** ← baru, posisi tinggi supaya langsung kelihatan
+4. Istilah Hari Ini
+5. Quick Access
+6. 📖 **Progress Materi** ← baru
+7. Aktivitas Terakhir
+8. Rumus Populer
+
+---
+
+## URUTAN EKSEKUSI BATCH 2
+
+1. Update `selectQuizCat()` di `app.js` — tambah null guard (TASK 8A, 1 baris)
+2. Tambah `markSectionRead()` di `app.js` + panggil saat section dibuka (TASK 6A)
+3. Update `ElektroDash.updateStreak()` — return `{ count, increased }` (TASK 7A)
+4. Tambah toast streak di init app (TASK 7B)
+5. Pastikan `showToast()` support durasi custom (TASK 7C)
+6. Tambah `buildMateriProgressSection()` + `buildTantangDiriSection()` + `startQuizKilat()` di `dashboard.js` (TASK 6B, 8A, 8B)
+7. Tambah semua CSS baru di `style.css` (TASK 6C, 8C)
+8. Update urutan render section di `ElektroDash.init()` (TASK 8D)
