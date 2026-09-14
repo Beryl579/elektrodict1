@@ -846,10 +846,12 @@ function initQuiz(){
 function selectQuizCat(btn, c){
   qCat = c;
   document.querySelectorAll('.qcat-btn').forEach(b=>b.classList.remove('on'));
-  btn.classList.add('on');
+  if(btn) btn.classList.add('on');  // null guard — bisa dipanggil dari dashboard tanpa elemen
   const startBtn = document.getElementById('quiz-start-btn');
-  startBtn.disabled = false;
-  startBtn.textContent = `⚡ Mulai — ${QUIZ_CATS[c].label}`;
+  if(startBtn){
+    startBtn.disabled = false;
+    startBtn.textContent = `⚡ Mulai — ${QUIZ_CATS[c].label}`;
+  }
 }
 
 // ── Helper: parser JSON kuis yang toleran (perbaikan trailing comma, potongan token) ──
@@ -2752,7 +2754,18 @@ window.onload=()=>{
   initOnboarding();
   loadChatHistory();
   // Dashboard sebagai landing page
-  if(window.ElektroDash) window.ElektroDash.updateStreak();
+  if(window.ElektroDash){
+    const streakResult = window.ElektroDash.updateStreak();
+    if(streakResult && streakResult.increased && streakResult.count >= 2){
+      const n = streakResult.count;
+      let msg;
+      if(n >= 30) msg = `👑 Streak ${n} hari! Legenda elektro.`;
+      else if(n >= 7) msg = `🏆 Streak ${n} hari! Satu minggu penuh!`;
+      else if(n >= 5) msg = `🔥 Streak ${n} hari! Hampir seminggu penuh!`;
+      else           msg = `🔥 Streak ${n} hari! Konsisten bro.`;
+      setTimeout(() => showToast(msg, 3500), 1800);
+    }
+  }
   // #22: set initial page as visible after paint
   requestAnimationFrame(()=>requestAnimationFrame(()=>{
     document.getElementById('page-dashboard').classList.add('visible');
@@ -4116,6 +4129,16 @@ function getMateriProgress() {
   try { return JSON.parse(localStorage.getItem('ed_materi_progress') || '{}'); } catch(e){ return {}; }
 }
 function saveMateriProgress(p) { localStorage.setItem('ed_materi_progress', JSON.stringify(p)); }
+function markSectionRead(moduleId, sectionId) {
+  if(!moduleId || !sectionId) return;
+  const prog = getMateriProgress();
+  if(!prog[moduleId]) prog[moduleId] = {};
+  const read = Array.isArray(prog[moduleId].sectionsRead) ? prog[moduleId].sectionsRead : [];
+  if(!read.includes(sectionId)){
+    prog[moduleId].sectionsRead = [...read, sectionId];
+    saveMateriProgress(prog);
+  }
+}
 function getMateriModule() {
   return (typeof MATERI_MODULES !== 'undefined' ? MATERI_MODULES : []).find(x => x.id === materiState.moduleId);
 }
@@ -4250,6 +4273,20 @@ function openMateriModule(id) {
     mountLedCalc();
     mountBjtSim();
     updateMateriDoneBtn();
+    // Track section views via IntersectionObserver
+    const mid = id;
+    if(typeof IntersectionObserver !== 'undefined'){
+      const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if(entry.isIntersecting){
+            const secEl = entry.target;
+            const secId = secEl.id.replace('mt-sec-', '');
+            if(secId) markSectionRead(mid, secId);
+          }
+        });
+      }, { threshold: 0.4 });
+      detail.querySelectorAll('[id^="mt-sec-"]').forEach(el => observer.observe(el));
+    }
   }, 60);
   window.scrollTo({top:0, behavior:'smooth'});
 }

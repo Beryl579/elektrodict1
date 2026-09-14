@@ -122,19 +122,22 @@
     let data = null;
     try{ data = raw ? JSON.parse(raw) : null; }catch{ data=null; }
     const today = todayStr();
+    let increased = false;
     if(!data || !data.lastDate){
       data = { count:1, lastDate:today };
     } else if(data.lastDate === today){
-      // already counted today
+      // already counted today — no change
     } else if(data.lastDate === yesterdayStr()){
       data.count = (parseInt(data.count,10)||0) + 1;
       data.lastDate = today;
+      increased = true;
     } else {
       data.count = 1;
       data.lastDate = today;
+      // streak reset — not an increase
     }
     localStorage.setItem(LS.streak, JSON.stringify(data));
-    return data;
+    return { count: data.count, increased };
   }
   function addQuizScore(pct){
     const cur = getNum(LS.score);
@@ -216,28 +219,43 @@
   }
 
   function renderMateriProgress(){
-    const total = (typeof MATERI_MODULES !== 'undefined' ? MATERI_MODULES.length : (window.MATERI_MODULES?window.MATERI_MODULES.length:0)) || 0;
-    const doneArr = getMateriDone();
-    const n = doneArr.length;
-    const pct = total ? Math.round(n/total*100) : 0;
+    const modules = (typeof MATERI_MODULES !== 'undefined' ? MATERI_MODULES : (window.MATERI_MODULES || []));
+    const total = modules.length;
+    if(!total) return '';
+
+    // Baca ed_materi_progress untuk sectionsRead per modul
+    let prog = {};
+    try{ prog = JSON.parse(localStorage.getItem('ed_materi_progress') || '{}'); }catch{}
+
+    const items = modules.map(m => {
+      const p = prog[m.id] || {};
+      const read = Array.isArray(p.sectionsRead) ? p.sectionsRead.length : 0;
+      const tot  = Array.isArray(m.sections) ? m.sections.length : 0;
+      const pct  = tot > 0 ? Math.round(read / tot * 100) : 0;
+      const done = p.done || false;
+      return `
+        <div class="dash-prog-item" onclick="switchTab('materi'); setTimeout(()=>openMateriModule('${m.id}'),200)">
+          <div class="dash-prog-header">
+            <span class="dash-prog-emoji">${m.emoji}</span>
+            <span class="dash-prog-title">${m.title}</span>
+            <span class="dash-prog-count">${read}/${tot}</span>
+            ${done ? '<span class="dash-prog-done">✓</span>' : ''}
+          </div>
+          <div class="dash-prog-bar-bg">
+            <div class="dash-prog-bar-fill" style="width:${pct}%"></div>
+          </div>
+        </div>`;
+    }).join('');
+
+    const doneCount = modules.filter(m => (prog[m.id]||{}).done).length;
+
     return `
     <div class="dash-section-title">
       <span class="dash-section-icon">${svgIcon('<path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5z"/><path d="M8 12h6"/><path d="M12 16h6"/>',18)}</span>
       Progress Materi
-      <span class="dash-section-sub">${n} / ${total} modul</span>
+      <span class="dash-section-sub">${doneCount} / ${total} modul selesai</span>
     </div>
-    <div class="dash-materi-card">
-      <div class="dash-materi-head">
-        <div class="dash-materi-label">${n} / ${total} modul dipelajari</div>
-        <div class="dash-materi-pct">${pct}%</div>
-      </div>
-      <div class="dash-materi-bar"><div class="dash-materi-fill" style="width:${pct}%"></div></div>
-      <button class="dash-word-btn" onclick="switchTab('materi')" style="margin-top:12px">
-        ${svgIcon('<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>',14)}
-        Lanjut Belajar
-        ${svgIcon('<path d="M12 7v4M12 17v.01M8 11h8M8 15h8"/>',14)}
-      </button>
-    </div>`;
+    <div class="dash-prog-list">${items}</div>`;
   }
 
   function renderFunFact(){
@@ -436,6 +454,39 @@
     el.innerHTML = `<div class="dash-funfact-text">"${pick.text}"</div><div class="dash-funfact-src">— ${pick.src}</div>`;
   }
 
+  function startQuizKilat(){
+    const cats = Object.keys((typeof QUIZ_CATS !== 'undefined' ? QUIZ_CATS : (window.QUIZ_CATS || {})));
+    if(!cats.length){ switchTab('quiz'); return; }
+    const randomCat = cats[Math.floor(Math.random() * cats.length)];
+    if(typeof switchTab !== 'function') return;
+    switchTab('quiz');
+    setTimeout(()=>{
+      if(typeof selectQuizCat === 'function') selectQuizCat(null, randomCat);
+      if(typeof startAIQuiz === 'function') startAIQuiz();
+    }, 400);
+  }
+
+  function renderTantangDiri(){
+    const cats = Object.keys((typeof QUIZ_CATS !== 'undefined' ? QUIZ_CATS : (window.QUIZ_CATS || {})));
+    let catLabel = 'Random';
+    if(cats.length){
+      const pick = cats[Math.floor(Math.random() * cats.length)];
+      const qc = (typeof QUIZ_CATS !== 'undefined' ? QUIZ_CATS : (window.QUIZ_CATS || {}))[pick];
+      catLabel = qc ? qc.label : pick;
+    }
+    return `
+    <div class="dash-challenge-card">
+      <div class="dash-challenge-left">
+        <div class="dash-challenge-title">⚡ Tantang Diri</div>
+        <div class="dash-challenge-sub">Kuis kilat 5 soal · Kategori random · Level mudah</div>
+        <div class="dash-challenge-cat">Kategori terpilih: ${catLabel}</div>
+      </div>
+      <button class="dash-challenge-btn" onclick="ElektroDash.startQuizKilat()">
+        Mulai →
+      </button>
+    </div>`;
+  }
+
   function initDashboard(){
     const container = document.getElementById('page-dashboard');
     if(!container) return;
@@ -443,11 +494,12 @@
     const html = `
       <div class="dash-wrap">
         ${renderHero()}
-        ${renderMateriProgress()}
         ${renderStats()}
+        ${renderTantangDiri()}
         ${renderWord()}
         ${renderFunFact()}
         ${renderQuick()}
+        ${renderMateriProgress()}
         ${renderKategori()}
         ${renderRecent()}
         ${renderFormulas()}
@@ -479,7 +531,8 @@
     getMateriDone,
     openTerm,
     openKategori,
-    getDailyTerm
+    getDailyTerm,
+    startQuizKilat
   };
 
   document.addEventListener('DOMContentLoaded', ()=>{ try{ updateStreak(); }catch(e){} });
