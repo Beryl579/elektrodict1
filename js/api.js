@@ -83,8 +83,12 @@
     async chat(messages, options = {}) {
       return await callAIBase({
         messages,
-        temperature: options.temperature ?? 0.7,
-        max_tokens: options.max_tokens ?? 2048,
+        temperature: options.temperature ?? 0.6,
+        top_p: options.top_p ?? 0.95,
+        reasoning_effort: options.reasoning_effort ?? "default",
+        max_tokens: options.max_tokens ?? options.max_completion_tokens ?? 2048,
+        max_completion_tokens: options.max_completion_tokens ?? options.max_tokens ?? 2048,
+        stop: null,
         stream: false
       }, TIMEOUT_TEXT_MS);
     },
@@ -95,8 +99,12 @@
           { role: 'system', content: 'Kamu adalah generator soal teknik elektro. Selalu kembalikan HANYA JSON valid.' },
           { role: 'user', content: userPrompt }
         ],
-        temperature: 0.8,
-        max_tokens: 2000,
+        temperature: 0.6,
+        top_p: 0.95,
+        reasoning_effort: "default",
+        max_tokens: 2048,
+        max_completion_tokens: 2048,
+        stop: null,
         stream: false
       }, TIMEOUT_TEXT_MS);
     },
@@ -113,7 +121,11 @@
           }
         ],
         max_tokens: 2048,
-        temperature: 0.3,
+        max_completion_tokens: 2048,
+        temperature: 0.6,
+        top_p: 0.95,
+        reasoning_effort: "default",
+        stop: null,
         stream: false
       }, TIMEOUT_VISION_MS);
     },
@@ -122,7 +134,11 @@
       return await callAIBase({
         messages: [{ role: 'user', content: prompt }],
         max_tokens: 200,
-        temperature: 0.9,
+        max_completion_tokens: 200,
+        temperature: 0.6,
+        top_p: 0.95,
+        reasoning_effort: "default",
+        stop: null,
         stream: false
       }, TIMEOUT_TEXT_MS);
     },

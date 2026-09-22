@@ -1,6 +1,6 @@
 /**
  * AI Vision Module
- * Groq: meta-llama/llama-4-scout-17b-16e-instruct — batas base64 ~4MB; resize otomatis.
+ * Groq: qwen/qwen3.8-27b — unified vision+txt+pdf, batas base64 ~4MB; resize otomatis.
  */
 
 let aivMode = 'soal';

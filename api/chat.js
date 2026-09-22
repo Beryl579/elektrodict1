@@ -47,8 +47,8 @@ module.exports = async function handler(req, res) {
     // Deteksi apakah ada input gambar (multimodal)
     const hasImage = messages.some(m => Array.isArray(m.content) && m.content.some(c => c.type === 'image_url'));
 
-    // Model ditentukan di backend — default ke Qwen 3.6 27B (multimodal)
-    const DEFAULT_MODEL = 'qwen/qwen3.6-27b';
+    // Model ditentukan di backend — unified ke qwen/qwen3.8-27b (vision+text+pdf multimodal)
+    const DEFAULT_MODEL = 'qwen/qwen3.8-27b';
     let targetModel = DEFAULT_MODEL;
     
     const latexRules = "Rumus wajib LaTeX: inline $...$, blok $$...$$. Contoh: $V = IR$. Dilarang memakai kurung biasa (...) untuk rumus.";
@@ -78,11 +78,14 @@ ATURAN:
       ...payload,
       model: targetModel,
       messages: messages,
-      stream: false,
-      // Pastikan output tidak terpotong di tengah kalimat.
-      // Default Groq = 1024 token (terlalu kecil untuk jawaban teknis yang detail).
-      // 2048 cukup untuk ~1200 kata — aman di free tier TPM.
-      max_tokens: payload.max_tokens || 2048
+      stream: false, // SDK contoh stream=True, tapi backend Vercel tetap non-stream (JSON) biar frontend kompatibel
+      temperature: 0.6,
+      top_p: 0.95,
+      reasoning_effort: "default",
+      stop: null,
+      // Groq support max_completion_tokens (baru) + max_tokens (legacy) — kirim keduanya biar kompatibel
+      max_tokens: payload.max_tokens || payload.max_completion_tokens || 2048,
+      max_completion_tokens: payload.max_completion_tokens || payload.max_tokens || 2048
     };
 
     let response;
@@ -105,22 +108,13 @@ ATURAN:
       }
     }
 
-    // 2. Groq fallback — model harus model Groq yang valid
+    // 2. Groq fallback — unified qwen/qwen3.8-27b (support vision, txt, pdf)
     if ((!response || !response.ok) && groqKeys.length > 0) {
-      const GROQ_MODELS = ['qwen/qwen3.6-27b', 'qwen/qwen3.8-27b', 'openai/gpt-oss-20b', 'openai/gpt-oss-120b'];
-      const groqModel = hasImage
-        ? 'qwen/qwen3.6-27b'
-        : (GROQ_MODELS.includes(targetModel) ? targetModel : 'qwen/qwen3.6-27b');
+      const groqModel = 'qwen/qwen3.8-27b';
 
       const callGroq = async (model) => {
         const currentKey = groqKeys[Math.floor(Math.random() * groqKeys.length)];
-        const groqBody = { ...aiPayload, model };
-        if (model.startsWith('openai/gpt-oss')) {
-          groqBody.reasoning_effort = 'low';
-          groqBody.include_reasoning = false;
-        } else if (model.startsWith('qwen/')) {
-          groqBody.reasoning_effort = 'none';
-        }
+        const groqBody = { ...aiPayload, model, reasoning_effort: "default", top_p: 0.95, temperature: 0.6 };
         return await fetch("https://api.groq.com/openai/v1/chat/completions", {
           method: "POST",
           headers: {
@@ -133,10 +127,8 @@ ATURAN:
 
       response = await callGroq(groqModel);
       if (response.status === 429 || response.status === 500 || response.status === 503) {
-        const fallbackModel = hasImage
-          ? (groqModel === 'qwen/qwen3.6-27b' ? 'qwen/qwen3.8-27b' : 'qwen/qwen3.6-27b')
-          : (groqModel === 'qwen/qwen3.6-27b' ? 'openai/gpt-oss-20b' : 'qwen/qwen3.6-27b');
-        response = await callGroq(fallbackModel);
+        // retry dengan key lain (model tetap qwen/qwen3.8-27b)
+        response = await callGroq(groqModel);
       }
     }
 

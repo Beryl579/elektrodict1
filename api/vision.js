@@ -2,7 +2,7 @@
  * Backend route for Vision (image analysis) — Groq proxy
  * Runtime: Node.js (Vercel default untuk /api/*.js)
  * Env: GROQ_API_KEY
- * Model: qwen/qwen3.6-27b (multimodal, support image + text via Groq)
+ * Model: qwen/qwen3.8-27b (multimodal, support vision+txt+pdf via Groq)
  */
 
 const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
@@ -72,16 +72,19 @@ module.exports = async function handler(req, res) {
   const kill = setTimeout(() => controller.abort(), UPSTREAM_TIMEOUT_MS);
 
   try {
-    // Inject reasoning_effort: 'none' untuk Qwen3 agar thinking tidak muncul di output.
-    // Aman untuk model lain karena parameter ini hanya dikenali Qwen3 & diabaikan model lain.
+    // Unified qwen/qwen3.8-27b — params sesuai spec: temperature 0.6, top_p 0.95, reasoning_effort default, max_completion_tokens 2048
     const visionPayload = { ...payload };
-    // Pastikan output tidak terpotong — default Groq 1024 terlalu kecil untuk analisis gambar.
+    visionPayload.model = 'qwen/qwen3.8-27b';
+    visionPayload.temperature = 0.6;
+    visionPayload.top_p = 0.95;
+    visionPayload.reasoning_effort = "default";
+    visionPayload.stop = null;
+    visionPayload.stream = false;
     if (!visionPayload.max_tokens) visionPayload.max_tokens = 2048;
-    visionPayload.model = 'qwen/qwen3.6-27b';
-    visionPayload.reasoning_effort = 'none';
+    if (!visionPayload.max_completion_tokens) visionPayload.max_completion_tokens = 2048;
 
     const callVisionGroq = async (model) => {
-      const p = { ...visionPayload, model, reasoning_effort: 'none' };
+      const p = { ...visionPayload, model, reasoning_effort: "default", temperature: 0.6, top_p: 0.95 };
       return await fetch(GROQ_URL, {
         method: 'POST',
         headers: {
@@ -93,8 +96,9 @@ module.exports = async function handler(req, res) {
       });
     };
 
-    let response = await callVisionGroq('qwen/qwen3.6-27b');
+    let response = await callVisionGroq('qwen/qwen3.8-27b');
     if (response.status === 503 || response.status === 429 || response.status === 500) {
+      // retry same unified model (key rotation sudah handled di GROQ_API_KEY split? disini single key, tetap retry)
       response = await callVisionGroq('qwen/qwen3.8-27b');
     }
 

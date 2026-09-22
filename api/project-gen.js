@@ -474,7 +474,8 @@ module.exports = async function handler(req, res) {
 
     const systemPrompt = buildSystemPrompt(boardKey);
 
-    // Panggil model: coba OpenRouter dulu, fallback Groq (gpt-oss-120b → gpt-oss-20b)
+    // Panggil model: unified qwen/qwen3.8-27b (vision+txt+pdf) — OpenRouter primary, Groq fallback
+    const UNIFIED_MODEL = "qwen/qwen3.8-27b";
     const callModel = async (messages, maxTokens) => {
       let response;
 
@@ -489,11 +490,15 @@ module.exports = async function handler(req, res) {
               "X-Title": "ElektroBot AI"
             },
             body: JSON.stringify({
-              model: "z-ai/glm-5.2:free",
+              model: UNIFIED_MODEL,
               response_format: { type: "json_object" },
               messages,
-              temperature: 0.7,
+              temperature: 0.6,
+              top_p: 0.95,
+              reasoning_effort: "default",
+              stop: null,
               max_tokens: maxTokens,
+              max_completion_tokens: maxTokens,
               stream: false
             })
           });
@@ -508,19 +513,14 @@ module.exports = async function handler(req, res) {
             model,
             response_format: { type: "json_object" },
             messages,
-            temperature: 0.7,
+            temperature: 0.6,
+            top_p: 0.95,
+            reasoning_effort: "default",
+            stop: null,
             max_tokens: maxTokens,
+            max_completion_tokens: maxTokens,
             stream: false
           };
-          // Sembunyikan thinking dari sumbernya:
-          // gpt-oss → reasoning_effort 'low' + include_reasoning false
-          // qwen3.6-27b → reasoning_effort 'none' (matikan sepenuhnya)
-          if (model.startsWith('openai/gpt-oss')) {
-            groqBody.reasoning_effort = 'low';
-            groqBody.include_reasoning = false;
-          } else if (model === 'qwen/qwen3.6-27b') {
-            groqBody.reasoning_effort = 'none';
-          }
           return fetch("https://api.groq.com/openai/v1/chat/completions", {
             method: "POST",
             headers: {
@@ -556,9 +556,10 @@ module.exports = async function handler(req, res) {
           return resp;
         };
 
-        response = await callGroq("openai/gpt-oss-120b");
+        response = await callGroq(UNIFIED_MODEL);
         if ([429, 413, 500].includes(response.status)) {
-          response = await callGroq("openai/gpt-oss-20b");
+          // retry same unified model dengan key lain
+          response = await callGroq(UNIFIED_MODEL);
         }
       }
 
